@@ -60,11 +60,18 @@ class MainTree(gtk.TreeView):
         	return
         
         node = rnode.children.next
-        	
+        
         while node != None:
-            iter2 = self.model.append(iter, [node.prop("name"),"",node])
+            info  = 'card=' + str(node.prop("card"))
+            iter2 = self.model.append(iter, [node.prop("name"),info,node])
             c.build_channels_list(node,self.model,iter2)
+            self.init_channels(node,iter2)
             node = self.conf.xml.nextNode(node)
+
+    def init_channels(self,cardnode,rootiter):
+#        card = cardnode.prop("card")
+#        self.model.set_value(rootiter,1,"4**test information")
+         pass
         
     def add_columns(self):
         
@@ -81,7 +88,7 @@ class MainTree(gtk.TreeView):
         self.append_column(column)
 
     def on_button_press_event(self, object, event):                                                                                                                                 
-        print "*** on_button_press_event"
+#        print "*** on_button_press_event"
 
 #        if event.button == 3:                                                                                                                                                       
 #            self.popup_menu.popup(None, None, None, event.button, event.time)                                                                                                       
