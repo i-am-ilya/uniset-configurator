@@ -6,15 +6,6 @@ import UniXML
 import configure
 import iocards
 
-TARGET_STRING = 0
-TARGET_ROOTWIN = 1
-
-target = [
-    ('STRING', 0, TARGET_STRING),
-    ('text/plain', 0, TARGET_STRING),
-    ('application/x-rootwin-drop', 0, TARGET_ROOTWIN)
-]
-
 class MainTree(gtk.TreeView):
 
     xml = None
@@ -26,7 +17,7 @@ class MainTree(gtk.TreeView):
         gtk.TreeView.__init__(self)
         self.model = None
         self.modelfilter = None
-        self.model = gtk.TreeStore(gobject.TYPE_STRING,gobject.TYPE_STRING,object)
+        self.model = gtk.TreeStore(gobject.TYPE_STRING,gobject.TYPE_STRING,object,gobject.TYPE_STRING)
         self.modelfilter = self.model.filter_new()
 
         # create treeview
@@ -46,9 +37,9 @@ class MainTree(gtk.TreeView):
     def build_tree(self):
 
         node = self.conf.xml.findNode(self.conf.xml.getDoc(),"nodes")[0].children.next 
-        iter0 = self.model.append(None, [_("Nodes"),"",None])
+        iter0 = self.model.append(None, [_("Nodes"),"",None,""])
         while node != None:
-            iter1 = self.model.append(iter0,[node.prop("name"),"",node])
+            iter1 = self.model.append(iter0,[node.prop("name"),"",node,"n"])
             self.read_cards(node,iter1)
             node = self.conf.xml.nextNode(node)
 
@@ -63,7 +54,7 @@ class MainTree(gtk.TreeView):
         
         while node != None:
             info  = 'card=' + str(node.prop("card"))
-            iter2 = self.model.append(iter, [node.prop("name"),info,node])
+            iter2 = self.model.append(iter, [node.prop("name"),info,node,"s"])
             c.build_channels_list(node,self.model,iter2)
             self.init_channels(node,iter2)
             node = self.conf.xml.nextNode(node)
@@ -98,8 +89,16 @@ class MainTree(gtk.TreeView):
             if not iter:                                                                                                                                                                
                  return True
             else :
-#                c = card.Card( model.get_value(iter, 2) )
-#                self.model.clear()
-#                self.iotree.read_channels(c)
-                 pass
+                 t = model.get_value(iter,3)
+#            	 print "********* select: " + str(t)
+                 if t == "n": # node elemnt
+                     pass
+                 elif t == "s": # card element
+                     pass
+                 elif t == "c": # channel element
+                     snode = self.conf.dlg_slist.run(self,model.get_value(iter,2))
+                     if snode != None:
+                         model.set_value(iter,2,snode)
+                         model.set_value(iter,1,snode.prop("name"))
+	
 	    return True

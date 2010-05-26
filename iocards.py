@@ -18,8 +18,8 @@ class IOCards():
     
     def build_di32_list(self,cardnode,model,iter):
         for i in range(0,32):
-            model.append(iter, [_("channel")+str(i),"",cardnode])
+            model.append(iter, [_("ch_")+str(i),"",cardnode,"c"])
  
     def build_ai16_list(self,cardnode,model,iter):
 		for i in range(0,16):
-			model.append(iter, [_("channel")+str(i),"",cardnode])
+			model.append(iter, [_("ch_")+str(i),"",cardnode,"c"])

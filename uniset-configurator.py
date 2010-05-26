@@ -12,6 +12,7 @@ import configure
 import libxml2
 import UniXML
 import locale
+import dlg_slist
 
 locale.setlocale(locale.LC_ALL, "ru_RU.UTF8")
 
@@ -37,7 +38,6 @@ class MainWindow(gtk.Widget):
 	def on_window1_destroy(self, destroy):
 		gtk.main_quit()
 
-
 conf = None                                                                                                                                                                         
 try:                                                                                                                                                                                
     conf = configure.Conf(confile,glade)                                                                                                                                             
@@ -47,9 +47,13 @@ except:
     dialog.run()                                                                                                                                                                    
     dialog.destroy()    
 
+# main tree
 tree_swin = glade.get_widget("scwin_left")
 mtree = maintree.MainTree(conf)
 tree_swin.add(mtree)
+
+#dlg = dlg_slist.SListDialog(conf.xml)
+#print "********* : " + str( dlg.run(None) )
 
 MainWindow()
 gtk.main()
