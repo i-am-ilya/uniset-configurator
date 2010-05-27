@@ -17,7 +17,7 @@ class MainTree(gtk.TreeView):
         self.model = None
         self.modelfilter = None
         #                          Name | Parameters | xmlnode | element type | number | subdev | parent iterator
-        self.model = gtk.TreeStore(gobject.TYPE_STRING,gobject.TYPE_STRING,object,gobject.TYPE_STRING,gobject.TYPE_INT,gobject.TYPE_INT,object)
+        self.model = gtk.TreeStore(gobject.TYPE_STRING,gobject.TYPE_STRING,object,gobject.TYPE_STRING,gobject.TYPE_STRING,gobject.TYPE_STRING,object)
         self.modelfilter = self.model.filter_new()
 
 #        self.modelfilter.set_visible_column(1)
@@ -38,23 +38,21 @@ class MainTree(gtk.TreeView):
         self.show_all()
 
     def build_tree(self):
-
         node = self.conf.xml.findNode(self.conf.xml.getDoc(),"nodes")[0].children.next 
         iter0 = self.model.append(None, [_("Nodes"),"",None,"",-1,-1,None])
         while node != None:
-            iter1 = self.model.append(iter0,[node.prop("name"),"",node,"n",int(node.prop("id")),0,iter0])
+            iter1 = self.model.append(iter0,[node.prop("name"),"",node,"n",node.prop("id"),0,iter0])
             self.read_cards(node,iter1)
             node = self.conf.xml.nextNode(node)
 
     def read_cards(self,rootnode,iter):
-
         rnode = self.conf.xml.findNode(rootnode,"iocards")[0] # .children.next
         if rnode == None: return
         node = rnode.children.next
         
         while node != None:
             info  = 'card=' + str(node.prop("card"))
-            iter2 = self.model.append(iter, [node.prop("name"),info,node,"s",int(node.prop("card")),0,iter])
+            iter2 = self.model.append(iter, [node.prop("name"),info,node,"s",node.prop("card"),0,iter])
             self.build_channels_list(node,self.model,iter2)
             node = self.conf.xml.nextNode(node)
  
@@ -66,13 +64,13 @@ class MainTree(gtk.TreeView):
     
     def build_di32_list(self,card,model,iter):
         for i in range(0,32):
-            model.append(iter, [_("ch_")+str(i),"",card,"c",i,0,iter])
+            model.append(iter, [_("ch_")+str(i),"",card,"c",str(i),"0",iter])
 
     def build_ai16_list(self,card,model,iter):
         for i in range(0,8):
-            model.append(iter, [_("J2:")+str(i),"",card,"c",i,0,iter])
+            model.append(iter, [_("J2:")+str(i),"",card,"c",str(i),"0",iter])
         for i in range(0,8):
-            model.append(iter, [_("J3:")+str(i),"",card,"c",i,1,iter])
+            model.append(iter, [_("J3:")+str(i),"",card,"c",str(i),"1",iter])
 
     def init_channels(self):
     # проходим по <sensors> и если поля заполнены ищем в нашем TreeView
@@ -84,7 +82,7 @@ class MainTree(gtk.TreeView):
 
     def find_node(self,node):
        it = self.model.iter_children(self.model.get_iter_first())
-       node_id = int(node.prop("io"))
+       node_id = node.prop("io")
        while it is not None:
            if self.model.get_value(it,4) == node_id:
                it1 = self.model.iter_children(it)
@@ -94,17 +92,26 @@ class MainTree(gtk.TreeView):
            it = self.model.iter_next(it)
 
     def find_card(self,it,node):
-       card_num = int(node.prop("card"))
+       card_num = node.prop("card")
        while it is not None:
            if self.model.get_value(it,4) == card_num:
                it2 = self.model.iter_children(it)
-               self.find_channel(it2,node)
+               self.find_subdev(it2,node)
+               return
+
+           it = self.model.iter_next(it)
+
+    def find_subdev(self,it,node):
+       sb = node.prop("subdev")
+       while it is not None:
+           if self.model.get_value(it,5) == sb:
+               self.find_channel(it,node)
                return
 
            it = self.model.iter_next(it)
 
     def find_channel(self,it,node):
-       ch = int(node.prop("channel"))
+       ch = node.prop("channel")
        while it is not None:
            if self.model.get_value(it,4) == ch:
                self.model.set_value(it,2,node)
@@ -156,8 +163,8 @@ class MainTree(gtk.TreeView):
                          node_iter = model.get_value(card_iter,6)
                          node = model.get_value(node_iter,2)
 
-                         node_id = node.prop("id")
-                         if node_id == "": node_id = node.prop("name")
+                         node_id = model.get_value(node_iter,4) # node.prop("id")
+#                         if node_id == "": node_id = node.prop("name")
 
                          snode.setProp("io",node_id);
                          snode.setProp("card",card.prop("card"));
