@@ -13,11 +13,11 @@ class SListDialog():
         self.xml = xml
         self.model = gtk.ListStore(gobject.TYPE_STRING,gobject.TYPE_STRING,gobject.TYPE_STRING,object)
 
-        self.tv = gtk.TreeView(self.model)
-        self.modelfilter = self.model.filter_new()
-			
+        self.tv = gtk.TreeView()
+        self.tv.set_model(self.model)
+        self.tv.set_search_equal_func(self.sfunc)
+         			
         self.tv.get_selection().set_mode(gtk.SELECTION_SINGLE)
-#        self.tv.get_selection().set_mode(gtk.SELECTION_BROWSE)
 
         self.tv.set_rules_hint(True)
         self.tv.connect("button-press-event", self.on_button_press_event)
@@ -44,22 +44,33 @@ class SListDialog():
             self.model.append([node.prop("id"),node.prop("name"),node.prop("textname"),node])
             node = self.xml.nextNode(node)
 
+    def sfunc(self,model, column, key, iter):
+
+        if model.get_value(iter,0).find(key) != -1:
+        	return False
+        if model.get_value(iter,1).find(key) != -1:
+            return False
+#       if model.get_value(iter,2).find(key) != -1:
+#           return False
+
+        return True
+
     def add_columns(self):
         
         renderer = gtk.CellRendererText()
-        renderer.set_property("xalign", 0.0)
+#        renderer.set_property("xalign", 0.0)
         column = gtk.TreeViewColumn(_("ID"), renderer, text=0)
         column.set_clickable(False)
         self.tv.append_column(column)
 
         renderer = gtk.CellRendererText()
-        renderer.set_property("xalign", 0.0)
+#        renderer.set_property("xalign", 0.0)
         column = gtk.TreeViewColumn(_("Name"), renderer, text=1)
         column.set_clickable(False)
         self.tv.append_column(column)
 
         renderer = gtk.CellRendererText()
-        renderer.set_property("xalign", 0.0)
+#        renderer.set_property("xalign", 0.0)
         column = gtk.TreeViewColumn(_("TextName"), renderer, text=1)
         column.set_clickable(False)
         self.tv.append_column(column)
@@ -84,14 +95,15 @@ class SListDialog():
                 return
             it = self.model.iter_next(it)
 
-    def run(self,parent,select):
+    def run(self,rootwin,select):
  
-#        if parent:
-#            self.dlg.set_parent(parent)
+#        if rootwin:
+#            self.dlg.set_transient_for(rootwin)
 
         if select:
            self.set_selected(select)
 
+#        self.dlg.maximize()
         res = self.dlg.run()
         self.dlg.hide();
 

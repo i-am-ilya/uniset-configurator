@@ -4,6 +4,7 @@
 from gettext import gettext as _
 import gettext
 import sys
+import os
 import gtk
 import gobject
 import gtk.glade
@@ -20,23 +21,35 @@ mwinglade="mainwin.glade"
 confile="configure.xml"
 
 if len(sys.argv) > 1:
-	confile = sys.argv[1]
+    confile = sys.argv[1]
 
 glade = gtk.glade.XML(mwinglade)
 
 class MainWindow(gtk.Widget):
-	def __init__(self):
-		glade.signal_autoconnect(self)
-		pass
+    def __init__(self):
+        glade.signal_autoconnect(self)
+        self.win = glade.get_widget("MainWindow")
+        pass
 
-	def on_toolbutton1_clicked(self, button):
-		print 'foo!'
+    def on_MainWindow_destroy(self, destroy):
+        if conf.is_changed() and conf.xml:
+            dlg = gtk.MessageDialog(self.win, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO, _("Save changes?"))
+            res = dlg.run()
+            if res == gtk.RESPONSE_YES:
+               os.rename(conf.xml.getFileName(),str(conf.xml.getFileName())+".bak")
+               conf.xml.save()
 
-	def on_toolbutton2_clicked(self, button):
-		print 'foo2!'
+        gtk.main_quit()
 
-	def on_window1_destroy(self, destroy):
-		gtk.main_quit()
+    def on_save_activate(self, data):
+        print "on_save_activate: " + str(conf.xml.getFileName())
+        if conf.xml:
+           os.rename(conf.xml.getFileName(),str(conf.xml.getFileName())+".bak")
+           conf.xml.save()
+           conf.unmark_changes()
+
+    def on_save_as_activate(self, data):
+         print "on_save_as_activate"
 
 conf = None                                                                                                                                                                         
 try:                                                                                                                                                                                
@@ -52,8 +65,8 @@ tree_swin = glade.get_widget("scwin_left")
 mtree = maintree.MainTree(conf)
 tree_swin.add(mtree)
 
-#dlg = dlg_slist.SListDialog(conf.xml)
-#print "********* : " + str( dlg.run(None) )
+#dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO, _("Save changes?"))
+#res = dlg.run()
 
 MainWindow()
 gtk.main()

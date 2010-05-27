@@ -9,8 +9,13 @@ class Conf:
     	self.glade = gladexml
 
         self.dlg_slist = dlg_slist.SListDialog(self.xml)
-#        self.dlg_slist = gladexml.get_widget("dlg_slist")                                                                                                                                           
-#        scwin_list = gladexml.get_widget("scwin_slist")                                                                                                                                         
-#        self.slist = slist.SList(self.xml,self.dlg_slist)                                                                                                                                                           
-#        scwin_list.add(self.slist)
-        
+        self.changes = 0
+
+    def mark_changes(self):
+        self.changes = 1
+
+    def unmark_changes(self):
+        self.changes = 0
+
+    def is_changed(self):
+        return self.changes
