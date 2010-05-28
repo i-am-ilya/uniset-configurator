@@ -65,7 +65,7 @@ tree_swin = glade.get_widget("scwin_left")
 mtree = maintree.MainTree(conf)
 tree_swin.add(mtree)
 
-#dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO, _("Save changes?"))
+#dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO, _("Already exist. \nReconnection?"))
 #res = dlg.run()
 
 MainWindow()

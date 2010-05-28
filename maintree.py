@@ -134,6 +134,19 @@ class MainTree(gtk.TreeView):
         column.set_clickable(False)
         self.append_column(column)
 
+    def check_connection(self,snode,it0):
+       it = self.model.iter_children(it0)
+       while it is not None:                                                                                                                                                        
+           if self.model.get_value(it,2) == snode:
+               return [snode,it]
+           
+           s,i = self.check_connection(snode,it)
+           if s is not None: return [s,i]
+           
+           it = self.model.iter_next(it)           
+       
+       return [None,None]                                                                                              
+
     def on_button_press_event(self, object, event):                                                                                                                                 
 #        print "*** on_button_press_event"
 
@@ -154,17 +167,38 @@ class MainTree(gtk.TreeView):
                  elif t == "c": # channel element
                      snode = self.conf.dlg_slist.run(self,model.get_value(iter,2))
                      if snode != None:
-                         model.set_value(iter,2,snode)
-                         model.set_value(iter,1,snode.prop("name"))
-                         
+
                          card_iter = model.get_value(iter,6)
                          card = model.get_value(card_iter,2)
                          
                          node_iter = model.get_value(card_iter,6)
                          node = model.get_value(node_iter,2)
-
                          node_id = model.get_value(node_iter,4) # node.prop("id")
 #                         if node_id == "": node_id = node.prop("name")
+                     
+                         it0 = self.model.iter_children(self.model.get_iter_first())
+                         cn,it = self.check_connection(snode,it0)
+                         if cn is not None:
+#                             print "************** ALREADY EXIST: " + str(cn)
+                             msg = "'" + snode.prop("name") + "' " + ("Already connection!") 
+                             addr = " (" + node.prop("name") + ":" + self.model.get_value(card_iter,0) + ":" + model.get_value(it,4) +")\n Reconnection?"
+                             msg = msg + addr
+                             dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,msg)
+                             res = dlg.run()
+                             dlg.hide()
+                             if res == gtk.RESPONSE_NO:
+                                 return True
+                             # сперва очистим привязку у старого
+                             model.set_value(it,2,None)
+                             model.set_value(it,1,"")
+                             cn.setProp("io","")
+                             cn.setProp("card","")
+                             cn.setProp("subdev", "")
+                             cn.setProp("channel","")
+                             
+                         
+                         model.set_value(iter,2,snode)
+                         model.set_value(iter,1,snode.prop("name"))
 
                          snode.setProp("io",node_id);
                          snode.setProp("card",card.prop("card"));
