@@ -13,7 +13,7 @@ class UniXML(str):
             self.doc = libxml2.parseFile(str)
         except libxml2.parserError:
             sys.exit(-1)
-        print "parsing " + self.doc.name
+#        print "parsing " + self.doc.name
         libxml2.registerErrorHandler(self.callback, "-->")
 
     def __del__(self):
@@ -72,3 +72,11 @@ class UniXML(str):
         if filename == None:
            filename = self.fname
         return self.doc.saveFile(filename)
+
+    def reopen(self, filename):
+        try:
+            self.doc.freeDoc()
+            self.fname = filename
+            self.doc = libxml2.parseFile(filename)
+        except libxml2.parserError:
+            sys.exit(-1)

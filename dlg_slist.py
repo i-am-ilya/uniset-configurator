@@ -37,6 +37,10 @@ class SListDialog():
         scwin.show_all()
         self.dlg.vbox.pack_start(scwin, True, True, 0)
 
+    def reopen(self,xml):
+        self.model.clear()
+        self.build_tree()	    
+
     def build_tree(self):
 
         node = self.xml.findNode(self.xml.getDoc(),"sensors")[0].children.next 

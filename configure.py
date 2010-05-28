@@ -19,3 +19,8 @@ class Conf:
 
     def is_changed(self):
         return self.changes
+    
+    def reopen(self, fname):
+        self.xml.reopen(fname)
+        self.dlg_slist.reopen(self.xml)
+        self.changes = 0
