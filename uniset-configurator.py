@@ -28,13 +28,7 @@ class MainWindow(gtk.Widget):
         pass
 
     def on_MainWindow_destroy(self, destroy):
-        if conf.is_changed() and conf.xml:
-            dlg = gtk.MessageDialog(self.win, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO, _("Save changes?"))
-            res = dlg.run()
-            if res == gtk.RESPONSE_YES:
-               os.rename(conf.xml.getFileName(),str(conf.xml.getFileName())+".bak")
-               conf.xml.save()
-
+        self.check_changes()
         gtk.main_quit()
 
     def on_save_activate(self, data):
@@ -48,14 +42,8 @@ class MainWindow(gtk.Widget):
          print "on_save_as_activate"
 
     def on_open_activate(self, data):
+        self.check_changes()
 
-        if conf.is_changed() and conf.xml:
-            dlg = gtk.MessageDialog(self.win, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO, _("Save changes?"))
-            res = dlg.run()
-            if res == gtk.RESPONSE_YES:
-               os.rename(conf.xml.getFileName(),str(conf.xml.getFileName())+".bak")
-               conf.xml.save()
-    
         dlg = gtk.FileChooserDialog(_("File selection"),action=gtk.FILE_CHOOSER_ACTION_OPEN,
                                   buttons=(gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL,gtk.STOCK_OPEN,gtk.RESPONSE_OK))
         res = dlg.run()
@@ -65,14 +53,16 @@ class MainWindow(gtk.Widget):
             conf.reopen(confile)
 
     def on_quit_activate(self, data):
+
+        gtk.main_quit()
+
+    def check_changes(self):
         if conf.is_changed() and conf.xml:
             dlg = gtk.MessageDialog(self.win, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO, _("Save changes?"))
             res = dlg.run()
             if res == gtk.RESPONSE_YES:
                os.rename(conf.xml.getFileName(),str(conf.xml.getFileName())+".bak")
                conf.xml.save()
-
-        gtk.main_quit()
 
 
 #def main():
@@ -108,4 +98,3 @@ tree_swin.add(mtree)
 #res = dlg.run()
 MainWindow()
 gtk.main()
-
