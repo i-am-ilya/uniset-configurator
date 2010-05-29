@@ -352,11 +352,18 @@ class MainTree(gtk.TreeView):
 
         it = self.model.append(node_iter, [n.prop("name"),info,n,"s",n.prop("card"),0,node_iter])
         self.build_channels_list(n,self.model,it)
+        self.conf.mark_changes()
 
     def on_remove_card_activate(self,menuitem):
-#        print "**********: remove card"
+
         (model, iter) = self.get_selection().get_selected()
         if not iter: return
+
+        dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,_("You are sure?"))
+        res = dlg.run()
+        dlg.hide()
+        if res == gtk.RESPONSE_NO:
+            return False
         
         cnode = model.get_value(iter,2)
         node_iter = model.get_value(iter,6)
@@ -368,15 +375,16 @@ class MainTree(gtk.TreeView):
         node = self.conf.xml.findNode(self.conf.xml.getDoc(),"sensors")[0].children.next 
         while node != None:
             if node.prop("io") == nn and node.prop("card") == cn:
-                  node.setProp("io","")
-                  node.setProp("card","")
-                  node.setProp("subdev","")
-                  node.setProp("channel","")
+                  node.unsetProp("io")
+                  node.unsetProp("card")
+                  node.unsetProp("subdev")
+                  node.unsetProp("channel")
 
             node = self.conf.xml.nextNode(node)
     
-#        cnode.freeNode()    
+        cnode.unlinkNode()    
         model.remove(iter)
+        self.conf.mark_changes()
 
     def on_edit_card_activate(self,menuitem):
         print "**********: edit card"
