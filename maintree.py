@@ -102,9 +102,9 @@ class MainTree(gtk.TreeView):
 
     def build_tree(self):
         node = self.conf.xml.findNode(self.conf.xml.getDoc(),"nodes")[0].children.next 
-        iter0 = self.model.append(None, [_("Nodes"),"",None,"",-1,-1,None])
+#        iter0 = self.model.append(None, [_("Nodes"),"",None,"",-1,-1,None])
         while node != None:
-            iter1 = self.model.append(iter0,[node.prop("name"),"",node,"n",node.prop("id"),0,iter0])
+            iter1 = self.model.append(None,[node.prop("name"),"",node,"n",node.prop("id"),0,None])
             self.read_cards(node,iter1)
             node = self.conf.xml.nextNode(node)
 
@@ -168,7 +168,7 @@ class MainTree(gtk.TreeView):
             node = self.conf.xml.nextNode(node)    
 
     def find_node(self,node):
-        it = self.model.iter_children(self.model.get_iter_first())
+        it = self.model.get_iter_first()
         node_id = node.prop("io")
         while it is not None:
            if self.model.get_value(it,4) == node_id:
@@ -271,7 +271,7 @@ class MainTree(gtk.TreeView):
                          node_id = model.get_value(node_iter,4) # node.prop("id")
 #                         if node_id == "": node_id = node.prop("name")
                      
-                         it0 = self.model.iter_children(self.model.get_iter_first())
+                         it0 = self.model.get_iter_first()
                          cn,it = self.check_connection(snode,it0)
                          if cn is not None:
 #                             print "************** ALREADY EXIST: " + str(cn)
