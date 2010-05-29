@@ -354,7 +354,29 @@ class MainTree(gtk.TreeView):
         self.build_channels_list(n,self.model,it)
 
     def on_remove_card_activate(self,menuitem):
-        print "**********: remove card"
+#        print "**********: remove card"
+        (model, iter) = self.get_selection().get_selected()
+        if not iter: return
+        
+        cnode = model.get_value(iter,2)
+        node_iter = model.get_value(iter,6)
+        pnode = model.get_value(node_iter,2)
+
+        cn = cnode.prop("card")
+        nn = pnode.prop("id")
+
+        node = self.conf.xml.findNode(self.conf.xml.getDoc(),"sensors")[0].children.next 
+        while node != None:
+            if node.prop("io") == nn and node.prop("card") == cn:
+                  node.setProp("io","")
+                  node.setProp("card","")
+                  node.setProp("subdev","")
+                  node.setProp("channel","")
+
+            node = self.conf.xml.nextNode(node)
+    
+#        cnode.freeNode()    
+        model.remove(iter)
 
     def on_edit_card_activate(self,menuitem):
         print "**********: edit card"
