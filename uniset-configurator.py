@@ -25,7 +25,6 @@ class MainWindow(gtk.Widget):
     def __init__(self):
         glade.signal_autoconnect(self)
         self.win = glade.get_widget("MainWindow")
-        pass
 
     def on_MainWindow_destroy(self, destroy):
         self.check_changes()
@@ -53,7 +52,6 @@ class MainWindow(gtk.Widget):
             conf.reopen(confile)
 
     def on_quit_activate(self, data):
-
         gtk.main_quit()
 
     def check_changes(self):
@@ -67,8 +65,9 @@ class MainWindow(gtk.Widget):
 
 #def main():
 
-#confile="configure.xml"
-confile=""
+# for debug
+confile="configure.xml"
+#confile=""
 
 if len(sys.argv) > 1:
    confile = sys.argv[1]
@@ -93,8 +92,5 @@ except:
 tree_swin = glade.get_widget("scwin_left")
 mtree = maintree.MainTree(conf)
 tree_swin.add(mtree)
-
-#dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO, _("Already exist. \nReconnection?"))
-#res = dlg.run()
 MainWindow()
 gtk.main()

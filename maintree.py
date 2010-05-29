@@ -32,8 +32,72 @@ class MainTree(gtk.TreeView):
         # expand all rows after the treeview widget has been realized
 #       self.connect('realize', lambda tv: tv.expand_all())
 
+        self.card_popup = gtk.Menu() 
+        i0 = gtk.MenuItem( _("add new card") ) 
+        i0.connect("activate", self.on_add_card_activate)
+        i0.show() 
+        self.card_popup.append(i0) 
+
+        i1 = gtk.MenuItem( _("remove card") ) 
+        i1.connect("activate", self.on_remove_card_activate)
+        i1.show() 
+        self.card_popup.append(i1) 
+
+        i2 = gtk.MenuItem( _("edit") ) 
+        i2.connect("activate", self.on_edit_card_activate)
+        i2.show() 
+        self.card_popup.append(i2) 
+
+        self.node_popup = gtk.Menu() 
+        i0 = gtk.MenuItem( _("add new card") ) 
+        i0.connect("activate", self.on_add_card_activate)
+        i0.show() 
+        self.node_popup.append(i0) 
+
         self.build_tree()
         self.init_channels()
+
+        self.cb_cardlist = gtk.combo_box_new_text()
+        for cname in self.get_card_list():
+              self.cb_cardlist.append_text(cname)
+
+        self.cb_cardlist.show_all()
+
+        self.dlg_card = gtk.Dialog(_("Select card"),None,gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,(gtk.STOCK_OK,gtk.RESPONSE_OK,gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL))
+        
+        vb = gtk.VBox()
+        
+        hb = gtk.HBox()
+
+        lb = gtk.Label(_(" Card number: "))
+        lb.show()
+        self.card_num = gtk.SpinButton()
+        self.card_num.set_range(0,10)
+        self.card_num.set_increments(1,1)
+        self.card_num.set_digits(0)
+        self.card_num.show()
+
+        hb.pack_start(lb,False,False,3)
+        hb.pack_start(self.card_num,True,True,3)
+        hb.show()
+
+        lb1 = gtk.Label(_("Base address: "))
+        lb1.show()
+        self.card_ba = gtk.Entry()
+        self.card_ba.set_width_chars(5)
+        self.card_ba.set_max_length(8)
+        self.card_ba.show()
+        hb1 = gtk.HBox()
+        hb1.pack_start(lb1,False,False,3)
+        hb1.pack_start(self.card_ba,True,True,3)
+        hb1.show()
+
+        vb.pack_start(self.cb_cardlist,True,True,3)
+        vb.pack_start(hb,True,True,3)
+        vb.pack_start(hb1,True,True,3)
+        vb.show()
+        self.dlg_card.vbox.pack_start(vb,True,True,0)        
+
 
         self.show_all()
 
@@ -52,15 +116,23 @@ class MainTree(gtk.TreeView):
         
         while node != None:
             info  = 'card=' + str(node.prop("card"))
+            info  = info + ' BA=' + str(node.prop("baddr"))
             iter2 = self.model.append(iter, [node.prop("name"),info,node,"s",node.prop("card"),0,iter])
             self.build_channels_list(node,self.model,iter2)
             node = self.conf.xml.nextNode(node)
+
+    def get_card_list(self):
+        return ["DI32","AI16","UNIO48","UNIO96"]
  
     def build_channels_list(self,cardnode,model,iter):
         if cardnode.prop("name") == "DI32":
             self.build_di32_list(cardnode,model,iter)
         elif cardnode.prop("name") == "AI16":
             self.build_ai16_list(cardnode,model,iter)
+        elif cardnode.prop("name") == "UNIO48":
+            self.build_unio48_list(cardnode,model,iter)
+        elif cardnode.prop("name") == "UNIO96":
+            self.build_unio96_list(cardnode,model,iter)
     
     def build_di32_list(self,card,model,iter):
         for i in range(0,32):
@@ -72,6 +144,22 @@ class MainTree(gtk.TreeView):
         for i in range(0,8):
             model.append(iter, [_("J3:")+str(i),"",card,"c",str(i),"1",iter])
 
+    def build_unio48_list(self,card,model,iter):
+        for i in range(0,24):
+            model.append(iter, [_("J1:")+str(i),"",card,"c",str(i),"0",iter])
+        for i in range(0,24):
+            model.append(iter, [_("J2:")+str(i),"",card,"c",str(i),"1",iter])
+
+    def build_unio96_list(self,card,model,iter):
+        for i in range(0,24):
+            model.append(iter, [_("J1:")+str(i),"",card,"c",str(i),"0",iter])
+        for i in range(0,24):
+            model.append(iter, [_("J2:")+str(i),"",card,"c",str(i),"1",iter])
+        for i in range(0,24):
+            model.append(iter, [_("J3:")+str(i),"",card,"c",str(i),"2",iter])
+        for i in range(0,24):
+            model.append(iter, [_("J4:")+str(i),"",card,"c",str(i),"3",iter])
+
     def init_channels(self):
     # проходим по <sensors> и если поля заполнены ищем в нашем TreeView
         node = self.conf.xml.findNode(self.conf.xml.getDoc(),"sensors")[0].children.next 
@@ -81,9 +169,9 @@ class MainTree(gtk.TreeView):
             node = self.conf.xml.nextNode(node)    
 
     def find_node(self,node):
-       it = self.model.iter_children(self.model.get_iter_first())
-       node_id = node.prop("io")
-       while it is not None:
+        it = self.model.iter_children(self.model.get_iter_first())
+        node_id = node.prop("io")
+        while it is not None:
            if self.model.get_value(it,4) == node_id:
                it1 = self.model.iter_children(it)
                self.find_card(it1,node)
@@ -92,23 +180,23 @@ class MainTree(gtk.TreeView):
            it = self.model.iter_next(it)
 
     def find_card(self,it,node):
-       card_num = node.prop("card")
-       while it is not None:
-           if self.model.get_value(it,4) == card_num:
-               it2 = self.model.iter_children(it)
-               self.find_subdev(it2,node)
-               return
+        card_num = node.prop("card")
+        while it is not None:
+            if self.model.get_value(it,4) == card_num:
+                it2 = self.model.iter_children(it)
+                self.find_subdev(it2,node)
+                return
 
-           it = self.model.iter_next(it)
+            it = self.model.iter_next(it)
 
     def find_subdev(self,it,node):
-       sb = node.prop("subdev")
-       while it is not None:
-           if self.model.get_value(it,5) == sb:
-               self.find_channel(it,node)
-               return
+        sb = node.prop("subdev")
+        while it is not None:
+            if self.model.get_value(it,5) == sb:
+                self.find_channel(it,node)
+                return
 
-           it = self.model.iter_next(it)
+            it = self.model.iter_next(it)
 
     def find_channel(self,it,node):
        ch = node.prop("channel")
@@ -149,14 +237,22 @@ class MainTree(gtk.TreeView):
 
     def on_button_press_event(self, object, event):                                                                                                                                 
 #        print "*** on_button_press_event"
+        (model, iter) = self.get_selection().get_selected()
 
-#        if event.button == 3:                                                                                                                                                       
-#            self.popup_menu.popup(None, None, None, event.button, event.time)                                                                                                       
-#            return True                                                                                                                                                         
+        if event.button == 3:                                                                                                                                                       
+            if not iter: return False
+            t = model.get_value(iter,3)
+            if t == "s":
+                self.card_popup.popup(None, None, None, event.button, event.time)                                                                                                       
+                return False                                                                                                                                                         
+            if t == "n":
+                self.node_popup.popup(None, None, None, event.button, event.time)                                                                                                       
+                return False                                                                                                                                                        
+            return False
+
         if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:                                                                                                              
-            (model, iter) = self.get_selection().get_selected()                                                                                                                         
             if not iter:                                                                                                                                                                
-                 return True
+                 return False
             else :
                  t = model.get_value(iter,3)
 #            	 print "********* select: " + str(t)
@@ -187,7 +283,7 @@ class MainTree(gtk.TreeView):
                              res = dlg.run()
                              dlg.hide()
                              if res == gtk.RESPONSE_NO:
-                                 return True
+                                 return False
                              # сперва очистим привязку у старого
                              model.set_value(it,2,None)
                              model.set_value(it,1,"")
@@ -205,5 +301,60 @@ class MainTree(gtk.TreeView):
                          snode.setProp("subdev", str(model.get_value(iter,5)));
                          snode.setProp("channel",str(model.get_value(iter,4)));
                          self.conf.mark_changes()
-	
-	    return True
+
+        return False
+
+    def on_add_card_activate(self,menuitem):
+    
+        (model, iter) = self.get_selection().get_selected()
+        if not iter: return
+
+        res = self.dlg_card.run()
+        self.dlg_card.hide()
+        if res != gtk.RESPONSE_OK:  
+            return
+ 
+        cm = self.cb_cardlist.get_model()
+        ind = self.cb_cardlist.get_active()        
+        cname = cm[ind][0]
+
+        if cname == "":
+           return
+
+        t = model.get_value(iter,3)
+        node_iter = None
+        if t == "s":
+            node_iter = model.get_value(iter,6)
+        elif t == "n":
+            node_iter = iter
+        else:
+            print "*** FAILED ELEMENT TYPE " + t
+            return
+
+        node = model.get_value(node_iter,2)
+
+        cnode = self.conf.xml.findNode(node,"iocards")[0]
+
+        if cnode == None:
+           cnode = node.newChild(None,"iocards",None)
+           if cnode == None:
+               print "************** FAILED CREATE CHILD for " + str(node)
+               return
+
+        n = cnode.newChild(None,"item",None)
+        n.setProp("name",cname)
+        n.setProp("card",str(self.card_num.get_value_as_int()))
+        n.setProp("baddr",self.card_ba.get_text())
+        self.conf.mark_changes()
+
+        info  = 'card=' + str(n.prop("card"))
+        info  = info + ' BA=' + str(n.prop("baddr"))
+
+        it = self.model.append(node_iter, [n.prop("name"),info,n,"s",n.prop("card"),0,node_iter])
+        self.build_channels_list(n,self.model,it)
+
+    def on_remove_card_activate(self,menuitem):
+        print "**********: remove card"
+
+    def on_edit_card_activate(self,menuitem):
+        print "**********: edit card"
