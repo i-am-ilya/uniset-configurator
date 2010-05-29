@@ -32,6 +32,7 @@ class SListDialog():
         self.tv.show_all()
 
         self.dlg = gtk.Dialog(_("Sensors list"),None,gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,(gtk.STOCK_OK,gtk.RESPONSE_OK,gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL))
+        self.dlg.set_default_size(500,400)
         scwin = gtk.ScrolledWindow();
         scwin.add(self.tv)
         scwin.show_all()

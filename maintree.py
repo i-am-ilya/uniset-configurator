@@ -104,7 +104,8 @@ class MainTree(gtk.TreeView):
         node = self.conf.xml.findNode(self.conf.xml.getDoc(),"nodes")[0].children.next 
 #        iter0 = self.model.append(None, [_("Nodes"),"",None,"",-1,-1,None])
         while node != None:
-            iter1 = self.model.append(None,[node.prop("name"),"",node,"n",node.prop("id"),0,None])
+            info = "id=" + str(node.prop("id")) + " ip=" + node.prop("ip")
+            iter1 = self.model.append(None,[node.prop("name"),info,node,"n",node.prop("id"),0,None])
             self.read_cards(node,iter1)
             node = self.conf.xml.nextNode(node)
 
@@ -246,10 +247,13 @@ class MainTree(gtk.TreeView):
                 return False                                                                                                                                                         
             if t == "n":
                 self.node_popup.popup(None, None, None, event.button, event.time)                                                                                                       
-                return False                                                                                                                                                        
-            return False
+                return False
 
-        if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:                                                                                                              
+#        if event.button == 1 and event.type != gtk.gdk._2BUTTON_PRESS:
+#            self.expand_row( model.get_path(iter), False )
+#            return False
+
+        if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
             if not iter:                                                                                                                                                                
                  return False
             else :
