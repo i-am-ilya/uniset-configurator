@@ -59,7 +59,7 @@ class MainTree(gtk.TreeView):
 
         self.cb_cardlist = gtk.combo_box_new_text()
         for cname in self.get_card_list():
-              self.cb_cardlist.append_text(cname)
+            self.cb_cardlist.append_text(cname)
 
         self.cb_cardlist.show_all()
 
@@ -96,8 +96,7 @@ class MainTree(gtk.TreeView):
         vb.pack_start(hb,True,True,3)
         vb.pack_start(hb1,True,True,3)
         vb.show()
-        self.dlg_card.vbox.pack_start(vb,True,True,0)        
-
+        self.dlg_card.vbox.pack_start(vb,True,True,0)
 
         self.show_all()
 
@@ -259,7 +258,7 @@ class MainTree(gtk.TreeView):
                  if t == "n": # node elemnt
                      pass
                  elif t == "s": # card element
-                     pass
+                     self.on_edit_card_activate(None)
                  elif t == "c": # channel element
                      snode = self.conf.dlg_slist.run(self,model.get_value(iter,2))
                      if snode != None:
@@ -314,10 +313,7 @@ class MainTree(gtk.TreeView):
         if res != gtk.RESPONSE_OK:  
             return
  
-        cm = self.cb_cardlist.get_model()
-        ind = self.cb_cardlist.get_active()        
-        cname = cm[ind][0]
-
+        cname = self.cb_cardlist.get_active_text()
         if cname == "":
            return
 
@@ -387,4 +383,38 @@ class MainTree(gtk.TreeView):
         self.conf.mark_changes()
 
     def on_edit_card_activate(self,menuitem):
-        print "**********: edit card"
+        (model, iter) = self.get_selection().get_selected()
+        if not iter: return
+
+        cnode = model.get_value(iter,2)
+
+        self.cb_cardlist.set_sensitive(False)
+
+		# select card
+        cn = cnode.prop("name")
+        m = self.cb_cardlist.get_model()
+        it = m.get_iter_first()
+        while it != None:
+           if str(m.get_value(it,0)) == cn:
+                self.cb_cardlist.set_active_iter(it)
+                break
+           it = m.iter_next(it)           
+
+        ba = cnode.prop("baddr")
+        if ba == None:
+            ba = ""
+        self.card_num.set_value( int(cnode.prop("card")))
+        self.card_ba.set_text(ba)
+        res = self.dlg_card.run()
+        self.dlg_card.hide()
+        self.cb_cardlist.set_sensitive(True)
+        if res != gtk.RESPONSE_OK:
+            return
+
+        cnode.setProp("card",str(self.card_num.get_value_as_int()))
+        cnode.setProp("baddr",self.card_ba.get_text())
+
+        info  = 'card=' + str(cnode.prop("card"))
+        info  = info + ' BA=' + str(cnode.prop("baddr"))
+        model.set_value(iter,1,info)
+        self.conf.mark_changes()
