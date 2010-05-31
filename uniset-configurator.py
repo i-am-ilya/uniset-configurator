@@ -8,7 +8,7 @@ import os
 import gtk
 import gobject
 import gtk.glade
-import maintree
+import io_maintree
 import configure
 import libxml2
 import UniXML
@@ -90,7 +90,7 @@ except:
 
   # main tree
 tree_swin = glade.get_widget("scwin_left")
-mtree = maintree.MainTree(conf)
-tree_swin.add(mtree)
+io_mtree = io_maintree.IOMainTree(conf)
+tree_swin.add(io_mtree)
 MainWindow()
 gtk.main()

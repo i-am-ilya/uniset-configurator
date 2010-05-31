@@ -767,11 +767,11 @@
 	<nodes port="2809">
 		<item id="3000" name="LocalhostNode" textname="Локальный узел" ip="127.0.0.1" dbserver="DBServer1">
 		  <iocards>
-			  <item name="DI32" card="1"/>
-			  <item name="AI16" card="2"/>
-		  </iocards>
+			  
+			  <item name="AI16" card="3" baddr=""/>
+		  <item name="DI32" card="2" baddr="0x120"/><item name="AI16" card="2" baddr=""/></iocards>
 		</item>
-		<item id="3001" name="GUI1Node" dbserver="DBServer1" textname="Графическая станция N1" ip="gui1" CANnodeID="0x01"/>
+		<item id="3001" name="GUI1Node" dbserver="DBServer1" textname="Графическая станция N1" ip="gui1" CANnodeID="0x01"><iocards><item name="UNIO48" card="2" baddr=""/></iocards></item>
 		<item id="3002" name="GUI2Node" dbserver="DBServer1" textname="Графическая станция N2" ip="gui2" CANnodeID="0x02"/>
 		<item id="3003" name="SESCPUNode" textname="Пульт ЦПУ (контроллер СЭС)" ip="sescpu" CANnodeID="0x03"/>
 		<item id="3004" name="SESNode" textname="КСЭС" ip="ses" CANnodeID="0x04"/>
@@ -795,9 +795,9 @@
 
 	<sensors name="Sensors" section="Sensors" no_check_depends="0">
 		
-		<item id="1" name="DefaultSensor" iotype="DI" io="3000" card="1" subdev="0" channel="1"/>
+		<item id="1" name="DefaultSensor" iotype="DI" card="1" subdev="0" channel="2"/>
 		
-		<item id="100" name="01_00_S" textname="Сигнал квитирования" iotype="DI"/>
+		<item id="100" name="01_00_S" textname="Сигнал квитирования" iotype="DI" io="3000" card="3" subdev="1" channel="0"/>
 		
 		<!-- Т01 Система масла ГДГ -->
 <!--NOT IN LIST
@@ -814,23 +814,23 @@
 		      textname="Давление смазочного масла ГДГ2"
 		      iotype="AI" />
 -->		
-		<item id="101" name="01_01_S" canTS="GDG1Node" CAN2sender="SYSTSNode" io="gdg1" unetGUITS="TSNode" aps="101" textname="Минимальное давление смазочного масла ГДГ1" mtype="1" iotype="DI" card="2" subdev="0" channel="3"/>
+		<item id="101" name="01_01_S" canTS="GDG1Node" CAN2sender="SYSTSNode" io="3000" unetGUITS="TSNode" aps="101" textname="Минимальное давление смазочного масла ГДГ1" mtype="1" iotype="DI" card="3" subdev="1" channel="1"/>
 		
-		<item id="102" name="01_02_S" canTS="GDG2Node" CAN2sender="SYSTSNode" io="3000" unetGUITS="TSNode" aps="101" textname="Минимальное давление смазочного масла ГДГ2" mtype="1" iotype="DI" card="2" subdev="1" channel="4"/>
+		<item id="102" name="01_02_S" canTS="GDG2Node" CAN2sender="SYSTSNode" io="3000" unetGUITS="TSNode" aps="101" textname="Минимальное давление смазочного масла ГДГ2" mtype="1" iotype="DI" card="3" subdev="1" channel="3"/>
 		
 		<item id="103" name="01_03_S" canTS="GDG1Node" CAN2sender="SYSTSNode" io="gdg1" unetGUITS="TSNode" aps="102" textname="Минимальное давление смазочного масла ГДГ1" mtype="2" iotype="DI" card="2" subdev="0" channel="23"/>
 		
 		<item id="104" name="01_04_S" canTS="GDG2Node" CAN2sender="SYSTSNode" io="gdg2" unetGUITS="TSNode" aps="102" textname="Минимальное давление смазочного масла ГДГ2" mtype="2" iotype="DI" card="2" subdev="0" channel="23"/>
 		
-		<item id="105" name="01_05_S" canTS="GDG1Node" CAN2sender="SYSTSNode" unetGUITS="TSNode" io="gdg1" textname="Дифференциальное давление смазочного масла ГДГ1 на фильтре" rmin="410" rmax="2060" cmin="0" cmax="100" iotype="AI" card="1" subdev="2" channel="2" aref="2"/>
+		<item id="105" name="01_05_S" canTS="GDG1Node" CAN2sender="SYSTSNode" unetGUITS="TSNode" io="3000" textname="Дифференциальное давление смазочного масла ГДГ1 на фильтре" rmin="410" rmax="2060" cmin="0" cmax="100" iotype="AI" card="3" subdev="1" channel="2" aref="2"/>
 		
-		<item id="106" name="01_06_S" canTS="GDG2Node" CAN2sender="SYSTSNode" unetGUITS="TSNode" io="gdg2" textname="Дифференциальное давление смазочного масла ГДГ2 на фильтре" rmin="410" rmax="2060" cmin="0" cmax="100" iotype="AI" card="1" subdev="2" channel="2" aref="2"/>
+		<item id="106" name="01_06_S" canTS="GDG2Node" CAN2sender="SYSTSNode" unetGUITS="TSNode" io="3000" textname="Дифференциальное давление смазочного масла ГДГ2 на фильтре" rmin="410" rmax="2060" cmin="0" cmax="100" iotype="AI" card="3" subdev="1" channel="3" aref="2"/>
 		
 		<item id="107" name="01_07_S" canTS="GDG1Node" CAN2sender="SYSTSNode" io="gdg1" unetGUITS="TSNode" aps="101" textname="Максимальная температура смазочного масла ГДГ1" mtype="1" iotype="DI" card="2" subdev="0" channel="5"/>
 
 		<item id="108" name="01_08_S" canTS="GDG2Node" CAN2sender="SYSTSNode" io="3000" unetGUITS="TSNode" aps="101" textname="Максимальная температура смазочного масла ГДГ2" mtype="1" iotype="DI" card="2" subdev="1" channel="5"/>
 
-		<item id="109" name="01_09_S" canTS="GDG1Node" CAN2sender="SYSTSNode" io="gdg1" unetGUITS="TSNode" aps="101" textname="Минимальный уровень смазочного масла в картере ГДГ1" mtype="1" iotype="DI" card="2" subdev="0" channel="6"/>
+		<item id="109" name="01_09_S" canTS="GDG1Node" CAN2sender="SYSTSNode" io="3000" unetGUITS="TSNode" aps="101" textname="Минимальный уровень смазочного масла в картере ГДГ1" mtype="1" iotype="DI" card="3" subdev="1" channel="5"/>
 
 		<item id="110" name="01_10_S" canTS="GDG2Node" CAN2sender="SYSTSNode" io="gdg2" unetGUITS="TSNode" aps="101" textname="Минимальный уровень смазочного масла в картере ГДГ2" mtype="1" iotype="DI" card="2" subdev="0" channel="6"/>
 
@@ -852,7 +852,7 @@
 		      textname="Минимальное давление смазочного масла на входе ГДГ2 (маслопрокачка при пуске)"
 		      iotype="DI" />-->
 		
-		<item id="111" name="01_11_S" aps="100" textname="Максимальный уровень масла в цистене отработанного масла МЦ-2" mtype="1" canTS="TS1Node" CAN2sender="SYSTSNode" unetGUITS="TSNode" io="ts1" iotype="DI" card="1" subdev="3" channel="3"/>
+		<item id="111" name="01_11_S" aps="100" textname="Максимальный уровень масла в цистене отработанного масла МЦ-2" mtype="1" canTS="TS1Node" CAN2sender="SYSTSNode" unetGUITS="TSNode" io="3000" iotype="DI" card="3" subdev="1" channel="7"/>
 		
 		<item id="112" name="01_12_S" aps="100" textname="Максимальный уровень масла в запасной цистене масла ГДГ МЦ-3" mtype="1" canTS="TS1Node" CAN2sender="SYSTSNode" unetGUITS="TSNode" io="ts1" iotype="DI" card="1" subdev="3" channel="4"/>
 		
@@ -895,7 +895,7 @@
 		
 		<item id="210" name="02_10_S" canTS="GDG1Node" CAN2sender="SYSTSNode" io="gdg1" unetGUITS="TSNode" aps="101" textname="Минимальное давление забортной воды охлаждения ГДГ1" mtype="1" iotype="DI" card="2" subdev="0" channel="21"/>
 		
-		<item id="211" name="02_11_S" canTS="GDG2Node" CAN2sender="SYSTSNode" io="gdg2" unetGUITS="TSNode" aps="101" textname="Минимальное давление забортной воды охлаждения ГДГ2" mtype="1" iotype="DI" card="2" subdev="0" channel="21"/>
+		<item id="211" name="02_11_S" canTS="GDG2Node" CAN2sender="SYSTSNode" io="3000" unetGUITS="TSNode" aps="101" textname="Минимальное давление забортной воды охлаждения ГДГ2" mtype="1" iotype="DI" card="3" subdev="1" channel="4"/>
 		
 		<item id="212" name="02_12_S" canTS="TSCPUNode" canGEU="GEUAPSNode" CAN2sender="SYSGEUNode" io="geuaps" unetGUITS="TSNode" aps="100" textname="Минимальный уровень охлаждающей воды в расширительной цистерне ПЧ" mtype="1" iotype="DI" card="2" subdev="0" channel="3"/>
 		
@@ -904,7 +904,7 @@
 		<item id="214" name="02_14_S" canTS="TSCPUNode" canGEU="GEUAPSNode" CAN2sender="SYSGEUNode" io="geuaps" unetGUITS="TSNode" aps="100" textname="Работает резервный насос охлаждающей забортной воды ГЭД и ПЧ" mtype="1" iotype="DI" card="2" subdev="0" channel="5"/>
 		<!-- Т03 Система топливная ГДГ -->
 		
-		<item id="301" name="03_01_S" canTS="GDG1Node" CAN2sender="SYSTSNode" io="3000" unetGUITS="TSNode" aps="101" textname="Минимальное давление топлива после фильтра ГДГ1" mtype="1" iotype="DI" card="1" subdev="0" channel="22"/>
+		<item id="301" name="03_01_S" canTS="GDG1Node" CAN2sender="SYSTSNode" unetGUITS="TSNode" aps="101" textname="Минимальное давление топлива после фильтра ГДГ1" mtype="1" iotype="DI" card="1" subdev="0" channel="22"/>
 		
 		<item id="302" name="03_02_S" canTS="GDG2Node" CAN2sender="SYSTSNode" io="gdg2" unetGUITS="TSNode" aps="101" textname="Минимальное давление топлива после фильтра ГДГ2" mtype="1" iotype="DI" card="2" subdev="0" channel="2"/>
 		
@@ -944,7 +944,7 @@
 			
 			<item id="320" name="03_20_AS" canTS="TS2Node" CAN2sender="SYSTSNode" unetGUITS="TSNode" io="ts2" textname="Уровень в запасной цистерне топлива ТЦ-11" iir_thr="3000" filtersize="6" iotype="AI" card="1" subdev="2" channel="0" aref="2" range="1" rmin="808" rmax="4096" cmin="0" cmax="100"/>
 			
-			<item id="321" name="03_21_S" aps="100" textname="Максимальный уровень в запасной цистерне топлива ТЦ-11" mtype="1" canTS="TS2Node" CAN2sender="SYSTSNode" unetGUITS="TSNode" threshold_aid="03_20_AS" lowlimit="88" hilimit="90" io="ts2" iotype="DI"/>
+			<item id="321" name="03_21_S" aps="100" textname="Максимальный уровень в запасной цистерне топлива ТЦ-11" mtype="1" canTS="TS2Node" CAN2sender="SYSTSNode" unetGUITS="TSNode" threshold_aid="03_20_AS" lowlimit="88" hilimit="90" io="3000" iotype="DI" card="3" subdev="1" channel="6"/>
 			
 			<item id="322" name="03_22_AS" canTS="TS2Node" CAN2sender="SYSTSNode" unetGUITS="TSNode" io="ts2" textname="Уровень в запасной цистерне топлива ТЦ-12" iir_thr="3000" filtersize="6" iotype="AI" card="1" subdev="2" channel="1" aref="2" range="1" rmin="808" rmax="4096" cmin="0" cmax="100"/>
 			
@@ -4349,7 +4349,7 @@
 		<item id="70000" name="TestMode_S" textname="test node sensor" iotype="DI"/>
 		<item id="70002" name="GEUCPUNode_TestMode_S" textname="test node sensor" iotype="DI"/>
 		<item id="70003" name="GEUPUSNode_TestMode_S" textname="test node sensor" iotype="DI"/>
-		<item id="70004" name="GEUNode_TestMode_S" textname="test node sensor" iotype="DI" io="3000" card="1" subdev="0" channel="6"/>
+		<item id="70004" name="GEUNode_TestMode_S" textname="test node sensor" iotype="DI" card="1" subdev="0" channel="6"/>
 		<item id="70005" name="GEUAPSNode_TestMode_S" textname="test node sensor" iotype="DI"/>
 		<item id="70006" name="GUITSNode_TestMode_S" textname="test node sensor" iotype="DI"/>
 		<item id="70007" name="TSCPUNode_TestMode_S" textname="test node sensor" iotype="DI"/>
