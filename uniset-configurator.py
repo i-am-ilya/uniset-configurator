@@ -8,12 +8,16 @@ import os
 import gtk
 import gobject
 import gtk.glade
-import io_maintree
 import configure
 import libxml2
 import UniXML
 import locale
-import dlg_slist
+
+# modules
+import io_main
+import can_main
+
+
 
 locale.setlocale(locale.LC_ALL, "ru_RU.UTF8")
 
@@ -52,6 +56,7 @@ class MainWindow(gtk.Widget):
             conf.reopen(confile)
 
     def on_quit_activate(self, data):
+        self.check_changes()
         gtk.main_quit()
 
     def check_changes(self):
@@ -61,6 +66,7 @@ class MainWindow(gtk.Widget):
             if res == gtk.RESPONSE_YES:
                os.rename(conf.xml.getFileName(),str(conf.xml.getFileName())+".bak")
                conf.xml.save()
+            conf.unmark_changes()
 
 
 #def main():
@@ -88,9 +94,29 @@ except:
    dialog.run()
    dialog.destroy()
 
-  # main tree
-tree_swin = glade.get_widget("scwin_left")
-io_mtree = io_maintree.IOMainTree(conf)
-tree_swin.add(io_mtree)
+
+def add_module( face, lbl, mainbook, glade ):
+    # main tree
+    scwin = gtk.ScrolledWindow()
+    scwin.show()
+    scwin.add(face)
+    face.show()
+    l = gtk.Label(lbl)
+    l.show()
+    mainbook.append_page(scwin,l)
+
+
+mainbook = glade.get_widget("mainbook")
+
+# I/O configure
+io_mtree = io_main.IOMain(conf)
+add_module(io_mtree,"I/O",mainbook,glade)
+
+# CAN configure
+can_mtree = can_main.CANMain(conf)
+add_module(can_mtree,"CAN",mainbook,glade)
+
+# ---------------
+mainbook.show()
 MainWindow()
 gtk.main()

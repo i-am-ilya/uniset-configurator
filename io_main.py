@@ -5,7 +5,7 @@ import gobject
 import UniXML
 import configure
 
-class IOMainTree(gtk.TreeView):
+class IOMain(gtk.TreeView):
 
     xml = None
 

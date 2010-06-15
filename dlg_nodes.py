@@ -4,14 +4,14 @@ import gtk
 import gobject
 import UniXML
 
-class SListDialog():
+class NodesDialog():
 
     xml = None
 
     def __init__(self, xml):
 
         self.xml = xml
-        #                          ID|Name|Textname
+        #                          id | name | textname | xmlnode
         self.model = gtk.ListStore(gobject.TYPE_STRING,gobject.TYPE_STRING,gobject.TYPE_STRING,object)
 
         self.tv = gtk.TreeView()
@@ -32,7 +32,7 @@ class SListDialog():
 
         self.tv.show_all()
 
-        self.dlg = gtk.Dialog(_("Sensors list"),None,gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,(gtk.STOCK_OK,gtk.RESPONSE_OK,gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL))
+        self.dlg = gtk.Dialog(_("Nodes list"),None,gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,(gtk.STOCK_OK,gtk.RESPONSE_OK,gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL))
         self.dlg.set_default_size(500,400)
         scwin = gtk.ScrolledWindow();
         scwin.add(self.tv)
@@ -45,7 +45,7 @@ class SListDialog():
 
     def build_tree(self):
 
-        node = self.xml.findNode(self.xml.getDoc(),"sensors")[0].children.next 
+        node = self.xml.findNode(self.xml.getDoc(),"nodes")[0].children.next 
         while node != None:
             self.model.append([node.prop("id"),node.prop("name"),node.prop("textname"),node])
             node = self.xml.nextNode(node)
@@ -64,19 +64,16 @@ class SListDialog():
     def add_columns(self):
         
         renderer = gtk.CellRendererText()
-#        renderer.set_property("xalign", 0.0)
         column = gtk.TreeViewColumn(_("ID"), renderer, text=0)
         column.set_clickable(False)
         self.tv.append_column(column)
 
         renderer = gtk.CellRendererText()
-#        renderer.set_property("xalign", 0.0)
         column = gtk.TreeViewColumn(_("Name"), renderer, text=1)
         column.set_clickable(False)
         self.tv.append_column(column)
 
         renderer = gtk.CellRendererText()
-#        renderer.set_property("xalign", 0.0)
         column = gtk.TreeViewColumn(_("TextName"), renderer, text=1)
         column.set_clickable(False)
         self.tv.append_column(column)
@@ -93,6 +90,7 @@ class SListDialog():
     def set_selected(self, sel):
         ts = self.tv.get_selection()
         ts.unselect_all()
+
         it = self.model.get_iter_first()
         while it is not None:
             if self.model.get_value(it, 3) == sel:
@@ -101,9 +99,7 @@ class SListDialog():
             it = self.model.iter_next(it)
 
     def run(self,rootwin,select):
-#        if rootwin:
-#            self.dlg.set_transient_for(rootwin)
-
+ 
         if select:
            self.set_selected(select)
 
