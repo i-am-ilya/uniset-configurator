@@ -62,7 +62,20 @@ class UniXML(str):
                 return node
             if node.name != "text" and node.name != "comment":
                   return node
+        return None
 
+    def getNode(self, node):
+        if node.name != "text" and node.name != "comment":
+           return node
+        return self.nextNode(node)
+
+    def firstNode(self, node):
+        while node != None:
+            node = node.prev
+            if node == None:
+                break
+        return self.getNode(node)
+        
     def getProp(self, node, str):
         prop = node.prop(str)
         if prop != None:
