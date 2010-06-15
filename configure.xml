@@ -767,9 +767,8 @@
 	<nodes port="2809">
 		<item id="3000" name="LocalhostNode" textname="Локальный узел" ip="127.0.0.1" dbserver="DBServer1">
 		  <iocards>
-			  
 			  <item name="AI16" card="3" baddr=""/>
-		  <item name="DI32" card="2" baddr="0x120"/><item name="AI16" card="2" baddr=""/></iocards>
+			  <item name="DI32" card="2" baddr="0x120"/><item name="AI16" card="2" baddr=""/></iocards>
 		</item>
 		<item id="3001" name="GUI1Node" dbserver="DBServer1" textname="Графическая станция N1" ip="gui1" CANnodeID="0x01"><iocards><item name="UNIO48" card="2" baddr=""/></iocards></item>
 		<item id="3002" name="GUI2Node" dbserver="DBServer1" textname="Графическая станция N2" ip="gui2" CANnodeID="0x02"/>

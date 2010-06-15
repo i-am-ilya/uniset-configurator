@@ -4,6 +4,8 @@
 
 import sys
 import libxml2
+import xml.dom.minidom as md
+#import re
 
 class UniXML(str):
     def __init__(self, str):
@@ -68,9 +70,13 @@ class UniXML(str):
         else:
             return ""
 
-    def save(self, filename=None):
+    def save(self, filename=None, pretty_format=True):
         if filename == None:
            filename = self.fname
+        
+        if pretty_format == True:
+		   return self.pretty_save(filename)
+
         return self.doc.saveFile(filename)
 
     def reopen(self, filename):
@@ -80,3 +86,13 @@ class UniXML(str):
             self.doc = libxml2.parseFile(filename)
         except libxml2.parserError:
             sys.exit(-1)
+
+    def pretty_save(self, filename):
+        context = self.doc.serialize(encoding="utf-8")
+        mdoc = md.parseString(context) 
+        s = mdoc.toprettyxml(encoding="utf-8").split("\n")
+        out = open(filename,"w")
+        for l in s:
+            if l.strip():
+               out.write(l+"\n")
+        out.close()
