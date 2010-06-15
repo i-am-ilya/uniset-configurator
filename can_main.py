@@ -225,12 +225,14 @@ class CANMain(gtk.TreeView):
     def on_node_select(self, btn):
         if btn == self.btn_selnode:
              print "****** node select"
-             node = self.conf.dlg_nodes.run(self,"") # self.node_name.get_text())
+             self.conf.dlg_nodes.set_select_name(self.node_name.get_text())
+             node = self.conf.dlg_nodes.run(self)
              if node != None:
                  self.node_name.set_text(node.prop("name"))
         elif btn == self.btn_sel_hbsensor:
-             print "****** hb sensor select " + self.hb_sensor.get_text()
-             snode = self.conf.dlg_slist.run(self,"") # self.hb_sensor.get_text())
+             print "****** hb sensor select "
+             self.conf.dlg_slist.set_selected_name(self.hb_sensor.get_text())
+             snode = self.conf.dlg_slist.run(self)
              if snode != None:
                  self.hb_sensor.set_text(snode.prop("name"))
          

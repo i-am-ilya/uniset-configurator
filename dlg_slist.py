@@ -11,7 +11,7 @@ class SListDialog():
     def __init__(self, xml):
 
         self.xml = xml
-        #                          ID|Name|Textname
+        #                          ID|Name|Textname|xmlnode
         self.model = gtk.ListStore(gobject.TYPE_STRING,gobject.TYPE_STRING,gobject.TYPE_STRING,object)
 
         self.tv = gtk.TreeView()
@@ -90,22 +90,45 @@ class SListDialog():
             self.dlg.response(gtk.RESPONSE_OK)			
         return False
 
-    def set_selected(self, sel):
+    def set_selected_xmlnode(self, sel):
         ts = self.tv.get_selection()
         ts.unselect_all()
         it = self.model.get_iter_first()
         while it is not None:
-            if self.model.get_value(it, 3) == sel:
+            if self.model.get_value(it, 3) == sel: # check iterator
                 ts.select_iter(it)
+                self.tv.scroll_to_cell( self.model.get_path(it) )
+                return
+            it = self.model.iter_next(it)
+    
+    def set_selected_name(self, sel):
+        ts = self.tv.get_selection()
+        ts.unselect_all()
+        it = self.model.get_iter_first()
+        while it is not None:
+            if self.model.get_value(it, 1) == sel:
+                ts.select_iter(it)
+                self.tv.scroll_to_cell( self.model.get_path(it) )
                 return
             it = self.model.iter_next(it)
 
-    def run(self,rootwin,select):
+    def set_selected_id(self, sel):
+        ts = self.tv.get_selection()
+        ts.unselect_all()
+
+        it = self.model.get_iter_first()
+        while it is not None:
+            if self.model.get_value(it,0) == sel:
+                ts.select_iter(it)
+                self.tv.scroll_to_cell( self.model.get_path(it) )
+                return
+            it = self.model.iter_next(it)
+    
+    def run(self,rootwin, xmlnode=None):
 #        if rootwin:
 #            self.dlg.set_transient_for(rootwin)
-
-        if select:
-           self.set_selected(select)
+        if xmlnode != None:
+           self.set_selected_xmlnode(xmlnode)
 
 #        self.dlg.maximize()
         res = self.dlg.run()
