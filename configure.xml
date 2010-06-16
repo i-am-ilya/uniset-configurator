@@ -619,9 +619,8 @@
 		</MTR>
 		<GUI SaveDir="/tmp">
 		</GUI>
-
 		<CAN_Net>
-			<TSCanNetwork TestModeSensor="TestMode_S" name="TSCanNetwork" comment="CAN СУ ТС">
+			<TSCanNetwork TestModeSensor="TestMode_S" comment="CAN СУ ТС" name="TSCanNetwork">
 				<!--	<node name="GUITSNode" nodeID="0x10" eds="guits.eds"
 				      TestMode="GUITSNode_TestMode_S"
 				      respondSensor1="CAN1_GUITS_Not_Respond_FS"
@@ -635,17 +634,17 @@
 				<node TestMode="TS2Node_TestMode_S" eds="ts2.eds" hbSensor="_31_20_AS" name="TS2Node" nodeID="0x60" nodeRespondSensor="CAN_TS2_Not_Respond_FS" respondSensor1="CAN1_TS2_Not_Respond_FS" respondSensor2="CAN2_TS2_Not_Respond_FS"/>
 				<node TestMode="TSPUSNode_TestMode_S" eds="tspus.eds" hbSensor="_31_51_AS" name="TSPUSNode" nodeID="0x70" nodeRespondSensor="CAN_TSPUS_Not_Respond_FS" respondSensor1="CAN1_TSPUS_Not_Respond_FS" respondSensor2="CAN2_TSPUS_Not_Respond_FS"/>
 			</TSCanNetwork>
-			<GEUCanNetwork TestModeSensor="TestMode_S" name="CanGEUNetwork" comment="CAN СУ ГЭУ">
+			<GEUCanNetwork TestModeSensor="TestMode_S" comment="CAN СУ ГЭУ" name="CanGEUNetwork">
 				<node TestMode="GEUAPSNode_TestMode_S" eds="geuaps.eds" hbSensor="_31_26_AS" name="GEUAPSNode" nodeID="0x10" nodeRespondSensor="CAN_GEUAPS_Not_Respond_FS" respondSensor1="CAN1_GEUAPS_Not_Respond_FS" respondSensor2="CAN2_GEUAPS_Not_Respond_FS"/>
 				<node TestMode="GEUCPUNode_TestMode_S" eds="geucpu.eds" hbSensor="_31_24_AS" name="GEUCPUNode" nodeID="0x20" nodeRespondSensor="CAN_GEUCPU_Not_Respond_FS" respondSensor1="CAN1_GEUCPU_Not_Respond_FS" respondSensor2="CAN2_GEUCPU_Not_Respond_FS"/>
 				<node TestMode="GEUPUSNode_TestMode_S" eds="geupus.eds" hbSensor="_31_29_AS" name="GEUPUSNode" nodeID="0x30" nodeRespondSensor="CAN_GEUPUS_Not_Respond_FS" respondSensor1="CAN1_GEUPUS_Not_Respond_FS" respondSensor2="CAN2_GEUPUS_Not_Respond_FS"/>
 				<node TestMode="GEUNode_TestMode_S" eds="geu.eds" hbSensor="_31_25_AS" name="GEUNode" nodeID="0x40" nodeRespondSensor="CAN_GEU_Not_Respond_FS" respondSensor1="CAN1_GEU_Not_Respond_FS" respondSensor2="CAN2_GEU_Not_Respond_FS"/>
 			</GEUCanNetwork>
-			<SESCanNetwork TestModeSensor="TestMode_S" name="SESCanNetwork" comment="CAN СУ СЭС">
+			<SESCanNetwork TestModeSensor="TestMode_S" comment="CAN СУ СЭС" name="SESCanNetwork">
 				<node TestMode="SESCPUNode_TestMode_S" eds="sescpu.eds" hbSensor="_31_15_AS" name="SESCPUNode" nodeID="0x10" nodeRespondSensor="CAN_SESCPU_Not_Respond_FS" respondSensor1="CAN1_SESCPU_Not_Respond_FS" respondSensor2="CAN2_SESCPU_Not_Respond_FS"/>
 				<node TestMode="SESNode_TestMode_S" eds="ses.eds" hbSensor="_31_16_AS" name="SESNode" nodeID="0x20" nodeRespondSensor="CAN_SES_Not_Respond_FS" respondSensor1="CAN1_SES_Not_Respond_FS" respondSensor2="CAN2_SES_Not_Respond_FS"/>
 			</SESCanNetwork>
-			<GlobalCanNetwork name="GlobalCanNetwork" comment="Общесудовой CAN">
+			<GlobalCanNetwork comment="Общесудовой CAN" name="GlobalCanNetwork">
 				<node TestMode="GUI1Node_TestMode_S" eds="gui1.eds" hbSensor="_31_27_AS" name="GUI1Node" nodeID="0x11" nodeRespondSensor="CAN_GUI1_Not_Respond_FS" respondSensor1="CAN1_GUI1_Not_Respond_FS" respondSensor2="CAN2_GUI1_Not_Respond_FS"/>
 				<node TestMode="GUI2Node_TestMode_S" eds="gui2.eds" hbSensor="_31_28_AS" name="GUI2Node" nodeID="0x21" nodeRespondSensor="CAN_GUI2_Not_Respond_FS" respondSensor1="CAN1_GUI2_Not_Respond_FS" respondSensor2="CAN2_GUI2_Not_Respond_FS"/>
 				<node TestMode="SYSSESNode_TestMode_S" eds="sessys.eds" hbSensor="_31_48_AS" name="SYSSESNode" nodeID="0x31" nodeRespondSensor="CAN_SYSSES_Not_Respond_FS" respondSensor1="CAN1_SYSSES_Not_Respond_FS" respondSensor2="CAN2_SYSSES_Not_Respond_FS"/>
@@ -653,7 +652,6 @@
 				<node TestMode="SYSGEUNode_TestMode_S" eds="geusys.eds" hbSensor="_31_49_AS" name="SYSGEUNode" nodeID="0x61" nodeRespondSensor="CAN_SYSGEU_Not_Respond_FS" respondSensor1="CAN1_SYSGEU_Not_Respond_FS" respondSensor2="CAN2_SYSGEU_Not_Respond_FS"/>
 			</GlobalCanNetwork>
 		</CAN_Net>
-		
 	</settings>
 	<ObjectsMap idfromfile="1" no_dep="0">
 		<!--
@@ -740,13 +738,24 @@
 					<item baddr="0x120" card="2" name="DI32"/>
 					<item baddr="" card="2" name="AI16"/>
 				</iocards>
+				<can>
+					<item eds="tscpu.eds" hbSensor="_31_23_AS" net="TSSYS" nodeID="0x10" respond="01_06_S" respond1="01_07_S" respond2="01_08_S"/>
+					<item eds="sescpu.eds" hbSensor="_31_23_AS" net="TSSYS" nodeID="0x10" respond="01_06_S" respond1="01_07_S" respond2="01_08_S"/>
+				</can>
 			</item>
 			<item CANnodeID="0x01" dbserver="DBServer1" id="3001" ip="gui1" name="GUI1Node" textname="Графическая станция N1">
 				<iocards>
 					<item baddr="" card="2" name="UNIO48"/>
 				</iocards>
+				<can>
+					<item Respond1="" Respond2="" eds="" hbSensor="" net="" nodeID="" nodeRespond=""/>
+				</can>
 			</item>
-			<item CANnodeID="0x02" dbserver="DBServer1" id="3002" ip="gui2" name="GUI2Node" textname="Графическая станция N2"/>
+			<item CANnodeID="0x02" dbserver="DBServer1" id="3002" ip="gui2" name="GUI2Node" textname="Графическая станция N2">
+				<can>
+					<item Respond1="" Respond2="" eds="" hbSensor="" net="" nodeID="" nodeRespond=""/>
+				</can>
+			</item>
 			<item CANnodeID="0x03" id="3003" ip="sescpu" name="SESCPUNode" textname="Пульт ЦПУ (контроллер СЭС)"/>
 			<item CANnodeID="0x04" id="3004" ip="ses" name="SESNode" textname="КСЭС"/>
 			<item CANnodeID="0x05" id="3005" ip="gdg1" name="GDG1Node" textname="ЩС ГДГ1"/>
@@ -764,7 +773,6 @@
 			<item CANnodeID="0x18" id="3018" ip="sescpu" name="SYSSESNode" textname="СУ СЭС"/>
 			<item CANnodeID="0x19" id="3019" ip="tspus" name="TSPUSNode" textname="Пульт ПУС (контроллер ТС)"/>
 		</nodes>
-		
 		<!-- ************************ Датчики ********************** -->
 		<sensors name="Sensors" no_check_depends="0" section="Sensors">
 			<item card="1" channel="2" id="1" iotype="DI" name="DefaultSensor" subdev="0"/>
