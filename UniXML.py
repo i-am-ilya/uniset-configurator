@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# $Id: UniXML.py,v 1.3 2006/09/12 16:57:28 lav Exp $
 
 import sys
 import libxml2

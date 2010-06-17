@@ -105,7 +105,7 @@ class IOMain(gtk.TreeView):
 #        iter0 = self.model.append(None, [_("Nodes"),"",None,"",-1,-1,None])
         while node != None:
             info = "id=" + str(node.prop("id")) + " ip=" + node.prop("ip")
-            iter1 = self.model.append(None,[node.prop("name"),info,node,"n",node.prop("id"),0,None])
+            iter1 = self.model.append(None,[node.prop("name"),info,node,"node",node.prop("id"),0,None])
             self.read_cards(node,iter1)
             node = self.conf.xml.nextNode(node)
 
@@ -117,7 +117,7 @@ class IOMain(gtk.TreeView):
         while node != None:
             info  = 'card=' + str(node.prop("card"))
             info  = info + ' BA=' + str(node.prop("baddr"))
-            iter2 = self.model.append(iter, [node.prop("name"),info,node,"s",node.prop("card"),0,iter])
+            iter2 = self.model.append(iter, [node.prop("name"),info,node,"card",node.prop("card"),0,iter])
             self.build_channels_list(node,self.model,iter2)
             node = self.conf.xml.nextNode(node)
 
@@ -136,29 +136,29 @@ class IOMain(gtk.TreeView):
     
     def build_di32_list(self,card,model,iter):
         for i in range(0,32):
-            model.append(iter, [_("ch_")+str(i),"",card,"c",str(i),"0",iter])
+            model.append(iter, [_("ch_")+str(i),"",card,"channel",str(i),"0",iter])
 
     def build_ai16_list(self,card,model,iter):
         for i in range(0,8):
-            model.append(iter, [_("J2:")+str(i),"",card,"c",str(i),"0",iter])
+            model.append(iter, [_("J2:")+str(i),"",card,"channel",str(i),"0",iter])
         for i in range(0,8):
-            model.append(iter, [_("J3:")+str(i),"",card,"c",str(i),"1",iter])
+            model.append(iter, [_("J3:")+str(i),"",card,"channel",str(i),"1",iter])
 
     def build_unio48_list(self,card,model,iter):
         for i in range(0,24):
-            model.append(iter, [_("J1:")+str(i),"",card,"c",str(i),"0",iter])
+            model.append(iter, [_("J1:")+str(i),"",card,"channel",str(i),"0",iter])
         for i in range(0,24):
-            model.append(iter, [_("J2:")+str(i),"",card,"c",str(i),"1",iter])
+            model.append(iter, [_("J2:")+str(i),"",card,"channel",str(i),"1",iter])
 
     def build_unio96_list(self,card,model,iter):
         for i in range(0,24):
-            model.append(iter, [_("J1:")+str(i),"",card,"c",str(i),"0",iter])
+            model.append(iter, [_("J1:")+str(i),"",card,"channel",str(i),"0",iter])
         for i in range(0,24):
-            model.append(iter, [_("J2:")+str(i),"",card,"c",str(i),"1",iter])
+            model.append(iter, [_("J2:")+str(i),"",card,"channel",str(i),"1",iter])
         for i in range(0,24):
-            model.append(iter, [_("J3:")+str(i),"",card,"c",str(i),"2",iter])
+            model.append(iter, [_("J3:")+str(i),"",card,"channel",str(i),"2",iter])
         for i in range(0,24):
-            model.append(iter, [_("J4:")+str(i),"",card,"c",str(i),"3",iter])
+            model.append(iter, [_("J4:")+str(i),"",card,"channel",str(i),"3",iter])
 
     def init_channels(self):
     # проходим по <sensors> и если поля заполнены ищем в нашем TreeView
@@ -222,18 +222,22 @@ class IOMain(gtk.TreeView):
         column.set_clickable(False)
         self.append_column(column)
 
-    def check_connection(self,snode,it0):
-       it = self.model.iter_children(it0)
-       while it is not None:                                                                                                                                                        
-           if self.model.get_value(it,2) == snode:
-               return [snode,it]
-           
-           s,i = self.check_connection(snode,it)
-           if s is not None: return [s,i]
-           
+    def check_connection(self,snode):
+       it = self.model.get_iter_first() # node level
+       while it is not None: 
+           it_card = self.model.iter_children(it) # card level
+           if it_card is not None:
+                while it_card != None:
+                    it_ch = self.model.iter_children(it_card) # channel level
+                    if it_ch != None:
+                         while it_ch != None:
+                             if self.model.get_value(it_ch,2) == snode:     
+                                   return [it,it_card,it_ch]
+                             it_ch = self.model.iter_next(it_ch)
+                    it_card = self.model.iter_next(it_card)
            it = self.model.iter_next(it)           
        
-       return [None,None]                                                                                              
+       return [None,None,None]
 
     def on_button_press_event(self, object, event):                                                                                                                                 
 #        print "*** on_button_press_event"
@@ -242,10 +246,10 @@ class IOMain(gtk.TreeView):
         if event.button == 3:                                                                                                                                                       
             if not iter: return False
             t = model.get_value(iter,3)
-            if t == "s":
+            if t == "card":
                 self.card_popup.popup(None, None, None, event.button, event.time)                                                                                                       
                 return False                                                                                                                                                         
-            if t == "n":
+            if t == "node":
                 self.node_popup.popup(None, None, None, event.button, event.time)                                                                                                       
                 return False
 
@@ -259,11 +263,11 @@ class IOMain(gtk.TreeView):
             else :
                  t = model.get_value(iter,3)
 #            	 print "********* select: " + str(t)
-                 if t == "n": # node elemnt
+                 if t == "node":
                      pass
-                 elif t == "s": # card element
+                 elif t == "card": 
                      self.on_edit_card_activate(None)
-                 elif t == "c": # channel element
+                 elif t == "channel":
                      snode = self.conf.dlg_slist.run(self,model.get_value(iter,2))
                      if snode != None:
 
@@ -274,13 +278,11 @@ class IOMain(gtk.TreeView):
                          node = model.get_value(node_iter,2)
                          node_id = model.get_value(node_iter,4) # node.prop("id")
 #                         if node_id == "": node_id = node.prop("name")
-                     
-                         it0 = self.model.get_iter_first()
-                         cn,it = self.check_connection(snode,it0)
-                         if cn is not None:
-#                             print "************** ALREADY EXIST: " + str(cn)
-                             msg = "'" + snode.prop("name") + "' " + ("Already connection!") 
-                             addr = " (" + node.prop("name") + ":" + self.model.get_value(card_iter,0) + ":" + model.get_value(it,4) +")\n Reconnection?"
+                         
+                         n_it,cd_it,ch_it = self.check_connection(snode)
+                         if ch_it is not None:
+                             msg = "'" + snode.prop("name") + "' " + _("Already connection!") 
+                             addr = " (" + self.model.get_value(n_it,0) + ":" + self.model.get_value(cd_it,0) + ":" + self.model.get_value(ch_it,0) +_(")\n Reconnection?")
                              msg = msg + addr
                              dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,msg)
                              res = dlg.run()
@@ -288,13 +290,12 @@ class IOMain(gtk.TreeView):
                              if res == gtk.RESPONSE_NO:
                                  return False
                              # сперва очистим привязку у старого
-                             model.set_value(it,2,None)
-                             model.set_value(it,1,"")
-                             cn.setProp("io","")
-                             cn.setProp("card","")
-                             cn.setProp("subdev", "")
-                             cn.setProp("channel","")
-                             
+                             model.set_value(ch_it,2,None)
+                             model.set_value(ch_it,1,"")
+                             snode.setProp("io","")
+                             snode.setProp("card","")
+                             snode.setProp("subdev", "")
+                             snode.setProp("channel","")
                          
                          model.set_value(iter,2,snode)
                          model.set_value(iter,1,snode.prop("name"))
@@ -323,9 +324,9 @@ class IOMain(gtk.TreeView):
 
         t = model.get_value(iter,3)
         node_iter = None
-        if t == "s":
+        if t == "card":
             node_iter = model.get_value(iter,6)
-        elif t == "n":
+        elif t == "node":
             node_iter = iter
         else:
             print "*** FAILED ELEMENT TYPE " + t
@@ -350,7 +351,7 @@ class IOMain(gtk.TreeView):
         info  = 'card=' + str(n.prop("card"))
         info  = info + ' BA=' + str(n.prop("baddr"))
 
-        it = self.model.append(node_iter, [n.prop("name"),info,n,"s",n.prop("card"),0,node_iter])
+        it = self.model.append(node_iter, [n.prop("name"),info,n,"card",n.prop("card"),0,node_iter])
         self.build_channels_list(n,self.model,it)
         self.conf.mark_changes()
 
