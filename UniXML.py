@@ -45,6 +45,13 @@ class UniXML(str):
             node = node.next
         return [None, None, None]
 
+    def findMyLevel(self, node, nodestr="", propstr=""):
+        while node != None:
+            if node.name == nodestr:
+                return [node, node.name, node.prop(propstr)]
+            node = node.next
+        return [None, None, None]
+    
     def findNode_byProp(self, node, propstr, valuestr):
         while node != None:
             if node.prop(propstr) == valuestr:

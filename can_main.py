@@ -181,7 +181,8 @@ class CANMain(gtk.TreeView):
     def build_tree(self):
         node = self.conf.xml.findNode(self.conf.xml.getDoc(),"nodes")[0].children.next 
         while node != None:
-             cannode = self.conf.xml.findNode(node,"can")
+             cannode = self.conf.xml.findMyLevel(node.children,"can")
+             cnode = None
              if cannode[0] != None:
                  cnode = cannode[0].children.next
              while cnode != None:
@@ -203,10 +204,10 @@ class CANMain(gtk.TreeView):
          return True
 
     def add_node(self,cannode,node,iter):
-            info  = ' eds=' + str(cannode.prop("eds"))
-            info  = info + ' nodeID=' + str(cannode.prop("nodeID"))
-            info  = info + '...'
-            self.model.append(iter,[node.prop("name"),info,cannode,"node",iter,node])
+         info  = 'nodeID=' + str(cannode.prop("nodeID"))
+         info  = info + '; eds=' + str(cannode.prop("eds"))
+         info  = info + ';...'
+         return self.model.append(iter,[node.prop("name"),info,cannode,"node",iter,node])
 
     def on_button_press_event(self, object, event):                                                                                                                                 
 #        print "*** on_button_press_event"
@@ -244,19 +245,70 @@ class CANMain(gtk.TreeView):
         iter = self.model.append(None,[name,"",None,"net",None,None])
         self.netlist.append([name,iter])
         self.conf.mark_changes()
-        pass
 
     def on_remove_net_activate(self, menuitem):
         self.conf.mark_changes()
-        pass
+
+    def check_node( self, node, rootiter ):
+       it = self.model.iter_children(rootiter)
+       while it is not None:                     
+           if self.model.get_value(it,5) == node:
+               return it
+           it = self.model.iter_next(it)           
+       
+       return None     
+
+    def check_nodeID( self, nodeID, rootiter ):
+       it = self.model.iter_children(rootiter)
+       while it is not None:                     
+           if self.model.get_value(it,2).prop("nodeID") == nodeID:
+               return it
+           it = self.model.iter_next(it)           
+       
+       return None     
 
     def on_add_node_activate(self, menuitem):
+        (model, iter) = self.get_selection().get_selected()
+        if not iter: return
+        
+        node = self.conf.dlg_nodes.run(self,None)
+        if node == None:
+             return
+        
+        etype = model.get_value(iter,3)
+        
+        rootiter=iter
+        if etype == "node":
+            rootiter = self.model.get_value(iter,4)
+        
+        if self.check_node(node,rootiter) != None:
+           msg = "'" + node.prop("name") + "' " + _("already added!") 
+           dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
+           res = dlg.run()
+           dlg.hide()
+           return
+
+        cnode = self.conf.xml.findMyLevel(node.children,"can")[0]
+        if cnode == None:
+            cnode = node.newChild(None,"can",None)
+            if cnode == None:
+               print "************** FAILED CREATE <can> for " + str(node.prop("name"))
+               return        
+
+        n = cnode.newChild(None,"item",None)
+        n.setProp("net", self.model.get_value(rootiter,0))
+        n.setProp("eds","")
+        n.setProp("hbSensor","")
+        n.setProp("nodeID","")
+        n.setProp("respond","")
+        n.setProp("respond1","")
+        n.setProp("respond2","")
+        it = self.add_node(n,node,rootiter)
+        self.edit_node(it)
         self.conf.mark_changes()
-        pass
 
     def on_remove_node_activate(self, menuitem):
         self.conf.mark_changes()
-        pass
 
     def init_text_param(self,node,pname):
         t = node.prop(pname)
@@ -267,9 +319,11 @@ class CANMain(gtk.TreeView):
     def on_edit_node_activate(self, menuitem):
         (model, iter) = self.get_selection().get_selected()
         if not iter: return
+        self.edit_node(iter)
 
-        cnode = model.get_value(iter,2) # can xmlnode
-        node_xmlnode = model.get_value(iter,5) # node xmlnode
+    def edit_node(self, iter): 
+        cnode = self.model.get_value(iter,2) # can xmlnode
+        node_xmlnode = self.model.get_value(iter,5) # node xmlnode
 
         self.eds.set_text( self.init_text_param(cnode,"eds") )
         self.node_id.set_text( self.init_text_param(cnode,"nodeID") )
@@ -284,17 +338,29 @@ class CANMain(gtk.TreeView):
         if res != gtk.RESPONSE_OK:
             return
 
+        rootiter = self.model.get_value(iter,4) # NET level iterator
+        nodeID = self.node_id.get_text()
+        
+        if nodeID != "":
+             it1 = self.check_nodeID(nodeID,rootiter)
+             if it1 != None and self.model.get_value(it1,2) != cnode:
+                 msg = "'" + nodeID + "' " + _("already exist for %s") % self.model.get_value(it1,0)
+                 dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
+                 res = dlg.run()
+                 dlg.hide()
+                 return
+
         cnode.setProp("eds",self.eds.get_text())
-        cnode.setProp("nodeID",self.node_id.get_text())
+        cnode.setProp("nodeID",nodeID)
         cnode.setProp("hbSensor",self.hb_sensor.get_text())
         cnode.setProp("respond",self.respond.get_text())
         cnode.setProp("respond1",self.respond1.get_text())
         cnode.setProp("respond2",self.respond2.get_text())
 
-        info  = ' eds=' + str(cnode.prop("eds"))
-        info  = info + ' nodeID=' + str(cnode.prop("nodeID"))
-        info  = info + '...'
-        model.set_value(iter,1,info)
+        info  = 'nodeID=' + str(cnode.prop("nodeID"))
+        info  = info + '; eds=' + str(cnode.prop("eds"))
+        info  = info + ';...'
+        self.model.set_value(iter,1,info)
         self.conf.mark_changes()
 
     def on_sensor_action(self, lbl):

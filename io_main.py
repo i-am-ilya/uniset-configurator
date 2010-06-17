@@ -110,7 +110,7 @@ class IOMain(gtk.TreeView):
             node = self.conf.xml.nextNode(node)
 
     def read_cards(self,rootnode,iter):
-        rnode = self.conf.xml.findNode(rootnode,"iocards")[0] # .children.next
+        rnode = self.conf.xml.findMyLevel(rootnode.children,"iocards")[0] # .children.next
         if rnode == None: return
         node = rnode.children.next
         
@@ -333,12 +333,12 @@ class IOMain(gtk.TreeView):
 
         node = model.get_value(node_iter,2)
 
-        cnode = self.conf.xml.findNode(node,"iocards")[0]
+        cnode = self.conf.xml.findMyLevel(node.children,"iocards")[0]
 
         if cnode == None:
            cnode = node.newChild(None,"iocards",None)
            if cnode == None:
-               print "************** FAILED CREATE CHILD for " + str(node)
+               print "************** FAILED CREATE <iocards> for " + str(node)
                return
 
         n = cnode.newChild(None,"item",None)
