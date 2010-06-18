@@ -27,7 +27,7 @@ class CANMain(gtk.TreeView):
         self.connect("button-press-event", self.on_button_press_event)
 
         renderer = gtk.CellRendererText()
-        column = gtk.TreeViewColumn(_("Name"), renderer, text=0)
+        column = gtk.TreeViewColumn(_("Net name"), renderer, text=0)
         column.set_clickable(False)
         self.append_column(column)
 
@@ -53,6 +53,11 @@ class CANMain(gtk.TreeView):
         i5.connect("activate", self.on_add_node_activate)
         i5.show() 
         self.net_popup.append(i5) 
+
+        i6 = gtk.MenuItem( _("rename network") ) 
+        i6.connect("activate", self.on_rename_net_activate)
+        i6.show() 
+        self.net_popup.append(i6) 
 
         self.node_popup = gtk.Menu() 
         i2 = gtk.MenuItem( _("edit node") ) 
@@ -245,7 +250,9 @@ class CANMain(gtk.TreeView):
         iter = self.model.append(None,[name,"",None,"net",None,None])
         self.netlist.append([name,iter])
         self.conf.mark_changes()
-
+        self.get_selection().select_iter(iter)
+        self.on_add_node_activate(menuitem)
+        
     def on_remove_net_activate(self, menuitem):
         self.conf.mark_changes()
 
@@ -308,6 +315,24 @@ class CANMain(gtk.TreeView):
         self.conf.mark_changes()
 
     def on_remove_node_activate(self, menuitem):
+        self.conf.mark_changes()
+
+    def on_rename_net_activate(self, menuitem):
+        (model, iter) = self.get_selection().get_selected()
+        if not iter: return
+        res = self.dlg_name.run()
+        self.dlg_name.hide()
+        if res != gtk.RESPONSE_OK:
+            return
+        new_name = self.netname.get_text()
+        self.model.set_value(iter,0,new_name)
+
+        it = self.model.iter_children(iter)
+        while it is not None:                     
+            node = self.model.get_value(it,2)
+            node.setProp("net",new_name)
+            it = self.model.iter_next(it)	  
+        
         self.conf.mark_changes()
 
     def init_text_param(self,node,pname):

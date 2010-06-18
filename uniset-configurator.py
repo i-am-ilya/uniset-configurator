@@ -20,6 +20,10 @@ import can_main
 
 
 locale.setlocale(locale.LC_ALL, "ru_RU.UTF8")
+#loc = findarg("--localepath=", "./locale")
+#locale.setlocale(locale.LC_ALL,'')
+#gettext.bindtextdomain("uniset-configurator", loc)
+#gettext.textdomain("uniset-configurator")
 
 mwinglade="mainwin.glade"
 glade = gtk.glade.XML(mwinglade)
