@@ -16,8 +16,8 @@ class IOMain(gtk.TreeView):
         gtk.TreeView.__init__(self)
         self.model = None
         self.modelfilter = None
-        #                          Name | Parameters | xmlnode | element type | number | subdev | parent iterator
-        self.model = gtk.TreeStore(gobject.TYPE_STRING,gobject.TYPE_STRING,object,gobject.TYPE_STRING,gobject.TYPE_STRING,gobject.TYPE_STRING,object)
+        #                          Name | Parameters | xmlnode | element type | number | subdev
+        self.model = gtk.TreeStore(gobject.TYPE_STRING,gobject.TYPE_STRING,object,gobject.TYPE_STRING,gobject.TYPE_STRING,gobject.TYPE_STRING)
         self.modelfilter = self.model.filter_new()
 
 #        self.modelfilter.set_visible_column(1)
@@ -105,7 +105,7 @@ class IOMain(gtk.TreeView):
 #        iter0 = self.model.append(None, [_("Nodes"),"",None,"",-1,-1,None])
         while node != None:
             info = "id=" + str(node.prop("id")) + " ip=" + node.prop("ip")
-            iter1 = self.model.append(None,[node.prop("name"),info,node,"node",node.prop("id"),0,None])
+            iter1 = self.model.append(None,[node.prop("name"),info,node,"node",node.prop("id"),0])
             self.read_cards(node,iter1)
             node = self.conf.xml.nextNode(node)
 
@@ -117,7 +117,7 @@ class IOMain(gtk.TreeView):
         while node != None:
             info  = 'card=' + str(node.prop("card"))
             info  = info + ' BA=' + str(node.prop("baddr"))
-            iter2 = self.model.append(iter, [node.prop("name"),info,node,"card",node.prop("card"),0,iter])
+            iter2 = self.model.append(iter, [node.prop("name"),info,node,"card",node.prop("card"),0])
             self.build_channels_list(node,self.model,iter2)
             node = self.conf.xml.nextNode(node)
 
@@ -136,29 +136,29 @@ class IOMain(gtk.TreeView):
     
     def build_di32_list(self,card,model,iter):
         for i in range(0,32):
-            model.append(iter, [_("ch_")+str(i),"",card,"channel",str(i),"0",iter])
+            model.append(iter, [_("ch_")+str(i),"",card,"channel",str(i),"0"])
 
     def build_ai16_list(self,card,model,iter):
         for i in range(0,8):
-            model.append(iter, [_("J2:")+str(i),"",card,"channel",str(i),"0",iter])
+            model.append(iter, [_("J2:")+str(i),"",card,"channel",str(i),"0"])
         for i in range(0,8):
-            model.append(iter, [_("J3:")+str(i),"",card,"channel",str(i),"1",iter])
+            model.append(iter, [_("J3:")+str(i),"",card,"channel",str(i),"1"])
 
     def build_unio48_list(self,card,model,iter):
         for i in range(0,24):
-            model.append(iter, [_("J1:")+str(i),"",card,"channel",str(i),"0",iter])
+            model.append(iter, [_("J1:")+str(i),"",card,"channel",str(i),"0"])
         for i in range(0,24):
-            model.append(iter, [_("J2:")+str(i),"",card,"channel",str(i),"1",iter])
+            model.append(iter, [_("J2:")+str(i),"",card,"channel",str(i),"1"])
 
     def build_unio96_list(self,card,model,iter):
         for i in range(0,24):
-            model.append(iter, [_("J1:")+str(i),"",card,"channel",str(i),"0",iter])
+            model.append(iter, [_("J1:")+str(i),"",card,"channel",str(i),"0"])
         for i in range(0,24):
-            model.append(iter, [_("J2:")+str(i),"",card,"channel",str(i),"1",iter])
+            model.append(iter, [_("J2:")+str(i),"",card,"channel",str(i),"1"])
         for i in range(0,24):
-            model.append(iter, [_("J3:")+str(i),"",card,"channel",str(i),"2",iter])
+            model.append(iter, [_("J3:")+str(i),"",card,"channel",str(i),"2"])
         for i in range(0,24):
-            model.append(iter, [_("J4:")+str(i),"",card,"channel",str(i),"3",iter])
+            model.append(iter, [_("J4:")+str(i),"",card,"channel",str(i),"3"])
 
     def init_channels(self):
     # проходим по <sensors> и если поля заполнены ищем в нашем TreeView
@@ -271,12 +271,12 @@ class IOMain(gtk.TreeView):
                      snode = self.conf.dlg_slist.run(self,model.get_value(iter,2))
                      if snode != None:
 
-                         card_iter = model.get_value(iter,6)
-                         card = model.get_value(card_iter,2)
+                         card_iter = self.model.iter_parent(iter)
+                         card = self.model.get_value(card_iter,2)
                          
-                         node_iter = model.get_value(card_iter,6)
-                         node = model.get_value(node_iter,2)
-                         node_id = model.get_value(node_iter,4) # node.prop("id")
+                         node_iter = self.model.iter_parent(card_iter)
+                         node = self.model.get_value(node_iter,2)
+                         node_id = self.model.get_value(node_iter,4) # node.prop("id")
 #                         if node_id == "": node_id = node.prop("name")
                          
                          n_it,cd_it,ch_it = self.check_connection(snode)
@@ -316,7 +316,7 @@ class IOMain(gtk.TreeView):
         t = model.get_value(iter,3)
         node_iter = None
         if t == "card":
-            node_iter = model.get_value(iter,6)
+            node_iter = self.model.iter_parent(iter)
         elif t == "node":
             node_iter = iter
         else:
@@ -376,7 +376,7 @@ class IOMain(gtk.TreeView):
         info  = 'card=' + str(n.prop("card"))
         info  = info + ' BA=' + str(n.prop("baddr"))
 
-        it = self.model.append(node_iter, [n.prop("name"),info,n,"card",n.prop("card"),0,node_iter])
+        it = self.model.append(node_iter, [n.prop("name"),info,n,"card",n.prop("card"),0])
         self.build_channels_list(n,self.model,it)
         self.conf.mark_changes()
 
@@ -391,9 +391,9 @@ class IOMain(gtk.TreeView):
         if res == gtk.RESPONSE_NO:
             return False
         
-        cnode = model.get_value(iter,2)
-        node_iter = model.get_value(iter,6)
-        pnode = model.get_value(node_iter,2)
+        cnode = self.model.get_value(iter,2)
+        node_iter = self.model.iter_parent(iter)
+        pnode = self.model.get_value(node_iter,2)
 
         cn = cnode.prop("card")
         nn = pnode.prop("id")

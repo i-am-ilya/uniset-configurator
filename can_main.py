@@ -17,8 +17,8 @@ class CANMain(gtk.TreeView):
         gtk.TreeView.__init__(self)
         self.model = None
         self.modelfilter = None
-        #                          Name | Parameters | can_xmlnode | element type | parent iterator | node_xmlnode
-        self.model = gtk.TreeStore(gobject.TYPE_STRING,gobject.TYPE_STRING,object,gobject.TYPE_STRING,object,object)
+        #                          Name | Parameters | can_xmlnode | element type | node_xmlnode
+        self.model = gtk.TreeStore(gobject.TYPE_STRING,gobject.TYPE_STRING,object,gobject.TYPE_STRING,object)
         self.modelfilter = self.model.filter_new()
 
         # create treeview
@@ -208,7 +208,7 @@ class CANMain(gtk.TreeView):
                     self.add_node(cannode,node,n[1])
                     return False
          
-         iter = self.model.append(None,[name,"",None,"net",None,None])
+         iter = self.model.append(None,[name,"",None,"net",None])
          self.netlist.append([name,iter])
          self.add_node(cannode,node,iter)
          return True
@@ -217,7 +217,7 @@ class CANMain(gtk.TreeView):
          info  = 'nodeID=' + str(cannode.prop("nodeID"))
          info  = info + '; eds=' + str(cannode.prop("eds"))
          info  = info + ';...'
-         return self.model.append(iter,[node.prop("name"),info,cannode,"node",iter,node])
+         return self.model.append(iter,[node.prop("name"),info,cannode,"node",node])
 
     def on_button_press_event(self, object, event):                                                                                                                                 
 #        print "*** on_button_press_event"
@@ -255,7 +255,7 @@ class CANMain(gtk.TreeView):
             return
 
         name = self.netname.get_text()
-        iter = self.model.append(None,[name,"",None,"net",None,None])
+        iter = self.model.append(None,[name,"",None,"net",None])
         self.netlist.append([name,iter])
         self.conf.mark_changes()
         self.get_selection().select_iter(iter)
@@ -281,7 +281,7 @@ class CANMain(gtk.TreeView):
     def check_node( self, node, rootiter ):
        it = self.model.iter_children(rootiter)
        while it is not None:                     
-           if self.model.get_value(it,5) == node:
+           if self.model.get_value(it,4) == node:
                return it
            it = self.model.iter_next(it)           
        
@@ -312,7 +312,7 @@ class CANMain(gtk.TreeView):
         
         rootiter=iter
         if etype == "node":
-            rootiter = self.model.get_value(iter,4)
+            rootiter = self.model.iter_parent(iter)
         
         if self.check_node(node,rootiter) != None:
            msg = "'" + node.prop("name") + "' " + _("already added!") 
@@ -385,7 +385,7 @@ class CANMain(gtk.TreeView):
 
     def edit_node(self, iter): 
         cnode = self.model.get_value(iter,2) # can xmlnode
-        node_xmlnode = self.model.get_value(iter,5) # node xmlnode
+        node_xmlnode = self.model.get_value(iter,4) # node xmlnode
 
         self.eds.set_text( self.init_text_param(cnode,"eds") )
         n = self.init_text_param(cnode,"nodeID")
@@ -406,7 +406,7 @@ class CANMain(gtk.TreeView):
             if res != gtk.RESPONSE_OK:
                 return
 
-            rootiter = self.model.get_value(iter,4) # NET level iterator
+            rootiter = self.model.iter_parent(iter) # NET level iterator
             nodeID = self.node_id.get_value_as_int()
             if nodeID != 0:
                 it1 = self.check_nodeID(nodeID,rootiter)

@@ -745,15 +745,25 @@
 				<iocards>
 					<item baddr="" card="2" name="UNIO48"/>
 					<item baddr="0" card="3" name="AI16"/>
+					<item baddr="" card="0" name="AI16"/>
+					<item baddr="" card="4" name="UNIO48"/>
 				</iocards>
 				<can>
 				</can>
 			</item>
 			<item dbserver="DBServer1" id="3002" ip="gui2" name="GUI2Node" textname="Графическая станция N2"/>
 			<item id="3003" ip="sescpu" name="SESCPUNode" textname="Пульт ЦПУ (контроллер СЭС)"/>
-			<item id="3004" ip="ses" name="SESNode" textname="КСЭС"/>
+			<item id="3004" ip="ses" name="SESNode" textname="КСЭС">
+				<can>
+					<item eds="" hbSensor="" net="SES" nodeID="0" respond="" respond1="" respond2=""/>
+				</can>
+			</item>
 			<item id="3005" ip="gdg1" name="GDG1Node" textname="ЩС ГДГ1"/>
-			<item id="3006" ip="gdg2" name="GDG2Node" textname="0С ГДГ2"/>
+			<item id="3006" ip="gdg2" name="GDG2Node" textname="0С ГДГ2">
+				<can>
+					<item eds="" hbSensor="" net="TS" nodeID="0" respond="" respond1="" respond2=""/>
+				</can>
+			</item>
 			<item id="3007" ip="ts1" name="TS1Node" textname="ЩС ВДГ1">
 				<can>
 					<item eds="" hbSensor="" net="TS" nodeID="" respond="" respond1="" respond2=""/>
