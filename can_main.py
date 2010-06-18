@@ -39,7 +39,21 @@ class CANMain(gtk.TreeView):
         # expand all rows after the treeview widget has been realized
 #       self.connect('realize', lambda tv: tv.expand_all())
 
+        self.empty_popup = gtk.Menu() 
+        i10 = gtk.MenuItem( _("add new network") ) 
+        i10.connect("activate", self.on_add_net_activate)
+        i10.show()
+        self.empty_popup.append(i10) 
+
         self.net_popup = gtk.Menu() 
+        i5 = gtk.MenuItem( _("add new node") ) 
+        i5.connect("activate", self.on_add_node_activate)
+        i5.show() 
+        self.net_popup.append(i5) 
+        i6 = gtk.MenuItem( _("rename network") ) 
+        i6.connect("activate", self.on_rename_net_activate)
+        i6.show() 
+        self.net_popup.append(i6) 
         i0 = gtk.MenuItem( _("add new network") ) 
         i0.connect("activate", self.on_add_net_activate)
         i0.show() 
@@ -48,16 +62,6 @@ class CANMain(gtk.TreeView):
         i1.connect("activate", self.on_remove_net_activate)
         i1.show() 
         self.net_popup.append(i1) 
-        
-        i5 = gtk.MenuItem( _("add new node") ) 
-        i5.connect("activate", self.on_add_node_activate)
-        i5.show() 
-        self.net_popup.append(i5) 
-
-        i6 = gtk.MenuItem( _("rename network") ) 
-        i6.connect("activate", self.on_rename_net_activate)
-        i6.show() 
-        self.net_popup.append(i6) 
 
         self.node_popup = gtk.Menu() 
         i2 = gtk.MenuItem( _("edit node") ) 
@@ -219,13 +223,16 @@ class CANMain(gtk.TreeView):
         (model, iter) = self.get_selection().get_selected()
 
         if event.button == 3:                                                                                                                                                       
-            if not iter: return False
+            if not iter: 
+                 self.empty_popup.popup(None, None, None, event.button, event.time)
+                 return False
+            
             t = model.get_value(iter,3)
             if t == "net":
-                self.net_popup.popup(None, None, None, event.button, event.time)                                                                                                       
+                self.net_popup.popup(None, None, None, event.button, event.time)
                 return False                                                                                                                                                         
             if t == "node":
-                self.node_popup.popup(None, None, None, event.button, event.time)                                                                                                       
+                self.node_popup.popup(None, None, None, event.button, event.time)
                 return False
 
         if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
@@ -254,6 +261,20 @@ class CANMain(gtk.TreeView):
         self.on_add_node_activate(menuitem)
         
     def on_remove_net_activate(self, menuitem):
+        (model, iter) = self.get_selection().get_selected()
+        if not iter: return
+        dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,_("You are sure?"))
+        res = dlg.run()
+        dlg.hide()
+        if res == gtk.RESPONSE_NO:
+            return
+        
+        it = self.model.iter_children(iter)
+        while it is not None:                     
+            node = self.model.get_value(it,2)
+            node.unlinkNode()    
+            it = self.model.iter_next(it)	  
+        self.model.remove(iter)        
         self.conf.mark_changes()
 
     def check_node( self, node, rootiter ):

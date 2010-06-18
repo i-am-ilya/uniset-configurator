@@ -739,14 +739,15 @@
 					<item baddr="" card="2" name="AI16"/>
 				</iocards>
 				<can>
-					<item eds="tscpu.eds" hbSensor="_31_23_AS" net="TS" nodeID="0x10" respond="01_06_S" respond1="01_07_S" respond2="01_08_S"/>
-					<item eds="sescpu.eds" hbSensor="_31_23_AS" net="TS" nodeID="0x10" respond="01_06_S" respond1="01_07_S" respond2="01_08_S"/>
 				</can>
 			</item>
 			<item dbserver="DBServer1" id="3001" ip="gui1" name="GUI1Node" textname="Графическая станция N1">
 				<iocards>
 					<item baddr="" card="2" name="UNIO48"/>
 				</iocards>
+				<can>
+					<item eds="" hbSensor="" net="TS" nodeID="0x10" respond="" respond1="" respond2=""/>
+				</can>
 			</item>
 			<item dbserver="DBServer1" id="3002" ip="gui2" name="GUI2Node" textname="Графическая станция N2"/>
 			<item id="3003" ip="sescpu" name="SESCPUNode" textname="Пульт ЦПУ (контроллер СЭС)"/>
@@ -755,16 +756,12 @@
 			<item id="3006" ip="gdg2" name="GDG2Node" textname="0С ГДГ2"/>
 			<item id="3007" ip="ts1" name="TS1Node" textname="ЩС ВДГ1">
 				<can>
-					<item eds="ts.eds" hbSensor="01_05_S" net="TS" nodeID="0x30" respond="01_08_S" respond1="01_09_S" respond2="01_09_S"/>
-					<item eds="" hbSensor="" net="SES" nodeID="0x1" respond="" respond1="" respond2=""/>
-					<item eds="" hbSensor="" net="GEU" nodeID="0x30" respond="" respond1="" respond2=""/>
 				</can>
 			</item>
 			<item id="3008" ip="ts2" name="TS2Node" textname="ЩС ВДГ2"/>
 			<item id="3010" ip="guits" name="GUITSNode" textname="ШУ ТС (панель)"/>
 			<item id="3011" ip="tscpu" name="TSCPUNode" textname="Пульт ЦПУ (контроллер ТС)">
 				<can>
-					<item eds="" hbSensor="" net="SES" nodeID="0x3" respond="" respond1="" respond2=""/>
 				</can>
 			</item>
 			<item id="3012" ip="geucpu" name="GEUCPUNode" textname="Пульт ЦПУ (контроллер ГЭУ)"/>
