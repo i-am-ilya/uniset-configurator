@@ -313,15 +313,6 @@ class IOMain(gtk.TreeView):
         (model, iter) = self.get_selection().get_selected()
         if not iter: return
 
-        res = self.dlg_card.run()
-        self.dlg_card.hide()
-        if res != gtk.RESPONSE_OK:  
-            return
- 
-        cname = self.cb_cardlist.get_active_text()
-        if cname == "":
-           return
-
         t = model.get_value(iter,3)
         node_iter = None
         if t == "card":
@@ -331,6 +322,40 @@ class IOMain(gtk.TreeView):
         else:
             print "*** FAILED ELEMENT TYPE " + t
             return
+
+        while True:
+            res = self.dlg_card.run()
+            self.dlg_card.hide()
+            if res != gtk.RESPONSE_OK:  
+                return
+            # check card number
+            cnum = self.card_num.get_value_as_int()
+            it1 = self.check_cardnum(cnum,node_iter,iter)
+            if it1 != None:
+               msg = "card number='" + str(cnum) + "' " + _("already exist for %s") % self.model.get_value(it1,0)
+               dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
+               res = dlg.run()
+               dlg.hide()
+               continue
+            # check baddr
+            s_baddr = self.card_ba.get_text()
+            baddr = 0
+            if s_baddr != "":
+                 baddr = int(eval(s_baddr))
+            it1 = self.check_baddr(baddr,node_iter,iter)
+            if baddr!=0 and it1 != None:
+               msg = "base address='" + s_baddr + "' " + _("already exist for %s") % self.model.get_value(it1,0)
+               dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
+               res = dlg.run()
+               dlg.hide()
+               continue
+
+            break                
+
+        cname = self.cb_cardlist.get_active_text()
+        if cname == "":
+           return
+
 
         node = model.get_value(node_iter,2)
 
@@ -387,6 +412,40 @@ class IOMain(gtk.TreeView):
         model.remove(iter)
         self.conf.mark_changes()
 
+    def check_cardnum(self,num, iter, selfiter):
+        it = self.model.iter_children(iter)
+        myname = self.model.get_value(selfiter,0)
+        while it is not None:
+            if self.model.get_value(it,0) == myname:
+                it = self.model.iter_next(it)  
+                continue
+            s_n = self.model.get_value(it,2).prop("card")
+            n = 0
+            if s_n != None and s_n!="":
+                n = int(s_n)
+
+            if n == num:
+                return it
+            it = self.model.iter_next(it)
+       
+        return None 	  
+
+    def check_baddr(self,baddr, iter, selfiter):
+        it = self.model.iter_children(iter)
+        myname = self.model.get_value(selfiter,0)
+        while it is not None:
+            if self.model.get_value(it,0) == myname:
+                it = self.model.iter_next(it)  
+                continue
+            s_n = self.model.get_value(it,2).prop("baddr")
+            n = 0
+            if s_n != "":
+                n = int(eval(s_n))
+
+            if n == baddr:
+                return it
+            it = self.model.iter_next(it)           
+    
     def on_edit_card_activate(self,menuitem):
         (model, iter) = self.get_selection().get_selected()
         if not iter: return
@@ -395,7 +454,7 @@ class IOMain(gtk.TreeView):
 
         self.cb_cardlist.set_sensitive(False)
 
-		# select card
+        # select card
         cn = cnode.prop("name")
         m = self.cb_cardlist.get_model()
         it = m.get_iter_first()
@@ -410,14 +469,41 @@ class IOMain(gtk.TreeView):
             ba = ""
         self.card_num.set_value( int(cnode.prop("card")))
         self.card_ba.set_text(ba)
-        res = self.dlg_card.run()
-        self.dlg_card.hide()
-        self.cb_cardlist.set_sensitive(True)
-        if res != gtk.RESPONSE_OK:
-            return
+        
+        while True:
+            res = self.dlg_card.run()
+            self.dlg_card.hide()
+            self.cb_cardlist.set_sensitive(True)
+            if res != gtk.RESPONSE_OK:
+                return
+            
+            # check card number
+            cnum = self.card_num.get_value_as_int()
+            it1 = self.check_cardnum(cnum,self.model.iter_parent(iter),iter)
+            if it1 != None:
+               msg = "card number='" + str(cnum) + "' " + _("already exist for %s") % self.model.get_value(it1,0)
+               dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
+               res = dlg.run()
+               dlg.hide()
+               continue
+            # check baddr
+            s_baddr = self.card_ba.get_text()
+            baddr = 0
+            if s_baddr != "":
+                 baddr = int(eval(s_baddr))
+            it1 = self.check_baddr(baddr,self.model.iter_parent(iter),iter)
+            if baddr!=0 and it1 != None:
+               msg = "base address='" + s_baddr + "' " + _("already exist for %s") % self.model.get_value(it1,0)
+               dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
+               res = dlg.run()
+               dlg.hide()
+               continue
 
-        cnode.setProp("card",str(self.card_num.get_value_as_int()))
-        cnode.setProp("baddr",self.card_ba.get_text())
+            break                
+
+        cnode.setProp("card",str(cnum))
+        cnode.setProp("baddr",str(baddr))
+        model.set_value(iter,4,cnum)
 
         info  = 'card=' + str(cnode.prop("card"))
         info  = info + ' BA=' + str(cnode.prop("baddr"))

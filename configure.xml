@@ -744,6 +744,7 @@
 			<item dbserver="DBServer1" id="3001" ip="gui1" name="GUI1Node" textname="Графическая станция N1">
 				<iocards>
 					<item baddr="" card="2" name="UNIO48"/>
+					<item baddr="0" card="3" name="AI16"/>
 				</iocards>
 				<can>
 				</can>
