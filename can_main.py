@@ -400,22 +400,23 @@ class CANMain(gtk.TreeView):
         self.respond1.set_text( self.init_text_param(cnode,"respond1") )
         self.respond2.set_text( self.init_text_param(cnode,"respond2") )
         
-        res = self.dlg_can.run()
-        self.dlg_can.hide()
-        if res != gtk.RESPONSE_OK:
-            return
+        while True:
+            res = self.dlg_can.run()
+            self.dlg_can.hide()
+            if res != gtk.RESPONSE_OK:
+                return
 
-        rootiter = self.model.get_value(iter,4) # NET level iterator
-        nodeID = self.node_id.get_value_as_int()
-        
-        if nodeID != 0:
-             it1 = self.check_nodeID(nodeID,rootiter)
-             if it1 != None and self.model.get_value(it1,2) != cnode:
-                 msg = "'" + str(nodeID) + "' " + _("already exist for %s") % self.model.get_value(it1,0)
-                 dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
-                 res = dlg.run()
-                 dlg.hide()
-                 return
+            rootiter = self.model.get_value(iter,4) # NET level iterator
+            nodeID = self.node_id.get_value_as_int()
+            if nodeID != 0:
+                it1 = self.check_nodeID(nodeID,rootiter)
+                if it1 != None and self.model.get_value(it1,2) != cnode:
+                    msg = "'" + str(nodeID) + "' " + _("already exist for %s") % self.model.get_value(it1,0)
+                    dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
+                    res = dlg.run()
+                    dlg.hide()
+                    continue
+            break
 
         cnode.setProp("eds",self.eds.get_text())
         cnode.setProp("nodeID",str(nodeID))
