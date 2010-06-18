@@ -746,7 +746,6 @@
 					<item baddr="" card="2" name="UNIO48"/>
 				</iocards>
 				<can>
-					<item eds="" hbSensor="" net="TS" nodeID="0x10" respond="" respond1="" respond2=""/>
 				</can>
 			</item>
 			<item dbserver="DBServer1" id="3002" ip="gui2" name="GUI2Node" textname="Графическая станция N2"/>
@@ -756,16 +755,22 @@
 			<item id="3006" ip="gdg2" name="GDG2Node" textname="0С ГДГ2"/>
 			<item id="3007" ip="ts1" name="TS1Node" textname="ЩС ВДГ1">
 				<can>
+					<item eds="" hbSensor="" net="TS" nodeID="" respond="" respond1="" respond2=""/>
 				</can>
 			</item>
 			<item id="3008" ip="ts2" name="TS2Node" textname="ЩС ВДГ2"/>
 			<item id="3010" ip="guits" name="GUITSNode" textname="ШУ ТС (панель)"/>
 			<item id="3011" ip="tscpu" name="TSCPUNode" textname="Пульт ЦПУ (контроллер ТС)">
 				<can>
+					<item eds="" hbSensor="" net="TS" nodeID="" respond="" respond1="" respond2=""/>
 				</can>
 			</item>
 			<item id="3012" ip="geucpu" name="GEUCPUNode" textname="Пульт ЦПУ (контроллер ГЭУ)"/>
-			<item id="3013" ip="geu" name="GEUNode" textname="Контроллер ГЭУ (управление)"/>
+			<item id="3013" ip="geu" name="GEUNode" textname="Контроллер ГЭУ (управление)">
+				<can>
+					<item eds="" hbSensor="" net="TS" nodeID="" respond="" respond1="" respond2=""/>
+				</can>
+			</item>
 			<item id="3014" ip="geuaps" name="GEUAPSNode" textname="Контроллер ГЭУ АПС"/>
 			<item id="3015" ip="geupus" name="GEUPUSNode" textname="Пульт ЦПУ (контроллер ГЭУ)"/>
 			<item id="3016" ip="tscpu" name="SYSTSNode" textname="СУ ТС"/>

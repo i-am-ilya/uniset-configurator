@@ -336,6 +336,17 @@ class CANMain(gtk.TreeView):
         self.conf.mark_changes()
 
     def on_remove_node_activate(self, menuitem):
+        (model, iter) = self.get_selection().get_selected()
+        if not iter: return
+        dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,_("You are sure?"))
+        res = dlg.run()
+        dlg.hide()
+        if res == gtk.RESPONSE_NO:
+            return
+
+        node = self.model.get_value(iter,2)
+        node.unlinkNode()
+        self.model.remove(iter)
         self.conf.mark_changes()
 
     def on_rename_net_activate(self, menuitem):
