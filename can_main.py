@@ -89,9 +89,10 @@ class CANMain(gtk.TreeView):
 
         lb1 = gtk.Label(_("NodeID: "))
         lb1.show()
-        self.node_id = gtk.Entry()
-        self.node_id.set_width_chars(5)
-        self.node_id.set_max_length(8)
+        self.node_id = gtk.SpinButton()
+        self.node_id.set_range(0,255)
+        self.node_id.set_increments(1,1)
+        self.node_id.set_digits(0)
         self.node_id.show()
         hb1 = gtk.HBox()
         hb1.pack_start(lb1,False,False,3)
@@ -287,9 +288,13 @@ class CANMain(gtk.TreeView):
        return None     
 
     def check_nodeID( self, nodeID, rootiter ):
+       if nodeID == 0:
+           return None
+
        it = self.model.iter_children(rootiter)
-       while it is not None:                     
-           if self.model.get_value(it,2).prop("nodeID") == nodeID:
+       while it is not None:
+           n = self.model.get_value(it,2).prop("nodeID")
+           if n!="" and int(eval(n)) == nodeID:
                return it
            it = self.model.iter_next(it)           
        
@@ -383,7 +388,12 @@ class CANMain(gtk.TreeView):
         node_xmlnode = self.model.get_value(iter,5) # node xmlnode
 
         self.eds.set_text( self.init_text_param(cnode,"eds") )
-        self.node_id.set_text( self.init_text_param(cnode,"nodeID") )
+        n = self.init_text_param(cnode,"nodeID")
+        if n != "":
+             self.node_id.set_value( int(eval(n)) )
+        else:
+             self.node_id.set_value(0)
+
         self.node_name.set_text( self.init_text_param(node_xmlnode,"name") )
         self.hb_sensor.set_text( self.init_text_param(cnode,"hbSensor") )
         self.respond.set_text( self.init_text_param(cnode,"respond") )
@@ -396,19 +406,19 @@ class CANMain(gtk.TreeView):
             return
 
         rootiter = self.model.get_value(iter,4) # NET level iterator
-        nodeID = self.node_id.get_text()
+        nodeID = self.node_id.get_value_as_int()
         
-        if nodeID != "":
+        if nodeID != 0:
              it1 = self.check_nodeID(nodeID,rootiter)
              if it1 != None and self.model.get_value(it1,2) != cnode:
-                 msg = "'" + nodeID + "' " + _("already exist for %s") % self.model.get_value(it1,0)
+                 msg = "'" + str(nodeID) + "' " + _("already exist for %s") % self.model.get_value(it1,0)
                  dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
                  res = dlg.run()
                  dlg.hide()
                  return
 
         cnode.setProp("eds",self.eds.get_text())
-        cnode.setProp("nodeID",nodeID)
+        cnode.setProp("nodeID",str(nodeID))
         cnode.setProp("hbSensor",self.hb_sensor.get_text())
         cnode.setProp("respond",self.respond.get_text())
         cnode.setProp("respond1",self.respond1.get_text())
