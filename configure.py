@@ -25,3 +25,11 @@ class Conf:
         self.xml.reopen(fname)
         self.dlg_slist.reopen(self.xml)
         self.changes = 0
+    
+    def check_value_int(self, val):
+        try:
+            x = int(val)
+            return True
+        except ValueError, NameError:
+             return False
+        

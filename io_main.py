@@ -12,6 +12,7 @@ class IOMain(gtk.TreeView):
     def __init__(self, conf):
 
         self.conf = conf
+        conf.glade.signal_autoconnect(self)
 
         gtk.TreeView.__init__(self)
         self.model = None
@@ -57,48 +58,96 @@ class IOMain(gtk.TreeView):
         self.build_tree()
         self.init_channels()
 
-        self.cb_cardlist = gtk.combo_box_new_text()
-        for cname in self.get_card_list():
-            self.cb_cardlist.append_text(cname)
+        self.dlg_card = conf.glade.get_widget("io_dlg_card")
+        self.dlg_card.set_title(_("Select card"))
+        self.card_num = conf.glade.get_widget("io_sp_cardnum")
+        self.card_ba = conf.glade.get_widget("io_baddr")
+        self.cb_cardlist = conf.glade.get_widget("io_cb_cardlist")
 
-        self.cb_cardlist.show_all()
-
-        self.dlg_card = gtk.Dialog(_("Select card"),None,gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,(gtk.STOCK_OK,gtk.RESPONSE_OK,gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL))
+        # Parameters dialog
+        self.dlg_param = conf.glade.get_widget("dlg_ioparam")
+        self.dlg_param.set_title( _("Setup channel") )
+        self.parambook = conf.glade.get_widget("ioparam_book")
+        self.init_notebook_pages()
         
-        vb = gtk.VBox()
+        self.lbl_sensor = conf.glade.get_widget("io_lbl_sensor")
+        self.sensor = None
+        self.dlg_info = conf.glade.get_widget("io_lbl_info")
+        self.iotype = conf.glade.get_widget("io_cbox_iotype")
         
-        hb = gtk.HBox()
+        # Common parameters
+        self.lamp = conf.glade.get_widget("io_cb_lamp")
+        self.notestlamp = conf.glade.get_widget("io_cb_notestlamp")
+        self.io_range = conf.glade.get_widget("io_sp_range")
+        self.io_aref = conf.glade.get_widget("io_sp_aref")
+        self.safety = conf.glade.get_widget("io_safety")
+        self.breaklim = conf.glade.get_widget("io_breaklim")
+        self.defval = conf.glade.get_widget("io_defval")
+        self.ignore = conf.glade.get_widget("io_cb_ignore")
+        self.invert = conf.glade.get_widget("io_cb_invert")
+        
+        # Calibrations
+        self.calibr_param = conf.glade.get_widget("io_tbl_calibration")
+        self.cdiagram = conf.glade.get_widget("io_cbox_cdiagram")
+        self.build_cdiagram_list()
+        self.cmin = conf.glade.get_widget("io_cmin")
+        self.cmax = conf.glade.get_widget("io_cmax")
+        self.rmin = conf.glade.get_widget("io_rmin")
+        self.rmax = conf.glade.get_widget("io_rmax")
+        self.prec = conf.glade.get_widget("io_sp_precision")
+        self.noprec = conf.glade.get_widget("io_cb_noprecision")
 
-        lb = gtk.Label(_(" Card number: "))
-        lb.show()
-        self.card_num = gtk.SpinButton()
-        self.card_num.set_range(0,10)
-        self.card_num.set_increments(1,1)
-        self.card_num.set_digits(0)
-        self.card_num.show()
-
-        hb.pack_start(lb,False,False,3)
-        hb.pack_start(self.card_num,True,True,3)
-        hb.show()
-
-        lb1 = gtk.Label(_("Base address: "))
-        lb1.show()
-        self.card_ba = gtk.Entry()
-        self.card_ba.set_width_chars(5)
-        self.card_ba.set_max_length(8)
-        self.card_ba.show()
-        hb1 = gtk.HBox()
-        hb1.pack_start(lb1,False,False,3)
-        hb1.pack_start(self.card_ba,True,True,3)
-        hb1.show()
-
-        vb.pack_start(self.cb_cardlist,True,True,3)
-        vb.pack_start(hb,True,True,3)
-        vb.pack_start(hb1,True,True,3)
-        vb.show()
-        self.dlg_card.vbox.pack_start(vb,True,True,0)
-
+        # Delay`s
+        self.ondelay = conf.glade.get_widget("io_on_delay")
+        self.offdelay = conf.glade.get_widget("io_off_delay")
+        self.jardelay = conf.glade.get_widget("io_jar_delay")
+        
         self.show_all()
+    
+    def init_notebook_pages(self):
+        # читаем все страницы и создаём нужные нам поля класса
+        # (для управления доступностью закладок)
+        # не очень конечно выгляди, но работает..
+        nums = self.parambook.get_n_pages()
+        for n in range(0,nums):
+            p = self.parambook.get_nth_page(n)
+            if p == None:
+              continue
+            lbl =  self.parambook.get_tab_label(p)
+            if lbl == None:
+              continue
+            if lbl.get_name() == "io_pgComm":
+               self.pgComm = p
+               self.lblComm = lbl
+            elif lbl.get_name() == "io_pgCalibration":
+               self.pgCalibration = p
+               self.lblcalibration = lbl
+            elif lbl.get_name() == "io_pgDelay":
+               self.pgDelay = p
+               self.lblDelay = lbl
+            elif lbl.get_name() == "io_pgFilter":
+               self.pgFilter = p
+               self.lblFilter = lbl
+            elif lbl.get_name() == "io_pgThreshold":
+               self.pgThreshold = p
+               self.lblThresholds = lbl
+
+    def build_cdiagram_list(self):
+        lstore = gtk.ListStore(gobject.TYPE_STRING)
+        lstore.clear()
+        cell = gtk.CellRendererText()
+        self.cdiagram.pack_start(cell, True)
+        self.cdiagram.add_attribute(cell, 'text', 0)
+        self.cdiagram.set_model(lstore)
+        lstore.append(["None"])
+        n = self.conf.xml.findNode(self.conf.xml.getDoc(),"Calibrations")[0]
+        if n == None:
+            return
+        node = self.conf.xml.firstNode(n.children.next)
+        while node != None:
+            dname = str(node.prop("name"))
+            lstore.append([dname])
+            node = self.conf.xml.nextNode(node)
 
     def build_tree(self):
         node = self.conf.xml.findNode(self.conf.xml.getDoc(),"nodes")[0].children.next 
@@ -121,9 +170,6 @@ class IOMain(gtk.TreeView):
             self.build_channels_list(node,self.model,iter2)
             node = self.conf.xml.nextNode(node)
 
-    def get_card_list(self):
-        return ["DI32","AI16","UNIO48","UNIO96"]
- 
     def build_channels_list(self,cardnode,model,iter):
         if cardnode.prop("name") == "DI32":
             self.build_di32_list(cardnode,model,iter)
@@ -136,29 +182,29 @@ class IOMain(gtk.TreeView):
     
     def build_di32_list(self,card,model,iter):
         for i in range(0,32):
-            model.append(iter, [_("ch_")+str(i),"",card,"channel",str(i),"0"])
+            model.append(iter, [_("ch_")+str(i),"",None,"channel",str(i),"0"])
 
     def build_ai16_list(self,card,model,iter):
         for i in range(0,8):
-            model.append(iter, [_("J2:")+str(i),"",card,"channel",str(i),"0"])
+            model.append(iter, [_("J2:")+str(i),"",None,"channel",str(i),"0"])
         for i in range(0,8):
-            model.append(iter, [_("J3:")+str(i),"",card,"channel",str(i),"1"])
+            model.append(iter, [_("J3:")+str(i),"",None,"channel",str(i),"1"])
 
     def build_unio48_list(self,card,model,iter):
         for i in range(0,24):
-            model.append(iter, [_("J1:")+str(i),"",card,"channel",str(i),"0"])
+            model.append(iter, [_("J1:")+str(i),"",None,"channel",str(i),"0"])
         for i in range(0,24):
-            model.append(iter, [_("J2:")+str(i),"",card,"channel",str(i),"1"])
+            model.append(iter, [_("J2:")+str(i),"",None,"channel",str(i),"1"])
 
     def build_unio96_list(self,card,model,iter):
         for i in range(0,24):
-            model.append(iter, [_("J1:")+str(i),"",card,"channel",str(i),"0"])
+            model.append(iter, [_("J1:")+str(i),"",None,"channel",str(i),"0"])
         for i in range(0,24):
-            model.append(iter, [_("J2:")+str(i),"",card,"channel",str(i),"1"])
+            model.append(iter, [_("J2:")+str(i),"",None,"channel",str(i),"1"])
         for i in range(0,24):
-            model.append(iter, [_("J3:")+str(i),"",card,"channel",str(i),"2"])
+            model.append(iter, [_("J3:")+str(i),"",None,"channel",str(i),"2"])
         for i in range(0,24):
-            model.append(iter, [_("J4:")+str(i),"",card,"channel",str(i),"3"])
+            model.append(iter, [_("J4:")+str(i),"",None,"channel",str(i),"3"])
 
     def init_channels(self):
     # проходим по <sensors> и если поля заполнены ищем в нашем TreeView
@@ -221,7 +267,7 @@ class IOMain(gtk.TreeView):
         column = gtk.TreeViewColumn(_("Parameters"), renderer, text=1)
         column.set_clickable(False)
         self.append_column(column)
-
+    
     def check_connection(self,snode):
        it = self.model.get_iter_first() # node level
        while it is not None: 
@@ -268,46 +314,52 @@ class IOMain(gtk.TreeView):
                  elif t == "card": 
                      self.on_edit_card_activate(None)
                  elif t == "channel":
-                     snode = self.conf.dlg_slist.run(self,model.get_value(iter,2))
-                     if snode != None:
-
-                         card_iter = self.model.iter_parent(iter)
-                         card = self.model.get_value(card_iter,2)
-                         
-                         node_iter = self.model.iter_parent(card_iter)
-                         node = self.model.get_value(node_iter,2)
-                         node_id = self.model.get_value(node_iter,4) # node.prop("id")
-#                         if node_id == "": node_id = node.prop("name")
-                         
-                         n_it,cd_it,ch_it = self.check_connection(snode)
-                         if ch_it is not None:
-                             msg = "'" + snode.prop("name") + "' " + _("Already connection!") 
-                             addr = " (" + self.model.get_value(n_it,0) + ":" + self.model.get_value(cd_it,0) + ":" + self.model.get_value(ch_it,0) +_(")\n Reconnection?")
-                             msg = msg + addr
-                             dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,msg)
-                             res = dlg.run()
-                             dlg.hide()
-                             if res == gtk.RESPONSE_NO:
-                                 return False
-                             # сперва очистим привязку у старого
-                             model.set_value(ch_it,2,None)
-                             model.set_value(ch_it,1,"")
-                             snode.setProp("io","")
-                             snode.setProp("card","")
-                             snode.setProp("subdev", "")
-                             snode.setProp("channel","")
-                         
-                         model.set_value(iter,2,snode)
-                         model.set_value(iter,1,snode.prop("name"))
-
-                         snode.setProp("io",node_id);
-                         snode.setProp("card",card.prop("card"));
-                         snode.setProp("subdev", str(model.get_value(iter,5)));
-                         snode.setProp("channel",str(model.get_value(iter,4)));
-                         self.conf.mark_changes()
+                     self.on_edit_channel(iter)
 
         return False
 
+    def on_dlg_card_btnCancel_clicked(self, button):
+       self.dlg_card.response(gtk.RESPONSE_CANCEL)
+
+    def on_dlg_card_btnOK_clicked(self,button):
+       self.dlg_card.response(gtk.RESPONSE_OK)
+
+    def on_io_btnCancel_clicked(self, button):
+       self.dlg_param.response(gtk.RESPONSE_CANCEL)
+
+    def on_io_btnOK_clicked(self,button):
+       self.dlg_param.response(gtk.RESPONSE_OK)
+
+    def on_io_btn_aID_clicked(self,button):
+        pass
+
+    def set_iotype(self,iotype):
+        model = self.iotype.get_model()
+        it = model.get_iter_first()
+        while it is not None:                     
+            if iotype.upper() == str(model.get_value(it,0)).upper():
+                 self.iotype.set_active_iter(it)
+                 return
+            it = model.iter_next(it)
+
+    def on_io_btn_sensor_clicked(self, button):
+        self.conf.dlg_slist.set_selected_name(self.lbl_sensor.get_text())
+        self.sensor = self.conf.dlg_slist.run(self)
+        if self.sensor != None:
+            self.lbl_sensor.set_text(self.sensor.prop("name"))
+            self.set_iotype(self.sensor.prop("iotype"))
+
+    def on_io_cbox_iotype_changed(self,combobox):
+        print "********* iotype changed ***"
+        # В зависимости от типа блокируем различные настройкистроим
+        pass
+    
+    def on_io_cbox_cdiagram_changed(self,combobox):
+        if self.cdiagram.get_active_text() == "None":
+            self.calibr_param.set_sensitive(True)
+        else:
+            self.calibr_param.set_sensitive(False)
+    
     def on_add_card_activate(self,menuitem):
     
         (model, iter) = self.get_selection().get_selected()
@@ -356,9 +408,7 @@ class IOMain(gtk.TreeView):
         if cname == "":
            return
 
-
         node = model.get_value(node_iter,2)
-
         cnode = self.conf.xml.findMyLevel(node.children,"iocards")[0]
 
         if cnode == None:
@@ -508,4 +558,192 @@ class IOMain(gtk.TreeView):
         info  = 'card=' + str(cnode.prop("card"))
         info  = info + ' BA=' + str(cnode.prop("baddr"))
         model.set_value(iter,1,info)
+        self.conf.mark_changes()
+
+
+    def check_calibrations_params(self):
+       # для начала проверим на "цифру"
+       if self.cmin.get_text()!="" and self.conf.check_value_int(self.cmin.get_text()) == False:
+          return [False,"cmin"]
+       if self.cmax.get_text()!="" and self.conf.check_value_int(self.cmax.get_text()) == False:
+          return [False,"cmax"]
+       if self.rmin.get_text()!="" and self.conf.check_value_int(self.rmin.get_text()) == False:
+           return [False,"rmin"]
+       if self.rmax.get_text()!="" and self.conf.check_value_int(self.rmax.get_text()) == False:
+          return [False,"rmax"]
+
+       return [True,""]
+
+    def check_delay_params(self):
+       # для начала проверим на "цифру"
+       if self.ondelay.get_text()!="" and self.conf.check_value_int(self.ondelay.get_text()) == False:
+          return [False, _("on delay")]
+       if self.offdelay.get_text()!="" and self.conf.check_value_int(self.offdelay.get_text()) == False:
+          return [False,_("off delay")]
+       if self.jardelay.get_text()!="" and self.conf.check_value_int(self.jardelay.get_text()) == False:
+           return [False, _("jar delay")]
+
+       return [True,""]
+       
+    def check_comm_params(self):
+       if self.safety.get_text()!="" and self.conf.check_value_int(self.safety.get_text()) == False:
+          return [False, _("safety")]
+       if self.defval.get_text()!="" and self.conf.check_value_int(self.defval.get_text()) == False:
+          return [False, _("default")]
+       if self.breaklim.get_text()!="" and self.conf.check_value_int(self.breaklim.get_text()) == False:
+          return [False, _("breaklim")]
+     
+       return [True,""]
+
+    def set_xml_param(self,xmlnode,proplist=[],val=""):
+        if xmlnode == None:
+             return
+
+        for p in proplist:
+            xmlnode.setProp(p,val)
+    
+    def get_int_val(self,str_val):
+        if str_val == "" or str_val == None: 
+            return 0
+
+        return int(str_val)
+
+    def init_dlg_parameters(self,iter):
+        self.sensor = self.model.get_value(iter,2)
+        
+        snode = UniXML.EmptyNode()
+        if self.sensor != None:
+            snode = self.sensor  
+        
+        self.lbl_sensor.set_text(snode.prop("name"))
+
+        # Common parameters
+        self.lamp.set_active( self.get_int_val(snode.prop("lamp")) )
+        self.notestlamp.set_active(self.get_int_val(snode.prop("notestlamp")))
+        self.io_range.set_value( self.get_int_val(snode.prop("range")) )
+        self.io_aref.set_value( self.get_int_val(snode.prop("aref")) )
+        self.safety.set_text( str(snode.prop("safety")) )
+        self.breaklim.set_text( str(snode.prop("breaklim")) )
+        self.defval.set_text( str(snode.prop("default")) )
+        self.ignore.set_active( self.get_int_val(snode.prop("ignore")) )
+        self.invert.set_active( self.get_int_val(snode.prop("invert")) )
+        
+        # Calibrations
+        self.cmin.set_text( str(snode.prop("cmin")) )
+        self.cmax.set_text( str(snode.prop("cmax")) )
+        self.rmin.set_text( str(snode.prop("rmin")) )
+        self.rmax.set_text( str(snode.prop("rmax")) )
+        self.prec.set_value( self.get_int_val(snode.prop("precision")) )
+        self.noprec.set_active( self.get_int_val(snode.prop("noprecision")) )
+
+    def get_cb_param(self, checkbutton):
+        if checkbutton.get_active():
+            return "1"
+        return ""
+    
+    def on_edit_channel(self,iter):
+
+        card_iter = self.model.iter_parent(iter)
+        card = self.model.get_value(card_iter,2)
+        node_iter = self.model.iter_parent(card_iter)
+        node = self.model.get_value(node_iter,2)
+        node_id = self.model.get_value(node_iter,4) # node.prop("id")
+        prev_sensor = self.model.get_value(iter,2)
+        print "************** prev_sensor: " + str(prev_sensor)
+        self.init_dlg_parameters(iter)
+        
+        txt = _("Setup ") + str(card.prop("name")) + ":" + str(self.model.get_value(iter,0))
+        self.dlg_info.set_text(txt)
+        while True:
+            res = self.dlg_param.run()
+            self.dlg_param.hide()
+            if res != gtk.RESPONSE_OK:
+                return
+
+#            if self.sensor == None:
+#                 msg = _("Unkown sensor name..")
+#                 dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
+#                 res = dlg.run()
+#                 dlg.hide()
+#                 continue
+            
+            # Common parameters
+            if self.sensor != None:
+                n_it,cd_it,ch_it = self.check_connection(self.sensor)
+                if ch_it is not None:
+                    msg = "'" + self.sensor.prop("name") + "' " + _("Already connection!") 
+                    addr = " (" + self.model.get_value(n_it,0) + ":" + self.model.get_value(cd_it,0) + ":" + self.model.get_value(ch_it,0) +_(")\n Reconnection?")
+                    msg = msg + addr
+                    dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,msg)
+                    res = dlg.run()
+                    dlg.hide()
+                    if res == gtk.RESPONSE_NO:
+                         return False
+                    # сперва очистим привязку у старого
+                    self.model.set_value(ch_it,2,None)
+                    self.model.set_value(ch_it,1,"")
+    
+            if self.sensor == None: # "очищаем старую привязку"
+                self.set_xml_param(prev_sensor,["lamp","notestlamp","range","aref","safety",\
+                       "breaklim","default","ignore","invert","cmin","cmax","rmin","rmax",\
+                       "precision","noprecision"],"")
+                self.model.set_value(iter,2,None)
+                self.model.set_value(iter,1,"")
+                return
+
+            cres,badparam = self.check_comm_params() 
+            if cres == False:
+                 msg = _("Incorrect value of common parameter: '") + str(badparam) + "'"
+                 dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
+                 res = dlg.run()
+                 dlg.hide()
+                 continue
+
+            # Calibrations
+            cres,badparam = self.check_calibrations_params() 
+            if cres == False:
+                 msg = _("Incorrect value of calibrations: '") + str(badparam) + "'"
+                 dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
+                 res = dlg.run()
+                 dlg.hide()
+                 continue
+            # Delay`s
+            cres,badparam = self.check_delay_params() 
+            if cres == False:
+                 msg = _("Incorrect value of delay`s: '") + str(badparam) + "'"
+                 dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
+                 res = dlg.run()
+                 dlg.hide()
+                 continue        
+
+            break
+
+        # Сохраняем параметры
+        self.model.set_value(iter,2,self.sensor)
+        self.model.set_value(iter,1,self.sensor.prop("name"))
+
+        self.sensor.setProp("io",node_id)
+        self.sensor.setProp("card",card.prop("card"))
+        self.sensor.setProp("subdev", str(self.model.get_value(iter,5)))
+        self.sensor.setProp("channel",str(self.model.get_value(iter,4)))
+        
+        # Common parameters
+        self.sensor.setProp("lamp", self.get_cb_param(self.lamp) )
+        self.sensor.setProp("notestlamp", self.get_cb_param(self.notestlamp) )
+        self.sensor.setProp("range", str(self.io_range.get_value_as_int()))
+        self.sensor.setProp("aref", str(self.io_aref.get_value_as_int()))
+        self.sensor.setProp("safety", str(self.safety.get_text()))
+        self.sensor.setProp("breaklim", str(self.breaklim.get_text()))
+        self.sensor.setProp("default", str(self.defval.get_text()))
+        self.sensor.setProp("ignore", self.get_cb_param(self.ignore) )
+        self.sensor.setProp("invert", self.get_cb_param(self.invert) )
+        
+        # Calibrations
+        self.sensor.setProp("cmin", self.cmin.get_text())
+        self.sensor.setProp("cmax", self.cmin.get_text())
+        self.sensor.setProp("rmin", self.cmin.get_text())
+        self.sensor.setProp("rmax", self.cmin.get_text())
+        self.sensor.setProp("precision", self.prec.get_value_as_int())
+        self.sensor.setProp("noprecision", self.get_cb_param(self.noprec) )
+             
         self.conf.mark_changes()

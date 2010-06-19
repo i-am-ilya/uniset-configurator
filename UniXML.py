@@ -5,7 +5,11 @@ import sys
 import libxml2
 import xml.dom.minidom as md
 #import re
-
+# ----------------------------- 
+class EmptyNode():
+     def prop(self,name):
+        return ""
+# -----------------------------  
 class UniXML(str):
     def __init__(self, str):
         try:
@@ -71,14 +75,18 @@ class UniXML(str):
         return None
 
     def getNode(self, node):
+        if node == None:
+           return None
         if node.name != "text" and node.name != "comment":
            return node
         return self.nextNode(node)
 
     def firstNode(self, node):
         while node != None:
+            prev = node
             node = node.prev
             if node == None:
+                node = prev
                 break
         return self.getNode(node)
         
