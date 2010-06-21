@@ -44,7 +44,7 @@ class SListDialog():
         self.build_tree()	    
 
     def build_tree(self):
-
+        self.model.append([_("None"),"","",None])
         node = self.xml.findNode(self.xml.getDoc(),"sensors")[0].children.next 
         while node != None:
             self.model.append([node.prop("id"),node.prop("name"),node.prop("textname"),node])

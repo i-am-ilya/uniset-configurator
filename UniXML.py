@@ -4,7 +4,7 @@
 import sys
 import libxml2
 import xml.dom.minidom as md
-#import re
+import re
 # ----------------------------- 
 class EmptyNode():
      def prop(self,name):
@@ -119,7 +119,10 @@ class UniXML(str):
         mdoc = md.parseString(context) 
         s = mdoc.toprettyxml(encoding="utf-8").split("\n")
         out = open(filename,"w")
+        p = re.compile(r'\ [^\s]{1,}=""')
         for l in s:
             if l.strip():
+               # удаяем пустые свойства prop=""
+               l = p.sub('', l)
                out.write(l+"\n")
         out.close()

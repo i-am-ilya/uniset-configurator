@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<MB745Configuration id="">
+<MB745Configuration>
 	<!-- Общие параметры по UniSet -->
 	<UniSet>
 		<LocalNode name="LocalhostNode"/>
@@ -25,16 +25,16 @@
 		<!-- [мсек] -->
 		<LocalIOR name="0"/>
 		<!-- 1 для реальной системы (подменяется на 1 при сборке пакета); 0 - использование omniNames -->
-		<UniSetDebug file="" levels="" name="unideb"/>
+		<UniSetDebug name="unideb"/>
 		<!-- Если не указано, то считается текущий каталог -->
-		<ConfDir name=""/>
-		<DataDir name=""/>
-		<BinDir name=""/>
-		<LogDir name=""/>
-		<DocDir name=""/>
-		<LockDir name=""/>
+		<ConfDir/>
+		<DataDir/>
+		<BinDir/>
+		<LogDir/>
+		<DocDir/>
+		<LockDir/>
 	</UniSet>
-	<dlog file="" levels="" name="dlog"/>
+	<dlog name="dlog"/>
 	<Services/>
 	<LocalDBServer dbname="mb745" dbpass="dbadmin" dbuser="dbadmin" name="DBServer1" pingTime="10000" reconnectTime="15000"/>
 	<SharedMemory name="SharedMemory" shmID="SharedMemory1"/>
@@ -63,91 +63,91 @@
 			я█я┌п╬ п╫п╟я│я┌я─п╬п╧п╨п╦
 -->
 	<UniExchangeTS name="UniExchangeTS">
-		<item name="UniExchangeSES" node="SYSSESNode" sid_connection=""/>
-		<item name="UniExchangeGEU" node="SYSGEUNode" sid_connection=""/>
+		<item name="UniExchangeSES" node="SYSSESNode"/>
+		<item name="UniExchangeGEU" node="SYSGEUNode"/>
 	</UniExchangeTS>
 	<UniExchangeSES name="UniExchangeSES">
-		<item name="UniExchangeTS" node="SYSTSNode" sid_connection=""/>
-		<item name="UniExchangeGEU" node="SYSGEUNode" sid_connection=""/>
+		<item name="UniExchangeTS" node="SYSTSNode"/>
+		<item name="UniExchangeGEU" node="SYSGEUNode"/>
 	</UniExchangeSES>
 	<UniExchangeGEU name="UniExchangeGEU">
-		<item name="UniExchangeSES" node="SYSSESNode" sid_connection=""/>
-		<item name="UniExchangeTS" node="SYSTSNode" sid_connection=""/>
+		<item name="UniExchangeSES" node="SYSSESNode"/>
+		<item name="UniExchangeTS" node="SYSTSNode"/>
 	</UniExchangeGEU>
 	<UniExchangeGUI name="UniExchangeGUI1">
-		<item name="UniExchangeSES" node="SYSSESNode" sid_connection=""/>
-		<item name="UniExchangeGEU" node="SYSGEUNode" sid_connection=""/>
-		<item name="UniExchangeTS" node="SYSTSNode" sid_connection=""/>
+		<item name="UniExchangeSES" node="SYSSESNode"/>
+		<item name="UniExchangeGEU" node="SYSGEUNode"/>
+		<item name="UniExchangeTS" node="SYSTSNode"/>
 	</UniExchangeGUI>
 	<UniExchangeGUITS name="UniExchangeGUITS">
-		<!--<item name="UniExchangeSES" node="SYSSESNode" sid_connection=""/>
-		<item name="UniExchangeGEU" node="SYSGEUNode" sid_connection=""/>
-		<item name="UniExchangeTS" node="SYSTSNode" sid_connection=""/> -->
-		<item name="UniExchangeTS1" node="TS1Node" sid_connection=""/>
+		<!--<item name="UniExchangeSES" node="SYSSESNode"/>
+		<item name="UniExchangeGEU" node="SYSGEUNode"/>
+		<item name="UniExchangeTS" node="SYSTSNode"/> -->
+		<item name="UniExchangeTS1" node="TS1Node"/>
 	</UniExchangeGUITS>
 	<!-- TS system -->
 	<UniExchangeTS1 name="UniExchangeTS1">
-		<item name="UniExchangeGDG1" node="GDG1Node" sid_connection=""/>
-		<item name="UniExchangeGDG2" node="GDG2Node" sid_connection=""/>
-		<item name="UniExchangeTS2" node="TS2Node" sid_connection=""/>
-		<item name="UniExchangeTSPUS" node="TSPUSNode" sid_connection=""/>
-		<item name="UniExchangeTSCPU" node="SYSTSNode" sid_connection=""/>
+		<item name="UniExchangeGDG1" node="GDG1Node"/>
+		<item name="UniExchangeGDG2" node="GDG2Node"/>
+		<item name="UniExchangeTS2" node="TS2Node"/>
+		<item name="UniExchangeTSPUS" node="TSPUSNode"/>
+		<item name="UniExchangeTSCPU" node="SYSTSNode"/>
 	</UniExchangeTS1>
 	<UniExchangeTS2 name="UniExchangeTS2">
-		<item name="UniExchangeGDG1" node="GDG1Node" sid_connection=""/>
-		<item name="UniExchangeGDG2" node="GDG2Node" sid_connection=""/>
-		<item name="UniExchangeTS1" node="TS1Node" sid_connection=""/>
-		<item name="UniExchangeTSPUS" node="TSPUSNode" sid_connection=""/>
-		<item name="UniExchangeTSCPU" node="SYSTSNode" sid_connection=""/>
+		<item name="UniExchangeGDG1" node="GDG1Node"/>
+		<item name="UniExchangeGDG2" node="GDG2Node"/>
+		<item name="UniExchangeTS1" node="TS1Node"/>
+		<item name="UniExchangeTSPUS" node="TSPUSNode"/>
+		<item name="UniExchangeTSCPU" node="SYSTSNode"/>
 	</UniExchangeTS2>
 	<UniExchangeGDG1 name="UniExchangeGDG1">
-		<item name="UniExchangeGDG2" node="GDG2Node" sid_connection=""/>
-		<item name="UniExchangeTS1" node="TS1Node" sid_connection=""/>
-		<item name="UniExchangeTS2" node="TS2Node" sid_connection=""/>
-		<item name="UniExchangeTSPUS" node="TSPUSNode" sid_connection=""/>
-		<item name="UniExchangeTSCPU" node="SYSTSNode" sid_connection=""/>
+		<item name="UniExchangeGDG2" node="GDG2Node"/>
+		<item name="UniExchangeTS1" node="TS1Node"/>
+		<item name="UniExchangeTS2" node="TS2Node"/>
+		<item name="UniExchangeTSPUS" node="TSPUSNode"/>
+		<item name="UniExchangeTSCPU" node="SYSTSNode"/>
 	</UniExchangeGDG1>
 	<UniExchangeGDG2 name="UniExchangeGDG2">
-		<item name="UniExchangeGDG1" node="GDG1Node" sid_connection=""/>
-		<item name="UniExchangeTS1" node="TS1Node" sid_connection=""/>
-		<item name="UniExchangeTS2" node="TS2Node" sid_connection=""/>
-		<item name="UniExchangeTSPUS" node="TSPUSNode" sid_connection=""/>
-		<item name="UniExchangeTSCPU" node="SYSTSNode" sid_connection=""/>
+		<item name="UniExchangeGDG1" node="GDG1Node"/>
+		<item name="UniExchangeTS1" node="TS1Node"/>
+		<item name="UniExchangeTS2" node="TS2Node"/>
+		<item name="UniExchangeTSPUS" node="TSPUSNode"/>
+		<item name="UniExchangeTSCPU" node="SYSTSNode"/>
 	</UniExchangeGDG2>
 	<UniExchangeTSCPU name="UniExchangeTSCPU">
-		<item name="UniExchangeGDG1" node="GDG1Node" sid_connection=""/>
-		<item name="UniExchangeGDG2" node="GDG2Node" sid_connection=""/>
-		<item name="UniExchangeTS1" node="TS1Node" sid_connection=""/>
-		<item name="UniExchangeTS2" node="TS2Node" sid_connection=""/>
-		<item name="UniExchangeTSPUS" node="TSPUSNode" sid_connection=""/>
+		<item name="UniExchangeGDG1" node="GDG1Node"/>
+		<item name="UniExchangeGDG2" node="GDG2Node"/>
+		<item name="UniExchangeTS1" node="TS1Node"/>
+		<item name="UniExchangeTS2" node="TS2Node"/>
+		<item name="UniExchangeTSPUS" node="TSPUSNode"/>
 	</UniExchangeTSCPU>
 	<UniExchangeTSPUS name="UniExchangeTSPUS">
-		<item name="UniExchangeGDG1" node="GDG1Node" sid_connection=""/>
-		<item name="UniExchangeGDG2" node="GDG2Node" sid_connection=""/>
-		<item name="UniExchangeTS1" node="TS1Node" sid_connection=""/>
-		<item name="UniExchangeTS2" node="TS2Node" sid_connection=""/>
-		<item name="UniExchangeTSCPU" node="SYSTSNode" sid_connection=""/>
+		<item name="UniExchangeGDG1" node="GDG1Node"/>
+		<item name="UniExchangeGDG2" node="GDG2Node"/>
+		<item name="UniExchangeTS1" node="TS1Node"/>
+		<item name="UniExchangeTS2" node="TS2Node"/>
+		<item name="UniExchangeTSCPU" node="SYSTSNode"/>
 	</UniExchangeTSPUS>
 	<!-- GEU system -->
 	<UniExchangeGEU1 name="UniExchangeGEU1">
-		<item name="UniExchangeGEUAPS" node="GEUAPSNode" sid_connection=""/>
-		<item name="UniExchangeGEUCPU" node="SYSGEUNode" sid_connection=""/>
-		<item name="UniExchangeGEUPUS" node="GEUPUSNode" sid_connection=""/>
+		<item name="UniExchangeGEUAPS" node="GEUAPSNode"/>
+		<item name="UniExchangeGEUCPU" node="SYSGEUNode"/>
+		<item name="UniExchangeGEUPUS" node="GEUPUSNode"/>
 	</UniExchangeGEU1>
 	<UniExchangeGEUAPS name="UniExchangeAPS">
-		<item name="UniExchangeGEU1" node="GEUNode" sid_connection=""/>
-		<item name="UniExchangeGEUCPU" node="SYSGEUNode" sid_connection=""/>
-		<item name="UniExchangeGEUPUS" node="GEUPUSNode" sid_connection=""/>
+		<item name="UniExchangeGEU1" node="GEUNode"/>
+		<item name="UniExchangeGEUCPU" node="SYSGEUNode"/>
+		<item name="UniExchangeGEUPUS" node="GEUPUSNode"/>
 	</UniExchangeGEUAPS>
 	<UniExchangeGEUPUS name="UniExchangeGEUPUS">
-		<item name="UniExchangeGEU1" node="GEUNode" sid_connection=""/>
-		<item name="UniExchangeGEUAPS" node="GEUAPSNode" sid_connection=""/>
-		<item name="UniExchangeGEUCPU" node="SYSGEUNode" sid_connection=""/>
+		<item name="UniExchangeGEU1" node="GEUNode"/>
+		<item name="UniExchangeGEUAPS" node="GEUAPSNode"/>
+		<item name="UniExchangeGEUCPU" node="SYSGEUNode"/>
 	</UniExchangeGEUPUS>
 	<UniExchangeGEUCPU name="UniExchangeGEUCPU">
-		<item name="UniExchangeGEU1" node="GEUNode" sid_connection=""/>
-		<item name="UniExchangeGEUAPS" node="GEUAPSNode" sid_connection=""/>
-		<item name="UniExchangeGEUPUS" node="GEUPUSNode" sid_connection=""/>
+		<item name="UniExchangeGEU1" node="GEUNode"/>
+		<item name="UniExchangeGEUAPS" node="GEUAPSNode"/>
+		<item name="UniExchangeGEUPUS" node="GEUPUSNode"/>
 	</UniExchangeGEUCPU>
 	<!--	
 		================================================================= 
@@ -181,13 +181,13 @@
 	-->
 		<!-- Световая колонка в машинном отделении(MO) -->
 		<!-- Сигналы с красным маячком -->
-		<MO_LCAPS_RED confirm="TSCPU_Confirm_S" flamp="MO_LC_RedFlash1_C" heartbeat_id="_31_41_AS" heartbeat_max="10" horn1="MO_LC_Horn1_C" hornreset="TSCPU_HornReset_S" name="MO_LCAPS_RED" remote_bs="" remoteconfirm="">
+		<MO_LCAPS_RED confirm="TSCPU_Confirm_S" flamp="MO_LC_RedFlash1_C" heartbeat_id="_31_41_AS" heartbeat_max="10" horn1="MO_LC_Horn1_C" hornreset="TSCPU_HornReset_S" name="MO_LCAPS_RED">
 			<item comm="Пожар в МО" delay="0" lamp="MO_LC_FireInMO_C" lamptype="AO" name="16_04_S"/>
 			<item comm="Пожар вне МО и МКО" delay="0" lamp="MO_LC_FireOut_MO_MKO_C" lamptype="AO" name="16_05_S"/>
 			<item comm="Пуск CO2 в МО" delay="0" lamp="MO_CO2_MO_C" lamptype="AO" name="20_05_S"/>
 		</MO_LCAPS_RED>
 		<!-- Сигналы с оранжевым маячком -->
-		<MO_LCAPS_ORANGE confirm="TSCPU_Confirm_S" flamp="MO_LC_OrangeFlash1_C" heartbeat_id="_31_43_AS" heartbeat_max="10" horn1="MO_LC_Horn2_C" hornreset="TSCPU_HornReset_S" name="MO_LCAPS_ORANGE" remote_bs="" remoteconfirm="">
+		<MO_LCAPS_ORANGE confirm="TSCPU_Confirm_S" flamp="MO_LC_OrangeFlash1_C" heartbeat_id="_31_43_AS" heartbeat_max="10" horn1="MO_LC_Horn2_C" hornreset="TSCPU_HornReset_S" name="MO_LCAPS_ORANGE">
 			<item comm="Неисправность рулевого устройства" delay="0" lamp="MO_HelmFailure_C" lamptype="AO" name="aps_helm_S"/>
 			<item blink="1" comm="Вызов к телефону в МО" delay="0" lamp="MO_Telephon_C" lamptype="AO" name="20_10_S" noconfirm="1"/>
 			<item blink="1" comm="Согласуй телеграф" delay="0" lamp="MO_Telegraph_C" lamptype="AO" name="20_13_S" noconfirm="1"/>
@@ -201,22 +201,22 @@
 		      чтобы при "вызове к телефону" и "команде машинного телеграфа"
 		      срабатывали не только лампочки, но и рыжий маячок
 		-->
-		<MO_LCAPS_ORANGE_SILENT confirm="" flamp="" heartbeat_id="" heartbeat_max="10" horn1="" hornreset="" name="MO_LCAPS_ORANGE_SILENT" remote_bs="" remoteconfirm="">
+		<MO_LCAPS_ORANGE_SILENT heartbeat_max="10" name="MO_LCAPS_ORANGE_SILENT">
 			<item blink="1" comm="Вызов к телефону в МО" delay="0" lamp="MO_Telephon_C" lamptype="AO" name="20_10_S" noconfirm="1"/>
 			<item comm="(маячок) при вызове к телефону в МО" delay="0" lamp="MO_LC_OrangeFlash2_C" lamptype="DO" name="20_10_S" noconfirm="1"/>
 			<item blink="1" comm="Согласуй телеграф" delay="0" lamp="MO_Telegraph_C" lamptype="AO" name="20_13_S" noconfirm="1"/>
 			<item comm="(маячок) при комаде телеграфа" delay="0" lamp="MO_LC_OrangeFlash3_C" lamptype="DO" name="20_13_S" noconfirm="1"/>
 		</MO_LCAPS_ORANGE_SILENT>
 		<!-- Сигналы с зелёным маячком, не требуют квитирования  horn1="MO_LC_Horn3_C" -->
-		<MO_LCAPS_GREEN confirm="" flamp="MO_LC_GreenFlash1_C" heartbeat_id="_31_45_AS" heartbeat_max="10" horn1="" hornreset="TSCPU_HornReset_S" name="MO_LCAPS_GREEN" remote_bs="" remoteconfirm="">
+		<MO_LCAPS_GREEN flamp="MO_LC_GreenFlash1_C" heartbeat_id="_31_45_AS" heartbeat_max="10" hornreset="TSCPU_HornReset_S" name="MO_LCAPS_GREEN">
 		</MO_LCAPS_GREEN>
 		<!-- Световая колонка в машинно-котельном отделении (MKO) -->
-		<MKO_LCAPS_RED confirm="TSCPU_Confirm_S" flamp="MKO_LC_RedFlash1_C" heartbeat_id="_31_42_AS" heartbeat_max="10" horn1="MKO_LC_Horn1_C" hornreset="TSCPU_HornReset_S" name="MKO_LCAPS_RED" remote_bs="" remoteconfirm="">
+		<MKO_LCAPS_RED confirm="TSCPU_Confirm_S" flamp="MKO_LC_RedFlash1_C" heartbeat_id="_31_42_AS" heartbeat_max="10" horn1="MKO_LC_Horn1_C" hornreset="TSCPU_HornReset_S" name="MKO_LCAPS_RED">
 			<item comm="Пожар в МКО" delay="0" lamp="MKO_LC_FireInMKO_C" lamptype="AO" name="16_03_S"/>
 			<item comm="Пожар вне МО и МКО" delay="0" lamp="MKO_LC_FireOut_MO_MKO_C" lamptype="AO" name="16_05_S"/>
 			<item comm="Пуск CO2 в МKО" delay="0" lamp="MKO_CO2_MKO_C" lamptype="AO" name="20_07_S"/>
 		</MKO_LCAPS_RED>
-		<MKO_LCAPS_ORANGE confirm="TSCPU_Confirm_S" flamp="MKO_LC_OrangeFlash1_C" heartbeat_id="_31_44_AS" heartbeat_max="10" horn1="MKO_LC_Horn2_C" hornreset="TSCPU_HornReset_S" name="MKO_LCAPS_ORANGE" remote_bs="" remoteconfirm="">
+		<MKO_LCAPS_ORANGE confirm="TSCPU_Confirm_S" flamp="MKO_LC_OrangeFlash1_C" heartbeat_id="_31_44_AS" heartbeat_max="10" horn1="MKO_LC_Horn2_C" hornreset="TSCPU_HornReset_S" name="MKO_LCAPS_ORANGE">
 			<item comm="Вода в МКО" delay="0" lamp="MKO_MKO_Water_C" lamptype="AO" name="14_06_S"/>
 			<item comm="Неисправность рулевого устройства" delay="0" lamp="MKO_HelmFailure_C" lamptype="AO" name="aps_helm_S"/>
 			<!-- MKO_APS_Flash_C - это искуственная лампочка.
@@ -228,11 +228,11 @@
 		      чтобы при "вызове к телефону"
 		      срабатывали не только лампочки, но и рыжий маячок
 		-->
-		<MKO_LCAPS_ORANGE_SILENT confirm="" flamp="" heartbeat_id="" heartbeat_max="10" horn1="" hornreset="" name="MKO_LCAPS_ORANGE_SILENT" remote_bs="" remoteconfirm="">
+		<MKO_LCAPS_ORANGE_SILENT heartbeat_max="10" name="MKO_LCAPS_ORANGE_SILENT">
 			<item blink="1" comm="Вызов к телефону в МКО" delay="0" lamp="MKO_Telephon_C" lamptype="AO" name="20_09_S" noconfirm="1"/>
 			<item comm="Маячок (при вызове к телефону в МКО)" delay="0" lamp="MKO_LC_OrangeFlash2_C" lamptype="DO" name="20_09_S" noconfirm="1"/>
 		</MKO_LCAPS_ORANGE_SILENT>
-		<MKO_LCAPS_GREEN flamp="MKO_LC_GreenFlash1_C" heartbeat_id="_31_46_AS" heartbeat_max="10" horn1="MKO_LC_Horn3_C" hornreset="TSCPU_HornReset_S" name="MKO_LCAPS_GREEN" remote_bs="">
+		<MKO_LCAPS_GREEN flamp="MKO_LC_GreenFlash1_C" heartbeat_id="_31_46_AS" heartbeat_max="10" horn1="MKO_LC_Horn3_C" hornreset="TSCPU_HornReset_S" name="MKO_LCAPS_GREEN">
 		</MKO_LCAPS_GREEN>
 		<MO_CommonHorn iotype="DO" name="MO_CommonHorn" out="MO_LC_Horn_C">
 			<item name="MO_LC_Horn1_C"/>
@@ -285,7 +285,7 @@
 		<MO_APSLamp iotype="AO" name="MO_APSLamp" out="MO_APS_C">
 			<item name="APSLamp_C"/>
 		</MO_APSLamp>
-		<TS_SELCO confirm="TS_SELCO_Confirm_S" heartbeat_id="" heartbeat_max="10" hornblink1="" hornreset="" name="TS_SELCO" remote_bs="">
+		<TS_SELCO confirm="TS_SELCO_Confirm_S" heartbeat_max="10" name="TS_SELCO">
 			<item comm="TS system failed" delay="0" lamp="TS_SELCO_Lamp1_C" lamptype="AO" name="aps_100_S"/>
 			<item comm="MO water" delay="0" lamp="TS_SELCO_Lamp2_C" lamptype="AO" name="14_05_S"/>
 			<item comm="MKO water" delay="0" lamp="TS_SELCO_Lamp3_C" lamptype="AO" name="14_06_S"/>
@@ -293,36 +293,36 @@
 			<item comm="APS system failed" delay="0" lamp="TS_SELCO_Lamp5_C" lamptype="AO" name="aps_107_S"/>
 			<item comm="fire pump N1 overload" delay="0" lamp="TS_SELCO_Lamp6_C" lamptype="AO" name="16_01_S"/>
 		</TS_SELCO>
-		<PUS_SELCO1 confirm="TSPUS_Confirm_S" confirmlamp="PUS_SELCO1_Confirm_C" heartbeat_id="" heartbeat_max="10" hornblink1="PUS_SELCO1_Horn_C" hornreset="TSPUS_HornReset_S" name="PUS_SELCO1" remote_bs="">
-			<item comm="" delay="0" lamp="PUS_SELCO1_Lamp1_C" lamptype="AO" name="12_04_S"/>
-			<item comm="" delay="0" lamp="PUS_SELCO1_Lamp2_C" lamptype="AO" name="12_06_S"/>
-			<item comm="" delay="0" lamp="PUS_SELCO1_Lamp3_C" lamptype="AO" name="12_10_S"/>
-			<item comm="" delay="0" lamp="PUS_SELCO1_Lamp4_C" lamptype="AO" name="12_12_S"/>
-			<item comm="" delay="0" lamp="PUS_SELCO1_Lamp11_C" lamptype="AO" name="12_03_S"/>
-			<item comm="" delay="0" lamp="PUS_SELCO1_Lamp12_C" lamptype="AO" name="12_05_S"/>
-			<item comm="" delay="0" lamp="PUS_SELCO1_Lamp13_C" lamptype="AO" name="12_09_S"/>
-			<item comm="" delay="0" lamp="PUS_SELCO1_Lamp14_C" lamptype="AO" name="12_11_S"/>
+		<PUS_SELCO1 confirm="TSPUS_Confirm_S" confirmlamp="PUS_SELCO1_Confirm_C" heartbeat_max="10" hornblink1="PUS_SELCO1_Horn_C" hornreset="TSPUS_HornReset_S" name="PUS_SELCO1">
+			<item delay="0" lamp="PUS_SELCO1_Lamp1_C" lamptype="AO" name="12_04_S"/>
+			<item delay="0" lamp="PUS_SELCO1_Lamp2_C" lamptype="AO" name="12_06_S"/>
+			<item delay="0" lamp="PUS_SELCO1_Lamp3_C" lamptype="AO" name="12_10_S"/>
+			<item delay="0" lamp="PUS_SELCO1_Lamp4_C" lamptype="AO" name="12_12_S"/>
+			<item delay="0" lamp="PUS_SELCO1_Lamp11_C" lamptype="AO" name="12_03_S"/>
+			<item delay="0" lamp="PUS_SELCO1_Lamp12_C" lamptype="AO" name="12_05_S"/>
+			<item delay="0" lamp="PUS_SELCO1_Lamp13_C" lamptype="AO" name="12_09_S"/>
+			<item delay="0" lamp="PUS_SELCO1_Lamp14_C" lamptype="AO" name="12_11_S"/>
 		</PUS_SELCO1>
-		<PUS_SELCO2 confirm="TSPUS_Confirm_S" confirmlamp="PUS_SELCO2_Confirm_C" heartbeat_id="" heartbeat_max="10" hornblink1="PUS_SELCO2_Horn_C" hornreset="TSPUS_HornReset_S" name="PUS_SELCO2" remote_bs="">
-			<item comm="" delay="0" lamp="PUS_SELCO2_Lamp1_C" lamptype="AO" name="aps_105_S"/>
-			<item comm="" delay="0" lamp="PUS_SELCO2_Lamp2_C" lamptype="AO" name="aps_101_S"/>
-			<item comm="" delay="0" lamp="PUS_SELCO2_Lamp3_C" lamptype="AO" name="08_08_S"/>
-			<item comm="" delay="0" lamp="PUS_SELCO2_Lamp4_C" lamptype="AO" name="aps_100_S"/>
-			<item comm="" delay="0" lamp="PUS_SELCO2_Lamp5_C" lamptype="AO" name="16_02_S"/>
-			<item comm="" delay="0" lamp="PUS_SELCO2_Lamp6_C" lamptype="AO" name="14_05_S"/>
-			<item comm="" delay="0" lamp="PUS_SELCO2_Lamp7_C" lamptype="AO" name="aps_106_S"/>
-			<item comm="" delay="0" lamp="PUS_SELCO2_Lamp8_C" lamptype="AO" name="07_14_S"/>
-			<item comm="" delay="0" lamp="PUS_SELCO2_Lamp11_C" lamptype="AO" name="aps_107_S"/>
-			<item comm="" delay="0" lamp="PUS_SELCO2_Lamp12_C" lamptype="AO" name="aps_102_S"/>
-			<item comm="" delay="0" lamp="PUS_SELCO2_Lamp13_C" lamptype="AO" name="08_07_S"/>
-			<item comm="" delay="0" lamp="PUS_SELCO2_Lamp14_C" lamptype="AO" name="21_07_S"/>
-			<item comm="" delay="0" lamp="PUS_SELCO2_Lamp15_C" lamptype="AO" name="16_01_S"/>
-			<item comm="" delay="0" lamp="PUS_SELCO2_Lamp16_C" lamptype="AO" name="14_06_S"/>
-			<item comm="" delay="0" lamp="PUS_SELCO2_Lamp17_C" lamptype="AO" name="21_06_S"/>
+		<PUS_SELCO2 confirm="TSPUS_Confirm_S" confirmlamp="PUS_SELCO2_Confirm_C" heartbeat_max="10" hornblink1="PUS_SELCO2_Horn_C" hornreset="TSPUS_HornReset_S" name="PUS_SELCO2">
+			<item delay="0" lamp="PUS_SELCO2_Lamp1_C" lamptype="AO" name="aps_105_S"/>
+			<item delay="0" lamp="PUS_SELCO2_Lamp2_C" lamptype="AO" name="aps_101_S"/>
+			<item delay="0" lamp="PUS_SELCO2_Lamp3_C" lamptype="AO" name="08_08_S"/>
+			<item delay="0" lamp="PUS_SELCO2_Lamp4_C" lamptype="AO" name="aps_100_S"/>
+			<item delay="0" lamp="PUS_SELCO2_Lamp5_C" lamptype="AO" name="16_02_S"/>
+			<item delay="0" lamp="PUS_SELCO2_Lamp6_C" lamptype="AO" name="14_05_S"/>
+			<item delay="0" lamp="PUS_SELCO2_Lamp7_C" lamptype="AO" name="aps_106_S"/>
+			<item delay="0" lamp="PUS_SELCO2_Lamp8_C" lamptype="AO" name="07_14_S"/>
+			<item delay="0" lamp="PUS_SELCO2_Lamp11_C" lamptype="AO" name="aps_107_S"/>
+			<item delay="0" lamp="PUS_SELCO2_Lamp12_C" lamptype="AO" name="aps_102_S"/>
+			<item delay="0" lamp="PUS_SELCO2_Lamp13_C" lamptype="AO" name="08_07_S"/>
+			<item delay="0" lamp="PUS_SELCO2_Lamp14_C" lamptype="AO" name="21_07_S"/>
+			<item delay="0" lamp="PUS_SELCO2_Lamp15_C" lamptype="AO" name="16_01_S"/>
+			<item delay="0" lamp="PUS_SELCO2_Lamp16_C" lamptype="AO" name="14_06_S"/>
+			<item delay="0" lamp="PUS_SELCO2_Lamp17_C" lamptype="AO" name="21_06_S"/>
 		</PUS_SELCO2>
-		<PUS_Various confirm="" heartbeat_id="" heartbeat_max="10" hornreset="" name="PUS_Various">
-			<item comm="Работает насосный агрегат N1 рулевой машины" delay="0" lamp="" lamptype="DO" name="12_01_S" noconfirm="1"/>
-			<item comm="Работает насосный агрегат N2 рулевой машины" delay="0" lamp="" lamptype="DO" name="12_02_S" noconfirm="1"/>
+		<PUS_Various heartbeat_max="10" name="PUS_Various">
+			<item comm="Работает насосный агрегат N1 рулевой машины" delay="0" lamptype="DO" name="12_01_S" noconfirm="1"/>
+			<item comm="Работает насосный агрегат N2 рулевой машины" delay="0" lamptype="DO" name="12_02_S" noconfirm="1"/>
 		</PUS_Various>
 		<PUS_CommonHorn iotype="AO" name="PUS_CommonHorn" out="TSPUS_Horn_C">
 			<item name="PUS_SELCO1_Horn_C"/>
@@ -337,7 +337,7 @@
 		<MiscSignals2 DG1_0801_s="08_01_S" DG1_0803_s="08_03_S" DG1_0805_s="08_05_S" DG1_0807_s="08_07_S" DG1_Overrun_c="DG1_Overrun_S" DG2_0802_s="08_02_S" DG2_0804_s="08_04_S" DG2_0806_s="08_06_S" DG2_0808_s="08_08_S" DG2_Overrun_c="DG2_Overrun_S" RM1_NoPowerWarn_c="12_15_S" RM1_NoPower_s="_12_15_S" RM1_PumpOn_s="12_07_S" RM2_NoPowerWarn_c="12_16_S" RM2_NoPower_s="_12_16_S" RM2_PumpOn_s="12_08_S" overrun_delay_msec="3000"/>
 		<MiscSignalsPUS PUS_P="TSPUS_SES_PWR_C" SEES_P_as="SEES_P_AS"/>
 		<!-- ЦПУ АПС -->
-		<TSCPU_APS confirm="TSCPU_Confirm_S" confirmlamp="TSCPU_Confirm_C" heartbeat_id="" heartbeat_max="10" hornblink1="TSCPU_Bell_C" hornreset="TSCPU_HornReset_S" name="TSCPU_APS" remote_bs="" remoteconfirm="">
+		<TSCPU_APS confirm="TSCPU_Confirm_S" confirmlamp="TSCPU_Confirm_C" heartbeat_max="10" hornblink1="TSCPU_Bell_C" hornreset="TSCPU_HornReset_S" name="TSCPU_APS">
 			<item always_alarm="1" comm="сработала АПС" delay="0" lamp="TSCPU_APS_C" lamptype="AO" name="APS_FS"/>
 		</TSCPU_APS>
 		<!-- Пост приёма топлива -->
@@ -383,18 +383,18 @@
 				<item name="QB1"/>
 			</automatlist>
 			<offlist>
-				<item cur="QG3" mid="" off_msec="20000" prepare_mid="" prev="QG1"/>
-				<item cur="QG4" mid="" off_msec="20000" prepare_mid="" prev="QG1"/>
-				<item cur="QG3" mid="" off_msec="20000" prepare_mid="" prev="QG2"/>
-				<item cur="QG4" mid="" off_msec="20000" prepare_mid="" prev="QG2"/>
-				<item cur="QG1" mid="" off_msec="20000" prepare_mid="" prev="QG3"/>
-				<item cur="QG2" mid="" off_msec="20000" prepare_mid="" prev="QG3"/>
-				<item cur="QB1" mid="" off_msec="20000" prepare_mid="" prev="QG3"/>
-				<item cur="QG1" mid="" off_msec="20000" prepare_mid="" prev="QG4"/>
-				<item cur="QG2" mid="" off_msec="20000" prepare_mid="" prev="QG4"/>
-				<item cur="QB1" mid="" off_msec="20000" prepare_mid="" prev="QG4"/>
-				<item cur="QG3" mid="" off_msec="20000" prepare_mid="" prev="QB1"/>
-				<item cur="QG4" mid="" off_msec="20000" prepare_mid="" prev="QB1"/>
+				<item cur="QG3" off_msec="20000" prev="QG1"/>
+				<item cur="QG4" off_msec="20000" prev="QG1"/>
+				<item cur="QG3" off_msec="20000" prev="QG2"/>
+				<item cur="QG4" off_msec="20000" prev="QG2"/>
+				<item cur="QG1" off_msec="20000" prev="QG3"/>
+				<item cur="QG2" off_msec="20000" prev="QG3"/>
+				<item cur="QB1" off_msec="20000" prev="QG3"/>
+				<item cur="QG1" off_msec="20000" prev="QG4"/>
+				<item cur="QG2" off_msec="20000" prev="QG4"/>
+				<item cur="QB1" off_msec="20000" prev="QG4"/>
+				<item cur="QG3" off_msec="20000" prev="QB1"/>
+				<item cur="QG4" off_msec="20000" prev="QB1"/>
 			</offlist>
 		</SEESControl>
 		<!--
@@ -479,10 +479,10 @@
 				<item delay="0" lamp="CPU_DG4_Alarm_BS" lamptype="AO" name="DG4_Alarm_S"/>
 			</APSPanel>
 		</SEES4_CPanel>
-		<SEES1 AcceptControlTime="5000" AcceptWaitingTime="20000" CommandPause="1000" ControlMode_f="DG1_CtlMode_AS" CtlMode_Auto_bs="DG1_AutoCtl_BS" CtlMode_Auto_s="DG1_AutoCtl_S" CtlMode_Hand_bs="DG1_PultCtl_BS" CtlMode_Off_bs="DG1_LocalCtl_BS" CtlMode_QG_bs="QG1_RemoteControl_BS" CtlMode_f="DG1_CtlMode_AS" DG_RemoteControl_s="DG1_RemoteControl_S" DG_Start_C="DG1_Start_C" DG_Start_s="DG1_Start_S" DG_Stop_C="DG1_Stop_C" DG_Stop_s="DG1_Stop_S" Diesel="Diesel1" Generator="Generator1" Leader_f="DG1_Leader_F" Load20Time="10000" LocalTestMode_S="SESNode_TestMode_S" NoPowerTime="2000" NoPower_C="SEES1_NoPower_C" NoPower_S="NoPower_S" NotAlone_C="SEES1_NotAloneWorking_C" OffTime="60000" OnControl_C="SEES1_OnControl_C" OnTime="15000" Overload105_S="SEES1_Overload105_S" Overload20_S="SEES1_Overload20_S" Overload95_S="SEES1_Overload95_S" Ping_C="SEES1_Ping_C" Priority_s="GDG_Priority12_S" Protection_BS="SEES1_Protection_BS" QG="QG1" QGOffTime="15000" QGOnTime="15000" QG_Off_C="QG1_Off_C" QG_Off_s="Ctl_QG1_Off_S" QG_On_C="QG1_On_C" QG_On_s="Ctl_QG1_On_S" QG_RemoteControl_s="QG_RemoteControl_S" ReservCount="3" Reserv_f="DG1_Reserv_S" Reset_C="SEES1_Reset_C" Reset_s="SEES_ProtReset_S" RunTime="60000" Warning_S="_106_01_S" askPause="2000" askTimeout="15000" cmd_OffReserv_f="SEES1_Reserv_Down_FS" cmd_OnReserv_f="SEES1_Reserv_FS" filterPause="500" frequency_as="DG1_F_AS" initPause="2000" kmax="1" lmpDG_OFF_c="DG1_LampOFF_C" lmpDG_ON_c="DG1_LampON_C" lmpQG_OFF_c="QG1_LampOFF_C" lmpQG_ON_c="QG1_LampON_C" mid_AutoModeOff="SEES_AutoOff_WM" mid_BadOperation="" mid_Diesel_NotOff="SEES_Diesel1_NotOff_WM" mid_Diesel_NotOn="SEES_Diesel1_NotOn_WM" mid_Generator_NotOff="SEES_Generator1_NotOff_WM" mid_Generator_NotOn="SEES_Generator1_NotOn_WM" mid_NA_State="SEES_DG1_NA_State_WM" mid_NoReserv="DG1_NoReserve_IM" mid_NotAccept="SEES_DG1_NotAccept_WM" mid_NotDischarge="SEES_DG1_NotDischarge_WM" mid_NotFinished="SEES_DG1_NotFinished_WM" mid_NotOff="SEES_DG1_NotOff_WM" mid_NotOn="SEES_DG1_NotOn_WM" mid_OnReservBadAction="DG1_ReservBadAction_WM" mid_ProtectionNotReset="SEES1_ProtectionNotReset_Att" mid_ProtectionOff="DG1_ProtectionOff_IM" mid_ProtectionOn="DG1_ProtectionOn_IM" mid_QG_NotOff="SEES_QG1_NotOff_WM" mid_QG_NotOn="SEES_QG1_NotOn_WM" mid_ReservBadAction="DG1_ReservBadAction_WM" mid_SetReserv="DG1_Reserve_IM" mid_SetReserv_Att="DG1_Reserve_Att_IM" mid_SetReserv_Failure="DG1_SetReserv_Failure_IM" mid_discharging="DG1_Discharging_IM" mid_endStarting="DG1_EndStarting_IM" mid_endStopping="DG1_EndStopping_IM" mid_starting="DG1_Starting_IM" mid_stopping="DG1_Stopping_IM" modeTime="300" myPostID="SEES1_CPanel" name="SEES1" num="1" postID="SEES1_PostID" power="1500" power_as="DG1_P_AS" protectionPause="500" state_as="SEES1_State_AS" voltage_as="DG1_U_AS"/>
-		<SEES2 AcceptControlTime="5000" AcceptWaitingTime="20000" CommandPause="1000" ControlMode_f="DG2_CtlMode_AS" CtlMode_Auto_bs="DG2_AutoCtl_BS" CtlMode_Auto_s="DG2_AutoCtl_S" CtlMode_Hand_bs="DG2_PultCtl_BS" CtlMode_Off_bs="DG2_LocalCtl_BS" CtlMode_QG_bs="QG2_RemoteControl_BS" CtlMode_f="DG2_CtlMode_AS" DG_RemoteControl_s="DG2_RemoteControl_S" DG_Start_C="DG2_Start_C" DG_Start_s="DG2_Start_S" DG_Stop_C="DG2_Stop_C" DG_Stop_s="DG2_Stop_S" Diesel="Diesel2" Generator="Generator2" Leader_f="DG2_Leader_F" Load20Time="10000" LocalTestMode_S="SESNode_TestMode_S" NoPowerTime="2000" NoPower_C="SEES2_NoPower_C" NoPower_S="NoPower_S" NotAlone_C="SEES2_NotAloneWorking_C" OffTime="60000" OnControl_C="SEES2_OnControl_C" OnTime="15000" Overload105_S="SEES2_Overload105_S" Overload20_S="SEES2_Overload20_S" Overload95_S="SEES2_Overload95_S" Ping_C="SEES2_Ping_C" Priority_s="GDG_Priority21_S" Protection_BS="SEES2_Protection_BS" QG="QG2" QGOffTime="15000" QGOnTime="15000" QG_Off_C="QG2_Off_C" QG_Off_s="Ctl_QG2_Off_S" QG_On_C="QG2_On_C" QG_On_s="Ctl_QG2_On_S" QG_RemoteControl_s="QG_RemoteControl_S" ReservCount="3" Reserv_f="DG2_Reserv_S" Reset_C="SEES2_Reset_C" Reset_s="SEES_ProtReset_S" RunTime="60000" Warning_S="_106_02_S" askPause="2000" askTimeout="15000" cmd_OffReserv_f="SEES2_Reserv_Down_FS" cmd_OnReserv_f="SEES2_Reserv_FS" filterPause="500" frequency_as="DG2_F_AS" initPause="2000" kmax="1" lmpDG_OFF_c="DG2_LampOFF_C" lmpDG_ON_c="DG2_LampON_C" lmpQG_OFF_c="QG2_LampOFF_C" lmpQG_ON_c="QG2_LampON_C" mid_AutoModeOff="SEES_AutoOff_WM" mid_BadOperation="" mid_Diesel_NotOff="SEES_Diesel2_NotOff_WM" mid_Diesel_NotOn="SEES_Diesel2_NotOn_WM" mid_Generator_NotOff="SEES_Generator2_NotOff_WM" mid_Generator_NotOn="SEES_Generator2_NotOn_WM" mid_NA_State="SEES_DG2_NA_State_WM" mid_NoReserv="DG2_NoReserve_IM" mid_NotAccept="SEES_DG2_NotAccept_WM" mid_NotDischarge="SEES_DG2_NotDischarge_WM" mid_NotFinished="SEES_DG2_NotFinished_WM" mid_NotOff="SEES_DG2_NotOff_WM" mid_NotOn="SEES_DG2_NotOn_WM" mid_OnReservBadAction="DG2_ReservBadAction_WM" mid_ProtectionNotReset="SEES2_ProtectionNotReset_Att" mid_ProtectionOff="DG2_ProtectionOff_IM" mid_ProtectionOn="DG2_ProtectionOn_IM" mid_QG_NotOff="SEES_QG2_NotOff_WM" mid_QG_NotOn="SEES_QG2_NotOn_WM" mid_ReservBadAction="DG2_ReservBadAction_WM" mid_SetReserv="DG2_Reserve_IM" mid_SetReserv_Att="DG2_Reserve_Att_IM" mid_SetReserv_Failure="DG2_SetReserv_Failure_IM" mid_discharging="DG2_Discharging_IM" mid_endStarting="DG2_EndStarting_IM" mid_endStopping="DG2_EndStopping_IM" mid_starting="DG2_Starting_IM" mid_stopping="DG2_Stopping_IM" modeTime="300" myPostID="SEES2_CPanel" name="SEES2" num="2" postID="SEES2_PostID" power="1500" power_as="DG2_P_AS" protectionPause="500" state_as="SEES2_State_AS" voltage_as="DG2_U_AS"/>
-		<SEES3 AcceptControlTime="5000" AcceptWaitingTime="20000" CommandPause="1000" ControlMode_f="DG3_CtlMode_AS" CtlMode_Auto_bs="DG3_AutoCtl_BS" CtlMode_Auto_s="DG3_AutoCtl_S" CtlMode_Hand_bs="DG3_PultCtl_BS" CtlMode_Off_bs="DG3_LocalCtl_BS" CtlMode_QG_bs="QG3_RemoteControl_BS" CtlMode_f="DG3_CtlMode_AS" DG_RemoteControl_s="DG3_RemoteControl_S" DG_Start_C="DG3_Start_C" DG_Start_s="DG3_Start_S" DG_Stop_C="DG3_Stop_C" DG_Stop_s="DG3_Stop_S" Diesel="Diesel3" Generator="Generator3" Leader_f="DG3_Leader_F" Load20Time="10000" LocalTestMode_S="SESNode_TestMode_S" NoPowerTime="2000" NoPower_C="SEES3_NoPower_C" NoPower_S="NoPower_S" NotAlone_C="SEES3_NotAloneWorking_C" OffTime="60000" OnControl_C="SEES3_OnControl_C" OnTime="15000" Overload105_S="SEES3_Overload105_S" Overload20_S="SEES3_Overload20_S" Overload95_S="SEES3_Overload95_S" Ping_C="SEES3_Ping_C" Priority_s="VDG_Priority12_S" Protection_BS="SEES3_Protection_BS" QG="QG3" QGOffTime="15000" QGOnTime="15000" QG_Off_C="QG3_Off_C" QG_Off_s="Ctl_QG3_Off_S" QG_On_C="QG3_On_C" QG_On_s="Ctl_QG3_On_S" QG_RemoteControl_s="QG_RemoteControl_S" ReservCount="3" Reserv_f="DG3_Reserv_S" Reset_C="SEES3_Reset_C" Reset_s="SEES_ProtReset_S" RunTime="60000" Warning_S="_106_03_S" askPause="2000" askTimeout="15000" cmd_OffReserv_f="SEES3_Reserv_Down_FS" cmd_OnReserv_f="SEES3_Reserv_FS" filterPause="500" frequency_as="DG3_F_AS" initPause="2000" lmpDG_OFF_c="DG3_LampOFF_C" lmpDG_ON_c="DG3_LampON_C" lmpQG_OFF_c="QG3_LampOFF_C" lmpQG_ON_c="QG3_LampON_C" mid_AutoModeOff="SEES_AutoOff_WM" mid_BadOperation="" mid_Diesel_NotOff="SEES_Diesel3_NotOff_WM" mid_Diesel_NotOn="SEES_Diesel3_NotOn_WM" mid_Generator_NotOff="SEES_Generator3_NotOff_WM" mid_Generator_NotOn="SEES_Generator3_NotOn_WM" mid_NA_State="SEES_DG3_NA_State_WM" mid_NoReserv="DG3_NoReserve_IM" mid_NotAccept="SEES_DG3_NotAccept_WM" mid_NotDischarge="SEES_DG3_NotDischarge_WM" mid_NotFinished="SEES_DG3_NotFinished_WM" mid_NotOff="SEES_DG3_NotOff_WM" mid_NotOn="SEES_DG3_NotOn_WM" mid_OnReservBadAction="DG3_ReservBadAction_WM" mid_ProtectionNotReset="SEES3_ProtectionNotReset_Att" mid_ProtectionOff="DG3_ProtectionOff_IM" mid_ProtectionOn="DG3_ProtectionOn_IM" mid_QG_NotOff="SEES_QG3_NotOff_WM" mid_QG_NotOn="SEES_QG3_NotOn_WM" mid_ReservBadAction="DG3_ReservBadAction_WM" mid_SetReserv="DG3_Reserve_IM" mid_SetReserv_Att="DG3_Reserve_Att_IM" mid_SetReserv_Failure="DG3_SetReserv_Failure_IM" mid_discharging="DG3_Discharging_IM" mid_endStarting="DG3_EndStarting_IM" mid_endStopping="DG3_EndStopping_IM" mid_starting="DG3_Starting_IM" mid_stopping="DG3_Stopping_IM" modeTime="300" myPostID="SEES3_CPanel" name="SEES3" num="3" postID="SEES3_PostID" power="300" power_as="DG3_P_AS" protectionPause="500" state_as="SEES3_State_AS" voltage_as="DG3_U_AS"/>
-		<SEES4 AcceptControlTime="5000" AcceptWaitingTime="20000" CommandPause="1000" ControlMode_f="DG4_CtlMode_AS" CtlMode_Auto_bs="DG4_AutoCtl_BS" CtlMode_Auto_s="DG4_AutoCtl_S" CtlMode_Hand_bs="DG4_PultCtl_BS" CtlMode_Off_bs="DG4_LocalCtl_BS" CtlMode_QG_bs="QG4_RemoteControl_BS" CtlMode_f="DG4_CtlMode_AS" DG_RemoteControl_s="DG4_RemoteControl_S" DG_Start_C="DG4_Start_C" DG_Start_s="DG4_Start_S" DG_Stop_C="DG4_Stop_C" DG_Stop_s="DG4_Stop_S" Diesel="Diesel4" Generator="Generator4" Leader_f="DG4_Leader_F" Load20Time="10000" LocalTestMode_S="SESNode_TestMode_S" NoPowerTime="2000" NoPower_C="SEES4_NoPower_C" NoPower_S="NoPower_S" NotAlone_C="SEES4_NotAloneWorking_C" OffTime="60000" OnControl_C="SEES4_OnControl_C" OnTime="15000" Overload105_S="SEES4_Overload105_S" Overload20_S="SEES4_Overload20_S" Overload95_S="SEES4_Overload95_S" Ping_C="SEES4_Ping_C" Priority_s="VDG_Priority21_S" Protection_BS="SEES4_Protection_BS" QG="QG4" QGOffTime="15000" QGOnTime="15000" QG_Off_C="QG4_Off_C" QG_Off_s="Ctl_QG4_Off_S" QG_On_C="QG4_On_C" QG_On_s="Ctl_QG4_On_S" QG_RemoteControl_s="QG_RemoteControl_S" ReservCount="3" Reserv_f="DG4_Reserv_S" Reset_C="SEES4_Reset_C" Reset_s="SEES_ProtReset_S" RunTime="60000" Warning_S="_106_04_S" askPause="2000" askTimeout="15000" cmd_OffReserv_f="SEES4_Reserv_Down_FS" cmd_OnReserv_f="SEES4_Reserv_FS" filterPause="500" frequency_as="DG4_F_AS" initPause="2000" lmpDG_OFF_c="DG4_LampOFF_C" lmpDG_ON_c="DG4_LampON_C" lmpQG_OFF_c="QG4_LampOFF_C" lmpQG_ON_c="QG4_LampON_C" mid_AutoModeOff="SEES_AutoOff_WM" mid_BadOperation="" mid_Diesel_NotOff="SEES_Diesel3_NotOff_WM" mid_Diesel_NotOn="SEES_Diesel3_NotOn_WM" mid_Generator_NotOff="SEES_Generator3_NotOff_WM" mid_Generator_NotOn="SEES_Generator3_NotOn_WM" mid_NA_State="SEES_DG4_NA_State_WM" mid_NoReserv="DG4_NoReserve_IM" mid_NotAccept="SEES_DG4_NotAccept_WM" mid_NotDischarge="SEES_DG4_NotDischarge_WM" mid_NotFinished="SEES_DG4_NotFinished_WM" mid_NotOff="SEES_DG4_NotOff_WM" mid_NotOn="SEES_DG4_NotOn_WM" mid_OnReservBadAction="DG4_ReservBadAction_WM" mid_ProtectionNotReset="SEES4_ProtectionNotReset_Att" mid_ProtectionOff="DG4_ProtectionOff_IM" mid_ProtectionOn="DG4_ProtectionOn_IM" mid_QG_NotOff="SEES_QG4_NotOff_WM" mid_QG_NotOn="SEES_QG4_NotOn_WM" mid_ReservBadAction="DG4_ReservBadAction_WM" mid_SetReserv="DG4_Reserve_IM" mid_SetReserv_Att="DG4_Reserve_Att_IM" mid_SetReserv_Failure="DG4_SetReserv_Failure_IM" mid_discharging="DG4_Discharging_IM" mid_endStarting="DG4_EndStarting_IM" mid_endStopping="DG4_EndStopping_IM" mid_starting="DG4_Starting_IM" mid_stopping="DG4_Stopping_IM" modeTime="300" myPostID="SEES4_CPanel" name="SEES4" num="4" postID="SEES4_PostID" power="300" power_as="DG4_P_AS" protectionPause="500" state_as="SEES4_State_AS" voltage_as="DG4_U_AS"/>
+		<SEES1 AcceptControlTime="5000" AcceptWaitingTime="20000" CommandPause="1000" ControlMode_f="DG1_CtlMode_AS" CtlMode_Auto_bs="DG1_AutoCtl_BS" CtlMode_Auto_s="DG1_AutoCtl_S" CtlMode_Hand_bs="DG1_PultCtl_BS" CtlMode_Off_bs="DG1_LocalCtl_BS" CtlMode_QG_bs="QG1_RemoteControl_BS" CtlMode_f="DG1_CtlMode_AS" DG_RemoteControl_s="DG1_RemoteControl_S" DG_Start_C="DG1_Start_C" DG_Start_s="DG1_Start_S" DG_Stop_C="DG1_Stop_C" DG_Stop_s="DG1_Stop_S" Diesel="Diesel1" Generator="Generator1" Leader_f="DG1_Leader_F" Load20Time="10000" LocalTestMode_S="SESNode_TestMode_S" NoPowerTime="2000" NoPower_C="SEES1_NoPower_C" NoPower_S="NoPower_S" NotAlone_C="SEES1_NotAloneWorking_C" OffTime="60000" OnControl_C="SEES1_OnControl_C" OnTime="15000" Overload105_S="SEES1_Overload105_S" Overload20_S="SEES1_Overload20_S" Overload95_S="SEES1_Overload95_S" Ping_C="SEES1_Ping_C" Priority_s="GDG_Priority12_S" Protection_BS="SEES1_Protection_BS" QG="QG1" QGOffTime="15000" QGOnTime="15000" QG_Off_C="QG1_Off_C" QG_Off_s="Ctl_QG1_Off_S" QG_On_C="QG1_On_C" QG_On_s="Ctl_QG1_On_S" QG_RemoteControl_s="QG_RemoteControl_S" ReservCount="3" Reserv_f="DG1_Reserv_S" Reset_C="SEES1_Reset_C" Reset_s="SEES_ProtReset_S" RunTime="60000" Warning_S="_106_01_S" askPause="2000" askTimeout="15000" cmd_OffReserv_f="SEES1_Reserv_Down_FS" cmd_OnReserv_f="SEES1_Reserv_FS" filterPause="500" frequency_as="DG1_F_AS" initPause="2000" kmax="1" lmpDG_OFF_c="DG1_LampOFF_C" lmpDG_ON_c="DG1_LampON_C" lmpQG_OFF_c="QG1_LampOFF_C" lmpQG_ON_c="QG1_LampON_C" mid_AutoModeOff="SEES_AutoOff_WM" mid_Diesel_NotOff="SEES_Diesel1_NotOff_WM" mid_Diesel_NotOn="SEES_Diesel1_NotOn_WM" mid_Generator_NotOff="SEES_Generator1_NotOff_WM" mid_Generator_NotOn="SEES_Generator1_NotOn_WM" mid_NA_State="SEES_DG1_NA_State_WM" mid_NoReserv="DG1_NoReserve_IM" mid_NotAccept="SEES_DG1_NotAccept_WM" mid_NotDischarge="SEES_DG1_NotDischarge_WM" mid_NotFinished="SEES_DG1_NotFinished_WM" mid_NotOff="SEES_DG1_NotOff_WM" mid_NotOn="SEES_DG1_NotOn_WM" mid_OnReservBadAction="DG1_ReservBadAction_WM" mid_ProtectionNotReset="SEES1_ProtectionNotReset_Att" mid_ProtectionOff="DG1_ProtectionOff_IM" mid_ProtectionOn="DG1_ProtectionOn_IM" mid_QG_NotOff="SEES_QG1_NotOff_WM" mid_QG_NotOn="SEES_QG1_NotOn_WM" mid_ReservBadAction="DG1_ReservBadAction_WM" mid_SetReserv="DG1_Reserve_IM" mid_SetReserv_Att="DG1_Reserve_Att_IM" mid_SetReserv_Failure="DG1_SetReserv_Failure_IM" mid_discharging="DG1_Discharging_IM" mid_endStarting="DG1_EndStarting_IM" mid_endStopping="DG1_EndStopping_IM" mid_starting="DG1_Starting_IM" mid_stopping="DG1_Stopping_IM" modeTime="300" myPostID="SEES1_CPanel" name="SEES1" num="1" postID="SEES1_PostID" power="1500" power_as="DG1_P_AS" protectionPause="500" state_as="SEES1_State_AS" voltage_as="DG1_U_AS"/>
+		<SEES2 AcceptControlTime="5000" AcceptWaitingTime="20000" CommandPause="1000" ControlMode_f="DG2_CtlMode_AS" CtlMode_Auto_bs="DG2_AutoCtl_BS" CtlMode_Auto_s="DG2_AutoCtl_S" CtlMode_Hand_bs="DG2_PultCtl_BS" CtlMode_Off_bs="DG2_LocalCtl_BS" CtlMode_QG_bs="QG2_RemoteControl_BS" CtlMode_f="DG2_CtlMode_AS" DG_RemoteControl_s="DG2_RemoteControl_S" DG_Start_C="DG2_Start_C" DG_Start_s="DG2_Start_S" DG_Stop_C="DG2_Stop_C" DG_Stop_s="DG2_Stop_S" Diesel="Diesel2" Generator="Generator2" Leader_f="DG2_Leader_F" Load20Time="10000" LocalTestMode_S="SESNode_TestMode_S" NoPowerTime="2000" NoPower_C="SEES2_NoPower_C" NoPower_S="NoPower_S" NotAlone_C="SEES2_NotAloneWorking_C" OffTime="60000" OnControl_C="SEES2_OnControl_C" OnTime="15000" Overload105_S="SEES2_Overload105_S" Overload20_S="SEES2_Overload20_S" Overload95_S="SEES2_Overload95_S" Ping_C="SEES2_Ping_C" Priority_s="GDG_Priority21_S" Protection_BS="SEES2_Protection_BS" QG="QG2" QGOffTime="15000" QGOnTime="15000" QG_Off_C="QG2_Off_C" QG_Off_s="Ctl_QG2_Off_S" QG_On_C="QG2_On_C" QG_On_s="Ctl_QG2_On_S" QG_RemoteControl_s="QG_RemoteControl_S" ReservCount="3" Reserv_f="DG2_Reserv_S" Reset_C="SEES2_Reset_C" Reset_s="SEES_ProtReset_S" RunTime="60000" Warning_S="_106_02_S" askPause="2000" askTimeout="15000" cmd_OffReserv_f="SEES2_Reserv_Down_FS" cmd_OnReserv_f="SEES2_Reserv_FS" filterPause="500" frequency_as="DG2_F_AS" initPause="2000" kmax="1" lmpDG_OFF_c="DG2_LampOFF_C" lmpDG_ON_c="DG2_LampON_C" lmpQG_OFF_c="QG2_LampOFF_C" lmpQG_ON_c="QG2_LampON_C" mid_AutoModeOff="SEES_AutoOff_WM" mid_Diesel_NotOff="SEES_Diesel2_NotOff_WM" mid_Diesel_NotOn="SEES_Diesel2_NotOn_WM" mid_Generator_NotOff="SEES_Generator2_NotOff_WM" mid_Generator_NotOn="SEES_Generator2_NotOn_WM" mid_NA_State="SEES_DG2_NA_State_WM" mid_NoReserv="DG2_NoReserve_IM" mid_NotAccept="SEES_DG2_NotAccept_WM" mid_NotDischarge="SEES_DG2_NotDischarge_WM" mid_NotFinished="SEES_DG2_NotFinished_WM" mid_NotOff="SEES_DG2_NotOff_WM" mid_NotOn="SEES_DG2_NotOn_WM" mid_OnReservBadAction="DG2_ReservBadAction_WM" mid_ProtectionNotReset="SEES2_ProtectionNotReset_Att" mid_ProtectionOff="DG2_ProtectionOff_IM" mid_ProtectionOn="DG2_ProtectionOn_IM" mid_QG_NotOff="SEES_QG2_NotOff_WM" mid_QG_NotOn="SEES_QG2_NotOn_WM" mid_ReservBadAction="DG2_ReservBadAction_WM" mid_SetReserv="DG2_Reserve_IM" mid_SetReserv_Att="DG2_Reserve_Att_IM" mid_SetReserv_Failure="DG2_SetReserv_Failure_IM" mid_discharging="DG2_Discharging_IM" mid_endStarting="DG2_EndStarting_IM" mid_endStopping="DG2_EndStopping_IM" mid_starting="DG2_Starting_IM" mid_stopping="DG2_Stopping_IM" modeTime="300" myPostID="SEES2_CPanel" name="SEES2" num="2" postID="SEES2_PostID" power="1500" power_as="DG2_P_AS" protectionPause="500" state_as="SEES2_State_AS" voltage_as="DG2_U_AS"/>
+		<SEES3 AcceptControlTime="5000" AcceptWaitingTime="20000" CommandPause="1000" ControlMode_f="DG3_CtlMode_AS" CtlMode_Auto_bs="DG3_AutoCtl_BS" CtlMode_Auto_s="DG3_AutoCtl_S" CtlMode_Hand_bs="DG3_PultCtl_BS" CtlMode_Off_bs="DG3_LocalCtl_BS" CtlMode_QG_bs="QG3_RemoteControl_BS" CtlMode_f="DG3_CtlMode_AS" DG_RemoteControl_s="DG3_RemoteControl_S" DG_Start_C="DG3_Start_C" DG_Start_s="DG3_Start_S" DG_Stop_C="DG3_Stop_C" DG_Stop_s="DG3_Stop_S" Diesel="Diesel3" Generator="Generator3" Leader_f="DG3_Leader_F" Load20Time="10000" LocalTestMode_S="SESNode_TestMode_S" NoPowerTime="2000" NoPower_C="SEES3_NoPower_C" NoPower_S="NoPower_S" NotAlone_C="SEES3_NotAloneWorking_C" OffTime="60000" OnControl_C="SEES3_OnControl_C" OnTime="15000" Overload105_S="SEES3_Overload105_S" Overload20_S="SEES3_Overload20_S" Overload95_S="SEES3_Overload95_S" Ping_C="SEES3_Ping_C" Priority_s="VDG_Priority12_S" Protection_BS="SEES3_Protection_BS" QG="QG3" QGOffTime="15000" QGOnTime="15000" QG_Off_C="QG3_Off_C" QG_Off_s="Ctl_QG3_Off_S" QG_On_C="QG3_On_C" QG_On_s="Ctl_QG3_On_S" QG_RemoteControl_s="QG_RemoteControl_S" ReservCount="3" Reserv_f="DG3_Reserv_S" Reset_C="SEES3_Reset_C" Reset_s="SEES_ProtReset_S" RunTime="60000" Warning_S="_106_03_S" askPause="2000" askTimeout="15000" cmd_OffReserv_f="SEES3_Reserv_Down_FS" cmd_OnReserv_f="SEES3_Reserv_FS" filterPause="500" frequency_as="DG3_F_AS" initPause="2000" lmpDG_OFF_c="DG3_LampOFF_C" lmpDG_ON_c="DG3_LampON_C" lmpQG_OFF_c="QG3_LampOFF_C" lmpQG_ON_c="QG3_LampON_C" mid_AutoModeOff="SEES_AutoOff_WM" mid_Diesel_NotOff="SEES_Diesel3_NotOff_WM" mid_Diesel_NotOn="SEES_Diesel3_NotOn_WM" mid_Generator_NotOff="SEES_Generator3_NotOff_WM" mid_Generator_NotOn="SEES_Generator3_NotOn_WM" mid_NA_State="SEES_DG3_NA_State_WM" mid_NoReserv="DG3_NoReserve_IM" mid_NotAccept="SEES_DG3_NotAccept_WM" mid_NotDischarge="SEES_DG3_NotDischarge_WM" mid_NotFinished="SEES_DG3_NotFinished_WM" mid_NotOff="SEES_DG3_NotOff_WM" mid_NotOn="SEES_DG3_NotOn_WM" mid_OnReservBadAction="DG3_ReservBadAction_WM" mid_ProtectionNotReset="SEES3_ProtectionNotReset_Att" mid_ProtectionOff="DG3_ProtectionOff_IM" mid_ProtectionOn="DG3_ProtectionOn_IM" mid_QG_NotOff="SEES_QG3_NotOff_WM" mid_QG_NotOn="SEES_QG3_NotOn_WM" mid_ReservBadAction="DG3_ReservBadAction_WM" mid_SetReserv="DG3_Reserve_IM" mid_SetReserv_Att="DG3_Reserve_Att_IM" mid_SetReserv_Failure="DG3_SetReserv_Failure_IM" mid_discharging="DG3_Discharging_IM" mid_endStarting="DG3_EndStarting_IM" mid_endStopping="DG3_EndStopping_IM" mid_starting="DG3_Starting_IM" mid_stopping="DG3_Stopping_IM" modeTime="300" myPostID="SEES3_CPanel" name="SEES3" num="3" postID="SEES3_PostID" power="300" power_as="DG3_P_AS" protectionPause="500" state_as="SEES3_State_AS" voltage_as="DG3_U_AS"/>
+		<SEES4 AcceptControlTime="5000" AcceptWaitingTime="20000" CommandPause="1000" ControlMode_f="DG4_CtlMode_AS" CtlMode_Auto_bs="DG4_AutoCtl_BS" CtlMode_Auto_s="DG4_AutoCtl_S" CtlMode_Hand_bs="DG4_PultCtl_BS" CtlMode_Off_bs="DG4_LocalCtl_BS" CtlMode_QG_bs="QG4_RemoteControl_BS" CtlMode_f="DG4_CtlMode_AS" DG_RemoteControl_s="DG4_RemoteControl_S" DG_Start_C="DG4_Start_C" DG_Start_s="DG4_Start_S" DG_Stop_C="DG4_Stop_C" DG_Stop_s="DG4_Stop_S" Diesel="Diesel4" Generator="Generator4" Leader_f="DG4_Leader_F" Load20Time="10000" LocalTestMode_S="SESNode_TestMode_S" NoPowerTime="2000" NoPower_C="SEES4_NoPower_C" NoPower_S="NoPower_S" NotAlone_C="SEES4_NotAloneWorking_C" OffTime="60000" OnControl_C="SEES4_OnControl_C" OnTime="15000" Overload105_S="SEES4_Overload105_S" Overload20_S="SEES4_Overload20_S" Overload95_S="SEES4_Overload95_S" Ping_C="SEES4_Ping_C" Priority_s="VDG_Priority21_S" Protection_BS="SEES4_Protection_BS" QG="QG4" QGOffTime="15000" QGOnTime="15000" QG_Off_C="QG4_Off_C" QG_Off_s="Ctl_QG4_Off_S" QG_On_C="QG4_On_C" QG_On_s="Ctl_QG4_On_S" QG_RemoteControl_s="QG_RemoteControl_S" ReservCount="3" Reserv_f="DG4_Reserv_S" Reset_C="SEES4_Reset_C" Reset_s="SEES_ProtReset_S" RunTime="60000" Warning_S="_106_04_S" askPause="2000" askTimeout="15000" cmd_OffReserv_f="SEES4_Reserv_Down_FS" cmd_OnReserv_f="SEES4_Reserv_FS" filterPause="500" frequency_as="DG4_F_AS" initPause="2000" lmpDG_OFF_c="DG4_LampOFF_C" lmpDG_ON_c="DG4_LampON_C" lmpQG_OFF_c="QG4_LampOFF_C" lmpQG_ON_c="QG4_LampON_C" mid_AutoModeOff="SEES_AutoOff_WM" mid_Diesel_NotOff="SEES_Diesel3_NotOff_WM" mid_Diesel_NotOn="SEES_Diesel3_NotOn_WM" mid_Generator_NotOff="SEES_Generator3_NotOff_WM" mid_Generator_NotOn="SEES_Generator3_NotOn_WM" mid_NA_State="SEES_DG4_NA_State_WM" mid_NoReserv="DG4_NoReserve_IM" mid_NotAccept="SEES_DG4_NotAccept_WM" mid_NotDischarge="SEES_DG4_NotDischarge_WM" mid_NotFinished="SEES_DG4_NotFinished_WM" mid_NotOff="SEES_DG4_NotOff_WM" mid_NotOn="SEES_DG4_NotOn_WM" mid_OnReservBadAction="DG4_ReservBadAction_WM" mid_ProtectionNotReset="SEES4_ProtectionNotReset_Att" mid_ProtectionOff="DG4_ProtectionOff_IM" mid_ProtectionOn="DG4_ProtectionOn_IM" mid_QG_NotOff="SEES_QG4_NotOff_WM" mid_QG_NotOn="SEES_QG4_NotOn_WM" mid_ReservBadAction="DG4_ReservBadAction_WM" mid_SetReserv="DG4_Reserve_IM" mid_SetReserv_Att="DG4_Reserve_Att_IM" mid_SetReserv_Failure="DG4_SetReserv_Failure_IM" mid_discharging="DG4_Discharging_IM" mid_endStarting="DG4_EndStarting_IM" mid_endStopping="DG4_EndStopping_IM" mid_starting="DG4_Starting_IM" mid_stopping="DG4_Stopping_IM" modeTime="300" myPostID="SEES4_CPanel" name="SEES4" num="4" postID="SEES4_PostID" power="300" power_as="DG4_P_AS" protectionPause="500" state_as="SEES4_State_AS" voltage_as="DG4_U_AS"/>
 		<Diesel1 name="Diesel1" state_as="Diesel1_State_AS">
 			<analog id="10014">
 				<item value="6">
@@ -734,19 +734,19 @@
 		<nodes port="2809">
 			<item dbserver="DBServer1" id="3000" ip="127.0.0.1" name="LocalhostNode" textname="Локальный узел">
 				<iocards>
-					<item baddr="" card="3" name="AI16"/>
+					<item card="3" name="AI16"/>
 					<item baddr="0x120" card="2" name="DI32"/>
-					<item baddr="" card="2" name="AI16"/>
+					<item card="2" name="AI16"/>
 				</iocards>
 				<can>
 				</can>
 			</item>
 			<item dbserver="DBServer1" id="3001" ip="gui1" name="GUI1Node" textname="Графическая станция N1">
 				<iocards>
-					<item baddr="" card="2" name="UNIO48"/>
+					<item card="2" name="UNIO48"/>
 					<item baddr="0" card="3" name="AI16"/>
-					<item baddr="" card="0" name="AI16"/>
-					<item baddr="" card="4" name="UNIO48"/>
+					<item card="0" name="AI16"/>
+					<item card="4" name="UNIO48"/>
 				</iocards>
 				<can>
 				</can>
@@ -755,31 +755,31 @@
 			<item id="3003" ip="sescpu" name="SESCPUNode" textname="Пульт ЦПУ (контроллер СЭС)"/>
 			<item id="3004" ip="ses" name="SESNode" textname="КСЭС">
 				<can>
-					<item eds="" hbSensor="" net="SES" nodeID="0" respond="" respond1="" respond2=""/>
+					<item net="SES" nodeID="0"/>
 				</can>
 			</item>
 			<item id="3005" ip="gdg1" name="GDG1Node" textname="ЩС ГДГ1"/>
 			<item id="3006" ip="gdg2" name="GDG2Node" textname="0С ГДГ2">
 				<can>
-					<item eds="" hbSensor="" net="TS" nodeID="0" respond="" respond1="" respond2=""/>
+					<item net="TS" nodeID="0"/>
 				</can>
 			</item>
 			<item id="3007" ip="ts1" name="TS1Node" textname="ЩС ВДГ1">
 				<can>
-					<item eds="" hbSensor="" net="TS" nodeID="" respond="" respond1="" respond2=""/>
+					<item net="TS"/>
 				</can>
 			</item>
 			<item id="3008" ip="ts2" name="TS2Node" textname="ЩС ВДГ2"/>
 			<item id="3010" ip="guits" name="GUITSNode" textname="ШУ ТС (панель)"/>
 			<item id="3011" ip="tscpu" name="TSCPUNode" textname="Пульт ЦПУ (контроллер ТС)">
 				<can>
-					<item eds="" hbSensor="" net="TS" nodeID="" respond="" respond1="" respond2=""/>
+					<item net="TS"/>
 				</can>
 			</item>
 			<item id="3012" ip="geucpu" name="GEUCPUNode" textname="Пульт ЦПУ (контроллер ГЭУ)"/>
 			<item id="3013" ip="geu" name="GEUNode" textname="Контроллер ГЭУ (управление)">
 				<can>
-					<item eds="" hbSensor="" net="TS" nodeID="" respond="" respond1="" respond2=""/>
+					<item net="TS"/>
 				</can>
 			</item>
 			<item id="3014" ip="geuaps" name="GEUAPSNode" textname="Контроллер ГЭУ АПС"/>
@@ -811,10 +811,10 @@
 			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG2Node" card="3" channel="3" id="102" io="3000" iotype="DI" mtype="1" name="01_02_S" subdev="1" textname="Минимальное давление смазочного масла ГДГ2" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aps="102" canTS="GDG1Node" card="2" channel="23" id="103" io="gdg1" iotype="DI" mtype="2" name="01_03_S" subdev="0" textname="Минимальное давление смазочного масла ГДГ1" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aps="102" canTS="GDG2Node" card="2" channel="23" id="104" io="gdg2" iotype="DI" mtype="2" name="01_04_S" subdev="0" textname="Минимальное давление смазочного масла ГДГ2" unetGUITS="TSNode"/>
-			<item CAN2sender="SYSTSNode" aref="2" canTS="GDG1Node" card="3" channel="2" cmax="100" cmin="0" id="105" io="3000" iotype="AI" name="01_05_S" rmax="2060" rmin="410" subdev="1" textname="Дифференциальное давление смазочного масла ГДГ1 на фильтре" unetGUITS="TSNode"/>
+			<item CAN2sender="SYSTSNode" aref="0" canTS="GDG1Node" card="3" channel="1" id="105" io="3000" iotype="AI" name="01_05_S" precision="0" range="0" subdev="0" textname="Дифференциальное давление смазочного масла ГДГ1 на фильтре" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aref="2" canTS="GDG2Node" card="2" channel="1" cmax="100" cmin="0" id="106" io="3001" iotype="AI" name="01_06_S" rmax="2060" rmin="410" subdev="0" textname="Дифференциальное давление смазочного масла ГДГ2 на фильтре" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG1Node" card="2" channel="2" id="107" io="3000" iotype="DI" mtype="1" name="01_07_S" subdev="0" textname="Максимальная температура смазочного масла ГДГ1" unetGUITS="TSNode"/>
-			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG2Node" card="2" channel="2" id="108" io="3001" iotype="DI" mtype="1" name="01_08_S" subdev="0" textname="Максимальная температура смазочного масла ГДГ2" unetGUITS="TSNode"/>
+			<item CAN2sender="SYSTSNode" aps="101" aref="0" canTS="GDG2Node" card="3" channel="4" id="108" io="3000" iotype="DI" mtype="1" name="01_08_S" precision="0" range="0" subdev="0" textname="Максимальная температура смазочного масла ГДГ2" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG1Node" card="3" channel="5" id="109" io="3000" iotype="DI" mtype="1" name="01_09_S" subdev="1" textname="Минимальный уровень смазочного масла в картере ГДГ1" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG2Node" card="2" channel="6" id="110" io="gdg2" iotype="DI" mtype="1" name="01_10_S" subdev="0" textname="Минимальный уровень смазочного масла в картере ГДГ2" unetGUITS="TSNode"/>
 			<!--NOT IN LIST
@@ -2095,7 +2095,7 @@
 				<consumers>
 				</consumers>
 			</item>
-			<item CAN2sender="SYSSESNode" canSES="SESNode" id="10026" iotype="DI" name="SEES_SetSlowDown_FS" textname="">
+			<item CAN2sender="SYSSESNode" canSES="SESNode" id="10026" iotype="DI" name="SEES_SetSlowDown_FS">
 				<consumers>
 					<consumer name="SEESControl" sesnode="1" type="objects" vartype="out"/>
 				</consumers>
@@ -2366,7 +2366,7 @@
 			<item CAN2sender="SYSSESNode" aps="105" canSES="SESNode" canTS="TSCPUNode" id="716485" iotype="DI" name="_106_12_S" textname="Неисправность Генератора 4 (от сигнала 10031)" unetGUITS="TSNode">
 			</item>
 			<!-- ========================================================================= -->
-			<item CAN2sender="SYSSESNode" canSES="SESNode" id="10007" iotype="DI" name="SEES1_Reserv_Down_FS" textname="">
+			<item CAN2sender="SYSSESNode" canSES="SESNode" id="10007" iotype="DI" name="SEES1_Reserv_Down_FS">
 				<consumers>
 					<consumer name="SEES1" sesnode="1" type="objects"/>
 				</consumers>
@@ -3771,40 +3771,40 @@
 		canSES="SESNode" CAN2sender="SYSSESNode"      />
 		<item id="9390" name="SEES_QG1_NotOn_WM" character="warning"
 		iotype="DI" textname="ДГ1: Отказ включения QG1" 
-		canSES="SESNode" CAN2sender="SYSSESNode"       APSgroup=""/>
+		canSES="SESNode" CAN2sender="SYSSESNode"      />
 		<item id="9391" name="SEES_QG2_NotOn_WM" character="warning"
 		iotype="DI" textname="ДГ2: Отказ включения QG2" 
-		canSES="SESNode" CAN2sender="SYSSESNode"       APSgroup=""/>
+		canSES="SESNode" CAN2sender="SYSSESNode"      />
 		<item id="9392" name="SEES_QG1_NotOff_WM" character="warning" 
 		iotype="DI" textname="ДГ1: Отказ отключения QG1" 
-		canSES="SESNode" CAN2sender="SYSSESNode"       APSgroup=""/>
+		canSES="SESNode" CAN2sender="SYSSESNode"      />
 		<item id="9393" name="SEES_QG2_NotOff_WM" character="warning" 
 		iotype="DI" textname="ДГ2: Отказ отключения QG2" 
-		canSES="SESNode" CAN2sender="SYSSESNode"       APSgroup=""/>
+		canSES="SESNode" CAN2sender="SYSSESNode"      />
 		<item id="9394" name="SEES_Diesel1_NotOn_WM" character="warning"
 		iotype="DI" textname="ДГ1: Отказ запуска дизеля N1" 
-		canSES="SESNode" CAN2sender="SYSSESNode"       APSgroup=""/>
+		canSES="SESNode" CAN2sender="SYSSESNode"      />
 		<item id="9395" name="SEES_Diesel2_NotOn_WM" character="warning"
 		iotype="DI" textname="ДГ2: Отказ запуска дизеля N2" 
-		canSES="SESNode" CAN2sender="SYSSESNode"       APSgroup=""/>
+		canSES="SESNode" CAN2sender="SYSSESNode"      />
 		<item id="9396" name="SEES_Diesel1_NotOff_WM" character="warning" 
 		iotype="DI" textname="ДГ1: Отказ остановки дизеля N1" 
-		canSES="SESNode" CAN2sender="SYSSESNode"       APSgroup=""/>
+		canSES="SESNode" CAN2sender="SYSSESNode"      />
 		<item id="9397" name="SEES_Diesel2_NotOff_WM" character="warning" 
 		iotype="DI" textname="ДГ2: Отказ остановки дизеля N2" 
-		canSES="SESNode" CAN2sender="SYSSESNode"       APSgroup=""/>
+		canSES="SESNode" CAN2sender="SYSSESNode"      />
 		<item id="9398" name="SEES_Generator1_NotOn_WM" character="warning"
 		iotype="DI" textname="ДГ1: Отказ включения генератора N1" 
-		canSES="SESNode" CAN2sender="SYSSESNode"       APSgroup=""/>
+		canSES="SESNode" CAN2sender="SYSSESNode"      />
 		<item id="9399" name="SEES_Generator2_NotOn_WM" character="warning"
 		iotype="DI" textname="ДГ2: Отказ включения генератора N2" 
-		canSES="SESNode" CAN2sender="SYSSESNode"       APSgroup=""/>
+		canSES="SESNode" CAN2sender="SYSSESNode"      />
 		<item id="9400" name="SEES_Generator1_NotOff_WM" character="warning" 
 		iotype="DI" textname="ДГ1: Отказ отключения генератора N1" 
-		canSES="SESNode" CAN2sender="SYSSESNode"       APSgroup=""/>
+		canSES="SESNode" CAN2sender="SYSSESNode"      />
 		<item id="9401" name="SEES_Generator2_NotOff_WM" character="warning" 
 		iotype="DI" textname="ДГ2: Отказ отключения генератора N2" 
-		canSES="SESNode" CAN2sender="SYSSESNode"       APSgroup=""/>
+		canSES="SESNode" CAN2sender="SYSSESNode"      />
 		<item id="9402" name="SEES_DG1_NA_State_WM" character="attention" 
 		iotype="DI" textname="ДГ1: Текущее состояние" 
 		canSES="SESNode" CAN2sender="SYSSESNode"      />
