@@ -7,8 +7,6 @@ import configure
 
 class CANMain(gtk.TreeView):
 
-    xml = None
-
     def __init__(self, conf):
 
         self.conf = conf

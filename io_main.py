@@ -4,10 +4,30 @@ import gtk
 import gobject
 import UniXML
 import configure
+'''
+Задачи:
+1. Добавление, удаление карт ввода/вывода на узлах
+2. Редактирование параметров каждого канала
 
+Основная работа - это считать парметры из
+xml-файла, отобразить их в диалоге настройки, проверить
+корректность и потом сохранить обратно в файл.
+При этом, т.к. с каждым параметром идёт по сути 
+"однотипная" работа, то используется следующая идея:
+Создан общий список (несколько списков) параметров,
+содержащий информацию:
+- название glade-элемента в диалоге настройки
+- название параметра в xml-файле
+- название поля в данном классе
+- игнорировать ли запись поля в xml-файл
+И вся работа ведётся со списком параметров.
+См. функции:
+init_glade_elements()
+init_elements_value()
+validate_elements()
+save2xml_elements_value()
+'''
 class IOMain(gtk.TreeView):
-
-    xml = None
 
     def __init__(self, conf):
 
@@ -27,8 +47,16 @@ class IOMain(gtk.TreeView):
         self.set_model(self.model)
         self.set_rules_hint(True)
         self.connect("button-press-event", self.on_button_press_event)
+        
+        renderer = gtk.CellRendererText()
+        column = gtk.TreeViewColumn(_("Name"), renderer, text=0)
+        column.set_clickable(False)
+        self.append_column(column)
 
-        self.add_columns()
+        renderer = gtk.CellRendererText()
+        column = gtk.TreeViewColumn(_("Parameters"), renderer, text=1)
+        column.set_clickable(False)
+        self.append_column(column)
 
         # expand all rows after the treeview widget has been realized
 #       self.connect('realize', lambda tv: tv.expand_all())
@@ -58,79 +86,137 @@ class IOMain(gtk.TreeView):
         self.build_tree()
         self.init_channels()
 
-        self.dlg_card = conf.glade.get_widget("io_dlg_card")
+        # Список параметров для карты
+        # ["class field","glade name","xmlname",save_xml_ignore_flag]
+        self.card_params=[ \
+            ["lbl_sensor","io_lbl_sensor",None,True], \
+            ["dlg_param","dlg_ioparam",None,True], \
+            ["parambook","ioparam_book",None,True], \
+            ["dlg_card","io_dlg_card","name",False], \
+            ["card_num","io_sp_cardnum","card",False], \
+            ["card_ba","io_baddr","baddr",False], \
+            ["cb_cardlist","io_cb_cardlist",None,True] \
+        ]
+        self.init_glade_elements(self.card_params)        
         self.dlg_card.set_title(_("Select card"))
-        self.card_num = conf.glade.get_widget("io_sp_cardnum")
-        self.card_ba = conf.glade.get_widget("io_baddr")
-        self.cb_cardlist = conf.glade.get_widget("io_cb_cardlist")
-
-        # Parameters dialog
-        self.dlg_param = conf.glade.get_widget("dlg_ioparam")
-        self.dlg_param.set_title( _("Setup channel") )
-        self.parambook = conf.glade.get_widget("ioparam_book")
-        self.init_notebook_pages()
         
-        self.lbl_sensor = conf.glade.get_widget("io_lbl_sensor")
+        # Список параметров для канала
+        # ["class field","glade name","xmlname",save_xml_ignore_flag]
+        self.channel_params=[ \
+            # Common objects
+            ["lbl_sensor","io_lbl_sensor","name",True], \
+            ["dlg_param","dlg_ioparam",None,True], \
+            ["parambook","ioparam_book",None,True], \
+            ["dlg_info","io_lbl_info",None,True], \
+            ["iotype","io_cbox_iotype","iotype",False], \
+            # Common parameters
+            ["lamp","io_cb_lamp","lamp",False], \
+            ["notestlamp","io_cb_notestlamp","notestlamp",False], \
+            ["io_range","io_sp_range","range",False], \
+            ["io_aref","io_sp_aref","aref",False], \
+            ["safety","io_safety","safety",False], \
+            ["breaklim","io_breaklim","breaklim",False], \
+            ["defval","io_defval","default",False], \
+            ["ioignore","io_cb_ignore","ioignore",False], \
+            ["ioinvert","io_cb_invert","ioinvert",False], \
+            # Calibrations
+            ["calibr_param","io_tbl_calibration",None,True], \
+            ["cdiagram","io_cbox_cdiagram","cdiagram",False], \
+            ["cmin","io_cmin","cmin",False], \
+            ["cmax","io_cmax","cmax",False], \
+            ["rmin","io_rmin","rmin",False], \
+            ["rmax","io_rmax","rmax",False], \
+            ["prec","io_sp_precision","precision",False],
+            ["noprec","io_cb_noprecision","noprecision",False], \
+            # Delay`s
+            ["ondelay","io_on_delay","ondelay",False], \
+            ["offdelay","io_off_delay","offdelay",False], \
+            ["jardelay","io_jar_delay","jardelay",False], \
+            # Filters
+            ["nofilter","io_cb_nofilter","nofilter",False], \
+            ["median","io_sp_median","median",False], \
+            ["leastsqr","io_sp_leastsqr","leatsqr",False], \
+            ["filterIIR","io_sp_filterIIR","filterIIR",False], \
+            ["filterRC","io_sp_filterRC","filterT",False], \
+            ["average","io_sp_average","average",False] \
+           ]
+
+        self.init_glade_elements(self.channel_params)
+
         self.sensor = None
         self.myedit_iter = None
-        self.dlg_info = conf.glade.get_widget("io_lbl_info")
-        self.iotype = conf.glade.get_widget("io_cbox_iotype")
-        
-        # Common parameters
-        self.lamp = conf.glade.get_widget("io_cb_lamp")
-        self.notestlamp = conf.glade.get_widget("io_cb_notestlamp")
-        self.io_range = conf.glade.get_widget("io_sp_range")
-        self.io_aref = conf.glade.get_widget("io_sp_aref")
-        self.safety = conf.glade.get_widget("io_safety")
-        self.breaklim = conf.glade.get_widget("io_breaklim")
-        self.defval = conf.glade.get_widget("io_defval")
-        self.ignore = conf.glade.get_widget("io_cb_ignore")
-        self.invert = conf.glade.get_widget("io_cb_invert")
-        
-        # Calibrations
-        self.calibr_param = conf.glade.get_widget("io_tbl_calibration")
-        self.cdiagram = conf.glade.get_widget("io_cbox_cdiagram")
+        self.init_notebook_pages()
         self.build_cdiagram_list()
-        self.cmin = conf.glade.get_widget("io_cmin")
-        self.cmax = conf.glade.get_widget("io_cmax")
-        self.rmin = conf.glade.get_widget("io_rmin")
-        self.rmax = conf.glade.get_widget("io_rmax")
-        self.prec = conf.glade.get_widget("io_sp_precision")
-        self.noprec = conf.glade.get_widget("io_cb_noprecision")
-
-        # Delay`s
-        self.ondelay = conf.glade.get_widget("io_on_delay")
-        self.offdelay = conf.glade.get_widget("io_off_delay")
-        self.jardelay = conf.glade.get_widget("io_jar_delay")
-        
-        # Filters
-        self.nofilter = conf.glade.get_widget("io_cb_nofilter")
-        self.median = conf.glade.get_widget("io_sp_median")
-        self.leastsqr = conf.glade.get_widget("io_sp_leastsqr")
-        self.filterIIR = conf.glade.get_widget("io_sp_filterIIR")
-        self.filterRC = conf.glade.get_widget("io_sp_filterRC")
-        self.average = conf.glade.get_widget("io_sp_average")
- 
-        print "*************** nofilter: " + str(self.nofilter.__class__.__name__)
-        print "*************** average: " + str(self.average.__class__.__name__)
-        print "*************** offdelay: " + str(self.offdelay.__class__.__name__)
-        
-        
-        self.init_glade_elements([["io_sp_median","median"],["io_sp_average","average"]])
-        
+        self.dlg_param.set_title( _("Setup channel") )
         self.show_all()
 
     def init_glade_elements(self, elist):
-        # Инициализация переменных из glade файла... по списку
-        # состоящему из элементов вида ["gladename","var name"]
-        print "********* init list: count: " + str(len(elist))
+        ''' Инициализация переменных из glade файла...
+            по списку элементов вида [class field,gladename,xmlname,xml_save_ignore]'''
         for e in elist:
-            self.__dict__[e[0]] = e[1]
-            
-    def set_prop(self):
-        return self.prop
+            if e[0] == None or e[1] == None:
+                continue
+            self.__dict__[e[0]] = self.conf.glade.get_widget(e[1])
 
+    def init_elements_value(self,elist,snode):
+        ''' Инициализация переменных из xml
+            по списку элементов вида [class field,gladename,xmlname,xml_save_ignore]'''
+        for e in elist:
+            if e[0]==None or e[2] == None:
+                continue
+            cname = str(self.__dict__[e[0]].__class__.__name__)
+            if cname == "SpinButton":
+                self.__dict__[e[0]].set_value(self.conf.get_int_val(snode.prop(e[2])))
+            elif cname == "Entry":
+                self.__dict__[e[0]].set_text(self.conf.get_str_val(snode.prop(e[2])))
+            elif cname == "CheckButton":
+                self.__dict__[e[0]].set_active(self.conf.get_int_val(snode.prop(e[2])))
+            elif cname == "ComboBox":
+                self.conf.set_combobox_element(self.__dict__[e[0]], self.conf.get_str_val(snode.prop(e[2])))
+            elif cname == "Label":
+                self.__dict__[e[0]].set_text(self.conf.get_str_val(snode.prop(e[2])))
+       
+    def validate_elements(self,elist):
+        ''' Проверка корректности данны 
+            по списку элементов вида [class field,gladename,xmlname,xml_save_ignore]'''
+        for e in elist:
+            if e[0]==None or e[2] == None:
+                continue
+            cname = str(self.__dict__[e[0]].__class__.__name__)
+            if cname == "Entry":
+                s = self.__dict__[e[0]].get_text()
+                if s!="" and self.conf.check_value_int(s) == False:
+                      return [False,e[2]]
 
+        return [True,""]
+    
+    def save2xml_elements_value(self,elist,snode,setval=None):
+        ''' Сохранение переменных в xml-узел
+            по списку элементов вида [class field,gladename,xmlname,xml_save_ignore]'''
+        for e in elist:
+            if e[0]==None or e[2] == None or e[3]==True:
+                continue
+            if setval != None:
+                snode.setProp(e[2],setval)
+            else:
+                cname = str(self.__dict__[e[0]].__class__.__name__)
+                if cname == "CheckButton":
+                    snode.setProp(e[2],self.conf.get_cb_param(self.__dict__[e[0]]))
+                elif cname == "Entry":
+                    snode.setProp(e[2],self.__dict__[e[0]].get_text())
+                elif cname == "SpinButton":
+                    v = self.__dict__[e[0]].get_value_as_int()
+                    if v==0:
+                        snode.setProp(e[2],"")
+                    else:
+                        snode.setProp(e[2],str(v))
+                elif cname == "ComboBox":
+                    t = self.__dict__[e[0]].get_active_text()
+                    if t == "" or t == "None":
+                        snode.setProp(e[2],"")
+                    else:
+                        snode.setProp(e[2],str())
+  
     def init_notebook_pages(self):
         # читаем все страницы и создаём нужные нам поля класса
         # (для управления доступностью закладок)
@@ -234,7 +320,7 @@ class IOMain(gtk.TreeView):
             model.append(iter, [_("J4:")+str(i),"",None,"channel",str(i),"3"])
 
     def init_channels(self):
-    # проходим по <sensors> и если поля заполнены ищем в нашем TreeView
+        # проходим по <sensors> и если поля заполнены ищем в нашем TreeView
         node = self.conf.xml.findNode(self.conf.xml.getDoc(),"sensors")[0].children.next 
         while node != None:
             if node.prop("io") != None:
@@ -281,20 +367,6 @@ class IOMain(gtk.TreeView):
 
            it = self.model.iter_next(it)
         
-    def add_columns(self):
-        renderer = gtk.CellRendererText()
-        
-#        renderer.set_property("xalign", 0.0)
-        column = gtk.TreeViewColumn(_("Name"), renderer, text=0)
-        column.set_clickable(False)
-        self.append_column(column)
-
-        renderer = gtk.CellRendererText()
-#        renderer.set_property("xalign", 0.0)
-        column = gtk.TreeViewColumn(_("Parameters"), renderer, text=1)
-        column.set_clickable(False)
-        self.append_column(column)
-    
     def check_connection(self,snode, myiter):
        it = self.model.get_iter_first() # node level
        myname = self.model.get_value(myiter,0)
@@ -362,27 +434,7 @@ class IOMain(gtk.TreeView):
 
     def on_io_btn_aID_clicked(self,button):
         pass
-
-    def set_iotype(self,iotype):
-        model = self.iotype.get_model()
-        it = model.get_iter_first()
-        while it is not None:                     
-            if iotype.upper() == str(model.get_value(it,0)).upper():
-                 self.iotype.set_active_iter(it)
-                 return
-            it = model.iter_next(it)
-    
-    def set_cdiagram(self,name):
-        if name == None:
-            return
-        model = self.cdiagram.get_model()
-        it = model.get_iter_first()
-        while it is not None:                     
-            if name.upper() == str(model.get_value(it,0)).upper():
-                 self.iotype.set_active_iter(it)
-                 return
-            it = model.iter_next(it)
-
+   
     def on_io_btn_sensor_clicked(self, button):
         self.conf.dlg_slist.set_selected_name(self.lbl_sensor.get_text())
         
@@ -404,12 +456,33 @@ class IOMain(gtk.TreeView):
                     self.model.set_value(ch_it,1,"")
             self.sensor = s  
             self.lbl_sensor.set_text(self.sensor.prop("name"))
-            self.set_iotype(self.sensor.prop("iotype"))
+            self.conf.set_combobox_element(self.iotype,self.sensor.prop("iotype"))
             break
 
     def on_io_cbox_iotype_changed(self,combobox):
-        # В зависимости от типа блокируем различные настройкистроим
-        pass
+        # В зависимости от типа блокируем различные настройки
+        t = combobox.get_active_text().upper()
+        if t == "DI" or t == "DO":
+             self.pgCalibration.set_sensitive(False)
+             self.lblcalibration.set_sensitive(False)
+             self.pgFilter.set_sensitive(False)
+             self.lblFilter.set_sensitive(False)
+        else:
+             self.pgCalibration.set_sensitive(True)
+             self.lblcalibration.set_sensitive(True)
+             self.pgFilter.set_sensitive(True)
+             self.lblFilter.set_sensitive(True)
+        
+        if t == "AI" or t=="AO":
+             self.pgThreshold.set_sensitive(False)
+             self.lblThresholds.set_sensitive(False)
+             self.pgDelay.set_sensitive(False)
+             self.lblDelay.set_sensitive(False)
+        else:
+             self.pgThreshold.set_sensitive(True)
+             self.lblThresholds.set_sensitive(True)
+             self.pgDelay.set_sensitive(True)
+             self.lblDelay.set_sensitive(True)
     
     def on_io_cbox_cdiagram_changed(self,combobox):
         if self.cdiagram.get_active_text() == "None":
@@ -617,122 +690,20 @@ class IOMain(gtk.TreeView):
         model.set_value(iter,1,info)
         self.conf.mark_changes()
 
-
-    def check_calibrations_params(self):
-       # для начала проверим на "цифру"
-       if self.cmin.get_text()!="" and self.conf.check_value_int(self.cmin.get_text()) == False:
-          return [False,"cmin"]
-       if self.cmax.get_text()!="" and self.conf.check_value_int(self.cmax.get_text()) == False:
-          return [False,"cmax"]
-       if self.rmin.get_text()!="" and self.conf.check_value_int(self.rmin.get_text()) == False:
-           return [False,"rmin"]
-       if self.rmax.get_text()!="" and self.conf.check_value_int(self.rmax.get_text()) == False:
-          return [False,"rmax"]
-
-       return [True,""]
-
-    def check_delay_params(self):
-       # для начала проверим на "цифру"
-       if self.ondelay.get_text()!="" and self.conf.check_value_int(self.ondelay.get_text()) == False:
-          return [False, _("on delay")]
-       if self.offdelay.get_text()!="" and self.conf.check_value_int(self.offdelay.get_text()) == False:
-          return [False,_("off delay")]
-       if self.jardelay.get_text()!="" and self.conf.check_value_int(self.jardelay.get_text()) == False:
-           return [False, _("jar delay")]
-
-       return [True,""]
-       
-    def check_comm_params(self):
-       if self.safety.get_text()!="" and self.conf.check_value_int(self.safety.get_text()) == False:
-          return [False, _("safety")]
-       if self.defval.get_text()!="" and self.conf.check_value_int(self.defval.get_text()) == False:
-          return [False, _("default")]
-       if self.breaklim.get_text()!="" and self.conf.check_value_int(self.breaklim.get_text()) == False:
-          return [False, _("breaklim")]
-     
-       return [True,""]
-
-    def set_xml_param(self,xmlnode,proplist=[],val=""):
-        if xmlnode == None:
-             return
-
-        for p in proplist:
-            xmlnode.setProp(p,val)
-    
-    def get_int_val(self,str_val):
-        if str_val == "" or str_val == None: 
-            return 0
-
-        return int(str_val)
-
-    def get_str_val(self,str_val):
-        if str_val == None: 
-            return ""
-
-        return str_val
-
-    def init_dlg_parameters(self,iter):
-        self.sensor = self.model.get_value(iter,2)
-        
-        snode = UniXML.EmptyNode()
-        if self.sensor != None:
-            snode = self.sensor  
-            self.set_iotype(self.sensor.prop("iotype"))
-
-        self.lbl_sensor.set_text(self.get_str_val(snode.prop("name")))
-
-        # Common parameters
-        self.lamp.set_active( self.get_int_val(snode.prop("lamp")) )
-        self.notestlamp.set_active(self.get_int_val(snode.prop("notestlamp")))
-        self.io_range.set_value( self.get_int_val(snode.prop("range")) )
-        self.io_aref.set_value( self.get_int_val(snode.prop("aref")) )
-        self.safety.set_text( self.get_str_val(snode.prop("safety")) )
-        self.breaklim.set_text( self.get_str_val(snode.prop("breaklim")) )
-        self.defval.set_text( self.get_str_val(snode.prop("default")) )
-        self.ignore.set_active( self.get_int_val(snode.prop("ignore")) )
-        self.invert.set_active( self.get_int_val(snode.prop("invert")) )
-        
-        # Calibrations
-        self.cmin.set_text( self.get_str_val(snode.prop("cmin")) )
-        self.cmax.set_text( self.get_str_val(snode.prop("cmax")) )
-        self.rmin.set_text( self.get_str_val(snode.prop("rmin")) )
-        self.rmax.set_text( self.get_str_val(snode.prop("rmax")) )
-        self.prec.set_value( self.get_int_val(snode.prop("precision")) )
-        self.noprec.set_active( self.get_int_val(snode.prop("noprecision")) )
-        self.set_cdiagram(snode.prop("caldiagram"))
-
-        # Filter
-#        self.nofilter.set_active( self.get_int_val(snode.prop("nofilter")) )
-#        self.median.set_value( self.get_int_val(snode.prop("filtermedian")) )
-#        self.leastsqr.set_value( self.get_int_val(snode.prop("leatsqr")) )
-#        self.filterIIR.set_value( self.get_int_val(snode.prop("iir_thr")) )
-#        self.filterRC.set_value( self.get_int_val(snode.prop("filterT")) )
-#        self.average.set_value( self.get_int_val(snode.prop("average")) )
-
-        # Delays
-        self.jardelay.set_text( self.get_str_val(snode.prop("jardelay")) )
-        self.ondelay.set_text( self.get_str_val(snode.prop("ondelay")) )
-        self.offdelay.set_text( self.get_str_val(snode.prop("offdelay")) )
-        
-        # Thresolds
-         
-        
-    def get_cb_param(self, checkbutton):
-        if checkbutton.get_active():
-            return "1"
-        return ""
-    
-    
     def on_edit_channel(self,iter):
-
         card_iter = self.model.iter_parent(iter)
         card = self.model.get_value(card_iter,2)
         node_iter = self.model.iter_parent(card_iter)
         node = self.model.get_value(node_iter,2)
         node_id = self.model.get_value(node_iter,4) # node.prop("id")
-        prev_sensor = self.model.get_value(iter,2)
-        self.init_dlg_parameters(iter)
-        
+
+        self.sensor = self.model.get_value(iter,2)
+        snode = UniXML.EmptyNode()
+        if self.sensor != None:
+            snode = self.sensor  
+        self.init_elements_value(self.channel_params,snode)
+
+        prev_sensor = self.sensor
         txt = _("Setup ") + str(card.prop("name")) + ":" + str(self.model.get_value(iter,0))
         self.dlg_info.set_text(txt)
         self.myedit_iter = iter
@@ -744,57 +715,18 @@ class IOMain(gtk.TreeView):
                 return
 
             if self.sensor == None: # "очищаем старую привязку"
-                self.set_xml_param(prev_sensor,["lamp","notestlamp","range","aref","safety",\
-                       "breaklim","default","ignore","invert","cmin","cmax","rmin","rmax",\
-                       "precision","noprecision"],"")
+                self.save2xml_elements_value(self.channel_params,prev_sensor,"")
                 self.model.set_value(iter,2,None)
                 self.model.set_value(iter,1,"")
                 return
-            # Common parameters
-#     проверку перенёс в
-#            if self.sensor != None:
-#                n_it,cd_it,ch_it = self.check_connection(self.sensor,iter)
-#                if ch_it is not None:
-#                    msg = "'" + self.sensor.prop("name") + "' " + _("Already connection!") 
-#                    addr = " (" + self.model.get_value(n_it,0) + ":" + self.model.get_value(cd_it,0) + ":" + self.model.get_value(ch_it,0) +_(")\n Reconnection?")
-#                    msg = msg + addr
-#                    dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,msg)
-#                    res = dlg.run()
-#                    dlg.hide()
-#                    if res == gtk.RESPONSE_NO:
-#                         return False
-#                    # сперва очистим привязку у старого
-#                    self.model.set_value(ch_it,2,None)
-#                    self.model.set_value(ch_it,1,"")
 
-            cres,badparam = self.check_comm_params() 
+            cres,badparam = self.validate_elements(self.channel_params)
             if cres == False:
-                 msg = _("Incorrect value of common parameter: '") + str(badparam) + "'"
+                 msg = _("Incorrect value: '") + str(badparam) + "'"
                  dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
                  res = dlg.run()
                  dlg.hide()
                  continue
-
-            # Calibrations
-            cres,badparam = self.check_calibrations_params() 
-            if cres == False:
-                 msg = _("Incorrect value of calibrations: '") + str(badparam) + "'"
-                 dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
-                 res = dlg.run()
-                 dlg.hide()
-                 continue
-            # Delay`s
-            cres,badparam = self.check_delay_params() 
-            if cres == False:
-                 msg = _("Incorrect value of delay`s: '") + str(badparam) + "'"
-                 dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
-                 res = dlg.run()
-                 dlg.hide()
-                 continue        
-            
-            # Filter
-            # Threshold
-            
             break
         
         self.myedit_iter = None
@@ -807,35 +739,6 @@ class IOMain(gtk.TreeView):
         self.sensor.setProp("card",card.prop("card"))
         self.sensor.setProp("subdev", str(self.model.get_value(iter,5)))
         self.sensor.setProp("channel",str(self.model.get_value(iter,4)))
-        
-        # Common parameters
-        self.sensor.setProp("lamp", self.get_cb_param(self.lamp) )
-        self.sensor.setProp("notestlamp", self.get_cb_param(self.notestlamp) )
-        self.sensor.setProp("range", str(self.io_range.get_value_as_int()))
-        self.sensor.setProp("aref", str(self.io_aref.get_value_as_int()))
-        self.sensor.setProp("safety", str(self.safety.get_text()))
-        self.sensor.setProp("breaklim", str(self.breaklim.get_text()))
-        self.sensor.setProp("default", str(self.defval.get_text()))
-        self.sensor.setProp("ioignore", self.get_cb_param(self.ignore) )
-        self.sensor.setProp("ioinvert", self.get_cb_param(self.invert) )
-        
-        # Calibrations
-        self.sensor.setProp("cmin", self.cmin.get_text())
-        self.sensor.setProp("cmax", self.cmax.get_text())
-        self.sensor.setProp("rmin", self.rmin.get_text())
-        self.sensor.setProp("rmax", self.rmax.get_text())
-        self.sensor.setProp("precision", str(self.prec.get_value_as_int()))
-        self.sensor.setProp("noprecision", self.get_cb_param(self.noprec) )
-        
-        # Filter
-        self.sensor.setProp("nofilter", self.get_cb_param(self.noprec) )
-        
-        # Delays
-        self.sensor.setProp("jardelay", self.jardelay.get_text())
-        self.sensor.setProp("ondelay", self.ondelay.get_text())
-        self.sensor.setProp("offdelay", self.offdelay.get_text())
-        
-        # Threshold
-        
-        
+        # Остальные параметры по списку
+        self.save2xml_elements_value(self.channel_params,self.sensor)
         self.conf.mark_changes()
