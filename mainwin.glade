@@ -184,7 +184,7 @@
       </widget>
     </child>
   </widget>
-  <widget class="GtkDialog" id="dlg_ioparam">
+  <widget class="GtkDialog" id="io_dlg_channel">
     <property name="border_width">5</property>
     <property name="modal">True</property>
     <property name="window_position">center</property>
@@ -1435,6 +1435,48 @@ UNIO96</property>
             <property name="position">0</property>
           </packing>
         </child>
+      </widget>
+    </child>
+  </widget>
+  <widget class="GtkMenu" id="io_card_popup">
+    <property name="visible">True</property>
+    <child>
+      <widget class="GtkMenuItem" id="mi_addcard">
+        <property name="visible">True</property>
+        <property name="use_action_appearance">False</property>
+        <property name="label" translatable="yes">add new card</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="on_add_card_activate"/>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkMenuItem" id="mi_delcard">
+        <property name="visible">True</property>
+        <property name="use_action_appearance">False</property>
+        <property name="label" translatable="yes">remove card</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="on_remove_card_activate"/>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkMenuItem" id="io_mi_editcard">
+        <property name="visible">True</property>
+        <property name="use_action_appearance">False</property>
+        <property name="label" translatable="yes">edit card</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="on_edit_card_activate"/>
+      </widget>
+    </child>
+  </widget>
+  <widget class="GtkMenu" id="io_node_popup">
+    <property name="visible">True</property>
+    <child>
+      <widget class="GtkMenuItem" id="io_node_add_card">
+        <property name="visible">True</property>
+        <property name="use_action_appearance">False</property>
+        <property name="label" translatable="yes">add new card</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="on_add_card_activate"/>
       </widget>
     </child>
   </widget>

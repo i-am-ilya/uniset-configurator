@@ -61,27 +61,11 @@ class IOMain(gtk.TreeView):
         # expand all rows after the treeview widget has been realized
 #       self.connect('realize', lambda tv: tv.expand_all())
 
-        self.card_popup = gtk.Menu() 
-        i0 = gtk.MenuItem( _("add new card") ) 
-        i0.connect("activate", self.on_add_card_activate)
-        i0.show() 
-        self.card_popup.append(i0) 
-
-        i1 = gtk.MenuItem( _("remove card") ) 
-        i1.connect("activate", self.on_remove_card_activate)
-        i1.show() 
-        self.card_popup.append(i1) 
-
-        i2 = gtk.MenuItem( _("edit") ) 
-        i2.connect("activate", self.on_edit_card_activate)
-        i2.show() 
-        self.card_popup.append(i2) 
-
-        self.node_popup = gtk.Menu() 
-        i0 = gtk.MenuItem( _("add new card") ) 
-        i0.connect("activate", self.on_add_card_activate)
-        i0.show() 
-        self.node_popup.append(i0) 
+        self.menu_list = [ \
+            ["card_popup","io_card_popup",None,True], \
+            ["node_popup","io_node_popup",None,True] \
+        ]
+        self.init_glade_elements(self.menu_list)
 
         self.build_tree()
         self.init_channels()
@@ -89,9 +73,6 @@ class IOMain(gtk.TreeView):
         # Список параметров для карты
         # ["class field","glade name","xmlname",save_xml_ignore_flag]
         self.card_params=[ \
-            ["lbl_sensor","io_lbl_sensor",None,True], \
-            ["dlg_param","dlg_ioparam",None,True], \
-            ["parambook","ioparam_book",None,True], \
             ["dlg_card","io_dlg_card","name",False], \
             ["card_num","io_sp_cardnum","card",False], \
             ["card_ba","io_baddr","baddr",False], \
@@ -105,7 +86,7 @@ class IOMain(gtk.TreeView):
         self.channel_params=[ \
             # Common objects
             ["lbl_sensor","io_lbl_sensor","name",True], \
-            ["dlg_param","dlg_ioparam",None,True], \
+            ["dlg_param","io_dlg_channel",None,True], \
             ["parambook","ioparam_book",None,True], \
             ["dlg_info","io_lbl_info",None,True], \
             ["iotype","io_cbox_iotype","iotype",False], \
@@ -572,6 +553,7 @@ class IOMain(gtk.TreeView):
 
         cname = self.cb_cardlist.get_active_text()
         if cname == "":
+           print "WARNING: add empty card name.. "
            return
 
         node = model.get_value(node_iter,2)
@@ -584,9 +566,7 @@ class IOMain(gtk.TreeView):
                return
 
         n = cnode.newChild(None,"item",None)
-        n.setProp("name",cname)
-        n.setProp("card",str(self.card_num.get_value_as_int()))
-        n.setProp("baddr",self.card_ba.get_text())
+        self.save2xml_elements_value(self.card_params,n)
         self.conf.mark_changes()
 
         info  = 'card=' + str(n.prop("card"))
@@ -667,29 +647,10 @@ class IOMain(gtk.TreeView):
         if not iter: return
 
         cnode = model.get_value(iter,2)
-
-        self.cb_cardlist.set_sensitive(False)
-
-        # select card
-        cn = cnode.prop("name")
-        m = self.cb_cardlist.get_model()
-        it = m.get_iter_first()
-        while it != None:
-           if str(m.get_value(it,0)) == cn:
-                self.cb_cardlist.set_active_iter(it)
-                break
-           it = m.iter_next(it)           
-
-        ba = cnode.prop("baddr")
-        if ba == None:
-            ba = ""
-        self.card_num.set_value( int(cnode.prop("card")))
-        self.card_ba.set_text(ba)
-        
+        self.init_elements_value(self.card_params,cnode)
         while True:
             res = self.dlg_card.run()
             self.dlg_card.hide()
-            self.cb_cardlist.set_sensitive(True)
             if res != gtk.RESPONSE_OK:
                 return
             
@@ -717,10 +678,8 @@ class IOMain(gtk.TreeView):
 
             break                
 
-        cnode.setProp("card",str(cnum))
-        cnode.setProp("baddr",str(baddr))
+        self.save2xml_elements_value(self.card_params,cnode)
         model.set_value(iter,4,cnum)
-
         info  = 'card=' + str(cnode.prop("card"))
         info  = info + ' BA=' + str(cnode.prop("baddr"))
         model.set_value(iter,1,info)
