@@ -58,7 +58,7 @@ class IOMain(base_main.BaseMain):
             ["dlg_card","io_dlg_card","name",False], \
             ["card_num","io_sp_cardnum","card",False], \
             ["card_ba","io_baddr","baddr",False], \
-            ["cb_cardlist","io_cb_cardlist",None,True] \
+            ["cb_cardlist","io_cb_cardlist","name",False] \
         ]
         self.init_glade_elements(self.card_params)        
         self.dlg_card.set_title(_("Select card"))
@@ -364,25 +364,23 @@ class IOMain(base_main.BaseMain):
                     # сперва очистим привязку у старого
                     self.model.set_value(ch_it,2,None)
                     self.model.set_value(ch_it,1,"")
-            
             self.sensor = s  
             break
  
-         if self.sensor == None:
-              self.tbl_comm.set_sensitive(False)
-              self.conf.set_combobox_element(self.iotype,"")
-              self.lbl_sensor.set_text("")
-         else:
-              self.tbl_comm.set_sensitive(True)  
-              self.conf.set_combobox_element(self.iotype,self.sensor.prop("iotype"))
-              self.lbl_sensor.set_text(self.sensor.prop("name"))
+        if self.sensor == None:
+             self.tbl_comm.set_sensitive(False)
+             self.set_combobox_element(self.iotype,"")
+             self.lbl_sensor.set_text("")
+        else:
+             self.tbl_comm.set_sensitive(True)  
+             self.set_combobox_element(self.iotype,self.sensor.prop("iotype"))
+             self.lbl_sensor.set_text(self.sensor.prop("name"))
 
     def on_io_cbox_iotype_changed(self,combobox):
         # В зависимости от типа блокируем различные настройки
         t = combobox.get_active_text()
         if t == None:
              t = ""
-        
         t = t.upper()
         if t == "DI" or t == "DO":
              self.pgCalibration.set_sensitive(False)
@@ -568,9 +566,14 @@ class IOMain(base_main.BaseMain):
 
         cnode = model.get_value(iter,2)
         self.init_elements_value(self.card_params,cnode)
+        # при редактировании отключаем выбор, т.к.
+        # сменить тип карты можно только удалив старую
+        # (со всеми привязками и т.п)
+        self.cb_cardlist.set_sensitive(False)
         while True:
             res = self.dlg_card.run()
             self.dlg_card.hide()
+            self.cb_cardlist.set_sensitive(True)
             if res != gtk.RESPONSE_OK:
                 return
             
@@ -634,11 +637,14 @@ class IOMain(base_main.BaseMain):
             self.dlg_param.hide()
             if res != gtk.RESPONSE_OK:
                 return
-
+            
             if self.sensor == None: # "очищаем старую привязку"
-                self.save2xml_elements_value(self.channel_params,prev_sensor,"")
+                if prev_sensor != None:
+                     self.save2xml_elements_value(self.channel_params,prev_sensor,"")
                 self.model.set_value(iter,2,None)
                 self.model.set_value(iter,1,"")
+                self.myedit_iter = None
+                self.conf.mark_changes()
                 return
 
             cres,badparam = self.validate_elements(self.channel_params)
@@ -650,12 +656,19 @@ class IOMain(base_main.BaseMain):
                  continue
             break
         
+        if self.sensor == None: # "очищаем старую привязку"
+            self.save2xml_elements_value(self.channel_params,prev_sensor,"")
+            self.model.set_value(iter,2,None)
+            self.model.set_value(iter,1,"")
+            self.myedit_iter = None
+            self.conf.mark_changes()
+            return
+
         self.myedit_iter = None
         
         # Сохраняем параметры
         self.model.set_value(iter,2,self.sensor)
         self.model.set_value(iter,1,self.sensor.prop("name"))
-
         self.sensor.setProp("io",node_id)
         self.sensor.setProp("card",card.prop("card"))
         self.sensor.setProp("subdev", str(self.model.get_value(iter,5)))

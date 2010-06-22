@@ -1439,7 +1439,6 @@ UNIO96</property>
     </child>
   </widget>
   <widget class="GtkMenu" id="io_card_popup">
-    <property name="visible">True</property>
     <child>
       <widget class="GtkMenuItem" id="mi_addcard">
         <property name="visible">True</property>
@@ -1469,7 +1468,6 @@ UNIO96</property>
     </child>
   </widget>
   <widget class="GtkMenu" id="io_node_popup">
-    <property name="visible">True</property>
     <child>
       <widget class="GtkMenuItem" id="io_node_add_card">
         <property name="visible">True</property>

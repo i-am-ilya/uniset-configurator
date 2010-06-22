@@ -43,17 +43,3 @@ class Conf:
         if str_val == None: 
             return ""
         return str_val
-    
-    def get_cb_param(self, checkbutton):
-        if checkbutton.get_active():
-            return "1"
-        return ""
-    
-    def set_combobox_element(self,cbox,val):
-        model = cbox.get_model()
-        it = model.get_iter_first()
-        while it is not None:                     
-            if val.upper() == str(model.get_value(it,0)).upper():
-                 cbox.set_active_iter(it)
-                 return
-            it = model.iter_next(it)     

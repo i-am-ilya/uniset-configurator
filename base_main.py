@@ -29,8 +29,6 @@ class BaseMain(gtk.TreeView):
     def __init__(self, conf):
 
         self.conf = conf
-        conf.glade.signal_autoconnect(self)
-
         gtk.TreeView.__init__(self)
 
     def init_glade_elements(self, elist):
@@ -55,7 +53,7 @@ class BaseMain(gtk.TreeView):
             elif cname == "CheckButton":
                 self.__dict__[e[0]].set_active(self.conf.get_int_val(snode.prop(e[2])))
             elif cname == "ComboBox":
-                self.conf.set_combobox_element(self.__dict__[e[0]], self.conf.get_str_val(snode.prop(e[2])))
+                self.set_combobox_element(self.__dict__[e[0]], self.conf.get_str_val(snode.prop(e[2])))
             elif cname == "Label":
                 self.__dict__[e[0]].set_text(self.conf.get_str_val(snode.prop(e[2])))
        
@@ -84,7 +82,7 @@ class BaseMain(gtk.TreeView):
             else:
                 cname = str(self.__dict__[e[0]].__class__.__name__)
                 if cname == "CheckButton":
-                    snode.setProp(e[2],self.conf.get_cb_param(self.__dict__[e[0]]))
+                    snode.setProp(e[2],self.get_cb_param(self.__dict__[e[0]]))
                 elif cname == "Entry":
                     snode.setProp(e[2],self.__dict__[e[0]].get_text())
                 elif cname == "Label":
@@ -101,3 +99,19 @@ class BaseMain(gtk.TreeView):
                         snode.setProp(e[2],"")
                     else:
                         snode.setProp(e[2],str())
+    
+    def get_cb_param(self, checkbutton):
+        if checkbutton.get_active():
+            return "1"
+        return ""
+    
+    def set_combobox_element(self,cbox,val):
+        if val == None:
+            val = ""
+        model = cbox.get_model()
+        it = model.get_iter_first()
+        while it is not None:                     
+            if val.upper() == str(model.get_value(it,0)).upper():
+                 cbox.set_active_iter(it)
+                 return
+            it = model.iter_next(it)
