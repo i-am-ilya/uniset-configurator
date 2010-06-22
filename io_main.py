@@ -110,6 +110,7 @@ class IOMain(gtk.TreeView):
             ["dlg_info","io_lbl_info",None,True], \
             ["iotype","io_cbox_iotype","iotype",False], \
             # Common parameters
+            ["tbl_comm","io_tbl_comm",None,True], \
             ["lamp","io_cb_lamp","lamp",False], \
             ["notestlamp","io_cb_notestlamp","notestlamp",False], \
             ["io_range","io_sp_range","range",False], \
@@ -138,7 +139,14 @@ class IOMain(gtk.TreeView):
             ["leastsqr","io_sp_leastsqr","leatsqr",False], \
             ["filterIIR","io_sp_filterIIR","filterIIR",False], \
             ["filterRC","io_sp_filterRC","filterT",False], \
-            ["average","io_sp_average","average",False] \
+            ["average","io_sp_average","average",False], \
+            # Thresholds
+            ["tbl_tresholds","io_tbl_tresholds",None,True], \
+            ["thr_hilimit","io_hilimit","hilimit",False], \
+            ["thr_lowlimit","io_lowlimit","lowlimit",False], \
+            ["thr_sensibility","io_sensibility","sensibility",False], \
+            ["thr_inverse","io_cb_thr_invert","inverse",False], \
+            ["thr_lbl_aID","io_lbl_aID","threshold_aid",False] \
            ]
 
         self.init_glade_elements(self.channel_params)
@@ -203,6 +211,8 @@ class IOMain(gtk.TreeView):
                 if cname == "CheckButton":
                     snode.setProp(e[2],self.conf.get_cb_param(self.__dict__[e[0]]))
                 elif cname == "Entry":
+                    snode.setProp(e[2],self.__dict__[e[0]].get_text())
+                elif cname == "Label":
                     snode.setProp(e[2],self.__dict__[e[0]].get_text())
                 elif cname == "SpinButton":
                     v = self.__dict__[e[0]].get_value_as_int()
@@ -433,11 +443,17 @@ class IOMain(gtk.TreeView):
        self.dlg_param.response(gtk.RESPONSE_OK)
 
     def on_io_btn_aID_clicked(self,button):
-        pass
+        self.conf.dlg_slist.set_selected_name(self.thr_lbl_aID.get_text())
+        s = self.conf.dlg_slist.run(self)
+        if s != None:
+            self.thr_lbl_aID.set_text(s.prop("name"))
+            self.tbl_tresholds.set_sensitive(True)
+        else:
+            self.thr_lbl_aID.set_text("")
+            self.tbl_tresholds.set_sensitive(False)
    
     def on_io_btn_sensor_clicked(self, button):
         self.conf.dlg_slist.set_selected_name(self.lbl_sensor.get_text())
-        
         while True:
             s = self.conf.dlg_slist.run(self)
             if s != None:
@@ -456,7 +472,12 @@ class IOMain(gtk.TreeView):
                     self.model.set_value(ch_it,1,"")
             self.sensor = s  
             self.lbl_sensor.set_text(self.sensor.prop("name"))
-            self.conf.set_combobox_element(self.iotype,self.sensor.prop("iotype"))
+            if s == None:
+                 self.tbl_comm.set_sensitive(False)
+                 self.conf.set_combobox_element(self.iotype,"")
+            else:
+                 self.tbl_comm.set_sensitive(True)  
+                 self.conf.set_combobox_element(self.iotype,self.sensor.prop("iotype"))
             break
 
     def on_io_cbox_iotype_changed(self,combobox):
@@ -489,6 +510,21 @@ class IOMain(gtk.TreeView):
             self.calibr_param.set_sensitive(True)
         else:
             self.calibr_param.set_sensitive(False)
+    
+    def set_sensitive_pages(self):
+         if self.sensor == None:
+             self.pgCalibration.set_sensitive(False)
+             self.lblcalibration.set_sensitive(False)
+             self.pgFilter.set_sensitive(False)
+             self.lblFilter.set_sensitive(False)
+             self.pgThreshold.set_sensitive(False)
+             self.lblThresholds.set_sensitive(False)
+             self.pgDelay.set_sensitive(False)
+             self.lblDelay.set_sensitive(False)
+             self.tbl_comm.set_sensitive(False)
+         else:
+             self.on_io_cbox_iotype_changed(self.iotype)
+             self.tbl_comm.set_sensitive(True)
     
     def on_add_card_activate(self,menuitem):
     
@@ -701,8 +737,14 @@ class IOMain(gtk.TreeView):
         snode = UniXML.EmptyNode()
         if self.sensor != None:
             snode = self.sensor  
+        self.set_sensitive_pages()
         self.init_elements_value(self.channel_params,snode)
-
+        
+        if self.thr_lbl_aID.get_text() == "":
+            self.tbl_tresholds.set_sensitive(False)
+        else:
+            self.tbl_tresholds.set_sensitive(True)
+        
         prev_sensor = self.sensor
         txt = _("Setup ") + str(card.prop("name")) + ":" + str(self.model.get_value(iter,0))
         self.dlg_info.set_text(txt)
