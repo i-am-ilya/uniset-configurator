@@ -439,7 +439,7 @@ class IOMain(base_main.BaseMain):
         else:
             print "*** FAILED ELEMENT TYPE " + t
             return
-
+        
         while True:
             res = self.dlg_card.run()
             self.dlg_card.hide()
@@ -476,17 +476,17 @@ class IOMain(base_main.BaseMain):
 
         node = model.get_value(node_iter,2)
         cnode = self.conf.xml.findMyLevel(node.children,"iocards")[0]
-
+        
         if cnode == None:
            cnode = node.newChild(None,"iocards",None)
            if cnode == None:
                print "************** FAILED CREATE <iocards> for " + str(node)
                return
-
+ 
         n = cnode.newChild(None,"item",None)
         self.save2xml_elements_value(self.card_params,n)
         self.conf.mark_changes()
-
+        
         info  = 'card=' + str(n.prop("card"))
         info  = info + ' BA=' + str(n.prop("baddr"))
 

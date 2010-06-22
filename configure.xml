@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<MB745Configuration>
+<MB745Configuration id="$Id: configure.xml,v 1.76 2009/04/01 21:24:38 pv Exp $">
 	<!-- Общие параметры по UniSet -->
 	<UniSet>
 		<LocalNode name="LocalhostNode"/>
@@ -610,6 +610,37 @@
 		<GEU1 FQCOffTime="10000" FQCOnTime="20000" LampOFF_c="GEU_LampOFF_FC" LampON_c="GEU_LampON_FC" Off_f="GEU_Off_F" On_f="GEU_On_F" ProtectionMode_f="GEU_ProtectionMode_F" Ready_c="GEU_Ready_C" Reset_f="GEU_Reset_F" SEES_Ready_f="SEES_ReadyForLoading_F" SEES_ReservPower_as="SEES_ReservPower_AS" allowEnable_c="GEU_AllowEnable_FS" fqc="FQC1" initPause="2000" name="GEU1" needPowerLimit_c="GEU_NeedPowerLimit_S" powerLimit="300" powerLimitTime="5000" resetPause="3000"/>
 		<FQC1 Mode_as="FQC_Mode_AS" OffTime="10000" Off_c="FQC_Off_C" OnTime="15000" On_c="FQC_On_C" Protection_s="FQC_Protection_S" mid_NotResetProtection="FQC_ProtectionNotReset_Att" mid_wait_on="FQC_WaitOn_IM" name="FQC1"/>
 		<APSControl askPause="500" askTimeout="15000" name="APSControl"/>
+		<TSCanNetwork TestModeSensor="TestMode_S" name="TSCanNetwork">
+			<!--	<node name="GUITSNode" nodeID="0x10" eds="guits.eds"
+			      TestMode="GUITSNode_TestMode_S"
+			      respondSensor1="CAN1_GUITS_Not_Respond_FS"
+			      respondSensor2="CAN2_GUITS_Not_Respond_FS"
+			      nodeRespondSensor="CAN_GUITS_Not_Respond_FS"
+			      hbSensor="_31_22_AS"/> -->
+			<node TestMode="TSCPUNode_TestMode_S" eds="tscpu.eds" hbSensor="_31_23_AS" name="TSCPUNode" nodeID="0x10" nodeRespondSensor="CAN_TSCPU_Not_Respond_FS" respondSensor1="CAN1_TSCPU_Not_Respond_FS" respondSensor2="CAN2_TSCPU_Not_Respond_FS"/>
+			<node TestMode="GDG1Node_TestMode_S" eds="gdg1.eds" hbSensor="_31_17_AS" name="GDG1Node" nodeID="0x30" nodeRespondSensor="CAN_GDG1_Not_Respond_FS" respondSensor1="CAN1_GDG1_Not_Respond_FS" respondSensor2="CAN2_GDG1_Not_Respond_FS"/>
+			<node TestMode="GDG2Node_TestMode_S" eds="gdg2.eds" hbSensor="_31_18_AS" name="GDG2Node" nodeID="0x40" nodeRespondSensor="CAN_GDG2_Not_Respond_FS" respondSensor1="CAN1_GDG2_Not_Respond_FS" respondSensor2="CAN2_GDG2_Not_Respond_FS"/>
+			<node TestMode="TS1Node_TestMode_S" eds="ts1.eds" hbSensor="_31_19_AS" name="TS1Node" nodeID="0x50" nodeRespondSensor="CAN_TS1_Not_Respond_FS" respondSensor1="CAN1_TS1_Not_Respond_FS" respondSensor2="CAN2_TS1_Not_Respond_FS"/>
+			<node TestMode="TS2Node_TestMode_S" eds="ts2.eds" hbSensor="_31_20_AS" name="TS2Node" nodeID="0x60" nodeRespondSensor="CAN_TS2_Not_Respond_FS" respondSensor1="CAN1_TS2_Not_Respond_FS" respondSensor2="CAN2_TS2_Not_Respond_FS"/>
+			<node TestMode="TSPUSNode_TestMode_S" eds="tspus.eds" hbSensor="_31_51_AS" name="TSPUSNode" nodeID="0x70" nodeRespondSensor="CAN_TSPUS_Not_Respond_FS" respondSensor1="CAN1_TSPUS_Not_Respond_FS" respondSensor2="CAN2_TSPUS_Not_Respond_FS"/>
+		</TSCanNetwork>
+		<GEUCanNetwork TestModeSensor="TestMode_S" name="CanGEUNetwork">
+			<node TestMode="GEUAPSNode_TestMode_S" eds="geuaps.eds" hbSensor="_31_26_AS" name="GEUAPSNode" nodeID="0x10" nodeRespondSensor="CAN_GEUAPS_Not_Respond_FS" respondSensor1="CAN1_GEUAPS_Not_Respond_FS" respondSensor2="CAN2_GEUAPS_Not_Respond_FS"/>
+			<node TestMode="GEUCPUNode_TestMode_S" eds="geucpu.eds" hbSensor="_31_24_AS" name="GEUCPUNode" nodeID="0x20" nodeRespondSensor="CAN_GEUCPU_Not_Respond_FS" respondSensor1="CAN1_GEUCPU_Not_Respond_FS" respondSensor2="CAN2_GEUCPU_Not_Respond_FS"/>
+			<node TestMode="GEUPUSNode_TestMode_S" eds="geupus.eds" hbSensor="_31_29_AS" name="GEUPUSNode" nodeID="0x30" nodeRespondSensor="CAN_GEUPUS_Not_Respond_FS" respondSensor1="CAN1_GEUPUS_Not_Respond_FS" respondSensor2="CAN2_GEUPUS_Not_Respond_FS"/>
+			<node TestMode="GEUNode_TestMode_S" eds="geu.eds" hbSensor="_31_25_AS" name="GEUNode" nodeID="0x40" nodeRespondSensor="CAN_GEU_Not_Respond_FS" respondSensor1="CAN1_GEU_Not_Respond_FS" respondSensor2="CAN2_GEU_Not_Respond_FS"/>
+		</GEUCanNetwork>
+		<SESCanNetwork TestModeSensor="TestMode_S" name="SESCanNetwork">
+			<node TestMode="SESCPUNode_TestMode_S" eds="sescpu.eds" hbSensor="_31_15_AS" name="SESCPUNode" nodeID="0x10" nodeRespondSensor="CAN_SESCPU_Not_Respond_FS" respondSensor1="CAN1_SESCPU_Not_Respond_FS" respondSensor2="CAN2_SESCPU_Not_Respond_FS"/>
+			<node TestMode="SESNode_TestMode_S" eds="ses.eds" hbSensor="_31_16_AS" name="SESNode" nodeID="0x20" nodeRespondSensor="CAN_SES_Not_Respond_FS" respondSensor1="CAN1_SES_Not_Respond_FS" respondSensor2="CAN2_SES_Not_Respond_FS"/>
+		</SESCanNetwork>
+		<GlobalCanNetwork>
+			<node TestMode="GUI1Node_TestMode_S" eds="gui1.eds" hbSensor="_31_27_AS" name="GUI1Node" nodeID="0x11" nodeRespondSensor="CAN_GUI1_Not_Respond_FS" respondSensor1="CAN1_GUI1_Not_Respond_FS" respondSensor2="CAN2_GUI1_Not_Respond_FS"/>
+			<node TestMode="GUI2Node_TestMode_S" eds="gui2.eds" hbSensor="_31_28_AS" name="GUI2Node" nodeID="0x21" nodeRespondSensor="CAN_GUI2_Not_Respond_FS" respondSensor1="CAN1_GUI2_Not_Respond_FS" respondSensor2="CAN2_GUI2_Not_Respond_FS"/>
+			<node TestMode="SYSSESNode_TestMode_S" eds="sessys.eds" hbSensor="_31_48_AS" name="SYSSESNode" nodeID="0x31" nodeRespondSensor="CAN_SYSSES_Not_Respond_FS" respondSensor1="CAN1_SYSSES_Not_Respond_FS" respondSensor2="CAN2_SYSSES_Not_Respond_FS"/>
+			<node TestMode="SYSTSNode_TestMode_S" eds="tssys.eds" hbSensor="_31_50_AS" name="SYSTSNode" nodeID="0x51" nodeRespondSensor="CAN_SYSTS_Not_Respond_FS" respondSensor1="CAN1_SYSTS_Not_Respond_FS" respondSensor2="CAN2_SYSTS_Not_Respond_FS"/>
+			<node TestMode="SYSGEUNode_TestMode_S" eds="geusys.eds" hbSensor="_31_49_AS" name="SYSGEUNode" nodeID="0x61" nodeRespondSensor="CAN_SYSGEU_Not_Respond_FS" respondSensor1="CAN1_SYSGEU_Not_Respond_FS" respondSensor2="CAN2_SYSGEU_Not_Respond_FS"/>
+		</GlobalCanNetwork>
 		<MTR address="1" device="/dev/ttyICPCON" speed="9600" timeout="50">
 			<item file="GDG1.msf" text="ГДГ1"/>
 			<item file="GDG2.msf" text="ГДГ2"/>
@@ -619,39 +650,6 @@
 		</MTR>
 		<GUI SaveDir="/tmp">
 		</GUI>
-		<CAN_Net>
-			<TSCanNetwork TestModeSensor="TestMode_S" comment="CAN СУ ТС" name="TSCanNetwork">
-				<!--	<node name="GUITSNode" nodeID="0x10" eds="guits.eds"
-				      TestMode="GUITSNode_TestMode_S"
-				      respondSensor1="CAN1_GUITS_Not_Respond_FS"
-			    	  respondSensor2="CAN2_GUITS_Not_Respond_FS"
-				      nodeRespondSensor="CAN_GUITS_Not_Respond_FS"
-				      hbSensor="_31_22_AS"/> -->
-				<node TestMode="TSCPUNode_TestMode_S" eds="tscpu.eds" hbSensor="_31_23_AS" name="TSCPUNode" nodeID="0x10" nodeRespondSensor="CAN_TSCPU_Not_Respond_FS" respondSensor1="CAN1_TSCPU_Not_Respond_FS" respondSensor2="CAN2_TSCPU_Not_Respond_FS"/>
-				<node TestMode="GDG1Node_TestMode_S" eds="gdg1.eds" hbSensor="_31_17_AS" name="GDG1Node" nodeID="0x30" nodeRespondSensor="CAN_GDG1_Not_Respond_FS" respondSensor1="CAN1_GDG1_Not_Respond_FS" respondSensor2="CAN2_GDG1_Not_Respond_FS"/>
-				<node TestMode="GDG2Node_TestMode_S" eds="gdg2.eds" hbSensor="_31_18_AS" name="GDG2Node" nodeID="0x40" nodeRespondSensor="CAN_GDG2_Not_Respond_FS" respondSensor1="CAN1_GDG2_Not_Respond_FS" respondSensor2="CAN2_GDG2_Not_Respond_FS"/>
-				<node TestMode="TS1Node_TestMode_S" eds="ts1.eds" hbSensor="_31_19_AS" name="TS1Node" nodeID="0x50" nodeRespondSensor="CAN_TS1_Not_Respond_FS" respondSensor1="CAN1_TS1_Not_Respond_FS" respondSensor2="CAN2_TS1_Not_Respond_FS"/>
-				<node TestMode="TS2Node_TestMode_S" eds="ts2.eds" hbSensor="_31_20_AS" name="TS2Node" nodeID="0x60" nodeRespondSensor="CAN_TS2_Not_Respond_FS" respondSensor1="CAN1_TS2_Not_Respond_FS" respondSensor2="CAN2_TS2_Not_Respond_FS"/>
-				<node TestMode="TSPUSNode_TestMode_S" eds="tspus.eds" hbSensor="_31_51_AS" name="TSPUSNode" nodeID="0x70" nodeRespondSensor="CAN_TSPUS_Not_Respond_FS" respondSensor1="CAN1_TSPUS_Not_Respond_FS" respondSensor2="CAN2_TSPUS_Not_Respond_FS"/>
-			</TSCanNetwork>
-			<GEUCanNetwork TestModeSensor="TestMode_S" comment="CAN СУ ГЭУ" name="CanGEUNetwork">
-				<node TestMode="GEUAPSNode_TestMode_S" eds="geuaps.eds" hbSensor="_31_26_AS" name="GEUAPSNode" nodeID="0x10" nodeRespondSensor="CAN_GEUAPS_Not_Respond_FS" respondSensor1="CAN1_GEUAPS_Not_Respond_FS" respondSensor2="CAN2_GEUAPS_Not_Respond_FS"/>
-				<node TestMode="GEUCPUNode_TestMode_S" eds="geucpu.eds" hbSensor="_31_24_AS" name="GEUCPUNode" nodeID="0x20" nodeRespondSensor="CAN_GEUCPU_Not_Respond_FS" respondSensor1="CAN1_GEUCPU_Not_Respond_FS" respondSensor2="CAN2_GEUCPU_Not_Respond_FS"/>
-				<node TestMode="GEUPUSNode_TestMode_S" eds="geupus.eds" hbSensor="_31_29_AS" name="GEUPUSNode" nodeID="0x30" nodeRespondSensor="CAN_GEUPUS_Not_Respond_FS" respondSensor1="CAN1_GEUPUS_Not_Respond_FS" respondSensor2="CAN2_GEUPUS_Not_Respond_FS"/>
-				<node TestMode="GEUNode_TestMode_S" eds="geu.eds" hbSensor="_31_25_AS" name="GEUNode" nodeID="0x40" nodeRespondSensor="CAN_GEU_Not_Respond_FS" respondSensor1="CAN1_GEU_Not_Respond_FS" respondSensor2="CAN2_GEU_Not_Respond_FS"/>
-			</GEUCanNetwork>
-			<SESCanNetwork TestModeSensor="TestMode_S" comment="CAN СУ СЭС" name="SESCanNetwork">
-				<node TestMode="SESCPUNode_TestMode_S" eds="sescpu.eds" hbSensor="_31_15_AS" name="SESCPUNode" nodeID="0x10" nodeRespondSensor="CAN_SESCPU_Not_Respond_FS" respondSensor1="CAN1_SESCPU_Not_Respond_FS" respondSensor2="CAN2_SESCPU_Not_Respond_FS"/>
-				<node TestMode="SESNode_TestMode_S" eds="ses.eds" hbSensor="_31_16_AS" name="SESNode" nodeID="0x20" nodeRespondSensor="CAN_SES_Not_Respond_FS" respondSensor1="CAN1_SES_Not_Respond_FS" respondSensor2="CAN2_SES_Not_Respond_FS"/>
-			</SESCanNetwork>
-			<GlobalCanNetwork comment="Общесудовой CAN" name="GlobalCanNetwork">
-				<node TestMode="GUI1Node_TestMode_S" eds="gui1.eds" hbSensor="_31_27_AS" name="GUI1Node" nodeID="0x11" nodeRespondSensor="CAN_GUI1_Not_Respond_FS" respondSensor1="CAN1_GUI1_Not_Respond_FS" respondSensor2="CAN2_GUI1_Not_Respond_FS"/>
-				<node TestMode="GUI2Node_TestMode_S" eds="gui2.eds" hbSensor="_31_28_AS" name="GUI2Node" nodeID="0x21" nodeRespondSensor="CAN_GUI2_Not_Respond_FS" respondSensor1="CAN1_GUI2_Not_Respond_FS" respondSensor2="CAN2_GUI2_Not_Respond_FS"/>
-				<node TestMode="SYSSESNode_TestMode_S" eds="sessys.eds" hbSensor="_31_48_AS" name="SYSSESNode" nodeID="0x31" nodeRespondSensor="CAN_SYSSES_Not_Respond_FS" respondSensor1="CAN1_SYSSES_Not_Respond_FS" respondSensor2="CAN2_SYSSES_Not_Respond_FS"/>
-				<node TestMode="SYSTSNode_TestMode_S" eds="tssys.eds" hbSensor="_31_50_AS" name="SYSTSNode" nodeID="0x51" nodeRespondSensor="CAN_SYSTS_Not_Respond_FS" respondSensor1="CAN1_SYSTS_Not_Respond_FS" respondSensor2="CAN2_SYSTS_Not_Respond_FS"/>
-				<node TestMode="SYSGEUNode_TestMode_S" eds="geusys.eds" hbSensor="_31_49_AS" name="SYSGEUNode" nodeID="0x61" nodeRespondSensor="CAN_SYSGEU_Not_Respond_FS" respondSensor1="CAN1_SYSGEU_Not_Respond_FS" respondSensor2="CAN2_SYSGEU_Not_Respond_FS"/>
-			</GlobalCanNetwork>
-		</CAN_Net>
 	</settings>
 	<ObjectsMap idfromfile="1" no_dep="0">
 		<!--
@@ -734,73 +732,36 @@
 		<nodes port="2809">
 			<item dbserver="DBServer1" id="3000" ip="127.0.0.1" name="LocalhostNode" textname="Локальный узел">
 				<iocards>
-					<item card="3" name="AI16"/>
-					<item baddr="0x120" card="2" name="DI32"/>
-					<item card="2" name="AI16"/>
+					<item/>
 				</iocards>
-				<can>
-				</can>
 			</item>
-			<item dbserver="DBServer1" id="3001" ip="gui1" name="GUI1Node" textname="Графическая станция N1">
+			<item CANnodeID="0x01" dbserver="DBServer1" id="3001" ip="gui1" name="GUI1Node" textname="Графическая станция N1">
 				<iocards>
-					<item card="2" name="UNIO48"/>
-					<item baddr="0" card="3" name="AI16"/>
-					<item card="0" name="AI16"/>
-					<item card="4" name="UNIO48"/>
-				</iocards>
-				<can>
-				</can>
-			</item>
-			<item dbserver="DBServer1" id="3002" ip="gui2" name="GUI2Node" textname="Графическая станция N2">
-				<iocards>
-					<item baddr="0x110" name="DI32"/>
+					<item/>
 				</iocards>
 			</item>
-			<item id="3003" ip="sescpu" name="SESCPUNode" textname="Пульт ЦПУ (контроллер СЭС)">
-				<iocards>
-					<item card="0" name="DI32"/>
-				</iocards>
-			</item>
-			<item id="3004" ip="ses" name="SESNode" textname="КСЭС">
-				<can>
-					<item net="SES" nodeID="0"/>
-				</can>
-			</item>
-			<item id="3005" ip="gdg1" name="GDG1Node" textname="ЩС ГДГ1"/>
-			<item id="3006" ip="gdg2" name="GDG2Node" textname="0С ГДГ2">
-				<can>
-					<item net="TS" nodeID="0"/>
-				</can>
-			</item>
-			<item id="3007" ip="ts1" name="TS1Node" textname="ЩС ВДГ1">
-				<can>
-					<item net="TS"/>
-				</can>
-			</item>
-			<item id="3008" ip="ts2" name="TS2Node" textname="ЩС ВДГ2"/>
-			<item id="3010" ip="guits" name="GUITSNode" textname="ШУ ТС (панель)"/>
-			<item id="3011" ip="tscpu" name="TSCPUNode" textname="Пульт ЦПУ (контроллер ТС)">
-				<can>
-					<item net="TS"/>
-				</can>
-			</item>
-			<item id="3012" ip="geucpu" name="GEUCPUNode" textname="Пульт ЦПУ (контроллер ГЭУ)"/>
-			<item id="3013" ip="geu" name="GEUNode" textname="Контроллер ГЭУ (управление)">
-				<can>
-					<item net="TS"/>
-				</can>
-			</item>
-			<item id="3014" ip="geuaps" name="GEUAPSNode" textname="Контроллер ГЭУ АПС"/>
-			<item id="3015" ip="geupus" name="GEUPUSNode" textname="Пульт ЦПУ (контроллер ГЭУ)"/>
-			<item id="3016" ip="tscpu" name="SYSTSNode" textname="СУ ТС"/>
-			<item id="3017" ip="geucpu" name="SYSGEUNode" textname="СУ ГЭУ"/>
-			<item id="3018" ip="sescpu" name="SYSSESNode" textname="СУ СЭС"/>
-			<item id="3019" ip="tspus" name="TSPUSNode" textname="Пульт ПУС (контроллер ТС)"/>
+			<item CANnodeID="0x02" dbserver="DBServer1" id="3002" ip="gui2" name="GUI2Node" textname="Графическая станция N2"/>
+			<item CANnodeID="0x03" id="3003" ip="sescpu" name="SESCPUNode" textname="Пульт ЦПУ (контроллер СЭС)"/>
+			<item CANnodeID="0x04" id="3004" ip="ses" name="SESNode" textname="КСЭС"/>
+			<item CANnodeID="0x05" id="3005" ip="gdg1" name="GDG1Node" textname="ЩС ГДГ1"/>
+			<item CANnodeID="0x06" id="3006" ip="gdg2" name="GDG2Node" textname="0С ГДГ2"/>
+			<item CANnodeID="0x07" id="3007" ip="ts1" name="TS1Node" textname="ЩС ВДГ1"/>
+			<item CANnodeID="0x08" id="3008" ip="ts2" name="TS2Node" textname="ЩС ВДГ2"/>
+			<item CANnodeID="0x10" id="3010" ip="guits" name="GUITSNode" textname="ШУ ТС (панель)"/>
+			<item CANnodeID="0x11" id="3011" ip="tscpu" name="TSCPUNode" textname="Пульт ЦПУ (контроллер ТС)"/>
+			<item CANnodeID="0x12" id="3012" ip="geucpu" name="GEUCPUNode" textname="Пульт ЦПУ (контроллер ГЭУ)"/>
+			<item CANnodeID="0x13" id="3013" ip="geu" name="GEUNode" textname="Контроллер ГЭУ (управление)"/>
+			<item CANnodeID="0x14" id="3014" ip="geuaps" name="GEUAPSNode" textname="Контроллер ГЭУ АПС"/>
+			<item CANnodeID="0x15" id="3015" ip="geupus" name="GEUPUSNode" textname="Пульт ЦПУ (контроллер ГЭУ)"/>
+			<item CANnodeID="0x16" id="3016" ip="tscpu" name="SYSTSNode" textname="СУ ТС"/>
+			<item CANnodeID="0x17" id="3017" ip="geucpu" name="SYSGEUNode" textname="СУ ГЭУ"/>
+			<item CANnodeID="0x18" id="3018" ip="sescpu" name="SYSSESNode" textname="СУ СЭС"/>
+			<item CANnodeID="0x19" id="3019" ip="tspus" name="TSPUSNode" textname="Пульт ПУС (контроллер ТС)"/>
 		</nodes>
 		<!-- ************************ Датчики ********************** -->
 		<sensors name="Sensors" no_check_depends="0" section="Sensors">
-			<item card="1" channel="2" id="1" iotype="DI" name="DefaultSensor" subdev="0"/>
-			<item card="3" channel="0" id="100" io="3000" iotype="DI" name="01_00_S" subdev="1" textname="Сигнал квитирования"/>
+			<item id="1" iotype="DI" name="DefaultSensor"/>
+			<item id="100" iotype="DI" name="01_00_S" textname="Сигнал квитирования"/>
 			<!-- Т01 Система масла ГДГ -->
 			<!--NOT IN LIST
 		<item id="101" name="01_01_S"
@@ -815,15 +776,15 @@
 		      textname="Давление смазочного масла ГДГ2"
 		      iotype="AI" />
 -->
-			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG1Node" card="3" channel="1" id="101" io="3000" iotype="DI" mtype="1" name="01_01_S" subdev="1" textname="Минимальное давление смазочного масла ГДГ1" unetGUITS="TSNode"/>
-			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG2Node" card="3" channel="3" id="102" io="3000" iotype="DI" mtype="1" name="01_02_S" subdev="1" textname="Минимальное давление смазочного масла ГДГ2" unetGUITS="TSNode"/>
+			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG1Node" card="2" channel="3" id="101" io="gdg1" iotype="DI" mtype="1" name="01_01_S" subdev="0" textname="Минимальное давление смазочного масла ГДГ1" unetGUITS="TSNode"/>
+			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG2Node" card="2" channel="3" id="102" io="gdg2" iotype="DI" mtype="1" name="01_02_S" subdev="0" textname="Минимальное давление смазочного масла ГДГ2" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aps="102" canTS="GDG1Node" card="2" channel="23" id="103" io="gdg1" iotype="DI" mtype="2" name="01_03_S" subdev="0" textname="Минимальное давление смазочного масла ГДГ1" unetGUITS="TSNode"/>
-			<item CAN2sender="SYSTSNode" aps="102" canTS="GDG2Node" channel="8" id="104" io="3002" mtype="2" name="01_04_S" subdev="0" textname="Минимальное давление смазочного масла ГДГ2" unetGUITS="TSNode"/>
-			<item CAN2sender="SYSTSNode" canTS="GDG1Node" card="3" channel="1" id="105" io="3000" name="01_05_S" subdev="0" textname="Дифференциальное давление смазочного масла ГДГ1 на фильтре" unetGUITS="TSNode"/>
-			<item CAN2sender="SYSTSNode" canTS="GDG2Node" card="3" channel="3" id="106" io="3000" name="01_06_S" subdev="0" textname="Дифференциальное давление смазочного масла ГДГ2 на фильтре" unetGUITS="TSNode"/>
-			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG1Node" channel="9" id="107" io="3002" ioinvert="1" jardelay="300" mtype="1" name="01_07_S" subdev="0" textname="Максимальная температура смазочного масла ГДГ1" unetGUITS="TSNode"/>
-			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG2Node" card="3" channel="6" id="108" io="3000" mtype="1" name="01_08_S" subdev="0" textname="Максимальная температура смазочного масла ГДГ2" unetGUITS="TSNode"/>
-			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG1Node" card="3" channel="5" id="109" io="3000" iotype="DI" mtype="1" name="01_09_S" subdev="1" textname="Минимальный уровень смазочного масла в картере ГДГ1" unetGUITS="TSNode"/>
+			<item CAN2sender="SYSTSNode" aps="102" canTS="GDG2Node" card="2" channel="23" id="104" io="gdg2" iotype="DI" mtype="2" name="01_04_S" subdev="0" textname="Минимальное давление смазочного масла ГДГ2" unetGUITS="TSNode"/>
+			<item CAN2sender="SYSTSNode" aref="2" canTS="GDG1Node" card="1" channel="2" cmax="100" cmin="0" id="105" io="gdg1" iotype="AI" name="01_05_S" rmax="2060" rmin="410" subdev="2" textname="Дифференциальное давление смазочного масла ГДГ1 на фильтре" unetGUITS="TSNode"/>
+			<item CAN2sender="SYSTSNode" aref="2" canTS="GDG2Node" card="1" channel="2" cmax="100" cmin="0" id="106" io="gdg2" iotype="AI" name="01_06_S" rmax="2060" rmin="410" subdev="2" textname="Дифференциальное давление смазочного масла ГДГ2 на фильтре" unetGUITS="TSNode"/>
+			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG1Node" card="2" channel="5" id="107" io="gdg1" iotype="DI" mtype="1" name="01_07_S" subdev="0" textname="Максимальная температура смазочного масла ГДГ1" unetGUITS="TSNode"/>
+			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG2Node" card="2" channel="5" id="108" io="gdg2" iotype="DI" mtype="1" name="01_08_S" subdev="0" textname="Максимальная температура смазочного масла ГДГ2" unetGUITS="TSNode"/>
+			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG1Node" card="2" channel="6" id="109" io="gdg1" iotype="DI" mtype="1" name="01_09_S" subdev="0" textname="Минимальный уровень смазочного масла в картере ГДГ1" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG2Node" card="2" channel="6" id="110" io="gdg2" iotype="DI" mtype="1" name="01_10_S" subdev="0" textname="Минимальный уровень смазочного масла в картере ГДГ2" unetGUITS="TSNode"/>
 			<!--NOT IN LIST
 		<item id="115" name="01_15_S"
@@ -839,10 +800,10 @@
 		<item id="120" name="01_20_S"
 		      textname="Минимальное давление смазочного масла на входе ГДГ2 (маслопрокачка при пуске)"
 		      iotype="DI" />-->
-			<item CAN2sender="SYSTSNode" aps="100" canTS="TS1Node" card="3" channel="7" id="111" io="3000" iotype="DI" mtype="1" name="01_11_S" subdev="1" textname="Максимальный уровень масла в цистене отработанного масла МЦ-2" unetGUITS="TSNode"/>
+			<item CAN2sender="SYSTSNode" aps="100" canTS="TS1Node" card="1" channel="3" id="111" io="ts1" iotype="DI" mtype="1" name="01_11_S" subdev="3" textname="Максимальный уровень масла в цистене отработанного масла МЦ-2" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aps="100" canTS="TS1Node" card="1" channel="4" id="112" io="ts1" iotype="DI" mtype="1" name="01_12_S" subdev="3" textname="Максимальный уровень масла в запасной цистене масла ГДГ МЦ-3" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG1Node" hilimit="90" id="113" io="gdg1" iotype="DI" lowlimit="88" msg="1" mtype="1" name="01_13_S" textname="Максимальное дифференциальное давление смазочного масла ГДГ1 на фильтре" threshold_aid="01_05_S" unetGUITS="TSNode"/>
-			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG2Node" card="2" channel="5" hilimit="90" id="114" io="3000" iotype="DI" lowlimit="88" msg="1" mtype="1" name="01_14_S" subdev="1" textname="Максимальное дифференциальное давление смазочного масла ГДГ2 на фильтре" threshold_aid="01_06_S" unetGUITS="TSNode"/>
+			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG2Node" hilimit="90" id="114" io="gdg2" iotype="DI" lowlimit="88" msg="1" mtype="1" name="01_14_S" textname="Максимальное дифференциальное давление смазочного масла ГДГ2 на фильтре" threshold_aid="01_06_S" unetGUITS="TSNode"/>
 			<!--NOT IN LIST
 		<item id="123" name="01_23_S"
 		      textname="Неисправность модуля сепарации масла"
@@ -861,35 +822,35 @@
 			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG1Node" card="2" channel="0" id="205" io="gdg1" iotype="DI" mtype="1" name="02_05_S" subdev="0" textname="Максимальная температура охлаждающей пресной воды ВТ-контура ГДГ1" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG2Node" card="2" channel="0" id="206" io="gdg2" iotype="DI" mtype="1" name="02_06_S" subdev="0" textname="Повышенная температура охлаждающей пресной воды ВТ-контура ГДГ2" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aps="102" canTS="GDG1Node" card="2" channel="20" id="207" io="gdg1" iotype="DI" mtype="2" name="02_07_S" subdev="0" textname="Повышенная температура охлаждающей пресной воды ВТ-контура ГДГ1" unetGUITS="TSNode"/>
-			<item CAN2sender="SYSTSNode" aps="102" canTS="GDG2Node" card="3" channel="7" id="208" io="3000" mtype="2" name="02_08_S" subdev="0" textname="Максимальная температура охлаждающей пресной воды ВТ-контура ГДГ2" unetGUITS="TSNode"/>
+			<item CAN2sender="SYSTSNode" aps="102" canTS="GDG2Node" card="2" channel="20" id="208" io="gdg2" iotype="DI" mtype="2" name="02_08_S" subdev="0" textname="Максимальная температура охлаждающей пресной воды ВТ-контура ГДГ2" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aps="100" canTS="TS1Node" card="1" channel="7" id="209" io="ts1" iotype="DI" mtype="1" name="02_09_S" subdev="3" textname="Минимальный уровень воды в расширительной цистерне ГДГ" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG1Node" card="2" channel="21" id="210" io="gdg1" iotype="DI" mtype="1" name="02_10_S" subdev="0" textname="Минимальное давление забортной воды охлаждения ГДГ1" unetGUITS="TSNode"/>
-			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG2Node" card="3" channel="4" id="211" io="3000" iotype="DI" mtype="1" name="02_11_S" subdev="1" textname="Минимальное давление забортной воды охлаждения ГДГ2" unetGUITS="TSNode"/>
+			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG2Node" card="2" channel="21" id="211" io="gdg2" iotype="DI" mtype="1" name="02_11_S" subdev="0" textname="Минимальное давление забортной воды охлаждения ГДГ2" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSGEUNode" aps="100" canGEU="GEUAPSNode" canTS="TSCPUNode" card="2" channel="3" id="212" io="geuaps" iotype="DI" mtype="1" name="02_12_S" subdev="0" textname="Минимальный уровень охлаждающей воды в расширительной цистерне ПЧ" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSGEUNode" aps="100" canGEU="GEUAPSNode" canTS="TSCPUNode" card="2" channel="4" id="213" io="geuaps" iotype="DI" mtype="1" name="02_13_S" subdev="0" textname="Работает резервный насос охлаждающей пресной воды ПЧ" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSGEUNode" aps="100" canGEU="GEUAPSNode" canTS="TSCPUNode" card="2" channel="5" id="214" io="geuaps" iotype="DI" mtype="1" name="02_14_S" subdev="0" textname="Работает резервный насос охлаждающей забортной воды ГЭД и ПЧ" unetGUITS="TSNode"/>
 			<!-- Т03 Система топливная ГДГ -->
-			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG1Node" card="1" channel="22" id="301" iotype="DI" mtype="1" name="03_01_S" subdev="0" textname="Минимальное давление топлива после фильтра ГДГ1" unetGUITS="TSNode"/>
+			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG1Node" card="2" channel="2" id="301" io="gdg1" iotype="DI" mtype="1" name="03_01_S" subdev="0" textname="Минимальное давление топлива после фильтра ГДГ1" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG2Node" card="2" channel="2" id="302" io="gdg2" iotype="DI" mtype="1" name="03_02_S" subdev="0" textname="Минимальное давление топлива после фильтра ГДГ2" unetGUITS="TSNode"/>
-			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG1Node" card="2" channel="0" id="303" io="3000" iotype="DI" mtype="1" name="03_03_S" subdev="0" textname="Утечка топлива из трубопроводов высокого давления ГДГ1" unetGUITS="TSNode"/>
-			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG2Node" card="3" channel="5" id="304" io="3000" mtype="1" name="03_04_S" subdev="0" textname="Утечка топлива из трубопроводов высокого давления ГДГ2" unetGUITS="TSNode"/>
-			<item CAN2sender="SYSTSNode" canTS="TS1Node" card="3" channel="5" filtersize="6" id="305" iir_thr="3000" io="3000" name="03_05_AS" subdev="0" textname="Уровень в запасной цистерне топлива ТЦ-1" unetGUITS="TSNode"/>
+			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG1Node" card="2" channel="22" id="303" io="gdg1" iotype="DI" mtype="1" name="03_03_S" subdev="0" textname="Утечка топлива из трубопроводов высокого давления ГДГ1" unetGUITS="TSNode"/>
+			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG2Node" card="2" channel="22" id="304" io="gdg2" iotype="DI" mtype="1" name="03_04_S" subdev="0" textname="Утечка топлива из трубопроводов высокого давления ГДГ2" unetGUITS="TSNode"/>
+			<item CAN2sender="SYSTSNode" aref="2" canTS="TS1Node" card="3" channel="2" cmax="100" cmin="0" filtersize="6" id="305" iir_thr="3000" io="ts1" iotype="AI" name="03_05_AS" rmax="2055" rmin="0" subdev="2" textname="Уровень в запасной цистерне топлива ТЦ-1" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aps="300" canTS="TS1Node" hilimit="90" id="306" io="ts1" iotype="DI" lowlimit="88" mtype="1" name="03_06_S" textname="Максимальный уровень в запасной цистерне топлива ТЦ-1" threshold_aid="03_05_AS" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aref="2" canTS="TS1Node" card="3" channel="3" cmax="100" cmin="0" filtersize="6" id="307" iir_thr="3000" io="ts1" iotype="AI" name="03_07_AS" rmax="2055" rmin="0" subdev="2" textname="Уровень в запасной цистерне топлива ТЦ-2" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aps="300" canTS="TS1Node" hilimit="90" id="308" io="ts1" iotype="DI" lowlimit="88" mtype="1" name="03_08_S" textname="Максимальный уровень в запасной цистерне топлива ТЦ-2" threshold_aid="03_07_AS" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aps="100" canTS="TS1Node" card="1" channel="16" id="309" io="ts1" iotype="DI" mtype="1" name="03_09_S" subdev="1" textname="Минимальный уровень топлива в расходной цистерне ТЦ-3" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aps="100" canTS="TS1Node" card="1" channel="17" id="310" io="ts1" iotype="DI" mtype="1" name="03_10_S" subdev="1" textname="Минимальный уровень топлива в расходной цистерне ТЦ-4" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aps="100" canTS="TS1Node" card="1" channel="18" id="311" io="ts1" iotype="DI" mtype="1" name="03_11_S" subdev="1" textname="Максимальный уровень топлива в переливном коллекторе запасных цистерн ТЦ-4,2" unetGUITS="TSNode"/>
-			<item CAN2sender="SYSTSNode" aps="100" canTS="TS1Node" card="2" channel="3" id="312" io="3000" iotype="DI" mtype="1" name="03_12_S" subdev="1" textname="Максимальный уровень топлива в переливном коллекторе расходных цистерн 0Ц-1,3,8" unetGUITS="TSNode"/>
+			<item CAN2sender="SYSTSNode" aps="100" canTS="TS1Node" card="1" channel="19" id="312" io="ts1" iotype="DI" mtype="1" name="03_12_S" subdev="1" textname="Максимальный уровень топлива в переливном коллекторе расходных цистерн 0Ц-1,3,8" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aref="2" canTS="TS1Node" card="3" channel="0" cmax="100" cmin="0" filtersize="6" id="313" iir_thr="3000" io="ts1" iotype="AI" name="03_13_AS" rmax="2055" rmin="0" subdev="2" textname="Уровень в запасной цистерне топлива ТЦ-5" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aps="300" canTS="TS1Node" hilimit="90" id="314" io="ts1" iotype="DI" lowlimit="88" mtype="1" name="03_14_S" textname="Максимальный уровень в запасной цистерне топлива ТЦ-5" threshold_aid="03_13_AS" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aref="2" canTS="TS1Node" card="3" channel="1" cmax="100" cmin="0" filtersize="6" id="315" iir_thr="3000" io="ts1" iotype="AI" name="03_15_AS" rmax="2055" rmin="0" subdev="2" textname="Уровень в запасной цистерне топлива ТЦ-6" unetGUITS="TSNode"/>
-			<item CAN2sender="SYSTSNode" aps="300" canTS="TS1Node" card="2" channel="0" hilimit="90" id="316" io="3000" iotype="DI" lowlimit="88" mtype="1" name="03_16_S" subdev="1" textname="Максимальный уровень в запасной цистерне топлива ТЦ-6" threshold_aid="03_15_AS" unetGUITS="TSNode"/>
+			<item CAN2sender="SYSTSNode" aps="300" canTS="TS1Node" hilimit="90" id="316" io="ts1" iotype="DI" lowlimit="88" mtype="1" name="03_16_S" textname="Максимальный уровень в запасной цистерне топлива ТЦ-6" threshold_aid="03_15_AS" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aps="100" canTS="TS1Node" card="1" channel="20" id="317" io="ts1" iotype="DI" mtype="1" name="03_17_S" subdev="1" textname="Максимальный уровень топлива в переливном коллекторе запасных цистерн ТЦ-5,6" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aps="100" canTS="TS1Node" card="1" channel="21" id="318" io="ts1" iotype="DI" mtype="1" name="03_18_S" subdev="1" textname="Максимальный уровень топлива в переливной цистерне ТЦ-7" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aps="100" canTS="TS1Node" card="1" channel="17" id="319" io="ts1" iotype="DI" mtype="1" name="03_19_S" subdev="2" textname="Максимальный уровень топлива в переливной цистерне ТЦ-10" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aref="2" canTS="TS2Node" card="1" channel="0" cmax="100" cmin="0" filtersize="6" id="320" iir_thr="3000" io="ts2" iotype="AI" name="03_20_AS" range="1" rmax="4096" rmin="808" subdev="2" textname="Уровень в запасной цистерне топлива ТЦ-11" unetGUITS="TSNode"/>
-			<item CAN2sender="SYSTSNode" aps="100" canTS="TS2Node" card="3" channel="6" hilimit="90" id="321" io="3000" iotype="DI" lowlimit="88" mtype="1" name="03_21_S" subdev="1" textname="Максимальный уровень в запасной цистерне топлива ТЦ-11" threshold_aid="03_20_AS" unetGUITS="TSNode"/>
+			<item CAN2sender="SYSTSNode" aps="100" canTS="TS2Node" hilimit="90" id="321" io="ts2" iotype="DI" lowlimit="88" mtype="1" name="03_21_S" textname="Максимальный уровень в запасной цистерне топлива ТЦ-11" threshold_aid="03_20_AS" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aref="2" canTS="TS2Node" card="1" channel="1" cmax="100" cmin="0" filtersize="6" id="322" iir_thr="3000" io="ts2" iotype="AI" name="03_22_AS" range="1" rmax="4096" rmin="808" subdev="2" textname="Уровень в запасной цистерне топлива ТЦ-12" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aps="100" canTS="TS2Node" hilimit="90" id="323" io="ts2" iotype="DI" lowlimit="88" mtype="1" name="03_23_S" textname="Максимальный уровень в запасной цистерне топлива ТЦ-12" threshold_aid="03_22_AS" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aps="100" canTS="TS1Node" card="1" channel="18" id="324" io="ts1" iotype="DI" mtype="1" name="03_24_S" subdev="2" textname="Максимальный уровень топлива в переливном коллекторе запасных цистерн ТЦ-11 - ТЦ-14" unetGUITS="TSNode"/>
@@ -3597,7 +3558,7 @@
 			<item id="70000" iotype="DI" name="TestMode_S" textname="test node sensor"/>
 			<item id="70002" iotype="DI" name="GEUCPUNode_TestMode_S" textname="test node sensor"/>
 			<item id="70003" iotype="DI" name="GEUPUSNode_TestMode_S" textname="test node sensor"/>
-			<item card="1" channel="6" id="70004" iotype="DI" name="GEUNode_TestMode_S" subdev="0" textname="test node sensor"/>
+			<item id="70004" iotype="DI" name="GEUNode_TestMode_S" textname="test node sensor"/>
 			<item id="70005" iotype="DI" name="GEUAPSNode_TestMode_S" textname="test node sensor"/>
 			<item id="70006" iotype="DI" name="GUITSNode_TestMode_S" textname="test node sensor"/>
 			<item id="70007" iotype="DI" name="TSCPUNode_TestMode_S" textname="test node sensor"/>

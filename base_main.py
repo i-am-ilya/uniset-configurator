@@ -89,7 +89,7 @@ class BaseMain(gtk.TreeView):
                     snode.setProp(e[2],self.__dict__[e[0]].get_text())
                 elif cname == "SpinButton":
                     v = self.__dict__[e[0]].get_value_as_int()
-                    if v==0:
+                    if v == 0:
                         snode.setProp(e[2],"")
                     else:
                         snode.setProp(e[2],str(v))
@@ -98,7 +98,7 @@ class BaseMain(gtk.TreeView):
                     if t == "" or t == "None":
                         snode.setProp(e[2],"")
                     else:
-                        snode.setProp(e[2],str())
+                        snode.setProp(e[2],t)
     
     def get_cb_param(self, checkbutton):
         if checkbutton.get_active():
