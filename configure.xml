@@ -732,19 +732,21 @@
 		<nodes port="2809">
 			<item dbserver="DBServer1" id="3000" ip="127.0.0.1" name="LocalhostNode" textname="Локальный узел">
 				<iocards>
-					<item/>
 				</iocards>
 			</item>
 			<item CANnodeID="0x01" dbserver="DBServer1" id="3001" ip="gui1" name="GUI1Node" textname="Графическая станция N1">
 				<iocards>
-					<item/>
 				</iocards>
 			</item>
 			<item CANnodeID="0x02" dbserver="DBServer1" id="3002" ip="gui2" name="GUI2Node" textname="Графическая станция N2"/>
 			<item CANnodeID="0x03" id="3003" ip="sescpu" name="SESCPUNode" textname="Пульт ЦПУ (контроллер СЭС)"/>
 			<item CANnodeID="0x04" id="3004" ip="ses" name="SESNode" textname="КСЭС"/>
 			<item CANnodeID="0x05" id="3005" ip="gdg1" name="GDG1Node" textname="ЩС ГДГ1"/>
-			<item CANnodeID="0x06" id="3006" ip="gdg2" name="GDG2Node" textname="0С ГДГ2"/>
+			<item CANnodeID="0x06" id="3006" ip="gdg2" name="GDG2Node" textname="0С ГДГ2">
+				<can>
+					<item comment="qwe" eds="tscvb" hbSensor="01_06_S" net="TestCAN1" nodeID="3" respond="01_06_S" respond1="01_08_S" respond2="01_10_S"/>
+				</can>
+			</item>
 			<item CANnodeID="0x07" id="3007" ip="ts1" name="TS1Node" textname="ЩС ВДГ1"/>
 			<item CANnodeID="0x08" id="3008" ip="ts2" name="TS2Node" textname="ЩС ВДГ2"/>
 			<item CANnodeID="0x10" id="3010" ip="guits" name="GUITSNode" textname="ШУ ТС (панель)"/>
