@@ -9,7 +9,7 @@ class Conf:
     	self.xml = UniXML.UniXML(fname)
     	self.glade = gladexml
 
-        self.dlg_slist = dlg_slist.SListDialog(self.xml)
+        self.dlg_slist = dlg_slist.SListDialog(self.xml,self.glade)
         self.dlg_nodes = dlg_nodes.NodesDialog(self.xml)
         self.changes = 0
 

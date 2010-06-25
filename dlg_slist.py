@@ -8,20 +8,39 @@ class SListDialog():
 
     xml = None
 
-    def __init__(self, xml):
+    def __init__(self,xml,glade):
 
         self.xml = xml
+        
+        self.dlg = glade.get_widget("dlg_slist")
+        self.dlg.set_default_size(500,400) 
+        self.fentry = glade.get_widget("slist_filter_entry")
+        
+        self.id_check = glade.get_widget("slist_id_cb")
+        self.name_check = glade.get_widget("slist_name_cb")
+        self.tname_check = glade.get_widget("slist_tname_cb")
+        self.case_cb = glade.get_widget("slist_case_cb")
+        
+        glade.signal_autoconnect(self)
+        
         #                          ID|Name|Textname|xmlnode
         self.model = gtk.ListStore(gobject.TYPE_STRING,gobject.TYPE_STRING,gobject.TYPE_STRING,object)
 
         self.tv = gtk.TreeView()
-        self.tv.set_model(self.model)
-        self.tv.set_search_equal_func(self.sfunc)
+
+        self.fmodel = self.model.filter_new()
+        self.fmodel.set_visible_func(self.filter_func)
+
+
+#        self.tv.set_model(self.model)
+        self.tv.set_model(self.fmodel)
+#        self.tv.set_search_equal_func(self.sfunc)
          			
         self.tv.get_selection().set_mode(gtk.SELECTION_SINGLE)
 
         self.tv.set_rules_hint(True)
         self.tv.connect("button-press-event", self.on_button_press_event)
+
 
         self.add_columns()
 
@@ -31,25 +50,35 @@ class SListDialog():
         self.build_tree()
 
         self.tv.show_all()
-
-        self.dlg = gtk.Dialog(_("Sensors list"),None,gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,(gtk.STOCK_OK,gtk.RESPONSE_OK,gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL))
-        self.dlg.set_default_size(500,400)
-        scwin = gtk.ScrolledWindow();
+        
+        scwin = glade.get_widget("slist_scwin")
         scwin.add(self.tv)
-        scwin.show_all()
-        self.dlg.vbox.pack_start(scwin, True, True, 0)
+        
 
     def reopen(self,xml):
         self.model.clear()
         self.build_tree()	    
 
+    def slist_btnOK_clicked(self,btn):
+        self.dlg.response(gtk.RESPONSE_OK)
+    
+    def slist_btnCancel_clicked(self,btn):
+        self.dlg.response(gtk.RESPONSE_CANCEL)
+        
     def build_tree(self):
         self.model.append([_("None"),"","",None])
         node = self.xml.findNode(self.xml.getDoc(),"sensors")[0].children.next 
         while node != None:
-            self.model.append([node.prop("id"),node.prop("name"),node.prop("textname"),node])
+            self.model.append([self.get_str_val(node.prop("id")), \
+                 self.get_str_val(node.prop("name")), \
+                 self.get_str_val(node.prop("textname")),node])
             node = self.xml.nextNode(node)
 
+    def get_str_val(self,str_val):
+        if str_val == None: 
+            return ""
+        return str_val    
+    
     def sfunc(self,model, column, key, iter):
 
         if model.get_value(iter,0).find(key) != -1:
@@ -96,7 +125,7 @@ class SListDialog():
         it = self.model.get_iter_first()
         while it is not None:
             if self.model.get_value(it, 3) == sel: # check iterator
-                ts.select_iter(it)
+                ts.select_iter( self.fmodel.convert_child_iter_to_iter(it))
                 self.tv.scroll_to_cell( self.model.get_path(it) )
                 return
             it = self.model.iter_next(it)
@@ -107,7 +136,7 @@ class SListDialog():
         it = self.model.get_iter_first()
         while it is not None:
             if self.model.get_value(it, 1) == sel:
-                ts.select_iter(it)
+                ts.select_iter( self.fmodel.convert_child_iter_to_iter(it))
                 self.tv.scroll_to_cell( self.model.get_path(it) )
                 return
             it = self.model.iter_next(it)
@@ -119,7 +148,7 @@ class SListDialog():
         it = self.model.get_iter_first()
         while it is not None:
             if self.model.get_value(it,0) == sel:
-                ts.select_iter(it)
+                ts.select_iter( self.fmodel.convert_child_iter_to_iter(it))
                 self.tv.scroll_to_cell( self.model.get_path(it) )
                 return
             it = self.model.iter_next(it)
@@ -140,3 +169,49 @@ class SListDialog():
               return model.get_value(iter,3)
 
         return None
+    
+    def on_filter_entry_changed(self,entry):
+        self.fmodel.refilter()
+
+    def on_filter_cb_changed(self,checkbtn):
+        self.fmodel.refilter()
+        if self.id_check.get_active() or self.name_check.get_active() or self.tname_check.get_active():
+             self.fentry.set_sensitive(True)
+        else:
+             self.fentry.set_sensitive(False)
+
+    def find_str(self, s1, s2, case):
+        
+        if case == False:
+           if s1.upper().find(s2.upper()) != -1:
+                return True
+           return False
+        
+        if s1.find(s2) != -1:
+             return True
+        return False
+    
+    def filter_func(self, model,it):
+        if it == None: 
+           return True
+        
+        t = self.fentry.get_text()
+        if t == "":
+             return True
+
+        case = self.case_cb.get_active()
+
+        if self.id_check.get_active() and self.find_str(model.get_value(it,0),t,case):
+            return True
+        
+        if self.name_check.get_active() and self.find_str(model.get_value(it,1),t,case):
+            return True
+        
+        if self.tname_check.get_active() and self.find_str(model.get_value(it,2),t,case):
+            return True
+        
+        if self.id_check.get_active() or self.name_check.get_active() or self.tname_check.get_active():
+             return False
+        
+        return True
+       

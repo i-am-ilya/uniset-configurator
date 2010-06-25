@@ -25,10 +25,6 @@ locale.setlocale(locale.LC_ALL, "ru_RU.UTF8")
 #gettext.bindtextdomain("uniset-configurator", loc)
 #gettext.textdomain("uniset-configurator")
 
-mwinglade="mainwin.glade"
-glade = gtk.glade.XML(mwinglade)
-conf = None                                                                                                                                                                         
-
 class MainWindow(gtk.Widget):
     def __init__(self):
         glade.signal_autoconnect(self)
@@ -73,11 +69,20 @@ class MainWindow(gtk.Widget):
             conf.unmark_changes()
 
 
-#def main():
+conf = None                                                                                                                                                                         
 
 # for debug
 confile="configure.xml"
 #confile=""
+mwinglade="mainwin.glade"
+
+try:
+    glade = gtk.glade.XML(mwinglade)
+except: 
+   dialog = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, _("Glade file damage or not found! \n Loading FAILED!"))
+   dialog.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("gray")) 
+   dialog.run()
+   dialog.destroy()
 
 if len(sys.argv) > 1:
    confile = sys.argv[1]

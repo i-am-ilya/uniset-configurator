@@ -732,6 +732,7 @@
 		<nodes port="2809">
 			<item dbserver="DBServer1" id="3000" ip="127.0.0.1" name="LocalhostNode" textname="Локальный узел">
 				<iocards>
+					<item card="1" name="AI16"/>
 				</iocards>
 			</item>
 			<item CANnodeID="0x01" dbserver="DBServer1" id="3001" ip="gui1" name="GUI1Node" textname="Графическая станция N1">
