@@ -337,8 +337,8 @@ class IOMain(base_main.BaseMain):
        self.dlg_param.response(gtk.RESPONSE_OK)
 
     def on_io_btn_aID_clicked(self,button):
-        self.conf.dlg_slist.set_selected_name(self.thr_lbl_aID.get_text())
-        s = self.conf.dlg_slist.run(self)
+        self.conf.s_dlg().set_selected_name(self.thr_lbl_aID.get_text())
+        s = self.conf.s_dlg().run(self)
         if s != None:
             self.thr_lbl_aID.set_text(s.prop("name"))
             self.tbl_tresholds.set_sensitive(True)
@@ -347,9 +347,9 @@ class IOMain(base_main.BaseMain):
             self.tbl_tresholds.set_sensitive(False)
    
     def on_io_btn_sensor_clicked(self, button):
-        self.conf.dlg_slist.set_selected_name(self.lbl_sensor.get_text())
+        self.conf.s_dlg().set_selected_name(self.lbl_sensor.get_text())
         while True:
-            s = self.conf.dlg_slist.run(self)
+            s = self.conf.s_dlg().run(self)
             if s != None:
                 n_it,cd_it,ch_it = self.check_connection(s,self.myedit_iter)
                 if ch_it is not None:

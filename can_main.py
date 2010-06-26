@@ -195,7 +195,7 @@ class CANMain(base_main.BaseMain):
         if not iter: return
        
         while True:
-            node = self.conf.dlg_nodes.run(self,None)
+            node = self.conf.n_dlg().run(self,None)
             if node == None:
                 return
         
@@ -297,9 +297,9 @@ class CANMain(base_main.BaseMain):
                break
         
         if lbl != None:
-            self.conf.dlg_slist.set_selected_name(lbl.get_text())
+            self.conf.s_dlg().set_selected_name(lbl.get_text())
         
-        s = self.conf.dlg_slist.run(self)
+        s = self.conf.s_dlg().run(self)
         if s != None:
             lbl.set_text(self.conf.get_str_val(s.prop("name")))
         else:

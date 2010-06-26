@@ -1912,26 +1912,26 @@ UNIO96</property>
       </widget>
     </child>
   </widget>
-  <widget class="GtkDialog" id="dlg_slist">
+  <widget class="GtkDialog" id="dlg_xlist">
     <property name="border_width">5</property>
     <property name="title" translatable="yes">Select sensor</property>
     <property name="window_position">center</property>
     <property name="type_hint">normal</property>
     <property name="has_separator">False</property>
     <child internal-child="vbox">
-      <widget class="GtkVBox" id="dialog-vbox5">
+      <widget class="GtkVBox" id="dialog-vbox7">
         <property name="visible">True</property>
         <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child>
-          <widget class="GtkVBox" id="vbox6">
+          <widget class="GtkVBox" id="vbox7">
             <property name="visible">True</property>
             <property name="orientation">vertical</property>
             <child>
-              <widget class="GtkHBox" id="hbox10">
+              <widget class="GtkHBox" id="hbox11">
                 <property name="visible">True</property>
                 <child>
-                  <widget class="GtkLabel" id="label40">
+                  <widget class="GtkLabel" id="label41">
                     <property name="visible">True</property>
                     <property name="xalign">0</property>
                     <property name="label" translatable="yes">Search for:</property>
@@ -1941,7 +1941,7 @@ UNIO96</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkCheckButton" id="slist_id_cb">
+                  <widget class="GtkCheckButton" id="xlist_id_cb">
                     <property name="label" translatable="yes">ID</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -1949,14 +1949,14 @@ UNIO96</property>
                     <property name="use_action_appearance">False</property>
                     <property name="active">True</property>
                     <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="on_filter_cb_changed"/>
+                    <signal name="toggled" handler="xlist_cb_toggled"/>
                   </widget>
                   <packing>
                     <property name="position">1</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkCheckButton" id="slist_name_cb">
+                  <widget class="GtkCheckButton" id="xlist_name_cb">
                     <property name="label" translatable="yes">Name</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -1964,14 +1964,14 @@ UNIO96</property>
                     <property name="use_action_appearance">False</property>
                     <property name="active">True</property>
                     <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="on_filter_cb_changed"/>
+                    <signal name="toggled" handler="xlist_cb_toggled"/>
                   </widget>
                   <packing>
                     <property name="position">2</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkCheckButton" id="slist_tname_cb">
+                  <widget class="GtkCheckButton" id="xlist_tname_cb">
                     <property name="label" translatable="yes">Text name</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -1979,7 +1979,7 @@ UNIO96</property>
                     <property name="use_action_appearance">False</property>
                     <property name="active">True</property>
                     <property name="draw_indicator">True</property>
-                    <signal name="toggled" handler="on_filter_cb_changed"/>
+                    <signal name="toggled" handler="xlist_cb_toggled"/>
                   </widget>
                   <packing>
                     <property name="position">3</property>
@@ -1992,19 +1992,19 @@ UNIO96</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkEntry" id="slist_filter_entry">
+              <widget class="GtkEntry" id="xlist_filter_entry">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="invisible_char">&#x25CF;</property>
                 <property name="invisible_char_set">True</property>
-                <signal name="changed" handler="on_filter_entry_changed"/>
+                <signal name="changed" handler="xlist_filter_entry_changed"/>
               </widget>
               <packing>
                 <property name="position">1</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkCheckButton" id="slist_case_cb">
+              <widget class="GtkCheckButton" id="xlist_case_cb">
                 <property name="label" translatable="yes">case sensitive</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -2012,7 +2012,7 @@ UNIO96</property>
                 <property name="use_action_appearance">False</property>
                 <property name="active">True</property>
                 <property name="draw_indicator">True</property>
-                <signal name="toggled" handler="on_filter_cb_changed"/>
+                <signal name="toggled" handler="xlist_cb_toggled"/>
               </widget>
               <packing>
                 <property name="expand">False</property>
@@ -2026,7 +2026,7 @@ UNIO96</property>
           </packing>
         </child>
         <child>
-          <widget class="GtkScrolledWindow" id="slist_scwin">
+          <widget class="GtkScrolledWindow" id="xlist_scwin">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="hscrollbar_policy">automatic</property>
@@ -2040,18 +2040,18 @@ UNIO96</property>
           </packing>
         </child>
         <child internal-child="action_area">
-          <widget class="GtkHButtonBox" id="dialog-action_area5">
+          <widget class="GtkHButtonBox" id="dialog-action_area7">
             <property name="visible">True</property>
             <property name="layout_style">end</property>
             <child>
-              <widget class="GtkButton" id="slist_btnOK">
+              <widget class="GtkButton" id="xlist_btnOK">
                 <property name="label">gtk-ok</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_action_appearance">False</property>
                 <property name="use_stock">True</property>
-                <signal name="clicked" handler="slist_btnOK_clicked"/>
+                <signal name="clicked" handler="xlist_btnOK_clicked"/>
               </widget>
               <packing>
                 <property name="expand">False</property>
@@ -2060,14 +2060,14 @@ UNIO96</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkButton" id="slist_btnCancel">
+              <widget class="GtkButton" id="xlist_btnCancel">
                 <property name="label">gtk-cancel</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_action_appearance">False</property>
                 <property name="use_stock">True</property>
-                <signal name="clicked" handler="slist_btnCancel_clicked"/>
+                <signal name="clicked" handler="xlist_btnCancel_clicked"/>
               </widget>
               <packing>
                 <property name="expand">False</property>
