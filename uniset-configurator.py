@@ -16,6 +16,7 @@ import locale
 # modules
 import io_main
 import can_main
+import nodes_main
 
 
 
@@ -124,6 +125,10 @@ add_module(io_mtree,"I/O",mainbook,glade)
 # CAN configure
 can_mtree = can_main.CANMain(conf)
 add_module(can_mtree,"CAN",mainbook,glade)
+
+# Nodes configure
+nodes_mtree = nodes_main.NodesMain(conf)
+add_module(nodes_mtree,"Nodes",mainbook,glade)
 
 # ---------------
 mainbook.show()

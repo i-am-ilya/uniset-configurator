@@ -2085,4 +2085,34 @@ UNIO96</property>
       </widget>
     </child>
   </widget>
+  <widget class="GtkMenu" id="nodes_popup">
+    <property name="visible">True</property>
+    <child>
+      <widget class="GtkMenuItem" id="menuitem1">
+        <property name="visible">True</property>
+        <property name="use_action_appearance">False</property>
+        <property name="label" translatable="yes">add new node</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="on_add_node_activate"/>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkMenuItem" id="menuitem2">
+        <property name="visible">True</property>
+        <property name="use_action_appearance">False</property>
+        <property name="label" translatable="yes">edit node</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="on_edit_node_activate"/>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkMenuItem" id="menuitem3">
+        <property name="visible">True</property>
+        <property name="use_action_appearance">False</property>
+        <property name="label" translatable="yes">remove node</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="on_remove_node_activate"/>
+      </widget>
+    </child>
+  </widget>
 </glade-interface>
