@@ -25,6 +25,7 @@ class Conf:
         if self.dlg_cur != "n":
             self.dlg_xlist.build_tree("nodes")
             self.dlg_cur = "n"
+        
         return self.dlg_xlist
 
     def mark_changes(self):
