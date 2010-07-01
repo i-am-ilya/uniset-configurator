@@ -9,7 +9,7 @@ class XListDialog():
     xml = None
 
     def __init__(self,xml,glade):
-
+        
         self.xml = xml
         
         self.dlg = glade.get_widget("dlg_xlist")
@@ -53,7 +53,7 @@ class XListDialog():
         
         scwin = glade.get_widget("xlist_scwin")
         scwin.add(self.tv)
-        
+
     def xlist_btnOK_clicked(self,btn):
         self.dlg.response(gtk.RESPONSE_OK)
     

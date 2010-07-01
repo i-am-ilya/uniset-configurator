@@ -11,10 +11,16 @@ import base_main
 class NodesMain(base_main.BaseMain):
 
     def __init__(self, conf):
-
+        
         base_main.BaseMain.__init__(self,conf)
         conf.glade.signal_autoconnect(self)
 
+        # --------  my signals  -----------
+        gobject.type_register(NodesMain)
+        gobject.signal_new("changed", NodesMain, gobject.SIGNAL_RUN_FIRST,
+                   gobject.TYPE_NONE, (object,gobject.TYPE_STRING))
+        # ---------------------------------
+        
         self.model = None
         self.modelfilter = None
         #                          Name | Parameters | xmlnode
@@ -127,6 +133,8 @@ class NodesMain(base_main.BaseMain):
         (model, iter) = self.get_selection().get_selected()
         if not iter: return
         
+#        self.emit("changed",model.get_value(iter,2),"edit")
+        
         xmlnode = model.get_value(iter,2)
         if self.edit_node(xmlnode) == True:
             model.set_value(iter,0,xmlnode.prop("name"))
@@ -142,8 +150,25 @@ class NodesMain(base_main.BaseMain):
             if res != gtk.RESPONSE_OK:
                 return False
             
+            # check name
+            if self.n_name.get_text().strip() == "":
+               dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,_("Empty 'name'"))
+               res = dlg.run()
+               dlg.hide()
+               continue
+
             # check id
+            
+            # check...
+            
             break                
 
         self.save2xml_elements_value(self.params,xmlnode)
         return True
+     
+    def my_change(self,obj, xmlnode, opname):
+        print "********* signal change..."
+        print "********* obj: " + str(obj)
+        print "********* operation: " + opname
+        print "********* xmlnode: " + str(xmlnode)
+        
