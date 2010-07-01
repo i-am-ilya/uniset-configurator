@@ -37,6 +37,14 @@ class Conf:
     def is_changed(self):
         return self.changes
     
+    def n_reopen(self):
+        if self.dlg_cur == "n":
+            self.dlg_xlist.build_tree("nodes")
+    
+    def s_reopen(self):
+        if self.dlg_cur == "s":
+            self.dlg_xlist.build_tree("sensors")
+
     def reopen(self, fname):
         self.xml.reopen(fname)
         self.dlg_cur = None

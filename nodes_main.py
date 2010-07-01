@@ -45,14 +45,25 @@ class NodesMain(base_main.BaseMain):
             ["node_popup","nodes_popup",None,True] \
         ]
         self.init_glade_elements(self.menu_list)
+        
+        self.params = [ \
+            ["dlg","nodes_dlg",None,True], \
+            ["n_id","nodes_id","id",False], \
+            ["n_name","nodes_name","name",False], \
+            ["n_tname","nodes_tname","textname",False], \
+            ["n_ip","nodes_ip","ip",False] \
+        ]
+        self.init_glade_elements(self.params)
 
         self.build_tree()
-     
+    
+    def get_info(self,xmlnode):
+        return str("id=" + str(xmlnode.prop("id")) + " ip=" + xmlnode.prop("ip"))
+
     def build_tree(self):
         node = self.conf.xml.findNode(self.conf.xml.getDoc(),"nodes")[0].children.next 
         while node != None:
-            info = "id=" + str(node.prop("id")) + " ip=" + node.prop("ip")
-            iter1 = self.model.append(None,[node.prop("name"),info,node])
+            iter1 = self.model.append(None,[node.prop("name"),self.get_info(node),node])
             node = self.conf.xml.nextNode(node)
 
     def on_button_press_event(self, object, event):                                                                                                                                 
@@ -67,22 +78,72 @@ class NodesMain(base_main.BaseMain):
         if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
             if not iter:                                                                                                                                                                
                  return False
+            self.nodes_edit_node_activate(None)
         return False
 
-#    def on_dlg_card_btnCancel_clicked(self, button):
-#       self.dlg_card.response(gtk.RESPONSE_CANCEL)
+    def on_nodes_btnCancel_clicked(self, button):
+       self.dlg.response(gtk.RESPONSE_CANCEL)
 
-#    def on_dlg_card_btnOK_clicked(self,button):
-#       self.dlg_card.response(gtk.RESPONSE_OK)
+    def on_nodes_btnOK_clicked(self,button):
+       self.dlg.response(gtk.RESPONSE_OK)
     
-    def on_remove_node_activate(self,menuitem):
+    def nodes_remove_node_activate(self,menuitem):
         print "On remove activate.."
-        pass
+        (model, iter) = self.get_selection().get_selected()
+        if not iter: return
+        
+        dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,_("Are you sure?"))
+        res = dlg.run()
+        dlg.hide()
+        if res == gtk.RESPONSE_NO:
+            return False
+        
+        xmlnode = model.get_value(iter,2)
+        xmlnode.unlinkNode()
+        model.remove(iter)
+        self.conf.mark_changes()
+        self.conf.n_reopen()
+
+    def nodes_add_node_activate(self,menuitem):
+        node = self.conf.xml.findNode(self.conf.xml.getDoc(),"nodes")[0]
+        if node == None:
+            print "************** <nodes> not found ?!"
+            return            
+           
+        xmlnode = node.newChild(None,"item",None)
+        if xmlnode == None:
+            print "************** FAILED CREATE <nodes> child item"
+            return            
+        
+        if self.edit_node(xmlnode) == False:
+            node.unlinkNode()
+            return
+
+        self.model.append(None,[xmlnode.prop("name"),self.get_info(xmlnode),xmlnode])
+        self.conf.mark_changes()
+        self.conf.n_reopen()
     
-    def on_add_node_activate(self,menuitem):
-        print "On add activate.."
-        pass
-    
-    def on_edit_node_activate(self,menuitem):
-        print "On edit activate.."
-        pass
+    def nodes_edit_node_activate(self,menuitem):
+        (model, iter) = self.get_selection().get_selected()
+        if not iter: return
+        
+        xmlnode = model.get_value(iter,2)
+        if self.edit_node(xmlnode) == True:
+            model.set_value(iter,0,xmlnode.prop("name"))
+            model.set_value(iter,1,self.get_info(xmlnode))
+            self.conf.mark_changes()
+            self.conf.n_reopen()
+        
+    def edit_node(self,xmlnode):
+        self.init_elements_value(self.params,xmlnode)
+        while True:
+            res = self.dlg.run()
+            self.dlg.hide()
+            if res != gtk.RESPONSE_OK:
+                return False
+            
+            # check id
+            break                
+
+        self.save2xml_elements_value(self.params,xmlnode)
+        return True

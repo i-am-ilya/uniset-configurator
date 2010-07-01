@@ -499,7 +499,7 @@ class IOMain(base_main.BaseMain):
         (model, iter) = self.get_selection().get_selected()
         if not iter: return
 
-        dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,_("You are sure?"))
+        dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,_("Are you sure?"))
         res = dlg.run()
         dlg.hide()
         if res == gtk.RESPONSE_NO:
