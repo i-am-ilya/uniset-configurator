@@ -24,7 +24,7 @@ init_elements_value()
 validate_elements()
 save2xml_elements_value()
 '''
-class BaseMain(gtk.TreeView):
+class BaseEditor(gtk.TreeView):
 
     def __init__(self, conf):
 

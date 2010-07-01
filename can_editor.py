@@ -4,13 +4,13 @@ import gtk
 import gobject
 import UniXML
 import configure
-import base_main
+import base_editor
 
-class CANMain(base_main.BaseMain):
+class CANEditor(base_editor.BaseEditor):
 
     def __init__(self, conf):
 
-        base_main.BaseMain.__init__(self,conf)
+        super(CANEditor, self).__init__(conf)
         conf.glade.signal_autoconnect(self)
         
         self.netlist = [] # list of pair [name,tree iter]

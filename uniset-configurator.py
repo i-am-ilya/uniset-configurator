@@ -14,9 +14,9 @@ import UniXML
 import locale
 
 # modules
-import io_main
-import can_main
-import nodes_main
+import io_editor
+import can_editor
+import nodes_editor
 
 
 
@@ -117,18 +117,24 @@ def add_module( face, lbl, mainbook, glade ):
 
 
 mainbook = glade.get_widget("mainbook")
-
+# -------------------
+"""" 
+ Создавать обязательно перед всеми
+ т.к. многие модули могут "хотеть" подключится
+ к сигналам
+"""
+# Nodes configure
+nodes_mtree = nodes_editor.NodesEditor(conf)
+add_module(nodes_mtree,"Nodes",mainbook,glade)
+# -------------------
 # I/O configure
-io_mtree = io_main.IOMain(conf)
+io_mtree = io_editor.IOEditor(conf)
 add_module(io_mtree,"I/O",mainbook,glade)
 
 # CAN configure
-can_mtree = can_main.CANMain(conf)
+can_mtree = can_editor.CANEditor(conf)
 add_module(can_mtree,"CAN",mainbook,glade)
 
-# Nodes configure
-nodes_mtree = nodes_main.NodesMain(conf)
-add_module(nodes_mtree,"Nodes",mainbook,glade)
 
 # ---------------
 mainbook.show()

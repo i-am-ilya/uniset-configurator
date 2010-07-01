@@ -4,18 +4,25 @@ import gtk
 import gobject
 import UniXML
 import configure
-import base_main
+import base_editor
 '''
 Задачи:
 1. Добавление, удаление карт ввода/вывода на узлах
 2. Редактирование параметров каждого канала
 '''
-class IOMain(base_main.BaseMain):
+class IOEditor(base_editor.BaseEditor):
 
     def __init__(self, conf):
 
-        base_main.BaseMain.__init__(self,conf)
+        super(IOEditor, self).__init__(conf)
         conf.glade.signal_autoconnect(self)
+        
+        n_editor = conf.n_editor()
+        if n_editor != None:
+#            n_editor.connect("change-node",self.nodeslist_change)
+#            n_editor.connect("add-new-node",self.nodeslist_add)
+#            n_editor.connect("remove-node",self.nodeslist_remove)
+           pass
 
         self.model = None
         self.modelfilter = None
@@ -676,3 +683,13 @@ class IOMain(base_main.BaseMain):
         # Остальные параметры по списку
         self.save2xml_elements_value(self.channel_params,self.sensor)
         self.conf.mark_changes()
+  
+    def nodeslist_change(self,obj, xmlnode):
+        print "********* signal nodeslist change..."
+    
+    def nodeslist_add(self,obj, xmlnode):
+        print "********* signal nodeslist add..."
+    
+    def nodeslist_remove(self,obj, xmlnode):
+        print "********* signal nodeslist remove..."
+                

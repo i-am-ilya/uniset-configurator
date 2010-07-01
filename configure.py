@@ -14,6 +14,7 @@ class Conf:
         self.dlg_cur = None
 
         self.changes = 0
+        self.nodes_editor = None
    
     def s_dlg(self):
         if self.dlg_cur != "s":
@@ -27,6 +28,12 @@ class Conf:
             self.dlg_cur = "n"
         
         return self.dlg_xlist
+    
+    def n_editor(self):
+        return self.nodes_editor
+    
+    def set_nodes_editor(self, editor):
+        self.nodes_editor = editor
 
     def mark_changes(self):
         self.changes = 1

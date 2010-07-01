@@ -4,22 +4,26 @@ import gtk
 import gobject
 import UniXML
 import configure
-import base_main
+import base_editor
 '''
 Редактирование списка узлов
 '''
-class NodesMain(base_main.BaseMain):
+class NodesEditor(base_editor.BaseEditor):
 
     def __init__(self, conf):
         
-        base_main.BaseMain.__init__(self,conf)
+        super(NodesEditor, self).__init__(conf)
         conf.glade.signal_autoconnect(self)
 
         # --------  my signals  -----------
-        gobject.type_register(NodesMain)
-        gobject.signal_new("changed", NodesMain, gobject.SIGNAL_RUN_FIRST,
-                   gobject.TYPE_NONE, (object,gobject.TYPE_STRING))
+        gobject.type_register(NodesEditor)
+        gobject.signal_new("change-node", NodesEditor, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (object,))
+#        gobject.signal_new("add-new-node", NodesEditor, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (object,))
+#        gobject.signal_new("remove-node", NodesEditor, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (object,))
         # ---------------------------------
+#        conf.set_nodes_editor(self)
+        
+        self.connect("change-node",self.my_change)
         
         self.model = None
         self.modelfilter = None
@@ -166,9 +170,5 @@ class NodesMain(base_main.BaseMain):
         self.save2xml_elements_value(self.params,xmlnode)
         return True
      
-    def my_change(self,obj, xmlnode, opname):
-        print "********* signal change..."
-        print "********* obj: " + str(obj)
-        print "********* operation: " + opname
-        print "********* xmlnode: " + str(xmlnode)
-        
+    def my_change(self,obj, xmlnode):
+        print "********* signal nodeslist change..."
