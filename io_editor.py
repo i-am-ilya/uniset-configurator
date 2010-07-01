@@ -19,10 +19,9 @@ class IOEditor(base_editor.BaseEditor):
         
         n_editor = conf.n_editor()
         if n_editor != None:
-#            n_editor.connect("change-node",self.nodeslist_change)
-#            n_editor.connect("add-new-node",self.nodeslist_add)
-#            n_editor.connect("remove-node",self.nodeslist_remove)
-           pass
+            n_editor.connect("change-node",self.nodeslist_change)
+            n_editor.connect("add-new-node",self.nodeslist_add)
+            n_editor.connect("remove-node",self.nodeslist_remove)
 
         self.model = None
         self.modelfilter = None
@@ -685,11 +684,11 @@ class IOEditor(base_editor.BaseEditor):
         self.conf.mark_changes()
   
     def nodeslist_change(self,obj, xmlnode):
-        print "********* signal nodeslist change..."
+        print "********* IO: signal nodeslist change..."
     
     def nodeslist_add(self,obj, xmlnode):
-        print "********* signal nodeslist add..."
+        print "********* IO: signal nodeslist add..."
     
     def nodeslist_remove(self,obj, xmlnode):
-        print "********* signal nodeslist remove..."
+        print "********* IO: signal nodeslist remove..."
                 

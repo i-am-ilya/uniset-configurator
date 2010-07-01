@@ -12,6 +12,11 @@ class CANEditor(base_editor.BaseEditor):
 
         super(CANEditor, self).__init__(conf)
         conf.glade.signal_autoconnect(self)
+        n_editor = conf.n_editor()
+        if n_editor != None:
+            n_editor.connect("change-node",self.nodeslist_change)
+            n_editor.connect("add-new-node",self.nodeslist_add)
+            n_editor.connect("remove-node",self.nodeslist_remove)        
         
         self.netlist = [] # list of pair [name,tree iter]
 
@@ -342,3 +347,13 @@ class CANEditor(base_editor.BaseEditor):
         info  = info + ';...'
         self.model.set_value(iter,1,info)
         self.conf.mark_changes()
+    
+    def nodeslist_change(self,obj, xmlnode):
+        print "********* CAN: signal nodeslist change..."
+    
+    def nodeslist_add(self,obj, xmlnode):
+        print "********* CAN: signal nodeslist add..."
+    
+    def nodeslist_remove(self,obj, xmlnode):
+        print "********* CAN: signal nodeslist remove..."
+                

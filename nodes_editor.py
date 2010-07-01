@@ -15,16 +15,14 @@ class NodesEditor(base_editor.BaseEditor):
         super(NodesEditor, self).__init__(conf)
         conf.glade.signal_autoconnect(self)
 
-        # --------  my signals  -----------
-        gobject.type_register(NodesEditor)
+        # --------  my signals ------------
+#        gobject.type_register(NodesEditor)
         gobject.signal_new("change-node", NodesEditor, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (object,))
-#        gobject.signal_new("add-new-node", NodesEditor, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (object,))
-#        gobject.signal_new("remove-node", NodesEditor, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (object,))
+        gobject.signal_new("add-new-node", NodesEditor, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (object,))
+        gobject.signal_new("remove-node", NodesEditor, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (object,))
         # ---------------------------------
-#        conf.set_nodes_editor(self)
-        
-        self.connect("change-node",self.my_change)
-        
+        conf.set_nodes_editor(self)
+       
         self.model = None
         self.modelfilter = None
         #                          Name | Parameters | xmlnode
@@ -98,7 +96,6 @@ class NodesEditor(base_editor.BaseEditor):
        self.dlg.response(gtk.RESPONSE_OK)
     
     def nodes_remove_node_activate(self,menuitem):
-        print "On remove activate.."
         (model, iter) = self.get_selection().get_selected()
         if not iter: return
         
@@ -109,6 +106,11 @@ class NodesEditor(base_editor.BaseEditor):
             return False
         
         xmlnode = model.get_value(iter,2)
+        try:
+           self.emit("remove-node",xmlnode)
+        except :
+           pass
+        
         xmlnode.unlinkNode()
         model.remove(iter)
         self.conf.mark_changes()
@@ -132,12 +134,14 @@ class NodesEditor(base_editor.BaseEditor):
         self.model.append(None,[xmlnode.prop("name"),self.get_info(xmlnode),xmlnode])
         self.conf.mark_changes()
         self.conf.n_reopen()
+        try:
+           self.emit("add-new-node",xmlnode)
+        except :
+           pass
     
     def nodes_edit_node_activate(self,menuitem):
         (model, iter) = self.get_selection().get_selected()
         if not iter: return
-        
-#        self.emit("changed",model.get_value(iter,2),"edit")
         
         xmlnode = model.get_value(iter,2)
         if self.edit_node(xmlnode) == True:
@@ -145,6 +149,10 @@ class NodesEditor(base_editor.BaseEditor):
             model.set_value(iter,1,self.get_info(xmlnode))
             self.conf.mark_changes()
             self.conf.n_reopen()
+            try:
+                self.emit("change-node",xmlnode)
+            except :
+                pass
         
     def edit_node(self,xmlnode):
         self.init_elements_value(self.params,xmlnode)
@@ -169,6 +177,4 @@ class NodesEditor(base_editor.BaseEditor):
 
         self.save2xml_elements_value(self.params,xmlnode)
         return True
-     
-    def my_change(self,obj, xmlnode):
-        print "********* signal nodeslist change..."
+  
