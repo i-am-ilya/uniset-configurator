@@ -709,13 +709,46 @@ class IOEditor(base_editor.BaseEditor):
                         it2 = self.model.iter_next(it2)
                    
                     it1 = self.model.iter_next(it1)
+                self.conf.mark_changes()
                 break
            
             it = self.model.iter_next(it)
     
     def nodeslist_add(self,obj, xmlnode):
-        print "********* IO: signal nodeslist add..."
+        self.model.append(None,[xmlnode.prop("name"),self.get_node_info(xmlnode),xmlnode,"node",xmlnode.prop("id"),0])
     
     def nodeslist_remove(self,obj, xmlnode):
-        print "********* IO: signal nodeslist remove..."
+        node_id = xmlnode.prop("id")
+        # Ищем узел проходим по всем его картам и датчикам
+        # и удаляем io="id"
+        it = self.model.get_iter_first()
+        while it is not None:
+            if self.model.get_value(it,2) == xmlnode:
+                msg = _("Remove io configuration for sensors at node='") + str(xmlnode.prop("name")) + "'"
+                dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,msg)
+                res = dlg.run()
+                dlg.hide()
+                if res == gtk.RESPONSE_NO:
+                     return
                 
+                it1 = self.model.iter_children(it)
+                # Идём по картам
+                while it1 is not None:
+                    it2 = self.model.iter_children(it1)
+                    # Идём по каналам 
+                    while it2 is not None:
+                        snode = self.model.get_value(it2,2)
+                        if snode != None:
+                            snode.setProp("io","")
+                            snode.setProp("card","")
+                            snode.setProp("subdev","")
+                            snode.setProp("channel","")
+                        it2 = self.model.iter_next(it2)
+                   
+                    it1 = self.model.iter_next(it1)
+                
+                self.model.remove(it)
+                self.conf.mark_changes()
+                break
+           
+            it = self.model.iter_next(it)
