@@ -176,7 +176,7 @@ class IOEditor(base_editor.BaseEditor):
         node = self.conf.xml.findNode(self.conf.xml.getDoc(),"nodes")[0].children.next 
 #        iter0 = self.model.append(None, [_("Nodes"),"",None,"",-1,-1,None])
         while node != None:
-            info = "id=" + str(node.prop("id")) + " ip=" + node.prop("ip")
+            info = self.get_node_info(node)
             iter1 = self.model.append(None,[node.prop("name"),info,node,"node",node.prop("id"),0])
             self.read_cards(node,iter1)
             node = self.conf.xml.nextNode(node)
@@ -683,8 +683,35 @@ class IOEditor(base_editor.BaseEditor):
         self.save2xml_elements_value(self.channel_params,self.sensor)
         self.conf.mark_changes()
   
+    def get_node_info(self, xmlnode):
+        return str("id=" + str(xmlnode.prop("id")) + " ip=" + xmlnode.prop("ip"))
+        
     def nodeslist_change(self,obj, xmlnode):
-        print "********* IO: signal nodeslist change..."
+        node_id = xmlnode.prop("id")
+        # Ищем узел проходим по всем его картам и датчикам
+        # и подменяем io="old_id" на io="new_id"
+        it = self.model.get_iter_first()
+        while it is not None:
+            if self.model.get_value(it,2) == xmlnode:
+                # заодно обновляем параметры
+                self.model.set_value(it,4,xmlnode.prop("id")) 
+                self.model.set_value(it,0,xmlnode.prop("name")) 
+                self.model.set_value(it,1,self.get_node_info(xmlnode))
+                it1 = self.model.iter_children(it)
+                # Идём по картам
+                while it1 is not None:
+                    it2 = self.model.iter_children(it1)
+                    # Идём по каналам 
+                    while it2 is not None:
+                        snode = self.model.get_value(it2,2)
+                        if snode != None:
+                            snode.setProp("io",node_id)
+                        it2 = self.model.iter_next(it2)
+                   
+                    it1 = self.model.iter_next(it1)
+                break
+           
+            it = self.model.iter_next(it)
     
     def nodeslist_add(self,obj, xmlnode):
         print "********* IO: signal nodeslist add..."

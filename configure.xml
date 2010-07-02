@@ -730,7 +730,7 @@
 	в качестве xxx будет узел из <nodes>
 -->
 		<nodes port="2809">
-			<item dbserver="DBServer1" id="3000" ip="127.0.0.1" name="LocalhostNode" textname="Локальный узел">
+			<item dbserver="DBServer1" id="3000" io="30001" ip="127.0.0.1" name="LocalhostNode" textname="Локальный узел">
 				<iocards>
 					<item card="1" name="AI16"/>
 				</iocards>
@@ -779,8 +779,8 @@
 		      textname="Давление смазочного масла ГДГ2"
 		      iotype="AI" />
 -->
-			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG1Node" card="2" channel="3" id="101" io="gdg1" iotype="DI" mtype="1" name="01_01_S" subdev="0" textname="Минимальное давление смазочного масла ГДГ1" unetGUITS="TSNode"/>
-			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG2Node" card="2" channel="3" id="102" io="gdg2" iotype="DI" mtype="1" name="01_02_S" subdev="0" textname="Минимальное давление смазочного масла ГДГ2" unetGUITS="TSNode"/>
+			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG1Node" card="1" channel="1" id="101" io="3000" iotype="DI" mtype="1" name="01_01_S" subdev="0" textname="Минимальное давление смазочного масла ГДГ1" unetGUITS="TSNode"/>
+			<item CAN2sender="SYSTSNode" aps="101" canTS="GDG2Node" card="1" channel="2" id="102" io="3000" iotype="DI" mtype="1" name="01_02_S" subdev="0" textname="Минимальное давление смазочного масла ГДГ2" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aps="102" canTS="GDG1Node" card="2" channel="23" id="103" io="gdg1" iotype="DI" mtype="2" name="01_03_S" subdev="0" textname="Минимальное давление смазочного масла ГДГ1" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aps="102" canTS="GDG2Node" card="2" channel="23" id="104" io="gdg2" iotype="DI" mtype="2" name="01_04_S" subdev="0" textname="Минимальное давление смазочного масла ГДГ2" unetGUITS="TSNode"/>
 			<item CAN2sender="SYSTSNode" aref="2" canTS="GDG1Node" card="1" channel="2" cmax="100" cmin="0" id="105" io="gdg1" iotype="AI" name="01_05_S" rmax="2060" rmin="410" subdev="2" textname="Дифференциальное давление смазочного масла ГДГ1 на фильтре" unetGUITS="TSNode"/>
