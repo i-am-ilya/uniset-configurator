@@ -108,9 +108,7 @@ class CANEditor(base_editor.BaseEditor):
          return True
 
     def add_node(self,cannode,node,iter):
-         info  = 'nodeID=' + str(cannode.prop("nodeID"))
-         info  = info + '; eds=' + str(cannode.prop("eds"))
-         info  = info + ';...'
+         info  = self.get_can_info(cannode)
          return self.model.append(iter,[node.prop("name"),info,cannode,"node",node])
 
     def on_button_press_event(self, object, event):                                                                                                                                 
@@ -342,18 +340,52 @@ class CANEditor(base_editor.BaseEditor):
             break
         
         self.save2xml_elements_value(self.node_param_list,cnode)
-        info  = 'nodeID=' + str(cnode.prop("nodeID"))
-        info  = info + '; eds=' + str(cnode.prop("eds"))
-        info  = info + ';...'
-        self.model.set_value(iter,1,info)
+        self.model.set_value(iter,1,self.get_can_info(cnode))
         self.conf.mark_changes()
     
+    def get_can_info(self,xmlnode):
+        info  = 'nodeID=' + str(xmlnode.prop("nodeID"))
+        info  = info + '; eds=' + str(xmlnode.prop("eds"))
+        info  = info + ';...'
+        return info
+    
     def nodeslist_change(self,obj, xmlnode):
-        print "********* CAN: signal nodeslist change..."
+        # Ищем сети куда входит данный узел и обновляем info
+        it = self.model.get_iter_first()
+        while it is not None:
+            # Идём по узлам
+            it1 = self.model.iter_children(it)
+            while it1 is not None:
+                if self.model.get_value(it1,4) == xmlnode:
+                     self.model.set_value(it1,0,xmlnode.prop("name"))
+                     self.model.set_value(it1,1,self.get_can_info(xmlnode))
+                     self.conf.mark_changes()
+                     break
+                it1 = self.model.iter_next(it1)
+            it = self.model.iter_next(it)        
     
     def nodeslist_add(self,obj, xmlnode):
-        print "********* CAN: signal nodeslist add..."
+        pass
     
     def nodeslist_remove(self,obj, xmlnode):
-        print "********* CAN: signal nodeslist remove..."
+        # Ищем сети куда входит данный узел и удаляем
+        it = self.model.get_iter_first()
+        while it is not None:
+            # Идём по узлам
+            it1 = self.model.iter_children(it)
+            while it1 is not None:
+                if self.model.get_value(it1,4) == xmlnode:
+#  Пока в редакторе не сделана настройка CAN по датчикам... это "вопрос" безполезен				  
+#                    msg = _("Remove CAN configuration for sensors at node='") + str(xmlnode.prop("name")) + "'"
+#                    dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,msg)
+#                    res = dlg.run()
+#                    dlg.hide()
+#                    if res == gtk.RESPONSE_NO:
+#                        return
+                     self.model.remove(it1)
+                     self.conf.mark_changes()
+                     break
+                it1 = self.model.iter_next(it1)
+            
+            it = self.model.iter_next(it)
                 

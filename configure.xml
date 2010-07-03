@@ -760,6 +760,7 @@
 			<item CANnodeID="0x17" id="3017" ip="geucpu" name="SYSGEUNode" textname="СУ ГЭУ"/>
 			<item CANnodeID="0x18" id="3018" ip="sescpu" name="SYSSESNode" textname="СУ СЭС"/>
 			<item CANnodeID="0x19" id="3019" ip="tspus" name="TSPUSNode" textname="Пульт ПУС (контроллер ТС)"/>
+			<item id="3020" ip="test" name="test" textname="test"/>
 		</nodes>
 		<!-- ************************ Датчики ********************** -->
 		<sensors name="Sensors" no_check_depends="0" section="Sensors">

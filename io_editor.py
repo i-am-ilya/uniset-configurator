@@ -722,15 +722,9 @@ class IOEditor(base_editor.BaseEditor):
         # Ищем узел проходим по всем его картам и датчикам
         # и удаляем io="id"
         it = self.model.get_iter_first()
+        dlg_ok = False
         while it is not None:
             if self.model.get_value(it,2) == xmlnode:
-                msg = _("Remove io configuration for sensors at node='") + str(xmlnode.prop("name")) + "'"
-                dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,msg)
-                res = dlg.run()
-                dlg.hide()
-                if res == gtk.RESPONSE_NO:
-                     return
-                
                 it1 = self.model.iter_children(it)
                 # Идём по картам
                 while it1 is not None:
@@ -739,10 +733,20 @@ class IOEditor(base_editor.BaseEditor):
                     while it2 is not None:
                         snode = self.model.get_value(it2,2)
                         if snode != None:
-                            snode.setProp("io","")
-                            snode.setProp("card","")
-                            snode.setProp("subdev","")
-                            snode.setProp("channel","")
+                             # Спрашиваем только на первой встретившейся "привязке" датчика
+                             if dlg_ok == False:
+                                 msg = _("Remove io configuration for sensors at node='") + str(xmlnode.prop("name")) + "'"
+                                 dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,msg)
+                                 res = dlg.run()
+                                 dlg.hide()
+                                 if res == gtk.RESPONSE_NO:
+                                      return
+                                 dlg_ok = True
+                            
+                             snode.setProp("io","")
+                             snode.setProp("card","")
+                             snode.setProp("subdev","")
+                             snode.setProp("channel","")
                         it2 = self.model.iter_next(it2)
                    
                     it1 = self.model.iter_next(it1)
