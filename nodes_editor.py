@@ -8,11 +8,12 @@ import base_editor
 '''
 Редактирование списка узлов
 '''
-class NodesEditor(base_editor.BaseEditor):
+class NodesEditor(base_editor.BaseEditor,gtk.TreeView):
 
     def __init__(self, conf):
         
-        super(NodesEditor, self).__init__(conf)
+        gtk.TreeView.__init__(self)
+        base_editor.BaseEditor.__init__(self,conf)
         conf.glade.signal_autoconnect(self)
 
         # --------  my signals ------------

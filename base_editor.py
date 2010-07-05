@@ -24,12 +24,11 @@ init_elements_value()
 validate_elements()
 save2xml_elements_value()
 '''
-class BaseEditor(gtk.TreeView):
+class BaseEditor():
 
     def __init__(self, conf):
 
         self.conf = conf
-        gtk.TreeView.__init__(self)
 
     def init_glade_elements(self, elist):
         ''' Инициализация переменных из glade файла...

@@ -6,11 +6,13 @@ import UniXML
 import configure
 import base_editor
 
-class CANEditor(base_editor.BaseEditor):
+class CANEditor(base_editor.BaseEditor, gtk.TreeView):
 
     def __init__(self, conf):
-
-        super(CANEditor, self).__init__(conf)
+        
+        gtk.TreeView.__init__(self)
+        base_editor.BaseEditor.__init__(self,conf)
+        
         conf.glade.signal_autoconnect(self)
         n_editor = conf.n_editor()
         if n_editor != None:

@@ -10,11 +10,13 @@ import base_editor
 1. Добавление, удаление карт ввода/вывода на узлах
 2. Редактирование параметров каждого канала
 '''
-class IOEditor(base_editor.BaseEditor):
+class IOEditor(base_editor.BaseEditor,gtk.TreeView):
 
     def __init__(self, conf):
 
-        super(IOEditor, self).__init__(conf)
+        gtk.TreeView.__init__(self)
+        base_editor.BaseEditor.__init__(self,conf)
+
         conf.glade.signal_autoconnect(self)
         
         n_editor = conf.n_editor()
@@ -187,12 +189,16 @@ class IOEditor(base_editor.BaseEditor):
         node = rnode.children.next
         
         while node != None:
-            info  = 'card=' + str(node.prop("card"))
-            info  = info + ' BA=' + str(node.prop("baddr"))
+            info = self.get_card_info(node)
             iter2 = self.model.append(iter, [node.prop("name"),info,node,"card",node.prop("card"),0])
             self.build_channels_list(node,self.model,iter2)
             node = self.conf.xml.nextNode(node)
 
+    def get_card_info(self,xmlnode):
+        info  = 'card=' + str(xmlnode.prop("card"))
+        info  = info + ' BA=' + str(xmlnode.prop("baddr"))
+        return info
+    
     def build_channels_list(self,cardnode,model,iter):
         if cardnode.prop("name") == "DI32":
             self.build_di32_list(cardnode,model,iter)
@@ -205,36 +211,36 @@ class IOEditor(base_editor.BaseEditor):
     
     def build_di32_list(self,card,model,iter):
         for i in range(0,32):
-            model.append(iter, [_("ch_")+str(i),"",None,"channel",str(i),"0"])
+            model.append(iter, [_("ch_")+str(i),"",None,_("channel"),str(i),"0"])
 
     def build_ai16_list(self,card,model,iter):
         for i in range(0,8):
-            model.append(iter, [_("J2:")+str(i),"",None,"channel",str(i),"0"])
+            model.append(iter, ["J2:"+str(i),"",None,_("channel"),str(i),"0"])
         for i in range(0,8):
-            model.append(iter, [_("J3:")+str(i),"",None,"channel",str(i),"1"])
+            model.append(iter, ["J3:"+str(i),"",None,_("channel"),str(i),"1"])
 
     def build_unio48_list(self,card,model,iter):
         for i in range(0,24):
-            model.append(iter, [_("J1:")+str(i),"",None,"channel",str(i),"0"])
+            model.append(iter, ["J1:"+str(i),"",None,_("channel"),str(i),"0"])
         for i in range(0,24):
-            model.append(iter, [_("J2:")+str(i),"",None,"channel",str(i),"1"])
+            model.append(iter, ["J2:"+str(i),"",None,_("channel"),str(i),"1"])
 
     def build_unio96_list(self,card,model,iter):
         for i in range(0,24):
-            model.append(iter, [_("J1:")+str(i),"",None,"channel",str(i),"0"])
+            model.append(iter, ["J1:"+str(i),"",None,_("channel"),str(i),"0"])
         for i in range(0,24):
-            model.append(iter, [_("J2:")+str(i),"",None,"channel",str(i),"1"])
+            model.append(iter, ["J2:"+str(i),"",None,_("channel"),str(i),"1"])
         for i in range(0,24):
-            model.append(iter, [_("J3:")+str(i),"",None,"channel",str(i),"2"])
+            model.append(iter, ["J3:"+str(i),"",None,_("channel"),str(i),"2"])
         for i in range(0,24):
-            model.append(iter, [_("J4:")+str(i),"",None,"channel",str(i),"3"])
+            model.append(iter, ["J4:"+str(i),"",None,_("channel"),str(i),"3"])
 
     def init_channels(self):
         # проходим по <sensors> и если поля заполнены ищем в нашем TreeView
         node = self.conf.xml.findNode(self.conf.xml.getDoc(),"sensors")[0].children.next 
         while node != None:
             if node.prop("io") != None:
-                  self.find_node(node)
+                 self.find_node(node)
             node = self.conf.xml.nextNode(node)    
 
     def find_node(self,node):
@@ -493,10 +499,7 @@ class IOEditor(base_editor.BaseEditor):
         self.save2xml_elements_value(self.card_params,n)
         self.conf.mark_changes()
         
-        info  = 'card=' + str(n.prop("card"))
-        info  = info + ' BA=' + str(n.prop("baddr"))
-
-        it = self.model.append(node_iter, [n.prop("name"),info,n,"card",n.prop("card"),0])
+        it = self.model.append(node_iter, [n.prop("name"),self.get_card_info(n),n,"card",n.prop("card"),0])
         self.build_channels_list(n,self.model,it)
         self.conf.mark_changes()
 

@@ -17,6 +17,7 @@ import locale
 import io_editor
 import can_editor
 import nodes_editor
+import uniset_editor
 
 
 
@@ -110,6 +111,7 @@ def add_module( face, lbl, mainbook, glade ):
     scwin = gtk.ScrolledWindow()
     scwin.show()
     scwin.add(face)
+    scwin.set_policy(gtk.POLICY_AUTOMATIC,gtk.POLICY_AUTOMATIC)
     face.show()
     l = gtk.Label(lbl)
     l.show()
@@ -134,6 +136,10 @@ add_module(io_mtree,"I/O",mainbook,glade)
 # CAN configure
 can_mtree = can_editor.CANEditor(conf)
 add_module(can_mtree,"CAN",mainbook,glade)
+
+# UniSet configure
+uniset_w = uniset_editor.UniSetEditor(conf)
+add_module(uniset_w,"UniSet",mainbook,glade)
 
 
 # ---------------
