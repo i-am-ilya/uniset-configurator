@@ -202,8 +202,12 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
     def build_channels_list(self,cardnode,model,iter):
         if cardnode.prop("name") == "DI32":
             self.build_di32_list(cardnode,model,iter)
-        elif cardnode.prop("name") == "AI16":
+        if cardnode.prop("name") == "DO32":
+            self.build_do32_list(cardnode,model,iter)
+        elif cardnode.prop("name") == "AI16-5A-3" or cardnode.prop("name") == "AIC123xx":
             self.build_ai16_list(cardnode,model,iter)
+        elif cardnode.prop("name") == "AO16-xx":
+            self.build_ao16_list(cardnode,model,iter)
         elif cardnode.prop("name") == "UNIO48":
             self.build_unio48_list(cardnode,model,iter)
         elif cardnode.prop("name") == "UNIO96":
@@ -213,7 +217,17 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         for i in range(0,32):
             model.append(iter, [_("ch_")+str(i),"",None,_("channel"),str(i),"0"])
 
+    def build_do32_list(self,card,model,iter):
+        for i in range(0,32):
+            model.append(iter, [_("ch_")+str(i),"",None,_("channel"),str(i),"0"])
+
     def build_ai16_list(self,card,model,iter):
+        for i in range(0,8):
+            model.append(iter, ["J2:"+str(i),"",None,_("channel"),str(i),"0"])
+        for i in range(0,8):
+            model.append(iter, ["J3:"+str(i),"",None,_("channel"),str(i),"1"])
+
+    def build_ao16_list(self,card,model,iter):
         for i in range(0,8):
             model.append(iter, ["J2:"+str(i),"",None,_("channel"),str(i),"0"])
         for i in range(0,8):

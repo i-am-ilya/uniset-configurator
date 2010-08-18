@@ -1323,8 +1323,11 @@ AO</property>
         <child>
           <widget class="GtkComboBox" id="io_cb_cardlist">
             <property name="visible">True</property>
-            <property name="items">AI16
+            <property name="items">AI16-5A-3
+AIC123xx
+AO16-xx
 DI32
+DO32
 UNIO48
 UNIO96</property>
           </widget>
