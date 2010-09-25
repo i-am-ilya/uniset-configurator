@@ -7,16 +7,22 @@ License: GPL
 Url: http://wiki.office.etersoft.ru/asu/Jauza?v=1fw
 Source: %name-%version.tar
 BuildArch: noarch
-BuildRequires: rpm-build-compat
-Requires: python-module-pisa, python-module-django >= 1.2, python-module-django-dbbackend-mysql, python-module-flup
+# Automatically added by buildreq on Sat Sep 25 2010
+BuildRequires: python-base
+
 %description
 %summary
 
 %prep
 %setup
 
+%build
+%autoreconf
+%configure
+%make_build
+
 %install
-%make_install install DESTDIR=%buildroot 
+%make_install
 
 %files
 %dir %python_sitelibdir/%name
