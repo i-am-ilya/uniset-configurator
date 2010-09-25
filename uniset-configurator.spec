@@ -23,14 +23,19 @@ BuildRequires: python-devel
 
 %install
 %make_install install DESTDIR=%buildroot
-#mkdir %buildroot/%_bindir/
-#ln -s %python_sitelibdir/%name.py %buildroot/%_bindir/%name.py 
+
+mkdir %buildroot%python_sitelibdir/%name
+mv -f %buildroot%python_sitelibdir/*.py %buildroot%python_sitelibdir/%name/
+
+mkdir %buildroot/%_bindir/
+ln -s %python_sitelibdir/%name/%name.py %buildroot/%_bindir/%name.py 
 
 %files
-#%dir %python_sitelibdir/%name
+%dir %python_sitelibdir/%name
 %python_sitelibdir/*
 %dir %_datadir/%name/
 %_datadir/%name/
+%_bindir/*
 
 %changelog
 * Sat Sep 25 2010 Pavel Vainerman <pv@altlinux.ru> 0.1-eter1

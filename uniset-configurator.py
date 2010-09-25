@@ -73,10 +73,12 @@ class MainWindow(gtk.Widget):
 
 conf = None                                                                                                                                                                         
 
+is_system_run_flag = sys.argv[0].startswith("./")
+mwinglade = ( "/usr/share/uniset-configurator/mainwin.glade" if not is_system_run_flag else "mainwin.glade" )
+
 # for debug
-confile="configure.xml"
-#confile=""
-mwinglade="mainwin.glade"
+#confile="configure.xml"
+confile=""
 
 try:
     glade = gtk.glade.XML(mwinglade)
