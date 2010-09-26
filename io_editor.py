@@ -66,10 +66,20 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
             ["dlg_card","io_dlg_card","name",False], \
             ["card_num","io_sp_cardnum","card",False], \
             ["card_ba","io_baddr","baddr",False], \
-            ["cb_cardlist","io_cb_cardlist","name",False] \
+            ["cb_cardlist","io_cb_cardlist","name",False], \
+            ["iodev","io_dev","dev",False], \
+            ["subdev1","io_subdev1","subdev1",False], \
+            ["subdev2","io_subdev2","subdev2",False], \
+            ["subdev3","io_subdev3","subdev3",False], \
+            ["subdev4","io_subdev4","subdev4",False] \
         ]
         self.init_glade_elements(self.card_params)        
         self.dlg_card.set_title(_("Select card"))
+
+        self.subdev1.set_sensitive(False)
+        self.subdev2.set_sensitive(False)
+        self.subdev3.set_sensitive(False)
+        self.subdev4.set_sensitive(False)
         
         # Список параметров для канала
         # ["class field","glade name","xmlname",save_xml_ignore_flag]
@@ -576,12 +586,29 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
                 continue
             s_n = self.model.get_value(it,2).prop("baddr")
             n = 0
-            if s_n != "":
+            if s_n != "" and s_n != None:
                 n = int(eval(s_n))
 
             if n == baddr:
                 return it
-            it = self.model.iter_next(it)           
+            it = self.model.iter_next(it)
+
+    def card_param_set_sensitive(self,cnode):
+        cname = str(cnode.prop("name"))
+        if cname == "UNIO96" or cname == "UNIO48":
+            self.subdev1.set_sensitive(True)
+            self.subdev2.set_sensitive(True)
+            self.subdev3.set_sensitive(True)
+            self.subdev4.set_sensitive(True)
+        else:
+            self.set_combobox_element(self.subdev1,"None")
+            self.set_combobox_element(self.subdev2,"None")
+            self.set_combobox_element(self.subdev3,"None")
+            self.set_combobox_element(self.subdev4,"None")
+            self.subdev1.set_sensitive(False)
+            self.subdev2.set_sensitive(False)
+            self.subdev3.set_sensitive(False)
+            self.subdev4.set_sensitive(False)
     
     def on_edit_card_activate(self,menuitem):
         (model, iter) = self.get_selection().get_selected()
@@ -589,6 +616,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
 
         cnode = model.get_value(iter,2)
         self.init_elements_value(self.card_params,cnode)
+        self.card_param_set_sensitive(cnode)
         # при редактировании отключаем выбор, т.к.
         # сменить тип карты можно только удалив старую
         # (со всеми привязками и т.п)

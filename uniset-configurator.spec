@@ -1,6 +1,6 @@
 Name: uniset-configurator
-Version: 0.1
-Release: eter1
+Version: 0.2
+Release: eter2
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -28,7 +28,7 @@ mkdir %buildroot%python_sitelibdir/%name
 mv -f %buildroot%python_sitelibdir/*.py %buildroot%python_sitelibdir/%name/
 
 mkdir %buildroot/%_bindir/
-ln -s %python_sitelibdir/%name/%name.py %buildroot/%_bindir/%name.py 
+ln -s %python_sitelibdir/%name/%name.py %buildroot/%_bindir/%name
 
 %files
 %dir %python_sitelibdir/%name
@@ -38,6 +38,11 @@ ln -s %python_sitelibdir/%name/%name.py %buildroot/%_bindir/%name.py
 %_bindir/*
 
 %changelog
+* Sun Sep 26 2010 Pavel Vainerman <pv@altlinux.ru> 0.2-eter2
+- add subdev and device file param for card
+
+* Sat Sep 25 2010 Pavel Vainerman <pv@altlinux.ru> 0.1-eter2
+- second build
+
 * Sat Sep 25 2010 Pavel Vainerman <pv@altlinux.ru> 0.1-eter1
 - initial build
-
