@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.2
-Release: eter2
+Release: eter4
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -38,6 +38,12 @@ ln -s %python_sitelibdir/%name/%name.py %buildroot/%_bindir/%name
 %_bindir/*
 
 %changelog
+* Sun Sep 26 2010 Pavel Vainerman <pv@altlinux.ru> 0.2-eter4
+- minor fixes
+
+* Sun Sep 26 2010 Pavel Vainerman <pv@altlinux.ru> 0.2-eter3
+- minor fixes in card setup dialog
+
 * Sun Sep 26 2010 Pavel Vainerman <pv@altlinux.ru> 0.2-eter2
 - add subdev and device file param for card
 

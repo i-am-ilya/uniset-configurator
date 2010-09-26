@@ -475,6 +475,8 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         else:
             print "*** FAILED ELEMENT TYPE " + t
             return
+
+        self.card_param_set_sensitive()
         
         while True:
             res = self.dlg_card.run()
@@ -598,11 +600,18 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
 
     def card_param_set_sensitive(self):
         cname = self.cb_cardlist.get_active_text()
-        if cname == "UNIO96" or cname == "UNIO48":
+        if cname == "UNIO96":
             self.subdev1.set_sensitive(True)
             self.subdev2.set_sensitive(True)
             self.subdev3.set_sensitive(True)
             self.subdev4.set_sensitive(True)
+        elif cname == "UNIO48":
+            self.subdev1.set_sensitive(True)
+            self.subdev2.set_sensitive(True)
+            self.subdev3.set_sensitive(False)
+            self.subdev4.set_sensitive(False)
+            self.set_combobox_element(self.subdev3,"None")
+            self.set_combobox_element(self.subdev4,"None")
         else:
             self.set_combobox_element(self.subdev1,"None")
             self.set_combobox_element(self.subdev2,"None")
