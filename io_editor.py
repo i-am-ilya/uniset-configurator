@@ -593,8 +593,11 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
                 return it
             it = self.model.iter_next(it)
 
-    def card_param_set_sensitive(self,cnode):
-        cname = str(cnode.prop("name"))
+    def on_io_cb_cardlist_changed(self,cb):
+        self.card_param_set_sensitive()
+
+    def card_param_set_sensitive(self):
+        cname = self.cb_cardlist.get_active_text()
         if cname == "UNIO96" or cname == "UNIO48":
             self.subdev1.set_sensitive(True)
             self.subdev2.set_sensitive(True)
@@ -616,7 +619,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
 
         cnode = model.get_value(iter,2)
         self.init_elements_value(self.card_params,cnode)
-        self.card_param_set_sensitive(cnode)
+        self.card_param_set_sensitive()
         # при редактировании отключаем выбор, т.к.
         # сменить тип карты можно только удалив старую
         # (со всеми привязками и т.п)
