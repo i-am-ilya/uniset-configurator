@@ -5,7 +5,7 @@ import sys, UniXML, dlg_xlist
 import gtk
 
 class Conf:
-    def __init__ (self, fname,gladexml):
+    def __init__ (self, fname,gladexml, datdir):
         
         self.xml = UniXML.UniXML(fname)
         self.glade = gladexml
@@ -15,6 +15,7 @@ class Conf:
 
         self.changes = 0
         self.nodes_editor = None
+        self.datdir = datdir
    
     def s_dlg(self):
         if self.dlg_cur != "s":

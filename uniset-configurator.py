@@ -74,7 +74,8 @@ class MainWindow(gtk.Widget):
 conf = None                                                                                                                                                                         
 
 is_system_run_flag = sys.argv[0].startswith("./")
-mwinglade = ( "/usr/share/uniset-configurator/mainwin.glade" if not is_system_run_flag else "mainwin.glade" )
+datdir = ( "/usr/share/uniset-configurator/" if not is_system_run_flag else "./" )
+mwinglade = datdir + "mainwin.glade"
 
 # for debug
 #confile="configure.xml"
@@ -100,7 +101,7 @@ if confile == "":
        confile = dlg.get_filename()
 
 try:
-   conf = configure.Conf(confile,glade) 
+   conf = configure.Conf(confile,glade,datdir) 
 except: 
    dialog = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, _("XML file damage or not found! \n Loading FAILED!"))
    dialog.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("gray")) 
