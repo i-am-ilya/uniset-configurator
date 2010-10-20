@@ -1,7 +1,7 @@
 pyexec_SCRIPTS 	= *.py
 
 confdir  	= $(pkgdatadir)
-conf_DATA	= *.glade 
+conf_DATA	= *.glade ctl-comedi-skel.sh
 
 #if MAINTAINER_MODE
 #MAINTAINER=locale/lstart.mo
