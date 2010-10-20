@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.3
-Release: eter1
+Release: eter2
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -31,7 +31,7 @@ mv -f %buildroot%python_sitelibdir/*.py %buildroot%python_sitelibdir/%name/
 
 mkdir %buildroot/%_bindir/
 ln -s %python_sitelibdir/%name/%name.py %buildroot/%_bindir/%name
-ln -s %python_sitelibdir/%name/io-conf.py %buildroot/%_bindir/uniset-ioconf
+ln -s %python_sitelibdir/%name/io_conf.py %buildroot/%_bindir/uniset-ioconf
 
 %files
 %dir %python_sitelibdir/%name
@@ -41,9 +41,12 @@ ln -s %python_sitelibdir/%name/io-conf.py %buildroot/%_bindir/uniset-ioconf
 %_bindir/*
 
 %changelog
+* Wed Oct 20 2010 Pavel Vainerman <pv@altlinux.ru> 0.3-eter2
+- fixed bug in previous build
+
 * Wed Oct 20 2010 Pavel Vainerman <pv@altlinux.ru> 0.3-eter1
 - add uniset-ioconf utilities
-- new version (add new fuctions)
+- new version (add new functions)
 
 * Sun Sep 26 2010 Pavel Vainerman <pv@altlinux.ru> 0.2-eter4
 - minor fixes
