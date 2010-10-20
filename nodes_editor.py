@@ -96,6 +96,23 @@ class NodesEditor(base_editor.BaseEditor,gtk.TreeView):
     def on_nodes_btnOK_clicked(self,button):
        self.dlg.response(gtk.RESPONSE_OK)
     
+    def nodes_genlist_activate(self,menuitem):
+        
+        dlg = gtk.FileChooserDialog(_("File save"),action=gtk.FILE_CHOOSER_ACTION_SAVE,
+                                  buttons=(gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL,gtk.STOCK_SAVE,gtk.RESPONSE_OK))
+        dlg.set_current_name("nodelist.txt")
+        res = dlg.run()
+        dlg.hide()
+        if res == gtk.RESPONSE_OK:
+            f = open(dlg.get_filename(),"w");
+            it = self.model.get_iter_first()
+            while it is not None:
+               xmlnode = self.model.get_value(it,2)
+               hname = str(xmlnode.prop("ip")) + '\n'
+               f.write(hname)
+               it = self.model.iter_next(it)	  
+            f.close()
+    
     def nodes_remove_node_activate(self,menuitem):
         (model, iter) = self.get_selection().get_selected()
         if not iter: return
