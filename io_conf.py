@@ -4,10 +4,12 @@ from gettext import gettext as _
 import re
 import datetime
 import UniXML
+from global_conf import *
+
 '''
 Класс реализующий всё что касается работы с настройками в/в (comedi):
 1. Типы карт, параметры, модули ядра и т.п.
-2. Он же консольный генератор скрипта настройки ctl-comedi.xxx
+2. Он же консольный генератор скрипта настройки ctl-comedi.sx
 '''
 class IOConfig():
 
@@ -15,23 +17,20 @@ class IOConfig():
         self.xml = xml
         self.datdir = datdir
     
-    def get_str_val(self,str_val):
-        if str_val == None: 
-            return ""
-        return str_val
-    
     def build_channels_list(self,cardnode,model,iter):
-        if cardnode.prop("name") == "DI32":
+        cname = cardnode.prop("name").upper()
+        if cname == "DI32":
             self.build_di32_list(cardnode,model,iter)
-        if cardnode.prop("name") == "DO32":
+        if cname == "DO32":
             self.build_do32_list(cardnode,model,iter)
-        elif cardnode.prop("name") == "AI16-5A-3" or cardnode.prop("name") == "AIC123xx":
+        elif cname == "AI16-5A-3" or cname == "AIC123xx" \
+             or cname == "AIC120" or cname == "AIC121":
             self.build_ai16_list(cardnode,model,iter)
-        elif cardnode.prop("name") == "AO16-xx":
+        elif cname == "AO16-xx":
             self.build_ao16_list(cardnode,model,iter)
-        elif cardnode.prop("name") == "UNIO48":
+        elif cname == "UNIO48":
             self.build_unio48_list(cardnode,model,iter)
-        elif cardnode.prop("name") == "UNIO96":
+        elif cname == "UNIO96":
             self.build_unio96_list(cardnode,model,iter)
    
     def build_di32_list(self,card,model,iter):
@@ -73,12 +72,12 @@ class IOConfig():
     def get_params_for_aixx5a(self,cardnode):
         # последовательность параметров см. исходники модуля aixx5a
         cname = cardnode.prop("name").upper()
-        avr = self.get_str_val(cardnode.prop("average"))
+        avr = get_str_val(cardnode.prop("average"))
         if avr == "":
            avr = "1"
         if cname == "AIC120" or cname == "AIC121":
             return "0," + avr
-        if cname == "AIC123":
+        if cname == "AIC123" or cname == "AIC123XX":
             return "1," + avr
         return ""
     
@@ -103,7 +102,7 @@ class IOConfig():
 #            maxnum = 3
         for i in range(1,maxnum):
           p = "subdev" + str(i)
-          sname = self.get_str_val(cardnode.prop(p))
+          sname = get_str_val(cardnode.prop(p))
           if s != "":
              s = s + "," + self.get_typenum_for_unio_subdev(sname.upper())
           else:
@@ -112,31 +111,33 @@ class IOConfig():
         return s
     
     def get_module_params_for_card(self,cardnode):
-        
         cname = cardnode.prop("name").upper()
+        
         if cname == "DI32":
             return ["di32_5",""]
         if cname == "DO32":
             return ["do32",""]
-        if cname == "AI16-5A-3" or cname == "AIC123xx":
-            return ["aixx5a",self.get_params_for_aixx5a(cardnode)]
-        if cname == "AO16-xx":
+        if cname == "AI16-5A-3" or cname == "AIC123XX" or cname == "AIC120" or cname == "AIC121":
+            return ["aixx5a", self.get_params_for_aixx5a(cardnode) ]
+        if cname == "AO16-XX":
             return ["ao16",""]
         if cname == "UNIO48":
-            return ["unioxx5",self.get_params_for_unioxx(cardnode)]
+            return ["unioxx5", self.get_params_for_unioxx(cardnode)]
         if cname == "UNIO96":
-            return ["unioxx5",self.get_params_for_unioxx(cardnode)]
+            return ["unioxx5", self.get_params_for_unioxx(cardnode)]
         
-        return [None,None]
+        return ["",""]
 
     def gen_comedi_script(self,xmlnode,fname):
          cardsinfo = [] # [module,params,dev,baddr]
          modlist = {} # делаем словарь, чтобы исключить повторяющиеся модули..
 
          while xmlnode != None:
-            res = self.get_module_params_for_card( xmlnode )
-            modlist[res[0]] = res[0]
-            cardsinfo.append( [res[0],res[1],self.get_str_val(xmlnode.prop("dev")),self.get_str_val(xmlnode.prop("baddr"))] )
+            mod_name = get_str_val(xmlnode.prop("module"))
+            mod_params = get_str_val(xmlnode.prop("module_params"))
+            if mod_name != "":
+			   modlist[mod_name] = mod_name
+            cardsinfo.append( [mod_name,mod_params,get_str_val(xmlnode.prop("dev")),get_str_val(xmlnode.prop("baddr"))] )
             xmlnode = self.xml.nextNode(xmlnode)
          
          gdate = datetime.datetime.today()

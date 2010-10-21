@@ -57,20 +57,5 @@ class Conf:
         self.xml.reopen(fname)
         self.dlg_cur = None
         self.changes = 0
-    
-    def check_value_int(self, val):                                         
-        try:
-            x = int(val)
-            return True
-        except ValueError, NameError:
-             return False
-    
-    def get_int_val(self,str_val):
-        if str_val == "" or str_val == None: 
-            return 0
-        return int(str_val)
-
-    def get_str_val(self,str_val):
-        if str_val == None: 
-            return ""
-        return str_val
+  
+ 

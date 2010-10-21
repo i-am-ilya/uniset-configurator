@@ -8,6 +8,8 @@ import UniXML
 import configure
 import base_editor
 import io_conf
+from global_conf import *
+
 '''
 Задачи:
 1. Добавление, удаление карт ввода/вывода на узлах
@@ -76,7 +78,10 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
             ["subdev1","io_subdev1","subdev1",False], \
             ["subdev2","io_subdev2","subdev2",False], \
             ["subdev3","io_subdev3","subdev3",False], \
-            ["subdev4","io_subdev4","subdev4",False] \
+            ["subdev4","io_subdev4","subdev4",False], \
+            ["mod_params","io_params","module_params",False], \
+            ["mod_name","io_module","module",False], \
+            ["mod_params_btn","io_params_btn",None,True] \
         ]
         self.init_glade_elements(self.card_params)        
         self.dlg_card.set_title(_("Select card"))
@@ -135,6 +140,26 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
             ["thr_lbl_aID","io_lbl_aID","threshold_aid",False] \
            ]
 
+        # список доступных диалогов настройки (должны быть в glade)
+        # список пар [class field, название в glade]
+        self.mod_dlg_list = [ \
+             ["dlg_aixx5a","io_dlg_aixx5a"], \
+             ["dlg_unioxx", "io_dlg_unio"], \
+             ["dlg_aixx5a_average_cb","dlg_aixx5a_average_cb"]
+        ]
+        self.init_glade_elements(self.mod_dlg_list)
+        
+        # список соответсвия названий карт и диалогов настройки параметров для них
+        # диалоги должны быть сделаны в glade
+        # (не все модуля ядра имеют настройки и соотвественно не для всех нужны диалоги)
+        self.mod_param_dlg_list = {} 
+        self.mod_param_dlg_list["AI16-5A-3"] = self.dlg_aixx5a
+        self.mod_param_dlg_list["AIC120"] = self.dlg_aixx5a
+        self.mod_param_dlg_list["AIC121"] = self.dlg_aixx5a
+        self.mod_param_dlg_list["AIC123XX"] = self.dlg_aixx5a
+        self.mod_param_dlg_list["UNIO48"] = self.dlg_unioxx
+        self.mod_param_dlg_list["UNIO96"] = self.dlg_unioxx
+
         self.init_glade_elements(self.channel_params)
 
         self.sensor = None
@@ -171,7 +196,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
             elif lbl.get_name() == "io_pgThreshold":
                self.pgThreshold = p
                self.lblThresholds = lbl
-
+    
     def build_cdiagram_list(self):
         lstore = gtk.ListStore(gobject.TYPE_STRING)
         lstore.clear()
@@ -205,7 +230,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         
         while node != None:
             info = self.get_card_info(node)
-            iter2 = self.model.append(iter, [node.prop("name"),info,node,"card",node.prop("card"),0])
+            iter2 = self.model.append(iter, [node.prop("name").upper(),info,node,"card",node.prop("card"),0])
             self.build_channels_list(node,self.model,iter2)
             node = self.conf.xml.nextNode(node)
 
@@ -317,19 +342,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
                      self.on_edit_channel(iter)
 
         return False
-
-    def on_dlg_card_btnCancel_clicked(self, button):
-       self.dlg_card.response(gtk.RESPONSE_CANCEL)
-
-    def on_dlg_card_btnOK_clicked(self,button):
-       self.dlg_card.response(gtk.RESPONSE_OK)
-
-    def on_io_btnCancel_clicked(self, button):
-       self.dlg_param.response(gtk.RESPONSE_CANCEL)
-
-    def on_io_btnOK_clicked(self,button):
-       self.dlg_param.response(gtk.RESPONSE_OK)
-
+ 
     def on_io_btn_aID_clicked(self,button):
         self.conf.s_dlg().set_selected_name(self.thr_lbl_aID.get_text())
         s = self.conf.s_dlg().run(self)
@@ -439,7 +452,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         while True:
             res = self.dlg_card.run()
             self.dlg_card.hide()
-            if res != gtk.RESPONSE_OK:  
+            if res != dlg_RESPONSE_OK:  
                 return
             # check card number
             cnum = self.card_num.get_value_as_int()
@@ -464,7 +477,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
                continue
 
             break                
-
+        
         cname = self.cb_cardlist.get_active_text()
         if cname == "":
            print "WARNING: add empty card name.. "
@@ -480,7 +493,15 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
                return
  
         n = cnode.newChild(None,"item",None)
+        
         self.save2xml_elements_value(self.card_params,n)
+        # т.к. название и параметры модуля определяются по xmlname
+        # то приходится сперва "обновить" значения в xmlname
+        # потом "определить" параметры модуля, а потом
+        # второй раз сохранить, с уже обновленнёми параметрами модуля
+        self.set_module_params(n)
+        self.save2xml_elements_value(self.card_params,n)
+
         self.conf.mark_changes()
         
         it = self.model.append(node_iter, [n.prop("name"),self.get_card_info(n),n,"card",n.prop("card"),0])
@@ -555,9 +576,45 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
 
     def on_io_cb_cardlist_changed(self,cb):
         self.card_param_set_sensitive()
+        (model, iter) = self.get_selection().get_selected()
+        if not iter: return
+        cnode = model.get_value(iter,2)
+        self.set_module_params(cnode)
+    
+    def on_io_params_btn_clicked(self,btn):
+        cname = self.cb_cardlist.get_active_text().upper()
+        if cname == None or cname == "":
+           return
 
+        if self.mod_param_dlg_list[cname] == None:
+           print "******** dlg for %s not found.." % cname
+        else:
+           dlg = self.mod_param_dlg_list[cname]
+           dlg.cardname = cname
+           res = dlg.run()
+           dlg.hide()
+    
+    def on_io_aixx5a_btnOK_clicked(self, btn):
+        cname = self.dlg_aixx5a.cardname
+        p = ""
+        if cname == "AIC120" or cname == "AIC121":
+           p="0"
+        elif cname == "AIC123XX" or cname == "AI16-5A-3":
+           p="1"
+        else:
+           p="0"
+        
+        avr = self.dlg_aixx5a_average_cb.get_active_text()
+        if avr == None or avr == "None":
+           p +=",1"
+        else:
+           p += "," + avr
+           
+        self.mod_params.set_text(p)
+        
+        
     def card_param_set_sensitive(self):
-        cname = self.cb_cardlist.get_active_text()
+        cname = self.cb_cardlist.get_active_text().upper()
         if cname == "UNIO96":
             self.subdev1.set_sensitive(True)
             self.subdev2.set_sensitive(True)
@@ -579,7 +636,19 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
             self.subdev2.set_sensitive(False)
             self.subdev3.set_sensitive(False)
             self.subdev4.set_sensitive(False)
-    
+        
+        if cname == "AI16-5A-3" or cname == "AIC123XX" or cname == "AIC120" or cname == "AIC121":
+           self.mod_params_btn.set_sensitive(True)
+        elif cname == "UNIO48" or cname == "UNIO96":
+           self.mod_params_btn.set_sensitive(True)
+        else:
+           self.mod_params_btn.set_sensitive(False)
+        
+    def set_module_params(self,cardnode):
+        p = self.ioconf.get_module_params_for_card(cardnode)
+        self.mod_name.set_text(p[0])
+        self.mod_params.set_text(p[1])
+ 
     def on_edit_card_activate(self,menuitem):
         (model, iter) = self.get_selection().get_selected()
         if not iter: return
@@ -587,15 +656,17 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         cnode = model.get_value(iter,2)
         self.init_elements_value(self.card_params,cnode)
         self.card_param_set_sensitive()
+        self.set_module_params(cnode)
         # при редактировании отключаем выбор, т.к.
         # сменить тип карты можно только удалив старую
         # (со всеми привязками и т.п)
         self.cb_cardlist.set_sensitive(False)
+        
         while True:
             res = self.dlg_card.run()
             self.dlg_card.hide()
             self.cb_cardlist.set_sensitive(True)
-            if res != gtk.RESPONSE_OK:
+            if res != dlg_RESPONSE_OK:
                 return
             
             # check card number
@@ -627,6 +698,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         info  = 'card=' + str(cnode.prop("card"))
         info  = info + ' BA=' + str(cnode.prop("baddr"))
         model.set_value(iter,1,info)
+        self.set_module_params(cnode)
         self.conf.mark_changes()
 
     def on_edit_channel(self,iter):
@@ -656,7 +728,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         while True:
             res = self.dlg_param.run()
             self.dlg_param.hide()
-            if res != gtk.RESPONSE_OK:
+            if res != dlg_RESPONSE_OK:
                 return
             
             if self.sensor == None: # "очищаем старую привязку"
@@ -776,12 +848,24 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         
         (model, iter) = self.get_selection().get_selected()
         if not iter: return
-
-        xmlnode = model.get_value(iter,2)
-        cardnode = self.conf.xml.findNode(xmlnode,"iocards")[0].children.next
-        if cardnode == None:
+        
+        t = model.get_value(iter,3)
+        node_iter = None
+        if t == "card":
+            node_iter = model.iter_parent(iter)
+        elif t == "node":
+            node_iter = iter
+        else:
+            print "*** FAILED ELEMENT TYPE " + t
+            return
+        
+        xmlnode = model.get_value(node_iter,2)
+        
+        cardnode = self.conf.xml.findNode(xmlnode,"iocards")[0]
+        if cardnode == None or cardnode.children.next == None:
             print "<iocards> not found for node='%s'" % xmlnode.prop("name")
             return
+        cardnode = cardnode.children.next
 
         dlg = gtk.FileChooserDialog(_("File save"),action=gtk.FILE_CHOOSER_ACTION_SAVE,
                                   buttons=(gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL,gtk.STOCK_SAVE,gtk.RESPONSE_OK))

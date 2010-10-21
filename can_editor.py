@@ -5,6 +5,7 @@ import gobject
 import UniXML
 import configure
 import base_editor
+from global_conf import *
 
 class CANEditor(base_editor.BaseEditor, gtk.TreeView):
 
@@ -104,7 +105,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
                     self.add_node(cannode,node,n[1])
                     return False
          
-         iter = self.model.append(None,[name,self.conf.get_str_val(cannode.prop("comment")),None,"net",None])
+         iter = self.model.append(None,[name,get_str_val(cannode.prop("comment")),None,"net",None])
          self.netlist.append([name,iter,cannode.prop("comment")])
          self.add_node(cannode,node,iter)
          return True
@@ -306,7 +307,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
         
         s = self.conf.s_dlg().run(self)
         if s != None:
-            lbl.set_text(self.conf.get_str_val(s.prop("name")))
+            lbl.set_text(get_str_val(s.prop("name")))
         else:
             lbl.set_text("")
         self.conf.mark_changes()            

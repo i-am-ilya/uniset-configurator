@@ -3,6 +3,7 @@ from gettext import gettext as _
 import gtk
 import gobject
 import UniXML
+from global_conf import *
 
 class XListDialog():
 
@@ -65,16 +66,11 @@ class XListDialog():
         self.model.append([_("None"),"","",None])
         node = self.xml.findNode(self.xml.getDoc(),section)[0].children.next 
         while node != None:
-            self.model.append([self.get_str_val(node.prop("id")), \
-                 self.get_str_val(node.prop("name")), \
-                 self.get_str_val(node.prop("textname")),node])
+            self.model.append([get_str_val(node.prop("id")), \
+                 get_str_val(node.prop("name")), \
+                 get_str_val(node.prop("textname")),node])
             node = self.xml.nextNode(node)
 
-    def get_str_val(self,str_val):
-        if str_val == None: 
-            return ""
-        return str_val    
-    
     def sfunc(self,model, column, key, iter):
 
         if model.get_value(iter,0).find(key) != -1:
