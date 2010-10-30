@@ -26,6 +26,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         
         self.ioconf = io_conf.IOConfig(conf.xml,conf.datdir)
         
+        # подключение к редактору узлов (для отслеживания изменений в списке узлов)
         n_editor = conf.n_editor()
         if n_editor != None:
             n_editor.connect("change-node",self.nodeslist_change)
@@ -614,7 +615,10 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         
         
     def card_param_set_sensitive(self):
-        cname = self.cb_cardlist.get_active_text().upper()
+        cname = self.cb_cardlist.get_active_text()
+        if cname != None:
+            cname = cname.upper()
+         
         if cname == "UNIO96":
             self.subdev1.set_sensitive(True)
             self.subdev2.set_sensitive(True)

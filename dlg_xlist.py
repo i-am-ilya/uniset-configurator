@@ -123,12 +123,14 @@ class XListDialog():
             it = self.model.iter_next(it)
     
     def set_selected_name(self, sel):
+        if sel=="" or sel==None:
+           return
         ts = self.tv.get_selection()
         ts.unselect_all()
         it = self.model.get_iter_first()
         while it is not None:
             if self.model.get_value(it, 1) == sel:
-                ts.select_iter( self.fmodel.convert_child_iter_to_iter(it))
+                ts.select_iter(self.fmodel.convert_child_iter_to_iter(it))
                 self.tv.scroll_to_cell( self.model.get_path(it) )
                 return
             it = self.model.iter_next(it)
