@@ -18,6 +18,7 @@ import io_editor
 import can_editor
 import nodes_editor
 import uniset_editor
+import lcaps_editor
 
 
 
@@ -123,7 +124,7 @@ def add_module( face, lbl, mainbook, glade ):
 
 mainbook = glade.get_widget("mainbook")
 # -------------------
-"""" 
+"""
  Создавать обязательно перед всеми
  т.к. многие модули могут "хотеть" подключится
  к сигналам
@@ -144,6 +145,9 @@ add_module(can_mtree,"CAN",mainbook,glade)
 uniset_w = uniset_editor.UniSetEditor(conf)
 add_module(uniset_w,"UniSet",mainbook,glade)
 
+# LCAPS editor
+lcaps_mtree = lcaps_editor.LCAPSEditor(conf)
+add_module(lcaps_mtree,"LCAPS",mainbook,glade)
 
 # ---------------
 mainbook.show()
