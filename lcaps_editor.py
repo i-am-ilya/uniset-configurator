@@ -7,6 +7,25 @@ import configure
 import base_editor
 from global_conf import *
 
+# 1. Name/Lamp Num 
+# 2. Sensor name
+# 3. FlashLamp type 
+# 4. Horn yes/no 
+# 5. element type [Lcaps|Item] 
+# 6. xmlnode | 7. sensor_xmlnode | 8. lamp_xmlnode
+# field id
+class fid():
+   name = 0
+   sensor = 1
+   flamp = 2
+   nohorn = 3
+   noconfirm = 4
+   etype = 5
+   xmlnode = 6
+   s_xmlnode = 7
+   l_xmlnode = 8
+   maxnum = 9
+
 '''
 Задачи: настройщик для алгоритма управления свето-звуковой сигнализацией на колонках
 '''
@@ -20,7 +39,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         conf.glade.signal_autoconnect(self)
         self.model = None
         self.modelfilter = None
-        #  Name | Sensor name | Lamp name | FlashLamp name | Horn yes/no | element type [Lcaps|Item] | xmlnode | sensor_xmlnode | lamp_xmlnode | horn_xmlnode 
+  
         self.model = gtk.TreeStore(gobject.TYPE_STRING,\
                                     gobject.TYPE_STRING, \
                                     gobject.TYPE_STRING, \
@@ -29,11 +48,10 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
                                     gobject.TYPE_STRING, \
                                     object,\
                                     object,\
-                                    object,\
                                     object)
         
         self.modelfilter = self.model.filter_new()
-
+        
 #       self.modelfilter.set_visible_column(1)
 
         # create treeview
@@ -41,25 +59,18 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         self.set_rules_hint(True)
         self.connect("button-press-event", self.on_button_press_event)
         
-        
-        
         renderer = gtk.CellRendererText()
-        column = gtk.TreeViewColumn(_("Lighting column"), renderer, text=0)
+        column = gtk.TreeViewColumn(_("Колонка"), renderer, text=fid.name)
         column.set_clickable(False)
         self.append_column(column)
 
         renderer = gtk.CellRendererText()
-        column = gtk.TreeViewColumn(_("Lamp"), renderer,text=1)
+        column = gtk.TreeViewColumn(_("Датчик"), renderer,text=fid.sensor)
         column.set_clickable(False)
         self.append_column(column)
         
         renderer = gtk.CellRendererText()
-        column = gtk.TreeViewColumn(_("Sensor"), renderer,text=2)
-        column.set_clickable(False)
-        self.append_column(column)
-        
-        renderer = gtk.CellRendererText()
-        column = gtk.TreeViewColumn(_("Light"), renderer,text=3)
+        column = gtk.TreeViewColumn(_("Маячок"), renderer,text=fid.flamp)
         column.set_clickable(False)
         self.append_column(column)
         
@@ -68,22 +79,32 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
 #        r1.set_property('activatable', True)
 #        self.r1.connect( 'toggled', self.col1_toggled_cb, model )
 #        column = gtk.TreeViewColumn(_("Horn"), r1,text=4)
-        column = gtk.TreeViewColumn(_("Horn"), renderer,text=4)        
+        column = gtk.TreeViewColumn(_("Без звука"), renderer,text=fid.nohorn)
+        column.set_clickable(False)
+        self.append_column(column)
+        column = gtk.TreeViewColumn(_("Без квитирования"), renderer,text=fid.noconfirm)
         column.set_clickable(False)
         self.append_column(column)
                 
         self.lcnew_params=[ \
             ["dlg_lcnew","lcaps_dlg_lcnew",None,True], \
             ["lcaps_popup","lcaps_popup",None,True], \
-            ["item_popup","lcaps_item_popup",None,True] \
+            ["item_popup","lcaps_item_popup",None,True], \
+            ["dlg_lc_name","lcaps_dlg_name",None,True], \
+            ["dlg_horn","lcaps_dlg_horn",None,True], \
+            ["dlg_hornreset","lcaps_dlg_hornreset",None,True], \
+            ["dlg_confirm","lcaps_dlg_confirm",None,True], \
+            ["dlg_lc_count","lcaps_dlg_lc_count",None,True], \
+            ["dlg_heartbeat","lcaps_dlg_heartbeat",None,True] \
         ]
+                
         self.init_glade_elements(self.lcnew_params)        
         self.item_params=[ \
             ["dlg_lcaps","lcaps_dlg",None,True], \
             ["dlg_lcaps_title","lcaps_dlg_title",None,True], \
             ["item_sensor","lcaps_dlg_sensor","name",False], \
             ["item_lamp","lcaps_dlg_lamp","lamp",False], \
-            ["item_horn","lcaps_dlg_horn","horn",False], \
+            ["item_horn","lcaps_dlg_cb_horn","horn",False], \
             ["item_noconfirm","lcaps_dlg_noconfirm","noconfirm",False], \
             ["item_delay","lcaps_dlg_delay","delay",False], \
             ["item_comment","lcaps_dlg_comment","comment",False] \
@@ -95,66 +116,91 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
            print "(LCAPSEditor): not found <sensors> section"
            raise Exception()
         self.s_node = self.s_node.children
-
-        self.build_lcaps_list()
+        
+        self.lc_list = dict()
+        self.load_lcaps_list()
+        self.build_lcaps_tree()
         self.show_all()
     
-    def build_lcaps_list(self):
-        setnode = self.conf.xml.findNode(self.conf.xml.getDoc(),"settings")[0]
-        if setnode == None:
+    def load_lcaps_list(self):
+        self.setnode = self.conf.xml.findNode(self.conf.xml.getDoc(),"settings")[0]
+        if self.setnode == None:
             print "(LCAPSEditor::build_lcaps_list): <settings> not found?!..."
             return
         
-        node = self.conf.xml.firstNode(setnode.children)
+        node = self.conf.xml.firstNode(self.setnode.children)
         while node != None:
             if node.name.upper() == "LCAPS":
                lname = get_str_val(node.prop("name"))
                print "find LCAPS: " + lname
-#  Name | Lamp name | Sensor | FlashLamp name | Horn yes/no | element type [Lcaps|Item] | xmlnode | sensor_xmlnode | lamp_xmlnode | horn_xmlnode 
-               horn_name = get_str_val(node.prop("horn"))
-               horn_node = None
-               if horn_name != "":
-                  horn_node = self.find_sensor(horn_name)
 
-               iter1 = self.model.append(None,[lname,"","","","","L",node,None,None,horn_node])
-               self.build_orange_list(iter1,node)
-               self.build_red_list(iter1,node)
-               self.build_green_list(iter1,node)
+               item_list = self.load_item_list(node,"orange") + \
+                                self.load_item_list(node,"red") + \
+                                self.load_item_list(node,"green")
                
-            node = self.conf.xml.nextNode(node)    
-    
-    def build_orange_list(self, lc_iter, xmlnode):
-        o_node = self.conf.xml.findNode(xmlnode,"orange")[0]
-        if o_node == None:
-           return
-        node = self.conf.xml.firstNode(o_node.children)
-        while node != None:
-            plist = self.read_item_param(lc_iter,node,o_node)
-            it = self.model.append(lc_iter,plist)
+               item_list.sort()
+               
+               lc_params = dict()
+               lc_params['name'] = lname
+               lc_params['xmlnode'] = node
+               lc_params['list'] = item_list
+               lc_params['horn'] = self.init_sensor(node,"horn")
+               lc_params['confirm'] = self.init_sensor(node,"confirm")
+               lc_params['heartbeat_id'] = self.init_sensor(node,"heartbeat_id")
+               
+               self.lc_list[lname] = lc_params
+            
             node = self.conf.xml.nextNode(node)
     
-    def build_green_list(self, lc_iter, xmlnode):
-        pass
-    
-    def build_red_list(self, lc_iter, xmlnode):
-        pass
-    
-    def read_item_param(self, i_iter, xmlnode,parent_xmlnode):
-        nohorn = 0
-        if get_int_val(xmlnode.prop("nohorn")) > 0:
-           nohorn = 1
+    def init_sensor(self,xmlnode,prop):
+        name = get_str_val(xmlnode.prop(prop))
+        node = None
+        if name != "":
+           return self.find_sensor(name)
         
-        return [ "", \
-              get_str_val(xmlnode.prop("lamp")), \
-              get_str_val(xmlnode.prop("name")), \
-              get_str_val(parent_xmlnode.prop("name")), \
-              nohorn, \
-              "I", \
-              xmlnode, \
-              self.find_sensor(get_str_val(xmlnode.prop("name"))), \
-              self.find_sensor(get_str_val(xmlnode.prop("lamp"))), \
-              None \
-        ]
+    def load_item_list(self, xmlnode,l_name):
+        o_node = self.conf.xml.findNode(xmlnode,l_name)[0]
+        if o_node == None:
+           return []
+        ret = []
+        node = self.conf.xml.firstNode(o_node.children)
+        while node != None:
+            plist = self.read_item_param(node,l_name)
+            ret.append(plist)
+            node = self.conf.xml.nextNode(node)
+        
+        return ret
+    
+    def read_item_param(self,xmlnode,l_name):
+        p=[]
+        for i in range(0,fid.maxnum):
+            p.append(None)
+        
+        p[fid.name] = get_str_val(xmlnode.prop("num"))
+        p[fid.flamp] = self.get_light_name(l_name)
+        p[fid.nohorn] = get_int_val(xmlnode.prop("nohorn"))
+        p[fid.noconfirm] = get_int_val(xmlnode.prop("noconfirm"))
+        p[fid.etype] = "I"
+        p[fid.xmlnode] = xmlnode
+        p[fid.s_xmlnode] = self.find_sensor(get_str_val(xmlnode.prop("name")))
+        p[fid.l_xmlnode] = self.find_sensor(get_str_val(xmlnode.prop("lamp")))
+        
+        if p[fid.s_xmlnode] != None:
+           s_node = p[fid.s_xmlnode]
+           p[fid.sensor] = str("(%s)%s" % (s_node.prop("id"),s_node.prop("textname")))
+        else:
+           p[fid.sensor] = get_str_val(xmlnode.prop("name"))
+
+        return p
+     
+    def get_light_name(self, name):
+        if name.lower()=="orange":
+           return "Оранжевый"
+        if name.lower()=="red":
+           return "Красный"
+        if name.lower()=="green":
+           return "Зелёный"
+        return ""
     
     def find_sensor(self, name):
         node = self.s_node
@@ -164,20 +210,43 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
             node = self.conf.xml.nextNode(node)           
         return None
     
-    def find_sensor_by_id(self, sid):
-        node = self.s_node
+    def find_object(self, name):
+        node = self.conf.find_o_node()
         while node != None:
-            if get_int_val(node.prop("id")) == sid:
+            if get_str_val(node.prop("name")) == name:
                return node
-            node = self.conf.xml.nextNode(node)
-        return None
+            node = self.conf.xml.nextNode(node)    
+        return None    
+    
+    def build_lcaps_tree(self):
+        
+        for key, lc in self.lc_list.items():
+            it1 = self.model.append(None,self.build_lc_param(lc))
+            for i in lc['list']:
+                it2 = self.model.append(it1,i)
+    
+    def build_lc_param(self,lc):
+        p=[]
+        for i in range(0,fid.maxnum):
+            p.append(None)
+        
+        p[fid.name] = lc['name']
+        p[fid.sensor] = ""
+        p[fid.flamp] = ""
+        p[fid.nohorn] = ""
+        p[fid.noconfirm] = ""
+        p[fid.etype] = "L"
+        p[fid.xmlnode] = lc['xmlnode']
+        p[fid.s_xmlnode] = None
+        p[fid.l_xmlnode] = None
+        return p
     
     def on_button_press_event(self, object, event):
         (model, iter) = self.get_selection().get_selected()
 
         if event.button == 3:                                                                                                                                                       
             if not iter: return False
-            t = model.get_value(iter,5)
+            t = model.get_value(iter,fid.etype)
             if t == "L":
                 self.lcaps_popup.popup(None, None, None, event.button, event.time)                                                                                                       
                 return False                                                                                                                                                         
@@ -189,7 +258,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
             if not iter:                                                                                                                                                                
                return False
-            t = model.get_value(iter,5)
+            t = model.get_value(iter,fid.etype)
             if t == "L": 
                self.on_edit_lcaps(iter)
             elif t == "I":
@@ -208,7 +277,96 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         print "***** item remove***"
     
     def on_lcaps_add(self,menuitem):
-        self.on_edit_lcaps(None)
+        while True:
+           res = self.dlg_lcnew.run()
+           self.dlg_lcnew.hide()
+           if res != dlg_RESPONSE_OK:
+               return
+           
+           if self.dlg_lc_name.get_text() == "":
+              dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,"Не задано имя")
+              res = dlg.run()
+              dlg.hide()
+              continue
+           
+           if self.dlg_horn.get_text() == "":
+              dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,"Не задано имя датчика 'horn'")
+              res = dlg.run()
+              dlg.hide()
+              continue
+           
+           if self.dlg_hornreset.get_text() == "":
+              dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,"Не задано имя датчика 'hornreset'")
+              res = dlg.run()
+              dlg.hide()
+              continue
+           
+           if self.dlg_confirm.get_text() == "":
+              dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,"Не задано имя датчика 'confirm'")
+              res = dlg.run()
+              dlg.hide()
+              continue           
+#           if self.dlg_heartbeat_name.get_text() == "":
+#              dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,"Не задано имя датчика 'heartbeat'")
+#              res = dlg.run()
+#              dlg.hide()
+#              continue
+           
+           print "*********** LC CREATE OK"
+           # проверяем корректность
+           break
+
+        lc_name = self.dlg_lc_name.get_text()
+        lc_id_node = self.find_object(lc_name)
+        if lc_id_node == None:
+           lc_id_node = self.conf.create_new_object(lc_name)
+        
+        horn_node = self.check_and_create_sensor(self.dlg_horn.get_text())
+        hb_node = self.check_and_create_sensor(self.dlg_heartbeat.get_text())
+        hr_node = self.check_and_create_sensor(self.dlg_hornreset.get_text())
+        c_node = self.check_and_create_sensor(self.dlg_confirm.get_text())
+        
+        # создаём три псевдо-горна (для орнажевого, красного и зелёного)
+        self.check_and_create_sensors(lc_name,"Horn",3)
+        # создаём лампочки (по количеству на колонке)
+        self.check_and_create_sensors(lc_name,"Lamp",self.dlg_lc_count.get_value_as_int())
+        
+        # создаём очередной настроечный узел в <setting>
+        lc_node = self.setnode.newChild(None,"LCAPS",None)
+        lc_node.setProp("name",lc_name)
+        lc_node.setProp("heartbeat_max","10")
+        lc_node.setProp("heartbeat",self.dlg_heartbeat.get_text())
+        lc_node.setProp("horn",self.dlg_horn.get_text())
+        lc_node.setProp("hornreset",self.dlg_hornreset.get_text())
+        lc_node.setProp("confirm",self.dlg_confirm.get_text())
+        
+        lc_params = dict()
+        lc_params['name'] = lc_name
+        lc_params['xmlnode'] = lc_node
+        lc_params['list'] = []
+        lc_params['horn'] = self.dlg_horn.get_text()
+        lc_params['hornreset'] = self.dlg_hornreset.get_text()
+        lc_params['confirm'] = self.dlg_confirm.get_text()
+        lc_params['heartbeat_id'] = self.dlg_heartbeat_name.get_text()
+               
+        self.lc_list[lc_name] = lc_params
+    
+    def check_and_create_sensor(self,name):
+        node = self.find_sensor(name)
+        if node == None:
+           node = self.conf.create_new_sensor(name)
+        return node        
+        
+    def check_and_create_sensors(self,lc_name,postfix,num):
+        l_list=[]
+        for i in range(1,num+1):
+            l_list.append(str("%s_%s%d_C")%(lc_name,postfix,i))
+        
+        for i in l_list:
+            node = self.find_sensor(i)
+            if node == None:
+               print "(CREATE NEW SENSOR): " + i
+               node = self.conf.create_new_sensor(i)
     
     def on_lcaps_edit(self,menuitem):
         (model, iter) = self.get_selection().get_selected()
@@ -236,7 +394,32 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
     
     def on_lcaps_dlg_id_sel_clicked(self, button):
         print "***** id select clicked***"
+        o = self.conf.o_dlg().run(self)
+        if o != None:
+           self.lcaps_dlg_lc_name.set_text(o.prop("name"))
     
     def on_lcaps_dlg_btn_heartbeat_clicked(self, button):
         print "***** heartbeat clicked**"
-        
+        s = self.conf.s_dlg().run(self)
+        if s != None:
+           self.dlg_heartbeat.set_text(s.prop("name"))
+    
+    def on_lcaps_dlg_btn_horn_clicked(self, button):
+        print "***** horn clicked**"
+        s = self.conf.s_dlg().run(self)
+        if s != None:
+           self.dlg_horn.set_text(s.prop("name"))
+    
+    def on_lcaps_dlg_btn_hornreset_clicked(self, button):
+        print "***** hornreset clicked**"
+        s = self.conf.s_dlg().run(self)
+        if s != None:
+           self.dlg_hornreset.set_text(s.prop("name"))
+    
+    def on_lcaps_dlg_btn_confirm_clicked(self, button):
+        print "***** confirm clicked**"
+        s = self.conf.s_dlg().run(self)
+        if s != None:
+           self.dlg_confirm.set_text(s.prop("name"))
+      
+     

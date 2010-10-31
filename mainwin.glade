@@ -3719,6 +3719,9 @@ TBI16_8</property>
   </widget>
   <widget class="GtkDialog" id="lcaps_dlg">
     <property name="border_width">5</property>
+    <property name="modal">True</property>
+    <property name="window_position">center</property>
+    <property name="icon_name">applications-engineering</property>
     <property name="type_hint">normal</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox9">
@@ -3883,7 +3886,7 @@ Green</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkCheckButton" id="lcaps_dlg_horn">
+              <widget class="GtkCheckButton" id="lcaps_dlg_cb_horn">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
@@ -4037,6 +4040,10 @@ Green</property>
   </widget>
   <widget class="GtkDialog" id="lcaps_dlg_lcnew">
     <property name="border_width">5</property>
+    <property name="title" translatable="yes">&#x41A;&#x43E;&#x43D;&#x444;&#x438;&#x433;&#x443;&#x440;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x435; &#x43D;&#x43E;&#x432;&#x43E;&#x439; &#x43A;&#x43E;&#x43B;&#x43E;&#x43D;&#x43A;&#x438;</property>
+    <property name="modal">True</property>
+    <property name="window_position">center</property>
+    <property name="icon_name">document-new</property>
     <property name="type_hint">normal</property>
     <child internal-child="vbox">
       <widget class="GtkVBox" id="dialog-vbox10">
@@ -4079,7 +4086,7 @@ Green</property>
         <child>
           <widget class="GtkTable" id="table10">
             <property name="visible">True</property>
-            <property name="n_rows">3</property>
+            <property name="n_rows">6</property>
             <property name="n_columns">2</property>
             <child>
               <widget class="GtkLabel" id="label74">
@@ -4095,6 +4102,7 @@ Green</property>
             </child>
             <child>
               <widget class="GtkLabel" id="label75">
+                <property name="visible">True</property>
                 <property name="xalign">1</property>
                 <property name="label" translatable="yes">&#x41A;&#x43E;&#x43B;&#x438;&#x447;&#x435;&#x441;&#x442;&#x432;&#x43E; &#x43B;&#x430;&#x43C;&#x43F;&#x43E;&#x447;&#x435;&#x43A;:</property>
                 <property name="justify">right</property>
@@ -4110,7 +4118,7 @@ Green</property>
               <widget class="GtkLabel" id="label76">
                 <property name="visible">True</property>
                 <property name="xalign">1</property>
-                <property name="label" translatable="yes">heartbeat-&#x434;&#x430;&#x442;&#x447;&#x438;&#x43A;:</property>
+                <property name="label" translatable="yes">horn:</property>
                 <property name="justify">right</property>
               </widget>
               <packing>
@@ -4121,86 +4129,30 @@ Green</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkTable" id="table11">
-                <property name="visible">True</property>
-                <property name="n_rows">2</property>
-                <property name="n_columns">2</property>
-                <child>
-                  <widget class="GtkButton" id="lcaps_dlg_id_create">
-                    <property name="label" translatable="yes">&#x421;&#x43E;&#x437;&#x434;&#x430;&#x442;&#x44C; &#x43D;&#x43E;&#x432;&#x43E;&#x435;</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="use_action_appearance">False</property>
-                    <signal name="clicked" handler="on_lcaps_dlg_id_create_clicked"/>
-                  </widget>
-                </child>
-                <child>
-                  <widget class="GtkButton" id="lcaps_dlg_id_sel">
-                    <property name="label" translatable="yes">&#x412;&#x44B;&#x431;&#x440;&#x430;&#x442;&#x44C;..</property>
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="use_action_appearance">False</property>
-                    <signal name="clicked" handler="on_lcaps_dlg_id_sel_clicked"/>
-                  </widget>
-                  <packing>
-                    <property name="top_attach">1</property>
-                    <property name="bottom_attach">2</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkEntry" id="lcaps_dlg_name">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="invisible_char">&#x25CF;</property>
-                  </widget>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkLabel" id="lcaps_dlg_sel_name">
-                    <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                  </widget>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="right_attach">2</property>
-                    <property name="top_attach">1</property>
-                    <property name="bottom_attach">2</property>
-                  </packing>
-                </child>
-              </widget>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-              </packing>
-            </child>
-            <child>
               <widget class="GtkHBox" id="hbox16">
                 <property name="visible">True</property>
                 <child>
-                  <widget class="GtkButton" id="lcaps_dlg_btn_heartbeat">
-                    <property name="label" translatable="yes">&#x412;&#x44B;&#x431;&#x440;&#x430;&#x442;&#x44C;..</property>
+                  <widget class="GtkEntry" id="lcaps_dlg_horn">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="use_action_appearance">False</property>
-                    <signal name="clicked" handler="on_lcaps_dlg_btn_heartbeat_clicked"/>
+                    <property name="invisible_char">&#x25CF;</property>
+                    <property name="invisible_char_set">True</property>
                   </widget>
                   <packing>
-                    <property name="expand">False</property>
                     <property name="position">0</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkLabel" id="lcaps_dlg_sel_name1">
+                  <widget class="GtkButton" id="lcaps_dlg_btn_horn">
+                    <property name="label" translatable="yes">...</property>
                     <property name="visible">True</property>
-                    <property name="xalign">0</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
+                    <signal name="clicked" handler="on_lcaps_dlg_btn_horn_clicked"/>
                   </widget>
                   <packing>
+                    <property name="expand">False</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
@@ -4214,14 +4166,222 @@ Green</property>
             </child>
             <child>
               <widget class="GtkSpinButton" id="lcaps_dlg_lc_count">
+                <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="invisible_char">&#x25CF;</property>
+                <property name="adjustment">1 1 10000 1 100 100</property>
+                <property name="numeric">True</property>
               </widget>
               <packing>
                 <property name="left_attach">1</property>
                 <property name="right_attach">2</property>
                 <property name="top_attach">1</property>
                 <property name="bottom_attach">2</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkLabel" id="label80">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="label" translatable="yes">hornreset:</property>
+                <property name="justify">right</property>
+              </widget>
+              <packing>
+                <property name="top_attach">3</property>
+                <property name="bottom_attach">4</property>
+                <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
+                <property name="y_options">GTK_EXPAND | GTK_SHRINK</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkHBox" id="hbox17">
+                <property name="visible">True</property>
+                <child>
+                  <widget class="GtkEntry" id="lcaps_dlg_hornreset">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="invisible_char">&#x25CF;</property>
+                    <property name="invisible_char_set">True</property>
+                  </widget>
+                  <packing>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkButton" id="lcaps_dlg_btn_hornreset">
+                    <property name="label" translatable="yes">...</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
+                    <signal name="clicked" handler="on_lcaps_dlg_btn_hornreset_clicked"/>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">3</property>
+                <property name="bottom_attach">4</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkVBox" id="vbox11">
+                <property name="visible">True</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <widget class="GtkLabel" id="label81">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">&#x432;&#x44B;&#x431;&#x440;&#x430;&#x442;&#x44C; &#x438;&#x43B;&#x438; &#x432;&#x43F;&#x438;&#x441;&#x430;&#x442;&#x44C; &#x438;&#x43C;&#x44F;</property>
+                    <property name="justify">center</property>
+                  </widget>
+                  <packing>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkHBox" id="hbox18">
+                    <property name="visible">True</property>
+                    <child>
+                      <widget class="GtkEntry" id="lcaps_dlg_name">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="invisible_char">&#x25CF;</property>
+                        <property name="invisible_char_set">True</property>
+                      </widget>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkButton" id="lcaps_dlg_id_sel">
+                        <property name="label" translatable="yes">...</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="use_action_appearance">False</property>
+                        <signal name="clicked" handler="on_lcaps_dlg_id_sel_clicked"/>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkLabel" id="label82">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="label" translatable="yes">confirm:</property>
+                <property name="justify">right</property>
+              </widget>
+              <packing>
+                <property name="top_attach">4</property>
+                <property name="bottom_attach">5</property>
+                <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
+                <property name="y_options">GTK_EXPAND | GTK_SHRINK</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkHBox" id="hbox19">
+                <property name="visible">True</property>
+                <child>
+                  <widget class="GtkEntry" id="lcaps_dlg_confirm">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="invisible_char">&#x25CF;</property>
+                    <property name="invisible_char_set">True</property>
+                  </widget>
+                  <packing>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkButton" id="lcaps_dlg_btn_confirm">
+                    <property name="label" translatable="yes">...</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
+                    <signal name="clicked" handler="on_lcaps_dlg_btn_confirm_clicked"/>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">4</property>
+                <property name="bottom_attach">5</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkLabel" id="label83">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="label" translatable="yes">heartbeat:</property>
+                <property name="justify">right</property>
+              </widget>
+              <packing>
+                <property name="top_attach">5</property>
+                <property name="bottom_attach">6</property>
+                <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
+                <property name="y_options">GTK_EXPAND | GTK_SHRINK</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkHBox" id="hbox20">
+                <property name="visible">True</property>
+                <child>
+                  <widget class="GtkEntry" id="lcaps_dlg_heartbeat">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="invisible_char">&#x25CF;</property>
+                    <property name="invisible_char_set">True</property>
+                    <signal name="activate" handler="on_lcaps_dlg_heartbeat_activate"/>
+                  </widget>
+                  <packing>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkButton" id="lcaps_dlg_btn_heartbeat">
+                    <property name="label" translatable="yes">...</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="use_action_appearance">False</property>
+                    <signal name="clicked" handler="on_lcaps_dlg_btn_heartbeat_clicked"/>
+                  </widget>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="top_attach">5</property>
+                <property name="bottom_attach">6</property>
               </packing>
             </child>
           </widget>
