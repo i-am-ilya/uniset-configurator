@@ -10,9 +10,11 @@ from global_conf import *
 # 1. Name/Lamp Num 
 # 2. Sensor name
 # 3. FlashLamp type 
-# 4. Horn yes/no 
-# 5. element type [Lcaps|Item] 
-# 6. xmlnode | 7. sensor_xmlnode | 8. lamp_xmlnode
+# 4. NoHorn
+# 5. NoConfirm
+# 6. Delay 
+# 7. element type [Lcaps|Item] 
+# 8. xmlnode | 9. sensor_xmlnode | 10. lamp_xmlnode
 # field id
 class fid():
    name = 0
@@ -20,11 +22,12 @@ class fid():
    flamp = 2
    nohorn = 3
    noconfirm = 4
-   etype = 5
-   xmlnode = 6
-   s_xmlnode = 7
-   l_xmlnode = 8
-   maxnum = 9
+   delay = 5
+   etype = 6
+   xmlnode = 7
+   s_xmlnode = 8
+   l_xmlnode = 9
+   maxnum = 10
 
 '''
 Задачи: настройщик для алгоритма управления свето-звуковой сигнализацией на колонках
@@ -41,6 +44,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         self.modelfilter = None
   
         self.model = gtk.TreeStore(gobject.TYPE_STRING,\
+                                    gobject.TYPE_STRING, \
                                     gobject.TYPE_STRING, \
                                     gobject.TYPE_STRING, \
                                     gobject.TYPE_STRING, \
@@ -145,12 +149,41 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
                lc_params['xmlnode'] = node
                lc_params['list'] = item_list
                lc_params['horn'] = self.init_sensor(node,"horn")
+               lc_params['hornreset'] = self.init_sensor(node,"hornreset")
                lc_params['confirm'] = self.init_sensor(node,"confirm")
                lc_params['heartbeat_id'] = self.init_sensor(node,"heartbeat_id")
+               lc_params['heartbeat_max'] = self.init_sensor(node,"heartbeat_max")
+               lc_params['orange'] = self.conf.xml.findNode(node,"orange")[0]
+               lc_params['green'] = self.conf.xml.findNode(node,"green")[0]
+               lc_params['red'] = self.conf.xml.findNode(node,"red")[0]
                
                self.lc_list[lname] = lc_params
             
             node = self.conf.xml.nextNode(node)
+    
+    def save_lclist_2xml(self):
+        
+        for key, lc in self.lc_list.items():
+            lc_node = lc['xmlnode']
+            
+            lc_node.setProp("confirm",self.name_if_exist(lc['confirm']))
+            lc_node.setProp("horn",self.name_if_exist(lc['horn']))
+            lc_node.setProp("hornreset",self.name_if_exist(lc['hornreset']))
+            lc_node.setProp("heartbeat_id",self.name_if_exist(lc['heartbeat_id']))
+            lc_node.setProp("heartbeat_max",lc['heartbeat_max'])
+            for i in lc['list']:
+                i_node = i[fid.xmlnode]
+                i_node.setProp("num",i[fid.name])
+                i_node.setProp("name",i[fid.sensor])
+                i_node.setProp("lamp",self.get_lamp_name(key,i[fid.name]))
+                i_node.setProp("nohorn",str(i[fid.nohorn]))
+                i_node.setProp("noconfirm",str(i[fid.noconfirm]))
+                i_node.setProp("delay",str(i[fid.delay]))
+    
+    def name_if_exist(self,node):
+        if node == None:
+           return ""
+        return node.prop("name")
     
     def init_sensor(self,xmlnode,prop):
         name = get_str_val(xmlnode.prop(prop))
@@ -180,6 +213,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         p[fid.flamp] = self.get_light_name(l_name)
         p[fid.nohorn] = get_int_val(xmlnode.prop("nohorn"))
         p[fid.noconfirm] = get_int_val(xmlnode.prop("noconfirm"))
+        p[fid.delay] = get_int_val(xmlnode.prop("delay"))
         p[fid.etype] = "I"
         p[fid.xmlnode] = xmlnode
         p[fid.s_xmlnode] = self.find_sensor(get_str_val(xmlnode.prop("name")))
@@ -202,6 +236,12 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
            return "Зелёный"
         return ""
     
+    def get_lamp_name(self,lc_name,num):
+        return "%s_Lamp%d_C"%(lc_name,int(num))
+    
+    def get_horn_name(self,lc_name,num):
+        return "%s_Horn%d_C"%(lc_name,int(num))
+    
     def find_sensor(self, name):
         node = self.s_node
         while node != None:
@@ -219,7 +259,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         return None    
     
     def build_lcaps_tree(self):
-        
+        #self.lc_list.sort()
         for key, lc in self.lc_list.items():
             it1 = self.model.append(None,self.build_lc_param(lc))
             for i in lc['list']:
@@ -235,6 +275,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         p[fid.flamp] = ""
         p[fid.nohorn] = ""
         p[fid.noconfirm] = ""
+        p[fid.delay] = ""
         p[fid.etype] = "L"
         p[fid.xmlnode] = lc['xmlnode']
         p[fid.s_xmlnode] = None
@@ -306,14 +347,20 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
               res = dlg.run()
               dlg.hide()
               continue           
+
 #           if self.dlg_heartbeat_name.get_text() == "":
 #              dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,"Не задано имя датчика 'heartbeat'")
 #              res = dlg.run()
 #              dlg.hide()
 #              continue
-           
-           print "*********** LC CREATE OK"
-           # проверяем корректность
+           if self.dlg_lc_count.get_value_as_int() <=1:
+              msg = _("Одна лампочка ?! Уверены")
+              dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,msg)
+              res = dlg.run()
+              dlg.hide()
+              if res != gtk.RESPONSE_YES:
+                 continue
+
            break
 
         lc_name = self.dlg_lc_name.get_text()
@@ -333,6 +380,10 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         
         # создаём очередной настроечный узел в <setting>
         lc_node = self.setnode.newChild(None,"LCAPS",None)
+        o_node = lc_node.newChild(None,"orange",None)
+        r_node = lc_node.newChild(None,"red",None)
+        g_node = lc_node.newChild(None,"green",None)
+        
         lc_node.setProp("name",lc_name)
         lc_node.setProp("heartbeat_max","10")
         lc_node.setProp("heartbeat",self.dlg_heartbeat.get_text())
@@ -344,12 +395,21 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         lc_params['name'] = lc_name
         lc_params['xmlnode'] = lc_node
         lc_params['list'] = []
-        lc_params['horn'] = self.dlg_horn.get_text()
-        lc_params['hornreset'] = self.dlg_hornreset.get_text()
-        lc_params['confirm'] = self.dlg_confirm.get_text()
-        lc_params['heartbeat_id'] = self.dlg_heartbeat_name.get_text()
+        lc_params['horn'] = horn_node
+        lc_params['hornreset'] = hr_node
+        lc_params['confirm'] = c_node
+        lc_params['heartbeat_id'] = hb_node
+        lc_params['heartbeat_max'] = "10"
+        lc_params['orange'] = o_node
+        lc_params['red'] = r_node
+        lc_params['green'] = g_node
                
         self.lc_list[lc_name] = lc_params
+        self.save_lclist_2xml()
+        
+        self.model.clear()
+        self.build_lcaps_tree()
+        self.conf.mark_changes()
     
     def check_and_create_sensor(self,name):
         node = self.find_sensor(name)

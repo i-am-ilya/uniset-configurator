@@ -121,7 +121,6 @@ def add_module( face, lbl, mainbook, glade ):
     l.show()
     mainbook.append_page(scwin,l)
 
-
 mainbook = glade.get_widget("mainbook")
 # -------------------
 """
