@@ -91,16 +91,6 @@
 						(защита от ложного срабатывания)
 		remote_reset - флаг, означающий, что выходная лампочка будет гаситься в случае удалённого квитирования
 	-->
-		<LCAPS name="LC1" confirm="" heartbeat_id="" heartbeat_max="" horn="" hornreset="">
-		  <orange>
-			 <item num="2" comment="Пожар в МО" delay="0" lamp="LC1_VDG_FireInMO_C" name="16_04_S" noconfirm="0"/>
-			 <item num="1" comment="Пожар в МО" delay="0" lamp="LC1_VDG_FireInMO_C" name="16_05_S" nohorn="1"/>
-		  </orange>
-		  <red>
-		  </red>
-		  <green>
-		  </green>
-		</LCAPS>
 		<!-- ============= Световая колонка в помещении ВДГ (платформа) ============== -->
 		<!-- Сигналы с красным маячком -->
 		<LC1_VDG_RED confirm="TSCPU_Confirm_S" flamp="LC1_VDG_RedFlash1_C" heartbeat_id="_31_XX_AS" heartbeat_max="10" horn1="LC1_VDG_Horn1_C" hornreset="TSCPU_HornReset_S" name="LC1_VDG_RED">
@@ -129,7 +119,7 @@
 		<LC1_VDG_GREEN flamp="LC1_VDG_GreenFlash1_C" heartbeat_id="_31_xx_AS" heartbeat_max="10" hornreset="TSCPU_HornReset_S" name="LC1_VDG_GREEN"/>
 		<!-- объединение по логике "или" всех <item> на out.
 		    Необходимо в тех случаях когда на ОДИН 'out воздействует больше чем один (НЕСКОЛЬКО) процесс управления ('item')..
-		-->  
+		-->
 		<LC1_VDG_CommonHorn iotype="DO" name="LC1_VDG_CommonHorn" out="LC1_VDG_Horn_C">
 			<item name="LC1_VDG_Horn1_C"/>
 			<item name="LC1_VDG_Horn2_C"/>
@@ -152,8 +142,6 @@
 		<LC1_VDG_APSLamp iotype="AO" name="LC1_VDG_APSLamp" out="LC1_VDG_APS_C" out2="LC2_VDG_APS_C">
 			<item name="APS_VDG_Lamp_C"/>
 		</LC1_VDG_APSLamp>
-		
-
 		<!-- управление сигналом на запуск системы СКДМП (в помещенииях ВДГ, ГДГ и ГЭД)
 		      Специально сделано отдельными группами, чтобы можно было настроить,
 		      срабатывание по отдельным сигналам.
@@ -163,13 +151,10 @@
 		-->
 		<MO_DeadMan name="MO_VDG_DeadMan" out="MO_GDG_DeadMan_Run_C">
 			<item name="APS_FS"/>
-		</MO_DeadMan>		
+		</MO_DeadMan>
 		<MKO_DeadMan name="MO_GDG_DeadMan" out="MO_GDG_DeadMan_Run_C">
 			<item name="APS_FS"/>
 		</MKO_DeadMan>
-		
-		
-		
 		<TS_SELCO confirm="TS_SELCO_Confirm_S" heartbeat_max="10" name="TS_SELCO">
 			<item comm="TS system failed" delay="0" lamp="TS_SELCO_Lamp1_C" lamptype="AO" name="aps_100_S"/>
 			<item comm="MO water" delay="0" lamp="TS_SELCO_Lamp2_C" lamptype="AO" name="14_05_S"/>
@@ -544,6 +529,35 @@
 		</MTR>
 		<GUI SaveDir="/tmp">
 		</GUI>
+		<LCAPS lamps="10" name="LC2">
+			<orange confirm="TSPUS_Confirm_S" flamp="LC2_FlashORANGE_C" heartbeat_max="10" horn1="LC2_CommHorn1_C" hornreset="TSCPU_HornReset_S" name="LC2_ORANGE"/>
+			<orange_comflash iotype="DO" name="LC2_ORANGE_CommFlash" out="LC2_FlashORANGE_C">
+				<item name="LC2_FlashORANGE1_C"/>
+				<item name="LC2_FlashORANGE2_C"/>
+				<item name="LC2_FlashORANGE3_C"/>
+			</orange_comflash>
+			<red confirm="TSPUS_Confirm_S" flamp="LC2_FlashRED_C" heartbeat_max="10" horn1="LC2_CommHorn2_C" hornreset="TSCPU_HornReset_S" name="LC2_RED"/>
+			<red_comflash iotype="DO" name="LC2_RED_CommFlash" out="LC2_FlashRED_C">
+				<item name="LC2_FlashRED1_C"/>
+				<item name="LC2_FlashRED2_C"/>
+				<item name="LC2_FlashRED3_C"/>
+			</red_comflash>
+			<green confirm="TSPUS_Confirm_S" flamp="LC2_FlashGREEN_C" heartbeat_max="10" horn1="LC2_CommHorn3_C" hornreset="TSCPU_HornReset_S" name="LC2_GREEN"/>
+			<green_comflash iotype="DO" name="LC2_GREEN_CommFlash" out="LC2_FlashGREEN_C">
+				<item name="LC2_FlashGREEN1_C"/>
+				<item name="LC2_FlashGREEN2_C"/>
+				<item name="LC2_FlashGREEN3_C"/>
+			</green_comflash>
+			<silent confirm="TSPUS_Confirm_S" flamp="LC2_FlashSILENT_C" heartbeat_max="10" hornreset="TSCPU_HornReset_S" name="LC2_SILENT"/>
+			<comhorn iotype="DO" name="LC2_CommHorn" out="LC2_VDG_Horn_C">
+				<item name="LC2_CommHorn1_C"/>
+				<item name="LC2_CommHorn2_C"/>
+				<item name="LC2_CommHorn3_C"/>
+				<item name="LC2_CommHorn4_C"/>
+				<item name="LC2_CommHorn5_C"/>
+				<item name="LC2_CommHorn6_C"/>
+			</comhorn>
+		</LCAPS>
 	</settings>
 	<ObjectsMap idfromfile="1" no_dep="0">
 		<!--
@@ -3125,6 +3139,36 @@
 			<!-- Псевдодатчик состояния флэш-карты !-->
 			<item id="888000" iotype="AI" name="flash_state" textname="Состояние флэш-карты"/>
 			<item id="888001" iotype="DI" name="pulsar" textname="xxpulsar"/>
+			<item id="10" iotype="AI"/>
+			<item id="11" name="LC2_Lamp1_C"/>
+			<item id="12" name="LC2_Lamp2_C"/>
+			<item id="14" name="LC2_Lamp3_C"/>
+			<item id="15" name="LC2_Lamp4_C"/>
+			<item id="16" name="LC2_Lamp5_C"/>
+			<item id="17" name="LC2_Lamp6_C"/>
+			<item id="18" name="LC2_Lamp7_C"/>
+			<item id="20" name="LC2_Lamp8_C"/>
+			<item id="21" name="LC2_Lamp9_C"/>
+			<item id="22" name="LC2_Lamp10_C"/>
+			<item id="31" iotype="DO" name="LC2_CommHorn1_C" textname="LC2_CommHorn1_C"/>
+			<item id="32" iotype="DO" name="LC2_FlashORANGE_C" textname="LC2_FlashORANGE_C"/>
+			<item id="34" iotype="DO" name="LC2_FlashORANGE1_C" textname="LC2_FlashORANGE1_C"/>
+			<item id="38" iotype="DO" name="LC2_FlashORANGE2_C" textname="LC2_FlashORANGE2_C"/>
+			<item id="39" iotype="DO" name="LC2_FlashORANGE3_C" textname="LC2_FlashORANGE3_C"/>
+			<item id="42" iotype="DO" name="LC2_CommHorn2_C" textname="LC2_CommHorn2_C"/>
+			<item id="43" iotype="DO" name="LC2_FlashRED_C" textname="LC2_FlashRED_C"/>
+			<item id="59" iotype="DO" name="LC2_FlashRED1_C" textname="LC2_FlashRED1_C"/>
+			<item id="85" iotype="DO" name="LC2_FlashRED2_C" textname="LC2_FlashRED2_C"/>
+			<item id="114" iotype="DO" name="LC2_FlashRED3_C" textname="LC2_FlashRED3_C"/>
+			<item id="116" iotype="DO" name="LC2_CommHorn3_C" textname="LC2_CommHorn3_C"/>
+			<item id="117" iotype="DO" name="LC2_FlashGREEN_C" textname="LC2_FlashGREEN_C"/>
+			<item id="119" iotype="DO" name="LC2_FlashGREEN1_C" textname="LC2_FlashGREEN1_C"/>
+			<item id="122" iotype="DO" name="LC2_FlashGREEN2_C" textname="LC2_FlashGREEN2_C"/>
+			<item id="170" iotype="DO" name="LC2_FlashGREEN3_C" textname="LC2_FlashGREEN3_C"/>
+			<item id="172" iotype="DO" name="LC2_CommHorn4_C" textname="LC2_CommHorn4_C"/>
+			<item id="173" iotype="DO" name="LC2_FlashSILENT_C" textname="LC2_FlashSILENT_C"/>
+			<item id="175" iotype="DO" name="LC2_CommHorn5_C" textname="LC2_CommHorn5_C"/>
+			<item id="176" iotype="DO" name="LC2_CommHorn6_C" textname="LC2_CommHorn6_C"/>
 		</sensors>
 		<thresholds name="thresholds">
 			<sensor iotype="AI" name="DG1_P_AS" ses="1">
@@ -3286,6 +3330,15 @@
 			<item evnt_ts2="1" id="21744" name="MKO_DeadMan"/>
 			<item evnt_ts1="1" id="21745" name="MO_DeadMan"/>
 			<item id="21800" name="Tester"/>
+			<item id="2" name="LC2"/>
+			<item id="23" name="LC2_ORANGE"/>
+			<item id="33" name="LC2_ORANGE_CommFlash"/>
+			<item id="41" name="LC2_RED"/>
+			<item id="44" name="LC2_RED_CommFlash"/>
+			<item id="115" name="LC2_GREEN"/>
+			<item id="118" name="LC2_GREEN_CommFlash"/>
+			<item id="171" name="LC2_SILENT"/>
+			<item id="174" name="LC2_CommHorn"/>
 		</objects>
 	</ObjectsMap>
 	<messages idfromfile="1" name="messages">

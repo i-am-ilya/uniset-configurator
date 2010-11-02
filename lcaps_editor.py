@@ -170,6 +170,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
                lc_params['name'] = lname
                lc_params['xmlnode'] = node
                lc_params['list'] = item_list
+               lc_params['numlamps'] = get_int_val(node.prop("lamps"))
                
                for sec in self.flamp_sections:
                    fparams = self.flamp_params[sec]
@@ -325,15 +326,18 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         (model, iter) = self.get_selection().get_selected()
 
         if event.button == 3:                                                                                                                                                       
-            if not iter: return False
+            if not iter: 
+               self.lcaps_popup.popup(None, None, None, event.button, event.time)
+               return False
+            
             t = model.get_value(iter,fid.etype)
             if t == "L":
-                self.lcaps_popup.popup(None, None, None, event.button, event.time)                                                                                                       
+                self.lcaps_popup.popup(None, None, None, event.button, event.time)
                 return False                                                                                                                                                         
             if t == "I":
-                self.item_popup.popup(None, None, None, event.button, event.time)                                                                                                       
+                self.item_popup.popup(None, None, None, event.button, event.time)
                 return False
-
+            
         
         if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
             if not iter:                                                                                                                                                                
@@ -455,6 +459,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         # создаём очередной настроечный узел в <setting>
         lc_node = self.setnode.newChild(None,"LCAPS",None)
         lc_node.setProp("name",lc_name)
+        lc_node.setProp("lamps",str(self.dlg_lc_count.get_value_as_int()))
         
         lc_params = dict()
         lc_params['name'] = lc_name
@@ -475,6 +480,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
             
             fparams = self.flamp_params[sec]
             fnode = self.create_xmlnode_if_not_exist(sec,lc_node)
+            fnode.setProp("name",fname)
             fparams["node"] = fnode
             fparams["name"] = fname
             

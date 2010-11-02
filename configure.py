@@ -25,21 +25,27 @@ class Conf:
 #        self.id_dict = self.load_id_dict()
 #        self.name_dict = self.load_name_dict()
    
-    def load_id_dict(self):
-        lst = self.build_id_dict("nodes")
-        lst.update(self.build_id_dict("sensors"))
-        lst.update(self.build_id_dict("objects"))
-        lst.update(self.build_id_dict("controllers"))
-        lst.update(self.build_id_dict("services"))
-        return lst
+    def load_dicts(self):
+        self.id_dict = dict()
+        self.name_dict = dict()
+        
+        self.build_id_dict("nodes")
+        self.build_id_dict("sensors")
+        self.build_id_dict("objects")
+        self.build_id_dict("controllers")
+        self.build_id_dict("services")
     
-    def load_name_dict(self):
-        lst = self.build_name_dict("nodes")
-        lst.update(self.build_name_dict("sensors"))
-        lst.update(self.build_name_dict("objects"))
-        lst.update(self.build_name_dict("controllers"))
-        lst.update(self.build_name_dict("services"))
-        return lst
+    def build_id_dict(self, secname):
+        node = self.find_section(secname)
+        while node != None:
+           i_id = get_int_val(node.prop("id"))
+           if i_id > 0 :
+              self.id_dict[i_id] = node
+           i_nm = get_str_val(node.prop("name"))
+           if i_nm != "":
+              self.name_dict[i_nm] = node
+           
+           node = self.xml.nextNode(node)
     
     def s_dlg(self):
         if self.dlg_cur != "s":
@@ -108,28 +114,6 @@ class Conf:
         
         return node.children
     
-    def build_id_dict(self, secname):
-        lst = dict()
-        node = self.find_section(secname)
-        while node != None:
-           i_id = get_int_val(node.prop("id"))
-           if i_id > 0 :
-              lst[i_id] = node
-           node = self.xml.nextNode(node)
-        
-        return lst
-    
-    def build_name_dict(self, secname):
-        lst = dict()
-        node = self.find_section(secname)
-        while node != None:
-           n = get_str_val(node.prop("name"))
-           if n != "":
-              lst[n] = node
-           node = self.xml.nextNode(node)
-        
-        return lst    
-    
     def find_first_unused_id(self):
         return self.find_first_unused_id_in_dict(self.id_dict)
     
@@ -139,7 +123,8 @@ class Conf:
            return 1
 
         id_list = id_dict.keys()
-
+        id_list.sort()
+        
         prev = 1
         # т.к. список отсортирован по возрастанию
         # то можно сразу проверить первый элемент
@@ -148,9 +133,9 @@ class Conf:
         
         prev = id_list[0]
         for i in id_list:
-            if i[0] - prev >1:
+            if i - prev > 1:
                break
-            prev = i[0]
+            prev = i
         
         return prev+1
     
@@ -160,8 +145,8 @@ class Conf:
         n = s_node.newChild(None,"item",None)
         n.setProp("name",sname)
         n.setProp("id",str(i))
-        self.id_dict.append([i,n])
-        self.id_dict.sort()
+        self.id_dict[i] = n
+        self.name_dict[sname] = n
         return n
     
     def create_new_object(self,oname):
@@ -170,8 +155,8 @@ class Conf:
         n = o_node.newChild(None,"item",None)
         n.setProp("name",oname)
         n.setProp("id",str(i))
-        self.id_dict.append([i,n])
-        self.id_dict.sort()
+        self.id_dict[i] = n
+        self.name_dict[oname] = n
         return n
     
     def find_sensor(self, name):
