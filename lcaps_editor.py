@@ -107,7 +107,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
             ["dlg_lcaps","lcaps_dlg",None,True], \
             ["dlg_lcaps_title","lcaps_dlg_title",None,True], \
             ["item_sensor","lcaps_dlg_sensor","name",False], \
-            ["item_lamp","lcaps_dlg_lamp","lamp",False], \
+            ["item_ltype","lcaps_dlg_light","lamp",False], \
             ["item_horn","lcaps_dlg_cb_horn","horn",False], \
             ["item_noconfirm","lcaps_dlg_noconfirm","noconfirm",False], \
             ["item_delay","lcaps_dlg_delay","delay",False], \
@@ -120,6 +120,29 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
            print "(LCAPSEditor): not found <sensors> section"
            raise Exception()
         self.s_node = self.s_node.children
+        
+        self.flamp_sections = ["orange","red","green","silent"]
+        self.nohorn_sections = ["silent"]
+        self.nocomm_sections = ["silent"]
+        
+        self.flamp_params = dict()
+        for sec in self.flamp_sections:
+            p = dict()
+            p["comm_name"] = str(sec+'_comflash')
+            p["comm_node"] = None
+            p["comm_idname"] = str(sec.upper()+'_CommFlash')
+            p["comm_xmlproplist"] = ["name","out","iotype"]
+            p["comm_xmlprop"] = None
+            p["xmlproplist"] = ["name","horn1","hornreset","confirm","heartbeat_id","heartbeat_max"]
+            p["xmlprop"] = None
+            self.flamp_params[sec] = p
+        
+        self.comhorn = dict()
+        self.comhorn["comm_name"] = "comhorn"
+        self.comhorn["comm_node"] = None
+        self.comhorn["comm_idname"] = '_CommHorn'
+        self.comhorn["xmlproplist"] = ["name","out","iotype"]
+        self.comhorn["xmlprop"] = None
         
         self.lc_list = dict()
         self.load_lcaps_list()
@@ -141,55 +164,80 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
                item_list = self.load_item_list(node,"orange") + \
                                 self.load_item_list(node,"red") + \
                                 self.load_item_list(node,"green")
-               
                item_list.sort()
                
                lc_params = dict()
                lc_params['name'] = lname
                lc_params['xmlnode'] = node
                lc_params['list'] = item_list
-               lc_params['horn'] = self.init_sensor(node,"horn")
-               lc_params['hornreset'] = self.init_sensor(node,"hornreset")
-               lc_params['confirm'] = self.init_sensor(node,"confirm")
-               lc_params['heartbeat_id'] = self.init_sensor(node,"heartbeat_id")
-               lc_params['heartbeat_max'] = self.init_sensor(node,"heartbeat_max")
-               lc_params['orange'] = self.conf.xml.findNode(node,"orange")[0]
-               lc_params['green'] = self.conf.xml.findNode(node,"green")[0]
-               lc_params['red'] = self.conf.xml.findNode(node,"red")[0]
                
+               for sec in self.flamp_sections:
+                   fparams = self.flamp_params[sec]
+                   fnode = self.create_xmlnode_if_not_exist(sec,node)
+                   fparams["node"] = fnode
+                   fparams["xmlprop"] = self.read_xml_param(fnode,fparams["xmlproplist"])
+                   
+                   cnode = self.create_xmlnode_if_not_exist(fparams["comm_name"],node)
+                   fparams["comm_node"] = cnode
+                   fparams["comm_xmlprop"] = self.read_xml_param(cnode,fparams["comm_xmlproplist"])
+                   lc_params[sec] = fparams
+               
+               hparams = self.comhorn
+               hparams["node"] = self.create_xmlnode_if_not_exist("comhorn",node)
+               hparams["xmlprop"] = self.read_xml_param( hparams["node"],self.comhorn["xmlproplist"] )
+               lc_params["comhorn"] = hparams
+
                self.lc_list[lname] = lc_params
             
             node = self.conf.xml.nextNode(node)
     
     def save_lclist_2xml(self):
         
-        for key, lc in self.lc_list.items():
+        for lc_name, lc in self.lc_list.items():
             lc_node = lc['xmlnode']
             
-            lc_node.setProp("confirm",self.name_if_exist(lc['confirm']))
-            lc_node.setProp("horn",self.name_if_exist(lc['horn']))
-            lc_node.setProp("hornreset",self.name_if_exist(lc['hornreset']))
-            lc_node.setProp("heartbeat_id",self.name_if_exist(lc['heartbeat_id']))
-            lc_node.setProp("heartbeat_max",lc['heartbeat_max'])
+            for sec in self.flamp_sections:
+#                for k, v in lc[sec].items():
+#                    print "********* v(%s)[%s]): %s"%(sec,k,str(v))
+                self.set_xml_properties(lc[sec]["node"],lc[sec]["xmlprop"])
+                if lc["comhorn"]["node"] != None:
+                   self.set_xml_properties(lc[sec]["comm_node"],lc[sec]["comm_xmlprop"])
+            
+            if lc["comhorn"]["node"] != None:
+               self.set_xml_properties(lc["comhorn"]["node"],lc["comhorn"]["xmlprop"])
+            
             for i in lc['list']:
                 i_node = i[fid.xmlnode]
                 i_node.setProp("num",i[fid.name])
                 i_node.setProp("name",i[fid.sensor])
-                i_node.setProp("lamp",self.get_lamp_name(key,i[fid.name]))
+                i_node.setProp("lamp",self.get_lamp_name(lc_name,i[fid.name]))
                 i_node.setProp("nohorn",str(i[fid.nohorn]))
                 i_node.setProp("noconfirm",str(i[fid.noconfirm]))
                 i_node.setProp("delay",str(i[fid.delay]))
-    
+
+    def set_xml_properties(self,node, proplist):
+        if node == None or proplist == None:
+           return
+        
+        for key, val in proplist.items():
+            node.setProp(key,val)
+
     def name_if_exist(self,node):
         if node == None:
            return ""
         return node.prop("name")
     
+    def create_xmlnode_if_not_exist(self,name,parent):
+        node = self.conf.xml.findNode(parent,name)[0]
+        if node == None:
+           node = parent.newChild(None,name,None)
+        return node
+    
     def init_sensor(self,xmlnode,prop):
         name = get_str_val(xmlnode.prop(prop))
         node = None
         if name != "":
-           return self.find_sensor(name)
+           return self.conf.find_sensor(name)
         
     def load_item_list(self, xmlnode,l_name):
         o_node = self.conf.xml.findNode(xmlnode,l_name)[0]
@@ -216,8 +264,8 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         p[fid.delay] = get_int_val(xmlnode.prop("delay"))
         p[fid.etype] = "I"
         p[fid.xmlnode] = xmlnode
-        p[fid.s_xmlnode] = self.find_sensor(get_str_val(xmlnode.prop("name")))
-        p[fid.l_xmlnode] = self.find_sensor(get_str_val(xmlnode.prop("lamp")))
+        p[fid.s_xmlnode] = self.conf.find_sensor(get_str_val(xmlnode.prop("name")))
+        p[fid.l_xmlnode] = self.conf.find_sensor(get_str_val(xmlnode.prop("lamp")))
         
         if p[fid.s_xmlnode] != None:
            s_node = p[fid.s_xmlnode]
@@ -226,6 +274,13 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
            p[fid.sensor] = get_str_val(xmlnode.prop("name"))
 
         return p
+    
+    def read_xml_param(self,xmlnode,proplist):
+        plist = dict()
+        for p in proplist:
+            plist[p] = xmlnode.prop(p)
+
+        return plist
      
     def get_light_name(self, name):
         if name.lower()=="orange":
@@ -241,22 +296,6 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
     
     def get_horn_name(self,lc_name,num):
         return "%s_Horn%d_C"%(lc_name,int(num))
-    
-    def find_sensor(self, name):
-        node = self.s_node
-        while node != None:
-            if get_str_val(node.prop("name")) == name:
-               return node
-            node = self.conf.xml.nextNode(node)           
-        return None
-    
-    def find_object(self, name):
-        node = self.conf.find_o_node()
-        while node != None:
-            if get_str_val(node.prop("name")) == name:
-               return node
-            node = self.conf.xml.nextNode(node)    
-        return None    
     
     def build_lcaps_tree(self):
         #self.lc_list.sort()
@@ -308,11 +347,50 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         return False
     
     def on_lcaps_item_add(self,menuitem):
-        self.on_edit_item(None)
+        (model, iter) = self.get_selection().get_selected()
+        if not iter:
+           return	  
+        
+        while True:
+           res = self.dlg_lcaps.run()
+           self.dlg_lcaps.hide()
+           if res != dlg_RESPONSE_OK:
+               return
+           
+           if self.item_sensor.get_text() == "":
+              dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,"Не задан датчик")
+              res = dlg.run()
+              dlg.hide()
+      
+           break
+        
+        t = mode.get_value(iter,fid.etype)
+        lc_iter = iter
+        if t == "I":
+           lc_iter = model.iter_parent(iter)
+        elif t == "L":
+           lc_iter = iter
+        else:
+           print "*** FAILED ELEMENT TYPE " + t
+           return
+        
+        lc_name = model.get_value(lc_iter,fid.name)
+        lc_params = self.lc_list[lc_name]
+        lc_node = lc_params['xmlnode']
+        
+        l_type = self.item_ltype.get_active_text()
+        l_node = None
+        if l_type == "Orange":
+           l_node = lc_params['orange']
+        elif l_type == "Red":
+           l_node = lc_params['red']
+        elif l_type == "Green":
+           l_node = lc_params['green']
+        
+        self.read_item_param(self,xmlnode,l_name)
     
     def on_lcaps_item_edit(self,menuitem):
-        (model, iter) = self.get_selection().get_selected()
-        self.on_edit_item(iter)
+        pass
     
     def on_lcaps_item_remove(self,menuitem):
         print "***** item remove***"
@@ -364,32 +442,19 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
            break
 
         lc_name = self.dlg_lc_name.get_text()
-        lc_id_node = self.find_object(lc_name)
-        if lc_id_node == None:
-           lc_id_node = self.conf.create_new_object(lc_name)
+        lc_id_node = self.conf.check_and_create_object(lc_name)
         
-        horn_node = self.check_and_create_sensor(self.dlg_horn.get_text())
-        hb_node = self.check_and_create_sensor(self.dlg_heartbeat.get_text())
-        hr_node = self.check_and_create_sensor(self.dlg_hornreset.get_text())
-        c_node = self.check_and_create_sensor(self.dlg_confirm.get_text())
+        horn_node = self.conf.check_and_create_sensor(self.dlg_horn.get_text(),"DO")
+        hb_node = self.conf.check_and_create_sensor(self.dlg_heartbeat.get_text(),"AI")
+        hr_node = self.conf.check_and_create_sensor(self.dlg_hornreset.get_text(),"DI")
+        c_node = self.conf.check_and_create_sensor(self.dlg_confirm.get_text(),"DI")
         
-        # создаём три псевдо-горна (для орнажевого, красного и зелёного)
-        self.check_and_create_sensors(lc_name,"Horn",3)
         # создаём лампочки (по количеству на колонке)
         self.check_and_create_sensors(lc_name,"Lamp",self.dlg_lc_count.get_value_as_int())
-        
+       
         # создаём очередной настроечный узел в <setting>
         lc_node = self.setnode.newChild(None,"LCAPS",None)
-        o_node = lc_node.newChild(None,"orange",None)
-        r_node = lc_node.newChild(None,"red",None)
-        g_node = lc_node.newChild(None,"green",None)
-        
         lc_node.setProp("name",lc_name)
-        lc_node.setProp("heartbeat_max","10")
-        lc_node.setProp("heartbeat",self.dlg_heartbeat.get_text())
-        lc_node.setProp("horn",self.dlg_horn.get_text())
-        lc_node.setProp("hornreset",self.dlg_hornreset.get_text())
-        lc_node.setProp("confirm",self.dlg_confirm.get_text())
         
         lc_params = dict()
         lc_params['name'] = lc_name
@@ -400,33 +465,108 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         lc_params['confirm'] = c_node
         lc_params['heartbeat_id'] = hb_node
         lc_params['heartbeat_max'] = "10"
-        lc_params['orange'] = o_node
-        lc_params['red'] = r_node
-        lc_params['green'] = g_node
-               
+        
+        h_postfix = self.comhorn["comm_idname"]
+        num = 1
+        for sec in self.flamp_sections:
+            
+            fname = lc_name+"_"+sec.upper()
+            self.conf.check_and_create_object(fname)
+            
+            fparams = self.flamp_params[sec]
+            fnode = self.create_xmlnode_if_not_exist(sec,lc_node)
+            fparams["node"] = fnode
+            fparams["name"] = fname
+            
+            h_name = str("%s%s%d_C"%(lc_name,h_postfix,num))
+            n_horn = self.conf.check_and_create_sensor(h_name,"DO")
+            
+            if sec not in self.nohorn_sections:
+               fnode.setProp("horn1",h_name)
+            
+            f_name = str("%s_Flash%s_C"%(lc_name,sec.upper()))
+            n_flash = self.conf.check_and_create_sensor(f_name,"DO")
+            fnode.setProp("flamp",f_name)
+            self.set_new_flamp_prop(fnode)
+            
+            fparams["xmlprop"] = self.read_xml_param(fnode,fparams["xmlproplist"])
+            
+            if sec not in self.nocomm_sections:
+               # comm flash section
+               fc_node = self.create_xmlnode_if_not_exist(fparams["comm_name"],lc_node)
+               fc_name = lc_name + "_" + fparams["comm_idname"] 
+               self.conf.check_and_create_object(fc_name)
+               fc_node.setProp("name",fc_name)
+               fc_node.setProp("out",f_name)
+               fc_node.setProp("iotype", n_flash.prop("iotype"))
+               for i in range(1,4):
+                   n = fc_node.newChild(None,"item",None)
+                   i_name = str("%s_Flash%s%d_C"%(lc_name,sec.upper(),i))
+                   n.setProp("name",i_name)
+                   self.conf.check_and_create_sensor(i_name,n_flash.prop("iotype"))
+               fparams["comm_node"] = fc_node
+               fparams["comm_xmlprop"] = self.read_xml_param(fc_node,fparams["comm_xmlproplist"])
+            else:
+               fparams["comm_node"] = None
+            
+            lc_params[sec] = fparams
+            num = num + 1
+        
+        # comm horn section
+        hparams = self.comhorn
+        hc_name = lc_name + hparams["comm_idname"] 
+        self.conf.check_and_create_object(hc_name)
+        hc_node = self.create_xmlnode_if_not_exist("comhorn",lc_node)
+        hc_node.setProp("name",hc_name)
+        hc_node.setProp("iotype",horn_node.prop("iotype"))
+        hc_node.setProp("out",horn_node.prop("name"))
+        hparams["node"] = hc_node
+        hparams["xmlprop"] = self.read_xml_param(hc_node,self.comhorn["xmlproplist"] )
+        h_num = len(self.flamp_sections) + 3
+        for i in range(1,h_num):
+            n = hc_node.newChild(None,"item",None)
+            i_name = str("%s%s%d_C"%(lc_name,h_postfix,i))
+            n.setProp("name",i_name)
+            self.conf.check_and_create_sensor(i_name,horn_node.prop("iotype"))
+        
+        lc_params["comhorn"] = hparams
+        
+#        print "****** %s: %s"%(lc_name,str(lc_params))
+        
         self.lc_list[lc_name] = lc_params
         self.save_lclist_2xml()
         
         self.model.clear()
         self.build_lcaps_tree()
         self.conf.mark_changes()
+        self.conf.update_list()
     
-    def check_and_create_sensor(self,name):
-        node = self.find_sensor(name)
-        if node == None:
-           node = self.conf.create_new_sensor(name)
-        return node        
-        
+    def set_new_flamp_prop(self, node):
+        node.setProp("heartbeat_max","10")
+        node.setProp("heartbeat",self.dlg_heartbeat.get_text())
+        node.setProp("hornreset",self.dlg_hornreset.get_text())
+        node.setProp("confirm",self.dlg_confirm.get_text())
+     
+     
     def check_and_create_sensors(self,lc_name,postfix,num):
         l_list=[]
         for i in range(1,num+1):
             l_list.append(str("%s_%s%d_C")%(lc_name,postfix,i))
         
         for i in l_list:
-            node = self.find_sensor(i)
+            node = self.conf.find_sensor(i)
             if node == None:
-               print "(CREATE NEW SENSOR): " + i
                node = self.conf.create_new_sensor(i)
+    
+    def check_and_create_objects(self,lc_name,postfix,num):
+        l_list=[]
+        for i in range(1,num+1):
+            l_list.append(str("%s_%s%d_C")%(lc_name,postfix,i))
+        
+        for i in l_list:
+            node = self.conf.find_object(i)
+            if node == None:
+               node = self.conf.create_new_object(i)
     
     def on_lcaps_edit(self,menuitem):
         (model, iter) = self.get_selection().get_selected()
@@ -444,42 +584,37 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         print "***** edit item: iter" + str(i_iter)
     
     def on_lcpas_dlg_btn_lamp_clicked(self, button):
-        print "***** btn_lamp_clicked***"
+        s = self.conf.s_dlg().run(self)
+        if s != None:
+           self.item_lamp.set_text(s.prop("name"))
     
     def on_lcpas_dlg_btn_sensor_clicked(self, button):
-        print "***** btn_sensor_clicked***"
-    
-    def on_lcaps_dlg_id_create_clicked(self, button):
-        print "***** id create_clicked***"
-    
+        s = self.conf.s_dlg().run(self)
+        if s != None:
+           self.item_sensor.set_text(s.prop("name"))
+     
     def on_lcaps_dlg_id_sel_clicked(self, button):
-        print "***** id select clicked***"
         o = self.conf.o_dlg().run(self)
         if o != None:
            self.lcaps_dlg_lc_name.set_text(o.prop("name"))
     
     def on_lcaps_dlg_btn_heartbeat_clicked(self, button):
-        print "***** heartbeat clicked**"
         s = self.conf.s_dlg().run(self)
         if s != None:
            self.dlg_heartbeat.set_text(s.prop("name"))
     
     def on_lcaps_dlg_btn_horn_clicked(self, button):
-        print "***** horn clicked**"
         s = self.conf.s_dlg().run(self)
         if s != None:
            self.dlg_horn.set_text(s.prop("name"))
     
     def on_lcaps_dlg_btn_hornreset_clicked(self, button):
-        print "***** hornreset clicked**"
         s = self.conf.s_dlg().run(self)
         if s != None:
            self.dlg_hornreset.set_text(s.prop("name"))
     
     def on_lcaps_dlg_btn_confirm_clicked(self, button):
-        print "***** confirm clicked**"
         s = self.conf.s_dlg().run(self)
         if s != None:
            self.dlg_confirm.set_text(s.prop("name"))
-      
      

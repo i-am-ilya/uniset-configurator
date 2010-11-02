@@ -21,15 +21,24 @@ class Conf:
         self.s_node = self.find_s_node()
         self.o_node = self.find_o_node()
         
-        self.id_list = self.load_id_list()
+        self.load_dicts()
+#        self.id_dict = self.load_id_dict()
+#        self.name_dict = self.load_name_dict()
    
-    def load_id_list(self):
-        lst = self.build_id_list("nodes")
-        lst = lst + self.build_id_list("sensors")
-        lst = lst + self.build_id_list("objects")
-        lst = lst + self.build_id_list("controllers")
-        lst = lst + self.build_id_list("services")
-        lst.sort()
+    def load_id_dict(self):
+        lst = self.build_id_dict("nodes")
+        lst.update(self.build_id_dict("sensors"))
+        lst.update(self.build_id_dict("objects"))
+        lst.update(self.build_id_dict("controllers"))
+        lst.update(self.build_id_dict("services"))
+        return lst
+    
+    def load_name_dict(self):
+        lst = self.build_name_dict("nodes")
+        lst.update(self.build_name_dict("sensors"))
+        lst.update(self.build_name_dict("objects"))
+        lst.update(self.build_name_dict("controllers"))
+        lst.update(self.build_name_dict("services"))
         return lst
     
     def s_dlg(self):
@@ -50,6 +59,10 @@ class Conf:
             self.dlg_cur = "o"
         return self.dlg_xlist    
     
+    def update_list(self,lname=""):
+#        if lname == "sensors" or lname == "nodes":
+        self.dlg_cur = ""
+        
     def n_editor(self):
         return self.nodes_editor
     
@@ -79,7 +92,7 @@ class Conf:
         self.changes = 0
         self.s_node = self.find_s_node()
         self.o_node = self.find_o_node()
-        self.id_list = self.load_id_list()
+        self.id_dict = self.load_id_dict()
         
     def find_s_node(self):
         return self.find_section("sensors")
@@ -95,29 +108,45 @@ class Conf:
         
         return node.children
     
-    def build_id_list(self, secname):
-        lst = []
+    def build_id_dict(self, secname):
+        lst = dict()
         node = self.find_section(secname)
         while node != None:
-           lst.append([get_int_val(node.prop("id")),node])
+           i_id = get_int_val(node.prop("id"))
+           if i_id > 0 :
+              lst[i_id] = node
            node = self.xml.nextNode(node)
         
         return lst
     
-    def find_first_unused_id(self):
-        return self.find_first_unused_id_in_list(self.id_list)
+    def build_name_dict(self, secname):
+        lst = dict()
+        node = self.find_section(secname)
+        while node != None:
+           n = get_str_val(node.prop("name"))
+           if n != "":
+              lst[n] = node
+           node = self.xml.nextNode(node)
+        
+        return lst    
     
-    def find_first_unused_id_in_list(self,id_list):
-        if len(id_list) <= 0:
+    def find_first_unused_id(self):
+        return self.find_first_unused_id_in_dict(self.id_dict)
+    
+    def find_first_unused_id_in_dict(self,id_dict):
+        
+        if len(id_dict) <= 0:
            return 1
+
+        id_list = id_dict.keys()
 
         prev = 1
         # т.к. список отсортирован по возрастанию
         # то можно сразу проверить первый элемент
-        if id_list[0][0] > prev:
+        if id_list[0] > prev:
            return prev
         
-        prev = id_list[0][0]
+        prev = id_list[0]
         for i in id_list:
             if i[0] - prev >1:
                break
@@ -131,8 +160,8 @@ class Conf:
         n = s_node.newChild(None,"item",None)
         n.setProp("name",sname)
         n.setProp("id",str(i))
-        self.id_list.append([i,n])
-        self.id_list.sort()
+        self.id_dict.append([i,n])
+        self.id_dict.sort()
         return n
     
     def create_new_object(self,oname):
@@ -141,6 +170,36 @@ class Conf:
         n = o_node.newChild(None,"item",None)
         n.setProp("name",oname)
         n.setProp("id",str(i))
-        self.id_list.append([i,n])
-        self.id_list.sort()
+        self.id_dict.append([i,n])
+        self.id_dict.sort()
         return n
+    
+    def find_sensor(self, name):
+        try:
+           return self.name_dict[name]
+        except KeyError,ValueError:
+           pass
+        
+        return None
+    
+    def find_object(self, name):
+        try:
+           return self.name_dict[name]
+        except KeyError,ValueError:
+           pass
+        
+        return None
+    
+    def check_and_create_object(self,name):
+        node = self.find_object(name)
+        if node == None:
+           node = self.create_new_object(name)
+        return node
+
+    def check_and_create_sensor(self,name,iotype):
+        node = self.find_sensor(name)
+        if node == None:
+           node = self.create_new_sensor(name)
+           node.setProp("iotype",iotype)
+           node.setProp("textname",name)
+        return node                
