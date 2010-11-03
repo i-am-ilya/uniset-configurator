@@ -96,6 +96,10 @@ class UniXML(str):
             return prop
         else:
             return ""
+    
+    def unlink(self,node):
+        if node != None:
+           node.unlinkNode()
 
     def save(self, filename=None, pretty_format=True):
         if filename == None:

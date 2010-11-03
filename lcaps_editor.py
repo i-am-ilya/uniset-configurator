@@ -85,10 +85,10 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
 #        r1.set_property('activatable', True)
 #        self.r1.connect( 'toggled', self.col1_toggled_cb, model )
 #        column = gtk.TreeViewColumn(_("Horn"), r1,text=4)
-        column = gtk.TreeViewColumn(_("Без звука"), renderer,text=fid.nohorn)
+        column = gtk.TreeViewColumn(_("Без\nзвука"), renderer,text=fid.nohorn)
         column.set_clickable(False)
         self.append_column(column)
-        column = gtk.TreeViewColumn(_("Без квитирования"), renderer,text=fid.noconfirm)
+        column = gtk.TreeViewColumn(_("Без\nквитирования"), renderer,text=fid.noconfirm)
         column.set_clickable(False)
         self.append_column(column)
         
@@ -110,8 +110,17 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
             ["dlg_lc_count","lcaps_dlg_lc_count","lamps",False], \
             ["dlg_heartbeat","lcaps_dlg_heartbeat","heartbeat",False] \
         ]
-                
-        self.init_glade_elements(self.lc_params)        
+        self.init_glade_elements(self.lc_params) 
+        
+        self.lc_rm_params=[\
+            ["dlg_rm","lcaps_dlg_remove",None,True], \
+            ["rm_id","lcaps_rm_id",None,True], \
+            ["rm_lamps","lcaps_rm_lamps",None,True], \
+            ["rm_helpers","lcaps_rm_helpsens",None,True], \
+            ["rm_title","lcaps_dlg_rm_title",None,True] \
+        ]                
+        self.init_glade_elements(self.lc_rm_params) 
+               
         self.item_params=[ \
             ["dlg_lcaps","lcaps_dlg",None,True], \
             ["dlg_lcaps_title","lcaps_dlg_title",None,True], \
@@ -590,7 +599,15 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
             if node == None:
                node = self.conf.create_new_sensor(i)
                node.setProp("iotype",iotype)
-    
+     
+    def remove_sensors(self,lc_name,postfix,num):
+        l_list=[]
+        for i in range(1,num+1):
+            l_list.append(str("%s_%s%d_C")%(lc_name,postfix,i))
+        
+        for i in l_list:
+            self.conf.remove_sensor(i)
+     
     def check_and_create_objects(self,lc_name,postfix,num):
         l_list=[]
         for i in range(1,num+1):
@@ -612,7 +629,59 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
        (model, iter) = self.get_selection().get_selected()
        if not iter:
           return
-    
+       
+       lc_node = model.get_value(iter,fid.xmlnode)
+       lc_name = model.get_value(iter,fid.name)
+
+       self.rm_id.set_active(True)
+       self.rm_lamps.set_active(True)
+       self.rm_helpers.set_active(True)
+       self.rm_title.set_text( str("Удаление '%s'\n/ %s /"%(lc_name,get_str_val(lc_node.prop("comment")))) )
+       res = self.dlg_rm.run()
+       self.dlg_rm.hide()
+       if res != dlg_RESPONSE_OK:
+            return False
+       
+       lc = self.lc_list[lc_name]
+#       print "*REMOVE: \n" + str(lc)
+       print "rm_id=%d rm_lamps=%d rm_helpers=%d"%(self.rm_id.get_active(),self.rm_lamps.get_active(),self.rm_helpers.get_active())
+       
+       if self.rm_id.get_active() == True:
+          self.conf.remove_object(lc_name)
+          self.conf.remove_object(lc["comhorn"]["node"].prop("name"))
+          for sec in self.flamp_sections:
+             fparams = self.flamp_params[sec]
+             fnode = fparams["node"]
+             self.conf.remove_object(fnode.prop("name"))
+             self.conf.remove_object(fparams["comm_node"].prop("name"))
+       
+       if self.rm_lamps.get_active() == True:
+          self.remove_sensors(lc_name,"Lamp", get_int_val(lc_node.prop("lamps")))
+       
+       h_postfix = self.comhorn["comm_idname"]
+       if self.rm_helpers.get_active() == True:
+          h_num = len(self.flamp_sections) + 3
+          for i in range(1,h_num):
+            i_name = str("%s%s%d_C"%(lc_name,h_postfix,i))
+            self.conf.remove_sensor(i_name)
+          
+          num = 1
+          for sec in self.flamp_sections:
+            h_name = str("%s%s%d_C"%(lc_name,h_postfix,num))
+            self.conf.remove_sensor(h_name)
+            f_name = str("%s_Flash%s_C"%(lc_name,sec.upper()))
+            self.conf.remove_sensor(f_name)
+            for i in range(1,4):
+                i_name = str("%s_Flash%s%d_C"%(lc_name,sec.upper(),i))
+                self.conf.remove_sensor(i_name)
+            num = num+1
+       
+       lc_node.unlinkNode()
+       self.lc_list.pop(lc_name)
+       self.model.remove(iter)
+       self.conf.update_list()
+       self.conf.mark_changes()
+
     def on_edit_item(self,iter):
         
         if not iter:

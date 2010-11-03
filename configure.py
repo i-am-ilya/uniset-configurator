@@ -187,4 +187,14 @@ class Conf:
            node = self.create_new_sensor(name)
            node.setProp("iotype",iotype)
            node.setProp("textname",name)
-        return node                
+        return node
+    
+    def remove_object(self,name):
+        node = self.find_object(name)
+        if node != None:
+           node.unlinkNode()
+    
+    def remove_sensor(self,name):
+        node = self.find_sensor(name)
+        if node != None:
+           node.unlinkNode()
