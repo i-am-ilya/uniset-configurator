@@ -38,13 +38,14 @@ class UniXML(str):
     def getFileName(self):
         return self.fname
 
-    def findNode(self, node, nodestr="", propstr=""):
+    def findNode(self, node, nodestr="", propstr="", recur=True):
         while node != None:
             if node.name == nodestr:
                 return [node, node.name, node.prop(propstr)]
-            ret = self.findNode(node.children, nodestr, propstr)
-            if ret[0] != None:
-                return ret
+            if recur == True:
+               ret = self.findNode(node.children, nodestr, propstr)
+               if ret[0] != None:
+                  return ret
             node = node.next
         return [None, None, None]
 
@@ -55,16 +56,17 @@ class UniXML(str):
             node = node.next
         return [None, None, None]
     
-    def findNode_byProp(self, node, propstr, valuestr):
+    def findNode_byProp(self, node, propstr, valuestr, recur=True):
         while node != None:
             if node.prop(propstr) == valuestr:
                 return [node, node.name, node.prop(propstr)]
-            ret = self.findNode_byProp (node.children, propstr, valuestr)
-            if ret[0] != None:
-                return ret
+            if recur == True:
+               ret = self.findNode_byProp (node.children, propstr, valuestr)
+               if ret[0] != None:
+                  return ret
             node = node.next
         return [None, None, None]
-
+    
     def nextNode(self, node):
         while node != None:
             node = node.next
