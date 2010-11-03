@@ -548,7 +548,9 @@
 				<item name="LC2_FlashGREEN2_C"/>
 				<item name="LC2_FlashGREEN3_C"/>
 			</green_comflash>
-			<silent confirm="TSPUS_Confirm_S" flamp="LC2_FlashSILENT_C" heartbeat_max="10" hornreset="TSCPU_HornReset_S" name="LC2_SILENT"/>
+			<silent confirm="TSPUS_Confirm_S" flamp="LC2_FlashSILENT_C" heartbeat_max="10" hornreset="TSCPU_HornReset_S" name="LC2_SILENT">
+				<item lamp="LC2_Lamp3_C" name="01_00_S" num="3"/>
+			</silent>
 			<comhorn iotype="DO" name="LC2_CommHorn" out="LC2_VDG_Horn_C">
 				<item name="LC2_CommHorn1_C"/>
 				<item name="LC2_CommHorn2_C"/>
@@ -557,6 +559,7 @@
 				<item name="LC2_CommHorn5_C"/>
 				<item name="LC2_CommHorn6_C"/>
 			</comhorn>
+			<silent_comflash/>
 		</LCAPS>
 	</settings>
 	<ObjectsMap idfromfile="1" no_dep="0">
