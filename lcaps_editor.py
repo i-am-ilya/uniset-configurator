@@ -140,7 +140,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
            raise Exception()
         self.s_node = self.s_node.children
         
-        self.flamp_sections = ["orange","red","green"]
+        self.flamp_sections = ['orange','red','green']
         
         self.flamp_params = dict()
         for sec in self.flamp_sections:
@@ -175,9 +175,15 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         node = self.conf.xml.firstNode(self.settings_node.children)
         while node != None:
             if node.name.upper() == "LCAPS":
+               
                lname = get_str_val(node.prop("name"))
+               if lname == "":
+                  print '**** Unknown <LCAPS name="?"'
+                  node = self.conf.xml.nextNode(node)
+                  continue
+               
                numlamps  = get_int_val(node.prop("lamps"))
-
+                
                item_list = self.load_item_dict(node,"orange")
                item_list.update(self.load_item_dict(node,"red"))
                item_list.update(self.load_item_dict(node,"green"))
@@ -191,7 +197,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
                lc_params['numlamps'] = get_int_val(node.prop("lamps"))
                
                for sec in self.flamp_sections:
-                   fparams = self.flamp_params[sec]
+                   fparams = self.flamp_params[sec].copy()
                    fnode = self.create_xmlnode_if_not_exist(sec,node,False)
                    fparams["node"] = fnode
                    fparams["xmlprop"] = self.read_xml_param(fnode,fparams["xmlproplist"])
@@ -201,12 +207,12 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
                    fparams["comm_xmlprop"] = self.read_xml_param(cnode,fparams["comm_xmlproplist"])
                    lc_params[sec] = fparams
                
-               hparams = self.comhorn
+               hparams = self.comhorn.copy()
                hparams["node"] = self.create_xmlnode_if_not_exist("comhorn",node,False)
                hparams["xmlprop"] = self.read_xml_param( hparams["node"],self.comhorn["xmlproplist"] )
                lc_params["comhorn"] = hparams
-
                self.lc_list[lname] = lc_params
+
             
             node = self.conf.xml.nextNode(node)
     
@@ -216,8 +222,6 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
             lc_node = lc['xmlnode']
             
             for sec in self.flamp_sections:
-#                for k, v in lc[sec].items():
-#                    print "********* v(%s)[%s]): %s"%(sec,k,str(v))
                 self.set_xml_properties(lc[sec]["node"],lc[sec]["xmlprop"])
                 if lc["comhorn"]["node"] != None:
                    self.set_xml_properties(lc[sec]["comm_node"],lc[sec]["comm_xmlprop"])
@@ -250,13 +254,15 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         return node.prop("name")
     
     def create_xmlnode_if_not_exist(self,name,parent,recur=True):
-        node = self.conf.xml.findNode(parent.children,name)[0]
+        rnode = self.conf.xml.firstNode(parent.children)
+        node = self.conf.xml.findNode(rnode,name)[0]
         if node == None:
            node = parent.newChild(None,name,None)
         return node
   
     def create_xmlnode_if_not_exist_by_prop(self,propname,propvalue,parent,name,recur=True):
-        node = self.conf.xml.findNode_byProp(parent.children,propname,propvalue,recur)[0]
+        rnode = self.conf.xml.firstNode(parent.children)
+        node = self.conf.xml.findNode_byProp(rnode,propname,propvalue,recur)[0]
         if node == None:
            node = parent.newChild(None,name,None)
            node.setProp(propname,propvalue)
@@ -356,8 +362,10 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
     
     def build_lcaps_tree(self):
         #self.lc_list.sort()
-        for key, lc in self.lc_list.items():
-            self.build_lcaps_item(lc)
+        i_dict = self.lc_list
+        sorted_keys = sorted(i_dict, key=lambda x: x)
+        for i in sorted_keys:        
+            self.build_lcaps_item(self.lc_list[i])
    
     def build_lcaps_item(self,lc):
         it1 = self.model.append(None,self.build_lc_param(lc))
@@ -419,7 +427,6 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         self.on_edit_item(iter)
     
     def on_lcaps_item_remove(self,menuitem):
-        print "***** item remove***"
         (model, iter) = self.get_selection().get_selected()
         self.on_remove_item(iter)  
     
@@ -525,7 +532,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
             fname = lc_name+"_"+sec.upper()
             self.conf.check_and_create_object(fname)
             
-            fparams = self.flamp_params[sec]
+            fparams = self.flamp_params[sec].copy()
             fnode = self.create_xmlnode_if_not_exist(sec,lc_node,False)
             fnode.setProp("name",fname)
             fparams["node"] = fnode
@@ -561,7 +568,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
             num = num + 1
         
         # comm horn section
-        hparams = self.comhorn
+        hparams = self.comhorn.copy()
         hc_name = lc_name + hparams["comm_idname"] 
         self.conf.check_and_create_object(hc_name)
         hc_node = self.create_xmlnode_if_not_exist("comhorn",lc_node,False)
@@ -578,10 +585,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         
         lc_params["comhorn"] = hparams
         
-#        print "****** %s: %s"%(lc_name,str(lc_params))
-        
         self.lc_list[lc_name] = lc_params
-        
         self.save2xml_elements_value(self.lc_params,lc_node)
         self.save_lclist_2xml()
         
@@ -729,6 +733,8 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
            lc_iter = self.model.iter_parent(iter)
         elif t == "L":
            lc_iter = iter
+           print "*** ELEMENT TYPE != 'I'"
+           return           
         else:
            print "*** FAILED ELEMENT TYPE " + t
            return
@@ -749,7 +755,9 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         l_node = fparams["node"]
         
         num = self.model.get_value(iter,fid.name)
+        
         xmlnode = self.create_xmlnode_if_not_exist_by_prop("num",num,l_node,"item",False)
+        
         # имя лампочки - генерируется
         lamp_name = self.get_lamp_name(lc_name,num)
         lamp_node = self.conf.check_and_create_sensor(lamp_name,"AO")
