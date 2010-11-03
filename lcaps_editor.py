@@ -23,11 +23,12 @@ class fid():
    nohorn = 3
    noconfirm = 4
    delay = 5
-   etype = 6
-   xmlnode = 7
-   s_xmlnode = 8
-   l_xmlnode = 9
-   maxnum = 10
+   tname = 6
+   etype = 7
+   xmlnode = 8
+   s_xmlnode = 9
+   l_xmlnode = 10
+   maxnum = 11
 
 '''
 Задачи: настройщик для алгоритма управления свето-звуковой сигнализацией на колонках
@@ -44,6 +45,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         self.modelfilter = None
   
         self.model = gtk.TreeStore(gobject.TYPE_STRING,\
+                                    gobject.TYPE_STRING, \
                                     gobject.TYPE_STRING, \
                                     gobject.TYPE_STRING, \
                                     gobject.TYPE_STRING, \
@@ -89,9 +91,14 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         column = gtk.TreeViewColumn(_("Без квитирования"), renderer,text=fid.noconfirm)
         column.set_clickable(False)
         self.append_column(column)
-                
+        
+        column = gtk.TreeViewColumn(_("Текстовое имя"), renderer,text=fid.tname)
+        column.set_clickable(False)
+        self.append_column(column)                
+        
+        
         self.lc_params=[ \
-            ["dlg_lcnew","lcaps_dlg_lcnew",None,True], \
+            ["dlg_lc","lcaps_dlg_lc",None,True], \
             ["lcaps_popup","lcaps_popup",None,True], \
             ["item_popup","lcaps_item_popup",None,True], \
             ["dlg_id_select_box","lcaps_id_select_box",None,True], \
@@ -151,12 +158,12 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         self.show_all()
     
     def load_lcaps_list(self):
-        self.setnode = self.conf.xml.findNode(self.conf.xml.getDoc(),"settings")[0]
-        if self.setnode == None:
+        self.settings_node = self.conf.xml.findNode(self.conf.xml.getDoc(),"settings")[0]
+        if self.settings_node == None:
             print "(LCAPSEditor::build_lcaps_list): <settings> not found?!..."
             return
         
-        node = self.conf.xml.firstNode(self.setnode.children)
+        node = self.conf.xml.firstNode(self.settings_node.children)
         while node != None:
             if node.name.upper() == "LCAPS":
                lname = get_str_val(node.prop("name"))
@@ -288,9 +295,11 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         
         if p[fid.s_xmlnode] != None:
            s_node = p[fid.s_xmlnode]
-           p[fid.sensor] = str("(%s)(%s)%s" % (s_node.prop("id"),s_node.prop("name"),s_node.prop("textname")))
+           p[fid.sensor] = str("(%6s)%s" % (s_node.prop("id"),s_node.prop("name")))
+           p[fid.tname] = get_str_val(s_node.prop("textname"))
         else:
            p[fid.sensor] = get_str_val(xmlnode.prop("name"))
+           p[fid.tname] = ""
 
         return p
       
@@ -407,17 +416,19 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
     def lcaps_edit(self,iter):
         
         lc_node = UniXML.EmptyNode()
+        addNew = True
         if iter != None:
            self.dlg_id_select_box.set_sensitive(False)
            lc_node = self.model.get_value(iter,fid.xmlnode)
+           addNew = False
         else:
-           self.dlg_id_select_box.set_sensitive(False)
+           self.dlg_id_select_box.set_sensitive(True)
         
         self.init_elements_value(self.lc_params,lc_node)
         
         while True:
-           res = self.dlg_lcnew.run()
-           self.dlg_lcnew.hide()
+           res = self.dlg_lc.run()
+           self.dlg_lc.hide()
            if res != dlg_RESPONSE_OK:
                return
            
@@ -467,22 +478,22 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         hb_node = self.conf.check_and_create_sensor(self.dlg_heartbeat.get_text(),"AI")
         hr_node = self.conf.check_and_create_sensor(self.dlg_hornreset.get_text(),"DI")
         c_node = self.conf.check_and_create_sensor(self.dlg_confirm.get_text(),"DI")
-        
-        # создаём лампочки (по количеству на колонке)
-        self.check_and_create_sensors(lc_name,"Lamp",self.dlg_lc_count.get_value_as_int(),"AO")
+        numlamps = self.dlg_lc_count.get_value_as_int()
        
-        if iter == None:
-           # создаём очередной настроечный узел в <setting>
-           lc_node = self.setnode.newChild(None,"LCAPS",None)
-           lc_node.setProp("name",lc_name)
+        # создаём лампочки (по количеству на колонке)
+        self.check_and_create_sensors(lc_name,"Lamp",numlamps,"AO")
+        lc_node = self.create_xmlnode_if_not_exist_by_prop("name",lc_name,self.settings_node,"LCAPS")
         
-        lc_node.setProp("lamps",str(self.dlg_lc_count.get_value_as_int()))
+        lc_node.setProp("lamps",str(numlamps))
         lc_node.setProp("comment",str(self.dlg_lc_comm.get_text()))
         
-        lc_params = dict()
-        lc_params['name'] = lc_name
-        lc_params['xmlnode'] = lc_node
-        lc_params['list'] = dict()
+        if addNew == True:
+           lc_params = dict()
+           lc_params['name'] = lc_name
+           lc_params['xmlnode'] = lc_node
+           lc_params['list'] = dict()
+           self.add_unused_item(lc_name,lc_params['list'],numlamps)
+        
         lc_params['horn'] = horn_node
         lc_params['hornreset'] = hr_node
         lc_params['confirm'] = c_node
@@ -556,10 +567,12 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         self.save2xml_elements_value(self.lc_params,lc_node)
         self.save_lclist_2xml()
         
-        self.model.clear()
-        self.build_lcaps_tree()
+        if addNew == True:
+           self.build_lcaps_item(lc_params)
+           self.conf.update_list()
+
         self.conf.mark_changes()
-        self.conf.update_list()
+        
     
     def set_new_flamp_prop(self, node):
         node.setProp("heartbeat_max","10")
@@ -604,12 +617,15 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         
         if not iter:
           return
-
-        xmlnode = self.model.get_value(iter,fid.xmlnode)
+        
+        i_node = UniXML.EmptyNode()
         addNew = True
+        xmlnode = self.model.get_value(iter,fid.xmlnode)
         if xmlnode != None:
-           self.init_elements_value(self.item_params,xmlnode)
+           i_node = xmlnode
            addNew = False
+        
+        self.init_elements_value(self.item_params,i_node)
         
         while True:
            res = self.dlg_lcaps.run()
@@ -670,10 +686,9 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         lc_params['list'][int(num)] = p
         
         if addNew == True:
-           self.model.remove(lc_iter)
-           iter = self.build_lcaps_item(lc_params)
-           path = self.model.get_path(iter)
-           self.expand_row(path,True)
+           it1 = self.model.insert_after(None,iter,p)
+           self.set_cursor( self.model.get_path(it1) )
+           self.model.remove(iter)
         
         self.conf.mark_changes()        
     

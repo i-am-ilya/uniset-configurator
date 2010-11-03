@@ -4016,7 +4016,7 @@ TBI16_8</property>
       </widget>
     </child>
   </widget>
-  <widget class="GtkDialog" id="lcaps_dlg_lcnew">
+  <widget class="GtkDialog" id="lcaps_dlg_lc">
     <property name="border_width">5</property>
     <property name="title" translatable="yes">&#x41A;&#x43E;&#x43D;&#x444;&#x438;&#x433;&#x443;&#x440;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x435; &#x43D;&#x43E;&#x432;&#x43E;&#x439; &#x43A;&#x43E;&#x43B;&#x43E;&#x43D;&#x43A;&#x438;</property>
     <property name="modal">True</property>

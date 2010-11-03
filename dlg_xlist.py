@@ -194,6 +194,9 @@ class XListDialog():
 
     def find_str(self, s1, s2, case):
         
+        if s1 == None or s2 == None:
+           return False
+        
         if case == False:
            if s1.upper().find(s2.upper()) != -1:
                 return True
@@ -201,6 +204,7 @@ class XListDialog():
         
         if s1.find(s2) != -1:
              return True
+        
         return False
     
     def filter_func(self, model,it):
