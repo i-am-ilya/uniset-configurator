@@ -176,12 +176,18 @@ class Conf:
         return None
     
     def check_and_create_object(self,name):
+        if name == None or name == "":
+           return None
+	  
         node = self.find_object(name)
         if node == None:
            node = self.create_new_object(name)
         return node
 
     def check_and_create_sensor(self,name,iotype):
+        if name == None or name == "":
+           return None
+        
         node = self.find_sensor(name)
         if node == None:
            node = self.create_new_sensor(name)

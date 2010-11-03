@@ -250,13 +250,13 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         return node.prop("name")
     
     def create_xmlnode_if_not_exist(self,name,parent,recur=True):
-        node = self.conf.xml.findNode(parent,name)[0]
+        node = self.conf.xml.findNode(parent.children,name)[0]
         if node == None:
            node = parent.newChild(None,name,None)
         return node
   
     def create_xmlnode_if_not_exist_by_prop(self,propname,propvalue,parent,name,recur=True):
-        node = self.conf.xml.findNode_byProp(parent,propname,propvalue,recur)[0]
+        node = self.conf.xml.findNode_byProp(parent.children,propname,propvalue,recur)[0]
         if node == None:
            node = parent.newChild(None,name,None)
            node.setProp(propname,propvalue)
@@ -271,9 +271,10 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         
     def load_item_dict(self, xmlnode,l_name):
         o_node = self.conf.xml.findNode(xmlnode,l_name)[0]
-        if o_node == None:
-           return []
         ret = dict()
+        if o_node == None:
+           return ret
+        
         node = self.conf.xml.firstNode(o_node.children)
         while node != None:
             plist = self.read_item_param(node,l_name)
@@ -487,24 +488,29 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         lc_id_node = self.conf.check_and_create_object(lc_name)
         
         horn_node = self.conf.check_and_create_sensor(self.dlg_horn.get_text(),"DO")
-        hb_node = self.conf.check_and_create_sensor(self.dlg_heartbeat.get_text(),"AI")
         hr_node = self.conf.check_and_create_sensor(self.dlg_hornreset.get_text(),"DI")
         c_node = self.conf.check_and_create_sensor(self.dlg_confirm.get_text(),"DI")
         numlamps = self.dlg_lc_count.get_value_as_int()
+        hb_node = None
+        if self.dlg_heartbeat.get_text() != "":
+            hb_node = self.conf.check_and_create_sensor(self.dlg_heartbeat.get_text(),"AI")
        
         # создаём лампочки (по количеству на колонке)
         self.check_and_create_sensors(lc_name,"Lamp",numlamps,"AO")
+
         lc_node = self.create_xmlnode_if_not_exist_by_prop("name",lc_name,self.settings_node,"LCAPS",False)
         
         lc_node.setProp("lamps",str(numlamps))
         lc_node.setProp("comment",str(self.dlg_lc_comm.get_text()))
         
+        lc_params = dict()
         if addNew == True:
-           lc_params = dict()
            lc_params['name'] = lc_name
            lc_params['xmlnode'] = lc_node
            lc_params['list'] = dict()
            self.add_unused_item(lc_name,lc_params['list'],numlamps)
+        else:
+           lc_params = self.lc_list[lc_name]           
         
         lc_params['horn'] = horn_node
         lc_params['hornreset'] = hr_node
