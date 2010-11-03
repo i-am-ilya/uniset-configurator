@@ -529,28 +529,31 @@
 		</MTR>
 		<GUI SaveDir="/tmp">
 		</GUI>
-		<LCAPS lamps="10" name="LC2">
-			<orange confirm="TSPUS_Confirm_S" flamp="LC2_FlashORANGE_C" heartbeat_max="10" horn1="LC2_CommHorn1_C" hornreset="TSCPU_HornReset_S" name="LC2_ORANGE"/>
+		<LCAPS comment="Колонка в помещении ВДГ (трюм)" confirm="TSCPU_Confirm_S" horn="LC2_VDG_Horn_C" hornreset="TSCPU_HornReset_S" lamps="10" name="LC2">
+			<orange confirm="TSCPU_Confirm_S" flamp="LC2_FlashORANGE_C" heartbeat_max="10" horn1="LC2_CommHorn1_C" hornreset="TSCPU_HornReset_S" name="LC2_ORANGE">
+				<item lamp="LC2_Lamp2_C" name="SEES1_Overload20_S" nohorn="1" num="2"/>
+				<item lamp="LC2_Lamp3_C" name="SEES1_Overload95_S" num="3"/>
+				<item lamp="LC2_Lamp4_C" name="SEES2_Overload95_S" num="4"/>
+			</orange>
 			<orange_comflash iotype="DO" name="LC2_ORANGE_CommFlash" out="LC2_FlashORANGE_C">
 				<item name="LC2_FlashORANGE1_C"/>
 				<item name="LC2_FlashORANGE2_C"/>
 				<item name="LC2_FlashORANGE3_C"/>
 			</orange_comflash>
-			<red confirm="TSPUS_Confirm_S" flamp="LC2_FlashRED_C" heartbeat_max="10" horn1="LC2_CommHorn2_C" hornreset="TSCPU_HornReset_S" name="LC2_RED"/>
+			<red confirm="TSCPU_Confirm_S" flamp="LC2_FlashRED_C" heartbeat_max="10" horn1="LC2_CommHorn2_C" hornreset="TSCPU_HornReset_S" name="LC2_RED"/>
 			<red_comflash iotype="DO" name="LC2_RED_CommFlash" out="LC2_FlashRED_C">
 				<item name="LC2_FlashRED1_C"/>
 				<item name="LC2_FlashRED2_C"/>
 				<item name="LC2_FlashRED3_C"/>
 			</red_comflash>
-			<green confirm="TSPUS_Confirm_S" flamp="LC2_FlashGREEN_C" heartbeat_max="10" horn1="LC2_CommHorn3_C" hornreset="TSCPU_HornReset_S" name="LC2_GREEN"/>
+			<green confirm="TSCPU_Confirm_S" flamp="LC2_FlashGREEN_C" heartbeat_max="10" horn1="LC2_CommHorn3_C" hornreset="TSCPU_HornReset_S" name="LC2_GREEN">
+				<item lamp="LC2_Lamp5_C" name="SEES2_Overload95_S" num="5"/>
+			</green>
 			<green_comflash iotype="DO" name="LC2_GREEN_CommFlash" out="LC2_FlashGREEN_C">
 				<item name="LC2_FlashGREEN1_C"/>
 				<item name="LC2_FlashGREEN2_C"/>
 				<item name="LC2_FlashGREEN3_C"/>
 			</green_comflash>
-			<silent confirm="TSPUS_Confirm_S" flamp="LC2_FlashSILENT_C" heartbeat_max="10" hornreset="TSCPU_HornReset_S" name="LC2_SILENT">
-				<item lamp="LC2_Lamp3_C" name="01_00_S" num="3"/>
-			</silent>
 			<comhorn iotype="DO" name="LC2_CommHorn" out="LC2_VDG_Horn_C">
 				<item name="LC2_CommHorn1_C"/>
 				<item name="LC2_CommHorn2_C"/>
@@ -3172,6 +3175,8 @@
 			<item id="173" iotype="DO" name="LC2_FlashSILENT_C" textname="LC2_FlashSILENT_C"/>
 			<item id="175" iotype="DO" name="LC2_CommHorn5_C" textname="LC2_CommHorn5_C"/>
 			<item id="176" iotype="DO" name="LC2_CommHorn6_C" textname="LC2_CommHorn6_C"/>
+			<item id="177" iotype="AI"/>
+			<item id="178" iotype="AI"/>
 		</sensors>
 		<thresholds name="thresholds">
 			<sensor iotype="AI" name="DG1_P_AS" ses="1">

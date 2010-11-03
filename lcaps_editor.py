@@ -90,26 +90,28 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         column.set_clickable(False)
         self.append_column(column)
                 
-        self.lcnew_params=[ \
+        self.lc_params=[ \
             ["dlg_lcnew","lcaps_dlg_lcnew",None,True], \
             ["lcaps_popup","lcaps_popup",None,True], \
             ["item_popup","lcaps_item_popup",None,True], \
-            ["dlg_lc_name","lcaps_dlg_name",None,True], \
-            ["dlg_horn","lcaps_dlg_horn",None,True], \
-            ["dlg_hornreset","lcaps_dlg_hornreset",None,True], \
-            ["dlg_confirm","lcaps_dlg_confirm",None,True], \
-            ["dlg_lc_count","lcaps_dlg_lc_count",None,True], \
-            ["dlg_heartbeat","lcaps_dlg_heartbeat",None,True] \
+            ["dlg_id_select_box","lcaps_id_select_box",None,True], \
+            ["dlg_lc_name","lcaps_dlg_name","name",False], \
+            ["dlg_lc_comm","lcaps_dlg_comm","comment",False], \
+            ["dlg_horn","lcaps_dlg_horn","horn",False], \
+            ["dlg_hornreset","lcaps_dlg_hornreset","hornreset",False], \
+            ["dlg_confirm","lcaps_dlg_confirm","confirm",False], \
+            ["dlg_lc_count","lcaps_dlg_lc_count","lamps",False], \
+            ["dlg_heartbeat","lcaps_dlg_heartbeat","heartbeat",False] \
         ]
                 
-        self.init_glade_elements(self.lcnew_params)        
+        self.init_glade_elements(self.lc_params)        
         self.item_params=[ \
             ["dlg_lcaps","lcaps_dlg",None,True], \
             ["dlg_lcaps_title","lcaps_dlg_title",None,True], \
             ["item_sensor","lcaps_dlg_sensor","name",False], \
             ["item_ltype","lcaps_dlg_flash",None,True], \
             ["item_lamp","lcaps_dlg_lamp","lamp",False], \
-            ["item_horn","lcaps_dlg_cb_nohorn",None,True], \
+            ["item_horn","lcaps_dlg_cb_nohorn","nohorn",False], \
             ["item_noconfirm","lcaps_dlg_noconfirm","noconfirm",False], \
             ["item_delay","lcaps_dlg_delay","delay",False], \
             ["item_comment","lcaps_dlg_comment","comment",False] \
@@ -122,9 +124,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
            raise Exception()
         self.s_node = self.s_node.children
         
-        self.flamp_sections = ["orange","red","green","silent"]
-        self.nohorn_sections = ["silent"]
-        self.nocomm_sections = ["silent"]
+        self.flamp_sections = ["orange","red","green"]
         
         self.flamp_params = dict()
         for sec in self.flamp_sections:
@@ -165,7 +165,6 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
                item_list = self.load_item_dict(node,"orange")
                item_list.update(self.load_item_dict(node,"red"))
                item_list.update(self.load_item_dict(node,"green"))
-               item_list.update(self.load_item_dict(node,"silent"))
                
                self.add_unused_item(lname,item_list,numlamps)
                
@@ -270,7 +269,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         for i in range(1,maxnum+1):
             if not lst.has_key(i):
                i_add = self.get_default_item(lc_name,i)
-               lst[str(i)] = i_add
+               lst[i] = i_add
     
     def read_item_param(self,xmlnode,l_name):
         p=[]
@@ -338,13 +337,15 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
     def build_lcaps_tree(self):
         #self.lc_list.sort()
         for key, lc in self.lc_list.items():
-            it1 = self.model.append(None,self.build_lc_param(lc))
-#            for i in lc['list'].values():
-#                it2 = self.model.append(it1,i)
-            i_dict = lc['list']
-            sorted_keys = sorted(i_dict, key=lambda x: int(x))
-            for i in sorted_keys:
-                it2 = self.model.append(it1,i_dict[i])
+            self.build_lcaps_item(lc)
+   
+    def build_lcaps_item(self,lc):
+        it1 = self.model.append(None,self.build_lc_param(lc))
+        i_dict = lc['list']
+        sorted_keys = sorted(i_dict, key=lambda x: int(x))
+        for i in sorted_keys:
+            it2 = self.model.append(it1,i_dict[i])    
+        return it1
     
     def build_lc_param(self,lc):
         p=[]
@@ -385,62 +386,35 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
                return False
             t = model.get_value(iter,fid.etype)
             if t == "L": 
-               self.on_edit_lcaps(iter)
+               self.lcaps_edit(iter)
             elif t == "I":
                self.on_edit_item(iter)               
         
         return False
     
-    def on_lcaps_item_add(self,menuitem):
+    def on_lcaps_item_edit(self,menuitem):
         (model, iter) = self.get_selection().get_selected()
         if not iter:
            return	  
-        
-        while True:
-           res = self.dlg_lcaps.run()
-           self.dlg_lcaps.hide()
-           if res != dlg_RESPONSE_OK:
-               return
-           
-           if self.item_sensor.get_text() == "":
-              dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,"Не задан датчик")
-              res = dlg.run()
-              dlg.hide()
-      
-           break
-        
-        t = mode.get_value(iter,fid.etype)
-        lc_iter = iter
-        if t == "I":
-           lc_iter = model.iter_parent(iter)
-        elif t == "L":
-           lc_iter = iter
-        else:
-           print "*** FAILED ELEMENT TYPE " + t
-           return
-        
-        lc_name = model.get_value(lc_iter,fid.name)
-        lc_params = self.lc_list[lc_name]
-        lc_node = lc_params['xmlnode']
-        
-        l_type = self.item_ltype.get_active_text()
-        l_node = None
-        if l_type == "Orange":
-           l_node = lc_params['orange']
-        elif l_type == "Red":
-           l_node = lc_params['red']
-        elif l_type == "Green":
-           l_node = lc_params['green']
-        
-        self.read_item_param(self,xmlnode,l_name)
-    
-    def on_lcaps_item_edit(self,menuitem):
-        pass
+        self.on_edit_item(iter)
     
     def on_lcaps_item_remove(self,menuitem):
         print "***** item remove***"
     
     def on_lcaps_add(self,menuitem):
+        self.lcaps_edit(None)
+    
+    def lcaps_edit(self,iter):
+        
+        lc_node = UniXML.EmptyNode()
+        if iter != None:
+           self.dlg_id_select_box.set_sensitive(False)
+           lc_node = self.model.get_value(iter,fid.xmlnode)
+        else:
+           self.dlg_id_select_box.set_sensitive(False)
+        
+        self.init_elements_value(self.lc_params,lc_node)
+        
         while True:
            res = self.dlg_lcnew.run()
            self.dlg_lcnew.hide()
@@ -495,12 +469,15 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         c_node = self.conf.check_and_create_sensor(self.dlg_confirm.get_text(),"DI")
         
         # создаём лампочки (по количеству на колонке)
-        self.check_and_create_sensors(lc_name,"Lamp",self.dlg_lc_count.get_value_as_int())
+        self.check_and_create_sensors(lc_name,"Lamp",self.dlg_lc_count.get_value_as_int(),"AO")
        
-        # создаём очередной настроечный узел в <setting>
-        lc_node = self.setnode.newChild(None,"LCAPS",None)
-        lc_node.setProp("name",lc_name)
+        if iter == None:
+           # создаём очередной настроечный узел в <setting>
+           lc_node = self.setnode.newChild(None,"LCAPS",None)
+           lc_node.setProp("name",lc_name)
+        
         lc_node.setProp("lamps",str(self.dlg_lc_count.get_value_as_int()))
+        lc_node.setProp("comment",str(self.dlg_lc_comm.get_text()))
         
         lc_params = dict()
         lc_params['name'] = lc_name
@@ -527,9 +504,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
             
             h_name = str("%s%s%d_C"%(lc_name,h_postfix,num))
             n_horn = self.conf.check_and_create_sensor(h_name,"DO")
-            
-            if sec not in self.nohorn_sections:
-               fnode.setProp("horn1",h_name)
+            fnode.setProp("horn1",h_name)
             
             f_name = str("%s_Flash%s_C"%(lc_name,sec.upper()))
             n_flash = self.conf.check_and_create_sensor(f_name,"DO")
@@ -538,23 +513,20 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
             
             fparams["xmlprop"] = self.read_xml_param(fnode,fparams["xmlproplist"])
             
-            if sec not in self.nocomm_sections:
-               # comm flash section
-               fc_node = self.create_xmlnode_if_not_exist(fparams["comm_name"],lc_node)
-               fc_name = lc_name + "_" + fparams["comm_idname"] 
-               self.conf.check_and_create_object(fc_name)
-               fc_node.setProp("name",fc_name)
-               fc_node.setProp("out",f_name)
-               fc_node.setProp("iotype", n_flash.prop("iotype"))
-               for i in range(1,4):
-                   n = fc_node.newChild(None,"item",None)
-                   i_name = str("%s_Flash%s%d_C"%(lc_name,sec.upper(),i))
-                   n.setProp("name",i_name)
-                   self.conf.check_and_create_sensor(i_name,n_flash.prop("iotype"))
-               fparams["comm_node"] = fc_node
-               fparams["comm_xmlprop"] = self.read_xml_param(fc_node,fparams["comm_xmlproplist"])
-            else:
-               fparams["comm_node"] = None
+            # comm flash section
+            fc_node = self.create_xmlnode_if_not_exist(fparams["comm_name"],lc_node)
+            fc_name = lc_name + "_" + fparams["comm_idname"] 
+            self.conf.check_and_create_object(fc_name)
+            fc_node.setProp("name",fc_name)
+            fc_node.setProp("out",f_name)
+            fc_node.setProp("iotype", n_flash.prop("iotype"))
+            for i in range(1,4):
+                i_name = str("%s_Flash%s%d_C"%(lc_name,sec.upper(),i))
+                n = self.create_xmlnode_if_not_exist_by_prop("name",i_name,fc_node,"item")
+                self.conf.check_and_create_sensor(i_name,n_flash.prop("iotype"))
+            
+            fparams["comm_node"] = fc_node
+            fparams["comm_xmlprop"] = self.read_xml_param(fc_node,fparams["comm_xmlproplist"])
             
             lc_params[sec] = fparams
             num = num + 1
@@ -571,9 +543,8 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         hparams["xmlprop"] = self.read_xml_param(hc_node,self.comhorn["xmlproplist"] )
         h_num = len(self.flamp_sections) + 3
         for i in range(1,h_num):
-            n = hc_node.newChild(None,"item",None)
             i_name = str("%s%s%d_C"%(lc_name,h_postfix,i))
-            n.setProp("name",i_name)
+            self.create_xmlnode_if_not_exist_by_prop("name",i_name,hc_node,"item")
             self.conf.check_and_create_sensor(i_name,horn_node.prop("iotype"))
         
         lc_params["comhorn"] = hparams
@@ -581,6 +552,8 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
 #        print "****** %s: %s"%(lc_name,str(lc_params))
         
         self.lc_list[lc_name] = lc_params
+        
+        self.save2xml_elements_value(self.lc_params,lc_node)
         self.save_lclist_2xml()
         
         self.model.clear()
@@ -594,7 +567,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         node.setProp("hornreset",self.dlg_hornreset.get_text())
         node.setProp("confirm",self.dlg_confirm.get_text())
      
-    def check_and_create_sensors(self,lc_name,postfix,num):
+    def check_and_create_sensors(self,lc_name,postfix,num,iotype):
         l_list=[]
         for i in range(1,num+1):
             l_list.append(str("%s_%s%d_C")%(lc_name,postfix,i))
@@ -603,6 +576,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
             node = self.conf.find_sensor(i)
             if node == None:
                node = self.conf.create_new_sensor(i)
+               node.setProp("iotype",iotype)
     
     def check_and_create_objects(self,lc_name,postfix,num):
         l_list=[]
@@ -616,24 +590,26 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
     
     def on_lcaps_edit(self,menuitem):
         (model, iter) = self.get_selection().get_selected()
-        self.on_edit_lcaps(iter)
+        if not iter:
+            return
+        
+        self.lcaps_edit(iter)
     
     def on_lcaps_remove(self,menuitem):
        (model, iter) = self.get_selection().get_selected()
        if not iter:
           return
     
-    def on_edit_lcaps(self,lc_iter):
-        print "***** edit lcaps: iter" + str(lc_iter)
-
     def on_edit_item(self,iter):
         
         if not iter:
           return
 
         xmlnode = self.model.get_value(iter,fid.xmlnode)
+        addNew = True
         if xmlnode != None:
            self.init_elements_value(self.item_params,xmlnode)
+           addNew = False
         
         while True:
            res = self.dlg_lcaps.run()
@@ -669,7 +645,6 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         lc_params = self.lc_list[lc_name]
         lc_node = lc_params['xmlnode']
         
-        
         l_type = self.item_ltype.get_active_text()
         fparams = None
         if l_type == "Оранжевый":
@@ -683,16 +658,23 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         
         num = self.model.get_value(iter,fid.name)
         xmlnode = self.create_xmlnode_if_not_exist_by_prop("num",num,l_node,"item")
-#       xmlnode.setProp("num",num)
         # имя лампочки - генерируется
-        self.item_lamp.set_text(self.get_lamp_name(lc_name,num)) 
+        lamp_name = self.get_lamp_name(lc_name,num)
+        lamp_node = self.conf.check_and_create_sensor(lamp_name,"AO")
+        self.item_lamp.set_text(lamp_name) 
 
         # обновляем xmlnode по параметрам в диалоге
         self.save2xml_elements_value(self.item_params,xmlnode)
 
-        print "****** add: " + str(xmlnode)
-
-        self.read_item_param(xmlnode,lc_name)
+        p = self.read_item_param(xmlnode,l_node.name)
+        lc_params['list'][int(num)] = p
+        
+        if addNew == True:
+           self.model.remove(lc_iter)
+           iter = self.build_lcaps_item(lc_params)
+           path = self.model.get_path(iter)
+           self.expand_row(path,True)
+        
         self.conf.mark_changes()        
     
     def on_lcpas_dlg_btn_lamp_clicked(self, button):

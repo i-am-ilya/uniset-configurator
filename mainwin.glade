@@ -4208,60 +4208,6 @@ TBI16_8</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkVBox" id="vbox11">
-                <property name="visible">True</property>
-                <property name="orientation">vertical</property>
-                <child>
-                  <widget class="GtkLabel" id="label81">
-                    <property name="visible">True</property>
-                    <property name="xalign">0</property>
-                    <property name="label" translatable="yes">&#x432;&#x44B;&#x431;&#x440;&#x430;&#x442;&#x44C; &#x438;&#x43B;&#x438; &#x432;&#x43F;&#x438;&#x441;&#x430;&#x442;&#x44C; &#x438;&#x43C;&#x44F;</property>
-                    <property name="justify">center</property>
-                  </widget>
-                  <packing>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <widget class="GtkHBox" id="hbox18">
-                    <property name="visible">True</property>
-                    <child>
-                      <widget class="GtkEntry" id="lcaps_dlg_name">
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="invisible_char">&#x25CF;</property>
-                        <property name="invisible_char_set">True</property>
-                      </widget>
-                      <packing>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <widget class="GtkButton" id="lcaps_dlg_id_sel">
-                        <property name="label" translatable="yes">...</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                        <property name="use_action_appearance">False</property>
-                        <signal name="clicked" handler="on_lcaps_dlg_id_sel_clicked"/>
-                      </widget>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                  </widget>
-                  <packing>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </widget>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-              </packing>
-            </child>
-            <child>
               <widget class="GtkLabel" id="label82">
                 <property name="visible">True</property>
                 <property name="xalign">1</property>
@@ -4362,6 +4308,89 @@ TBI16_8</property>
                 <property name="bottom_attach">6</property>
               </packing>
             </child>
+            <child>
+              <widget class="GtkVBox" id="vbox11">
+                <property name="visible">True</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <widget class="GtkLabel" id="label81">
+                    <property name="visible">True</property>
+                    <property name="xalign">0</property>
+                    <property name="label" translatable="yes">&#x432;&#x44B;&#x431;&#x440;&#x430;&#x442;&#x44C; &#x438;&#x43B;&#x438; &#x432;&#x43F;&#x438;&#x441;&#x430;&#x442;&#x44C; &#x438;&#x43C;&#x44F;</property>
+                    <property name="justify">center</property>
+                  </widget>
+                  <packing>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkHBox" id="lcaps_id_select_box">
+                    <property name="visible">True</property>
+                    <child>
+                      <widget class="GtkEntry" id="lcaps_dlg_name">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="invisible_char">&#x25CF;</property>
+                        <property name="invisible_char_set">True</property>
+                      </widget>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkButton" id="lcaps_dlg_id_sel">
+                        <property name="label" translatable="yes">...</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="use_action_appearance">False</property>
+                        <signal name="clicked" handler="on_lcaps_dlg_id_sel_clicked"/>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkVBox" id="vbox12">
+                    <property name="visible">True</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <widget class="GtkLabel" id="label84">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">&#x43A;&#x43E;&#x43C;&#x435;&#x43D;&#x442;&#x430;&#x440;&#x438;&#x439;:</property>
+                      </widget>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkEntry" id="lcaps_dlg_comm">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="invisible_char">&#x25CF;</property>
+                      </widget>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+              </widget>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+              </packing>
+            </child>
           </widget>
           <packing>
             <property name="expand">False</property>
@@ -4417,15 +4446,6 @@ TBI16_8</property>
   <widget class="GtkMenu" id="lcaps_popup">
     <property name="visible">True</property>
     <child>
-      <widget class="GtkMenuItem" id="menuitem12">
-        <property name="visible">True</property>
-        <property name="use_action_appearance">False</property>
-        <property name="label" translatable="yes">Add new item</property>
-        <property name="use_underline">True</property>
-        <signal name="activate" handler="on_lcaps_item_add"/>
-      </widget>
-    </child>
-    <child>
       <widget class="GtkMenuItem" id="menuitem11">
         <property name="visible">True</property>
         <property name="use_action_appearance">False</property>
@@ -4462,15 +4482,6 @@ TBI16_8</property>
   <widget class="GtkMenu" id="lcaps_item_popup">
     <property name="visible">True</property>
     <child>
-      <widget class="GtkMenuItem" id="menuitem14">
-        <property name="visible">True</property>
-        <property name="use_action_appearance">False</property>
-        <property name="label" translatable="yes">Add</property>
-        <property name="use_underline">True</property>
-        <signal name="activate" handler="on_lcaps_item_add"/>
-      </widget>
-    </child>
-    <child>
       <widget class="GtkMenuItem" id="menuitem15">
         <property name="visible">True</property>
         <property name="use_action_appearance">False</property>
@@ -4480,16 +4491,10 @@ TBI16_8</property>
       </widget>
     </child>
     <child>
-      <widget class="GtkSeparatorMenuItem" id="menuitem16">
-        <property name="visible">True</property>
-        <property name="use_action_appearance">False</property>
-      </widget>
-    </child>
-    <child>
       <widget class="GtkMenuItem" id="menuitem17">
         <property name="visible">True</property>
         <property name="use_action_appearance">False</property>
-        <property name="label" translatable="yes">remove</property>
+        <property name="label" translatable="yes">Remove</property>
         <property name="use_underline">True</property>
         <signal name="activate" handler="on_lcaps_item_remove"/>
       </widget>
