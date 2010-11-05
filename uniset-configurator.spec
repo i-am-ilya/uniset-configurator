@@ -31,7 +31,7 @@ mv -f %buildroot%python_sitelibdir/*.py %buildroot%python_sitelibdir/%name/
 
 mkdir %buildroot/%_bindir/
 ln -s %python_sitelibdir/%name/%name.py %buildroot/%_bindir/%name
-ln -s %python_sitelibdir/%name/modules/uniset-io/uniset_io_conf.py %buildroot/%_bindir/uniset-ioconf
+ln -s %python_sitelibdir/%name/modules/uniset_io/uniset_io_conf.py %buildroot/%_bindir/uniset-ioconf
 ln -s %python_sitelibdir/%name/modules/lcaps/lcaps_conf.py %buildroot/%_bindir/uniset-lcaps-conf
 
 %files
