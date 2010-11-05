@@ -1,5 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import sys
+
+is_system_run_flag = sys.argv[0].startswith("./")
+
+if is_system_run_flag:
+   sys.path.append("../../")
+
 from gettext import gettext as _
 import re
 import datetime
@@ -29,12 +36,17 @@ class LCAPSConfig():
         while node != None:
             if node.name.upper() == "LCAPS":
                name = get_str_val(node.prop("name"))
-               if name == lcname:
-                  lc_node = node
+               if lcname == "ALL":
+                  fname = "lcaps-%s-test.xml"%name.lower()
+                  self.gen_test_skel_by_name(node,name,fname)
+               elif name == lcname:
+                  self.gen_test_skel_by_name(node,name,fname)
                   break
             
             node = self.xml.nextNode(node)
-         
+    
+    def gen_test_skel_by_name(self, lc_node, lc_name, fname):
+        
         if lc_node == None:
            print "<LCAPS name='%s' not found"%lcname
            return False
@@ -88,7 +100,7 @@ class LCAPSConfig():
         check = self.gen_checks_for_section(ctx_check,secnode)
         for l in ctx_item:
             l = self.check_and_replace(l,"{TESTNUM}",str(tnum))
-            l = self.check_and_replace(l,"{LCNAME}",secnode.parent.prop("name"))
+            l = self.check_and_replace(l,"{LCNAME}",secnode.parent.prop("name").upper())
             l = self.check_and_replace(l,"{SEC}",secnode.name.upper())
             l = self.check_and_replace(l,"{Flash}",secnode.prop("flamp"))
             l = self.check_and_replace(l,"{CommHorn}",secnode.prop("horn1"))
@@ -125,15 +137,15 @@ if __name__ == "__main__":
 
     is_system_run_flag = sys.argv[0].startswith("./")
     datdir = ( "/usr/share/uniset-configurator/" if not is_system_run_flag else "./" )
-    templdir=datdir+"/templates/lcaps"
+    templdir=( datdir + "templates/lcaps/" if not is_system_run_flag else "./templates/" )
 
     confile = ""
     if checkArgParam("--help",False) == True or checkArgParam("-h",False) == True:
-       print "Usage: %s [--confile configure.xml ] [--outfile filename]  --gen-comedi-conf Nodename" % sys.argv[0]
-       print "--confile confile           - Configuration file. Default: configure.xml"
-       print "--gen-test-skel LCAPS name  - Generate test skeleton for LCAPS=name"
-       print "--outfile filename          - Save to filename. Default: name-test"
-       print "-v                          - Verbose mode"
+       print "Usage: %s [--confile configure.xml ] [--outfile filename]  --gen-test-skel [name|ALL]" % sys.argv[0]
+       print "--confile confile                 - Configuration file. Default: configure.xml"
+       print "--gen-test-skel [LCAPSname|ALL]   - Generate test skeleton for LCAPS=name"
+       print "--outfile filename                - Save to filename. Default: name-test"
+       print "-v                                - Verbose mode"
        exit(0)
 
     confile = getArgParam("--confile","configure.xml")
@@ -141,7 +153,7 @@ if __name__ == "__main__":
     verb = checkArgParam("-v",False)
     
     if lcname == "":
-       print "Usage: %s [--confile configure.xml ] [--outfile filename]  --gen-test-skel LCAPS_name" % sys.argv[0]
+       print "Usage: %s [--confile configure.xml ] [--outfile filename]  --gen-test-skel [name|ALL]" % sys.argv[0]
        exit(1)
     
     outfile = getArgParam("--outfile","")
