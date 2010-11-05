@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.5
-Release: eter3
+Release: eter4
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -43,6 +43,9 @@ ln -s %python_sitelibdir/%name/modules/lcaps/lcaps_conf.py %buildroot/%_bindir/u
 %_bindir/*
 
 %changelog
+* Fri Nov 05 2010 Pavel Vainerman <pv@altlinux.ru> 0.5-eter4
+- add 'ALL' for lcaps-conf --gen-test-skel
+
 * Fri Nov 05 2010 Pavel Vainerman <pv@altlinux.ru> 0.4-eter3
 - new release (master merge aps)
 
