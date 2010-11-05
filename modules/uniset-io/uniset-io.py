@@ -881,3 +881,10 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         
         if res == gtk.RESPONSE_OK:
            self.ioconf.gen_comedi_script(cardnode,dlg.get_filename())
+
+
+def create_module(conf):
+    return IOEditor(conf)
+
+def module_name():
+    return "I/O"

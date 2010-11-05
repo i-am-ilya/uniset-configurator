@@ -1,4 +1,4 @@
-SUBDIRS = templates
+SUBDIRS = modules templates
 
 pyexec_SCRIPTS 	= *.py
 

@@ -13,15 +13,6 @@ import libxml2
 import UniXML
 import locale
 
-# modules
-import io_editor
-import can_editor
-import nodes_editor
-import uniset_editor
-import lcaps_editor
-
-
-
 locale.setlocale(locale.LC_ALL, "ru_RU.UTF8")
 #loc = findarg("--localepath=", "./locale")
 #locale.setlocale(locale.LC_ALL,'')
@@ -123,32 +114,44 @@ def add_module( face, lbl, mainbook, glade ):
 
 mainbook = glade.get_widget("mainbook")
 # -------------------
-"""
- Создавать обязательно перед всеми
- т.к. многие модули могут "хотеть" подключится
- к сигналам
-"""
-# Nodes configure
-nodes_mtree = nodes_editor.NodesEditor(conf)
-add_module(nodes_mtree,"Nodes",mainbook,glade)
-# -------------------
-# I/O configure
-io_mtree = io_editor.IOEditor(conf)
-add_module(io_mtree,"I/O",mainbook,glade)
+# load modules
+moddir = "modules"
+modlist=[]
+imodules = dict()
+for name in os.listdir(moddir):
+    fullname = os.path.join(moddir, name)
+    if os.path.isdir(fullname):
+        sys.path.append(fullname)
+        modlist.append(name)
+        mlist = map(__import__,[name])
+        for i in mlist:
+            imodules[name] = i
 
-# CAN configure
-can_mtree = can_editor.CANEditor(conf)
-add_module(can_mtree,"CAN",mainbook,glade)
+# read priority list
 
-# UniSet configure
-uniset_w = uniset_editor.UniSetEditor(conf)
-add_module(uniset_w,"UniSet",mainbook,glade)
+prior_mlist = []
+if os.path.exists(moddir+"/priority.list"):
+   mlist = open(moddir+"/priority.list").readlines()
+   for n in mlist:
+       n = n.strip()
+       if imodules.has_key(n):
+          prior_mlist.append(n)
 
-# LCAPS editor
-lcaps_mtree = lcaps_editor.LCAPSEditor(conf)
-add_module(lcaps_mtree,"LCAPS",mainbook,glade)
+load_list = prior_mlist
 
+# добавляем оставшиеся найденные, но которых нет в списке загрузки
+for n in modlist:
+    if n not in prior_mlist:
+       if imodules.has_key(n):
+          load_list.append(n)
+
+# загружаем согласно списку
+for n in load_list:
+    m = imodules[n]
+    face = m.create_module(conf)
+    add_module(face,m.module_name(),mainbook,glade)
 # ---------------
+
 mainbook.show()
 MainWindow()
 gtk.main()

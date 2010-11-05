@@ -391,4 +391,9 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
                 it1 = self.model.iter_next(it1)
             
             it = self.model.iter_next(it)
-                
+
+def create_module(conf):
+    return CANEditor(conf)
+
+def module_name():
+    return "CAN"

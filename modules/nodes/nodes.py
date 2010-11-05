@@ -195,4 +195,10 @@ class NodesEditor(base_editor.BaseEditor,gtk.TreeView):
 
         self.save2xml_elements_value(self.params,xmlnode)
         return True
-  
+
+
+def create_module(conf):
+    return NodesEditor(conf)
+
+def module_name():
+    return "Nodes"

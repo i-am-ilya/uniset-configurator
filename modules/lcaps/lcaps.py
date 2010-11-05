@@ -848,3 +848,11 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
     
     def on_generate_test_clicked(self, button):
         pass
+
+
+
+def create_module(conf):
+    return LCAPSEditor(conf)
+
+def module_name():
+    return "LCAPS"

@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 # AC_PREREQ(2.59)
-AC_INIT([uniset-configurator], [0.4])
+AC_INIT([uniset-configurator], [0.5])
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME,AC_PACKAGE_VERSION)
 
 #AM_GNU_GETTEXT([external])
@@ -25,6 +25,14 @@ AM_PATH_PYTHON(2.6)
 #AM_CHECK_PYTHON_HEADERS(,[AC_MSG_ERROR([python headers not found]);exit] )
 
 AC_CONFIG_FILES([Makefile
+                 modules/Makefile
+                 modules/can/Makefile
+                 modules/uniset-io/Makefile
+                 modules/uniset-io/templates/Makefile
+                 modules/nodes/Makefile
+                 modules/uniset/Makefile
+                 modules/lcaps/Makefile
+                 modules/lcaps/templates/Makefile
                  templates/Makefile])
 		 
 AC_OUTPUT

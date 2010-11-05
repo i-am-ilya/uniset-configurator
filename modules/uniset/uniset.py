@@ -5,6 +5,13 @@ import gobject
 import UniXML
 import configure
 import base_editor
+
+def create_module(conf):
+    return UniSetEditor(conf)
+
+def module_name():
+    return "UniSet"
+
 '''
 Редактирование общих параметров uniset
 '''
@@ -104,4 +111,9 @@ class UniSetEditor(base_editor.BaseEditor,gtk.Viewport):
 
     def on_uniset_btnOK_clicked(self,button):
        self.dlg.response(gtk.RESPONSE_OK)
-  
+
+def create_module(conf):
+    return UniSetEditor(conf)
+
+def module_name():
+    return "UniSet"

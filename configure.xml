@@ -529,12 +529,43 @@
 		</MTR>
 		<GUI SaveDir="/tmp">
 		</GUI>
-		<LCAPS comment="Колонка в помещении ВДГ (трюм)" confirm="TSCPU_Confirm_S" horn="LC2_VDG_Horn_C" hornreset="TSCPU_HornReset_S" lamps="10" name="LC2">
-			<orange confirm="TSCPU_Confirm_S" flamp="LC2_FlashORANGE_C" heartbeat_max="10" horn1="LC2_CommHorn1_C" hornreset="TSCPU_HornReset_S" name="LC2_ORANGE">
-				<item lamp="LC2_Lamp2_C" name="SEES1_Overload20_S" nohorn="1" num="2"/>
-				<item lamp="LC2_Lamp3_C" name="SEES1_Overload95_S" num="3"/>
-				<item lamp="LC2_Lamp4_C" name="SEES2_Overload95_S" num="4"/>
+		<LCAPS comment="Помещение ВДГ (платформа)" confirm="TSCPU_Confirm_S" horn="LC1_Horn_C" hornreset="TSCPU_HornReset_S" lamps="8" name="LC1">
+			<orange confirm="TSCPU_Confirm_S" flamp="LC1_FlashORANGE_C" heartbeat_max="10" horn1="LC1_CommHorn1_C" hornreset="TSCPU_HornReset_S" name="LC1_ORANGE">
+				<item lamp="LC1_Lamp2_C" lamptype="AO" name="QM2_NA_S" num="2" nohorn="1"/>
+				<item lamp="LC1_Lamp1_C" lamptype="AO" name="QM1_NA_S" num="1"/>
 			</orange>
+			<orange_comflash iotype="DO" name="LC1_ORANGE_CommFlash" out="LC1_FlashORANGE_C">
+				<item name="LC1_FlashORANGE1_C"/>
+				<item name="LC1_FlashORANGE2_C"/>
+				<item name="LC1_FlashORANGE3_C"/>
+			</orange_comflash>
+			<red confirm="TSCPU_Confirm_S" flamp="LC1_FlashRED_C" heartbeat_max="10" horn1="LC1_CommHorn2_C" hornreset="TSCPU_HornReset_S" name="LC1_RED">
+				<item lamp="LC1_Lamp3_C" lamptype="AO" name="QM2_On_S" nohorn="1" num="3"/>
+			</red>
+			<red_comflash iotype="DO" name="LC1_RED_CommFlash" out="LC1_FlashRED_C">
+				<item name="LC1_FlashRED1_C"/>
+				<item name="LC1_FlashRED2_C"/>
+				<item name="LC1_FlashRED3_C"/>
+			</red_comflash>
+			<green confirm="TSCPU_Confirm_S" flamp="LC1_FlashGREEN_C" heartbeat_max="10" horn1="LC1_CommHorn3_C" hornreset="TSCPU_HornReset_S" name="LC1_GREEN">
+				<item lamp="LC1_Lamp4_C" lamptype="AO" name="SEES2_Overload95_S" num="4"/>
+				<item lamp="LC1_Lamp2_C" lamptype="AO" name="SEES1_Overload105_S" num="2"/>
+			</green>
+			<green_comflash iotype="DO" name="LC1_GREEN_CommFlash" out="LC1_FlashGREEN_C">
+				<item name="LC1_FlashGREEN1_C"/>
+				<item name="LC1_FlashGREEN2_C"/>
+				<item name="LC1_FlashGREEN3_C"/>
+			</green_comflash>
+			<comhorn iotype="DO" name="LC1_CommHorn" out="LC1_Horn_C">
+				<item name="LC1_CommHorn1_C"/>
+				<item name="LC1_CommHorn2_C"/>
+				<item name="LC1_CommHorn3_C"/>
+				<item name="LC1_CommHorn4_C"/>
+				<item name="LC1_CommHorn5_C"/>
+			</comhorn>
+		</LCAPS>
+		<LCAPS comment="Помещение ВДГ (трюм)" confirm="TSCPU_Confirm_S" horn="LC2_Horn_C" hornreset="TSCPU_HornReset_S" lamps="8" name="LC2">
+			<orange confirm="TSCPU_Confirm_S" flamp="LC2_FlashORANGE_C" heartbeat_max="10" horn1="LC2_CommHorn1_C" hornreset="TSCPU_HornReset_S" name="LC2_ORANGE"/>
 			<orange_comflash iotype="DO" name="LC2_ORANGE_CommFlash" out="LC2_FlashORANGE_C">
 				<item name="LC2_FlashORANGE1_C"/>
 				<item name="LC2_FlashORANGE2_C"/>
@@ -546,23 +577,81 @@
 				<item name="LC2_FlashRED2_C"/>
 				<item name="LC2_FlashRED3_C"/>
 			</red_comflash>
-			<green confirm="TSCPU_Confirm_S" flamp="LC2_FlashGREEN_C" heartbeat_max="10" horn1="LC2_CommHorn3_C" hornreset="TSCPU_HornReset_S" name="LC2_GREEN">
-				<item lamp="LC2_Lamp5_C" name="SEES2_Overload95_S" num="5"/>
-			</green>
+			<green confirm="TSCPU_Confirm_S" flamp="LC2_FlashGREEN_C" heartbeat_max="10" horn1="LC2_CommHorn3_C" hornreset="TSCPU_HornReset_S" name="LC2_GREEN"/>
 			<green_comflash iotype="DO" name="LC2_GREEN_CommFlash" out="LC2_FlashGREEN_C">
 				<item name="LC2_FlashGREEN1_C"/>
 				<item name="LC2_FlashGREEN2_C"/>
 				<item name="LC2_FlashGREEN3_C"/>
 			</green_comflash>
-			<comhorn iotype="DO" name="LC2_CommHorn" out="LC2_VDG_Horn_C">
+			<comhorn iotype="DO" name="LC2_CommHorn" out="LC2_Horn_C">
 				<item name="LC2_CommHorn1_C"/>
 				<item name="LC2_CommHorn2_C"/>
 				<item name="LC2_CommHorn3_C"/>
 				<item name="LC2_CommHorn4_C"/>
 				<item name="LC2_CommHorn5_C"/>
-				<item name="LC2_CommHorn6_C"/>
 			</comhorn>
-			<silent_comflash/>
+		</LCAPS>
+		<LCAPS comment="Помещение ГДГ" confirm="TSCPU_Confirm_S" horn="LC3_Horn_C" hornreset="TSCPU_HornReset_S" lamps="8" name="LC3">
+			<orange confirm="TSCPU_Confirm_S" flamp="LC3_FlashORANGE_C" heartbeat_max="10" horn1="LC3_CommHorn1_C" hornreset="TSCPU_HornReset_S" name="LC3_ORANGE"/>
+			<orange_comflash iotype="DO" name="LC3_ORANGE_CommFlash" out="LC3_FlashORANGE_C">
+				<item name="LC3_FlashORANGE1_C"/>
+				<item name="LC3_FlashORANGE2_C"/>
+				<item name="LC3_FlashORANGE3_C"/>
+			</orange_comflash>
+			<red confirm="TSCPU_Confirm_S" flamp="LC3_FlashRED_C" heartbeat_max="10" horn1="LC3_CommHorn2_C" hornreset="TSCPU_HornReset_S" name="LC3_RED"/>
+			<red_comflash iotype="DO" name="LC3_RED_CommFlash" out="LC3_FlashRED_C">
+				<item name="LC3_FlashRED1_C"/>
+				<item name="LC3_FlashRED2_C"/>
+				<item name="LC3_FlashRED3_C"/>
+			</red_comflash>
+			<green confirm="TSCPU_Confirm_S" flamp="LC3_FlashGREEN_C" heartbeat_max="10" horn1="LC3_CommHorn3_C" hornreset="TSCPU_HornReset_S" name="LC3_GREEN"/>
+			<green_comflash iotype="DO" name="LC3_GREEN_CommFlash" out="LC3_FlashGREEN_C">
+				<item name="LC3_FlashGREEN1_C"/>
+				<item name="LC3_FlashGREEN2_C"/>
+				<item name="LC3_FlashGREEN3_C"/>
+			</green_comflash>
+			<comhorn iotype="DO" name="LC3_CommHorn" out="LC3_Horn_C">
+				<item name="LC3_CommHorn1_C"/>
+				<item name="LC3_CommHorn2_C"/>
+				<item name="LC3_CommHorn3_C"/>
+				<item name="LC3_CommHorn4_C"/>
+				<item name="LC3_CommHorn5_C"/>
+			</comhorn>
+		</LCAPS>
+		<LCAPS comment="Помещение ГЭД" confirm="TSCPU_Confirm_S" horn="LC4_Horn_C" hornreset="TSCPU_HornReset_S" lamps="9" name="LC4">
+			<orange confirm="TSCPU_Confirm_S" flamp="LC4_FlashORANGE_C" heartbeat_max="10" horn1="LC4_CommHorn1_C" hornreset="TSCPU_HornReset_S" name="LC4_ORANGE">
+				<item lamp="LC1_Lamp1_C" name="QM1_NA_S" num="1"/>
+			</orange>
+			<orange_comflash iotype="DO" name="LC4_ORANGE_CommFlash" out="LC4_FlashORANGE_C">
+				<item name="LC4_FlashORANGE1_C"/>
+				<item name="LC4_FlashORANGE2_C"/>
+				<item name="LC4_FlashORANGE3_C"/>
+			</orange_comflash>
+			<red confirm="TSCPU_Confirm_S" flamp="LC4_FlashRED_C" heartbeat_max="10" horn1="LC4_CommHorn2_C" hornreset="TSCPU_HornReset_S" name="LC4_RED">
+				<item lamp="LC1_Lamp4_C" name="QM1_Off_S" num="4"/>
+				<item lamp="LC1_Lamp3_C" name="QM2_Off_C" num="3"/>
+			</red>
+			<red_comflash iotype="DO" name="LC4_RED_CommFlash" out="LC4_FlashRED_C">
+				<item name="LC4_FlashRED1_C"/>
+				<item name="LC4_FlashRED2_C"/>
+				<item name="LC4_FlashRED3_C"/>
+			</red_comflash>
+			<green confirm="TSCPU_Confirm_S" flamp="LC4_FlashGREEN_C" heartbeat_max="10" horn1="LC4_CommHorn3_C" hornreset="TSCPU_HornReset_S" name="LC4_GREEN">
+				<item lamp="LC1_Lamp3_C" name="QM2_NA_S" num="3"/>
+				<item lamp="LC1_Lamp2_C" name="QM2_NA_S" num="2"/>
+			</green>
+			<green_comflash iotype="DO" name="LC4_GREEN_CommFlash" out="LC4_FlashGREEN_C">
+				<item name="LC4_FlashGREEN1_C"/>
+				<item name="LC4_FlashGREEN2_C"/>
+				<item name="LC4_FlashGREEN3_C"/>
+			</green_comflash>
+			<comhorn iotype="DO" name="LC4_CommHorn" out="LC4_Horn_C">
+				<item name="LC4_CommHorn1_C"/>
+				<item name="LC4_CommHorn2_C"/>
+				<item name="LC4_CommHorn3_C"/>
+				<item name="LC4_CommHorn4_C"/>
+				<item name="LC4_CommHorn5_C"/>
+			</comhorn>
 		</LCAPS>
 	</settings>
 	<ObjectsMap idfromfile="1" no_dep="0">
@@ -2820,71 +2909,58 @@
 			<item CAN2sender="SYSTSNode" canTS="TS1Node" id="57" iotype="DI" name="APS_VDG_FS" textname="APSControl: Сработала АПС по ВДГ"/>
 			<item CAN2sender="SYSTSNode" canTS="TS1Node" id="58" iotype="AO" name="APS_VDG_Lamp_C" textname="Помещение ВДГ: лампа АПС на колонке"/>
 			<!-- Световая колонка в помещении ВДГ (платформа)-->
-			<item card="1" channel="12" id="120" io="3010" iotype="AO" lamp="1" name="LC1_VDG_FireOut_C" subdev="0" textname="(21.05)Пожар вне МО"/>
-			<item card="1" channel="13" id="121" io="3010" iotype="AO" lamp="1" name="LC1_VDG_FireInMO_C" subdev="0" textname="(21.03)Пожар в МО"/>
-			<item card="1" channel="14" id="123" io="3010" iotype="AO" lamp="1" name="LC1_VDG_CO2_MO_C" subdev="0" textname="(21.07)Пуск CO2 в МО"/>
-			<item card="1" channel="15" id="124" io="3010" iotype="AO" lamp="1" name="LC1_VDG_APS_C" subdev="0" textname="(21.16)Сработала АПС"/>
-			<item card="1" channel="16" id="125" io="3010" iotype="AO" lamp="1" name="LC1_VDG_HelmFailure_C" subdev="0" textname="(21.17)Неисправность рулевого устройства"/>
-			<item card="1" channel="17" id="126" io="3010" iotype="AO" lamp="1" name="LC1_VDG_MO_Water_C" subdev="0" textname="(21.15)Вода в МО"/>
-			<item card="1" channel="18" id="127" io="3010" iotype="AO" lamp="1" name="LC1_VDG_DeadMan_C" subdev="0" textname="(21.21)СКДМП"/>
-			<item card="1" channel="19" id="128" io="3010" iotype="AO" lamp="1" name="LC1_VDG_Telephon_C" subdev="0" textname="(21.13)Вызов к телефону ВДГ"/>
-			<item card="1" channel="20" id="129" io="3010" iotype="DO" lamp="1" name="LC1_VDG_Horn_C" subdev="0" textname="Горн в МО"/>
-			<item card="1" channel="21" id="130" io="3010" iotype="DO" name="LC1_VDG_RedFlash_C" subdev="0" textname="Красный маячок в МО"/>
-			<item card="1" channel="22" id="131" io="3010" iotype="DO" name="LC1_VDG_OrangeFlash_C" subdev="0" textname="Оранжевый маячок в МО"/>
-			<item card="1" channel="23" id="132" io="3010" iotype="DO" name="LC1_VDG_GreenFlash_C" subdev="0" textname="Зелёный маячок в МО"/>
+			<item card="1" channel="12" id="120" io="3010" iotype="AO" lamp="1" name="LC1_Lamp1_C" subdev="0" textname="(21.05)Пожар вне МО"/>
+			<item card="1" channel="13" id="121" io="3010" iotype="AO" lamp="1" name="LC1_Lamp2_C" subdev="0" textname="(21.03)Пожар в МО"/>
+			<item card="1" channel="14" id="123" io="3010" iotype="AO" lamp="1" name="LC1_Lamp3_C" subdev="0" textname="(21.07)Пуск CO2 в МО"/>
+			<item card="1" channel="15" id="124" io="3010" iotype="AO" lamp="1" name="LC1_Lamp4_C" subdev="0" textname="(21.16)Сработала АПС"/>
+			<item card="1" channel="16" id="125" io="3010" iotype="AO" lamp="1" name="LC1_Lamp5_C" subdev="0" textname="(21.17)Неисправность рулевого устройства"/>
+			<item card="1" channel="17" id="126" io="3010" iotype="AO" lamp="1" name="LC1_Lamp6_C" subdev="0" textname="(21.15)Вода в МО"/>
+			<item card="1" channel="18" id="127" io="3010" iotype="AO" lamp="1" name="LC1_Lamp7_C" subdev="0" textname="(21.21)СКДМП"/>
+			<item card="1" channel="19" id="128" io="3010" iotype="AO" lamp="1" name="LC1_Lamp8_C" subdev="0" textname="(21.13)Вызов к телефону ВДГ"/>
+			<item card="1" channel="20" id="129" io="3010" iotype="DO" lamp="1" name="LC1_Horn_C" subdev="0" textname="Горн в МО"/>
+			<item card="1" channel="21" id="130" io="3010" iotype="DO" name="LC1_RedFlash_C" subdev="0" textname="Красный маячок в МО"/>
+			<item card="1" channel="22" id="131" io="3010" iotype="DO" name="LC1_OrangeFlash_C" subdev="0" textname="Оранжевый маячок в МО"/>
+			<item card="1" channel="23" id="132" io="3010" iotype="DO" name="LC1_GreenFlash_C" subdev="0" textname="Зелёный маячок в МО"/>
 			<!-- Световая колонка в помещении ВДГ (трюм)-->
-			<item card="1" channel="0" id="133" io="3010" iotype="AO" lamp="1" name="LC2_VDG_FireOut_C" subdev="0" textname="(21.05)Пожар вне МО"/>
-			<item card="1" channel="1" id="134" io="3010" iotype="AO" lamp="1" name="LC2_VDG_FireInMO_C" subdev="0" textname="(21.03)Пожар в МО"/>
-			<item card="1" channel="2" id="135" io="3010" iotype="AO" lamp="1" name="LC2_VDG_CO2_MO_C" subdev="0" textname="(21.07)Пуск CO2 в МО"/>
-			<item card="1" channel="3" id="136" io="3010" iotype="AO" lamp="1" name="LC2_VDG_APS_C" subdev="0" textname="(21.16)Сработала АПС"/>
-			<item card="1" channel="4" id="137" io="3010" iotype="AO" lamp="1" name="LC2_VDG_HelmFailure_C" subdev="0" textname="(21.17)Неисправность рулевого устройства"/>
-			<item card="1" channel="5" id="138" io="3010" iotype="AO" lamp="1" name="LC2_VDG_MO_Water_C" subdev="0" textname="(21.15)Вода в МО"/>
-			<item card="1" channel="6" id="139" io="3010" iotype="AO" lamp="1" name="LC2_VDG_DeadMan_C" subdev="0" textname="(21.21)СКДМП"/>
-			<item card="1" channel="7" id="140" io="3010" iotype="AO" lamp="1" name="LC2_VDG_Telephon_C" subdev="0" textname="(21.13)Вызов к телефону ВДГ"/>
-			<item card="1" channel="8" id="141" io="3010" iotype="DO" name="LC2_VDG_Horn_C" subdev="0" textname="Горн в МО"/>
-			<item card="1" channel="9" id="142" io="3010" iotype="DO" name="LC2_VDG_RedFlash_C" subdev="0" textname="Красный маячок в МО"/>
-			<item card="1" channel="10" id="143" io="3010" iotype="DO" name="LC2_VDG_OrangeFlash_C" subdev="0" textname="Оранжевый маячок в МО"/>
-			<item card="1" channel="11" id="144" io="3010" iotype="DO" name="LC2_VDG_GreenFlash_C" subdev="0" textname="Зелёный маячок в МО"/>
+			<item card="1" channel="0" id="133" io="3010" iotype="AO" lamp="1" name="LC2_Lamp1_C" subdev="0" textname="(21.05)Пожар вне МО"/>
+			<item card="1" channel="1" id="134" io="3010" iotype="AO" lamp="1" name="LC2_Lamp2_C" subdev="0" textname="(21.03)Пожар в МО"/>
+			<item card="1" channel="2" id="135" io="3010" iotype="AO" lamp="1" name="LC2_Lamp3_C" subdev="0" textname="(21.07)Пуск CO2 в МО"/>
+			<item card="1" channel="3" id="136" io="3010" iotype="AO" lamp="1" name="LC2_Lamp4_C" subdev="0" textname="(21.16)Сработала АПС"/>
+			<item card="1" channel="4" id="137" io="3010" iotype="AO" lamp="1" name="LC2_Lamp5_C" subdev="0" textname="(21.17)Неисправность рулевого устройства"/>
+			<item card="1" channel="5" id="138" io="3010" iotype="AO" lamp="1" name="LC2_Lamp6_C" subdev="0" textname="(21.15)Вода в МО"/>
+			<item card="1" channel="6" id="139" io="3010" iotype="AO" lamp="1" name="LC2_Lamp7_C" subdev="0" textname="(21.21)СКДМП"/>
+			<item card="1" channel="7" id="140" io="3010" iotype="AO" lamp="1" name="LC2_Lamp8_C" subdev="0" textname="(21.13)Вызов к телефону ВДГ"/>
+			<item card="1" channel="8" id="141" io="3010" iotype="DO" name="LC2_Horn_C" subdev="0" textname="Горн в МО"/>
+			<item card="1" channel="9" id="142" io="3010" iotype="DO" name="LC2_RedFlash_C" subdev="0" textname="Красный маячок в МО"/>
+			<item card="1" channel="10" id="143" io="3010" iotype="DO" name="LC2_OrangeFlash_C" subdev="0" textname="Оранжевый маячок в МО"/>
+			<item card="1" channel="11" id="144" io="3010" iotype="DO" name="LC2_GreenFlash_C" subdev="0" textname="Зелёный маячок в МО"/>
 			<!-- Световая колонка в помещении ГДГ -->
-			<item card="4" channel="14" id="145" io="3022" iotype="AO" lamp="1" name="LC3_GDG_FireOut_C" subdev="1" textname="(21.05)Пожар вне МО"/>
-			<item card="4" channel="15" id="146" io="3022" iotype="AO" lamp="1" name="LC3_GDG_FireInMO_C" subdev="1" textname="(21.03)Пожар в МО"/>
-			<item card="4" channel="16" id="147" io="3022" iotype="AO" lamp="1" name="LC3_GDG_CO2_MO_C" subdev="1" textname="(21.07)Пуск CO2 в МО"/>
-			<item card="4" channel="17" id="148" io="3022" iotype="AO" lamp="1" name="LC3_GDG_APS_C" subdev="1" textname="(21.16)Сработала АПС"/>
-			<item card="4" channel="18" id="149" io="3022" iotype="AO" lamp="1" name="LC3_GDG_HelmFailure_C" subdev="1" textname="(21.17)Неисправность рулевого устройства"/>
-			<item card="4" channel="19" id="150" io="3022" iotype="AO" lamp="1" name="LC3_GDG_MO_Water_C" subdev="1" textname="(21.15)Вода в МО"/>
-			<item card="4" channel="20" id="151" io="3022" iotype="AO" lamp="1" name="LC3_GDG_DeadMan_C" subdev="1" textname="(21.21)СКДМП"/>
-			<item card="4" channel="21" id="152" io="3022" iotype="AO" lamp="1" name="LC3_GDG_Telephon_C" subdev="1" textname="(21.13)Вызов к телефону ГДГ"/>
-			<item card="4" channel="13" id="153" io="3022" iotype="DO" name="LC3_GDG_Horn_C" subdev="1" textname="Горн в МО"/>
-			<item card="4" channel="22" id="154" io="3022" iotype="DO" name="LC3_GDG_RedFlash_C" subdev="1" textname="Красный маячок в МО"/>
-			<item card="4" channel="23" id="155" io="3022" iotype="DO" name="LC3_GDG_OrangeFlash_C" subdev="1" textname="Оранжевый маячок в МО"/>
-			<item card="4" channel="0" id="156" io="3022" iotype="DO" name="LC3_GDG_GreenFlash_C" subdev="2" textname="Зелёный маячок в МО"/>
+			<item card="4" channel="14" id="145" io="3022" iotype="AO" lamp="1" name="LC3_Lamp1_C" subdev="1" textname="(21.05)Пожар вне МО"/>
+			<item card="4" channel="15" id="146" io="3022" iotype="AO" lamp="1" name="LC3_Lamp2_C" subdev="1" textname="(21.03)Пожар в МО"/>
+			<item card="4" channel="16" id="147" io="3022" iotype="AO" lamp="1" name="LC3_Lamp3_C" subdev="1" textname="(21.07)Пуск CO2 в МО"/>
+			<item card="4" channel="17" id="148" io="3022" iotype="AO" lamp="1" name="LC3_Lamp4_C" subdev="1" textname="(21.16)Сработала АПС"/>
+			<item card="4" channel="18" id="149" io="3022" iotype="AO" lamp="1" name="LC3_Lamp5_C" subdev="1" textname="(21.17)Неисправность рулевого устройства"/>
+			<item card="4" channel="19" id="150" io="3022" iotype="AO" lamp="1" name="LC3_Lamp6_C" subdev="1" textname="(21.15)Вода в МО"/>
+			<item card="4" channel="20" id="151" io="3022" iotype="AO" lamp="1" name="LC3_Lamp7_C" subdev="1" textname="(21.21)СКДМП"/>
+			<item card="4" channel="21" id="152" io="3022" iotype="AO" lamp="1" name="LC3_Lamp8_C" subdev="1" textname="(21.13)Вызов к телефону ГДГ"/>
+			<item card="4" channel="13" id="153" io="3022" iotype="DO" name="LC3_Horn_C" subdev="1" textname="Горн в МО"/>
+			<item card="4" channel="22" id="154" io="3022" iotype="DO" name="LC3_RedFlash_C" subdev="1" textname="Красный маячок в МО"/>
+			<item card="4" channel="23" id="155" io="3022" iotype="DO" name="LC3_OrangeFlash_C" subdev="1" textname="Оранжевый маячок в МО"/>
+			<item card="4" channel="0" id="156" io="3022" iotype="DO" name="LC3_GreenFlash_C" subdev="2" textname="Зелёный маячок в МО"/>
 			<!-- Световая колонка в помещении ГЭД -->
-			<item card="4" channel="0" id="157" io="3022" iotype="AO" lamp="1" name="LC4_GED_FireOutGED_C" subdev="1" textname="(21.06)Пожар вне ГЭД"/>
-			<item card="4" channel="1" id="158" io="3022" iotype="AO" lamp="1" name="LC4_GED_FireInGED_C" subdev="1" textname="(21.08)Пожар в ГЭД"/>
-			<item card="4" channel="2" id="159" io="3022" iotype="AO" lamp="1" name="LC4_GED_CO2_GED_C" subdev="1" textname="(21.16)Пуск CO2 в ГЭД"/>
-			<item card="4" channel="3" id="160" io="3022" iotype="AO" lamp="1" name="LC4_GED_APS_C" subdev="1" textname="(21.17)Сработала АПС"/>
-			<item card="4" channel="4" id="161" io="3022" iotype="AO" lamp="1" name="LC4_GED_HelmFailure_C" subdev="1" textname="(21.20)Неисправность рулевого устройства"/>
-			<item card="4" channel="8" id="162" io="3022" iotype="AO" lamp="1" name="LC4_Water_C" subdev="1" textname="(21.15)Вода в ГЭД"/>
-			<item card="4" channel="5" id="163" io="3022" iotype="AO" lamp="1" name="LC4_GED_DeadMan_C" subdev="1" textname="(21.22)СКДМП"/>
-			<item card="4" channel="6" id="164" io="3022" iotype="AO" lamp="1" name="LC4_GED_Telephon_C" subdev="1" textname="(21.14)Вызов к телефону ГЭД"/>
-			<item card="4" channel="7" id="165" io="3022" iotype="AO" lamp="1" name="LC4_GED_Telegraph_C" subdev="1" textname="(21.23)Машинный телеграф"/>
-			<item card="4" channel="12" id="166" io="3022" iotype="DO" name="LC4_GED_Horn_C" subdev="1" textname="Горн в ГЭД"/>
-			<item card="4" channel="9" id="167" io="3022" iotype="DO" name="LC4_GED_RedFlash_C" subdev="1" textname="Красный маячок в ГЭД"/>
-			<item card="4" channel="10" id="168" io="3022" iotype="DO" name="LC4_GED_OrangeFlash_C" subdev="1" textname="Оранжевый маячок в ГЭД"/>
-			<item card="4" channel="11" id="169" io="3022" iotype="DO" name="LC4_GED_GreenFlash_C" subdev="1" textname="Зелёный маячок в ГЭД"/>
-			<!-- Псевдодатчики для групповых алгоритмов -->
-			<!--			
-			<item id="777100" iotype="DO" name="MO_LC_RedFlash1_C" textname="Красный маячок в МО"/>
-			<item id="777101" iotype="DO" name="MO_LC_OrangeFlash1_C" textname="Оранжевый маячок в МО"/>
-			<item id="777108" iotype="DO" name="MO_LC_OrangeFlash2_C" textname="Оранжевый маячок в МО"/>
-			<item id="777109" iotype="DO" name="MO_LC_OrangeFlash3_C" textname="Оранжевый маячок в МО"/>
-			<item id="777102" iotype="DO" name="MO_LC_GreenFlash1_C" textname="Зелёный маячок в МО"/>
-			<item id="777103" iotype="DO" name="MO_LC_Horn1_C" textname="Горн в МО"/>
-			<item id="777104" iotype="DO" name="MO_LC_Horn2_C" textname="Горн в МО"/>
-			<item id="777105" iotype="DO" name="MO_LC_Horn3_C" textname="Горн в МО"/>
-			<item id="777106" iotype="AO" name="MO_APS_Flash_C" textname="(псевдо лампочка): Сработала АПС"/>
-			<item id="777107" iotype="AO" name="MKO_APS_Flash_C" textname="(псевдо лампочка): Сработала АПС"/>
--->
+			<item card="4" channel="0" id="157" io="3022" iotype="AO" lamp="1" name="LC4_Lamp1_C" subdev="1" textname="(21.06)Пожар вне ГЭД"/>
+			<item card="4" channel="1" id="158" io="3022" iotype="AO" lamp="1" name="LC4_Lamp2_C" subdev="1" textname="(21.08)Пожар в ГЭД"/>
+			<item card="4" channel="2" id="159" io="3022" iotype="AO" lamp="1" name="LC4_Lamp3_C" subdev="1" textname="(21.16)Пуск CO2 в ГЭД"/>
+			<item card="4" channel="3" id="160" io="3022" iotype="AO" lamp="1" name="LC4_Lamp4_C" subdev="1" textname="(21.17)Сработала АПС"/>
+			<item card="4" channel="4" id="161" io="3022" iotype="AO" lamp="1" name="LC4_Lamp5_C" subdev="1" textname="(21.20)Неисправность рулевого устройства"/>
+			<item card="4" channel="8" id="162" io="3022" iotype="AO" lamp="1" name="LC4_Lamp6_C" subdev="1" textname="(21.15)Вода в ГЭД"/>
+			<item card="4" channel="5" id="163" io="3022" iotype="AO" lamp="1" name="LC4_Lamp7_C" subdev="1" textname="(21.22)СКДМП"/>
+			<item card="4" channel="6" id="164" io="3022" iotype="AO" lamp="1" name="LC4_Lamp8_C" subdev="1" textname="(21.14)Вызов к телефону ГЭД"/>
+			<item card="4" channel="7" id="165" io="3022" iotype="AO" lamp="1" name="LC4_Lamp9_C" subdev="1" textname="(21.23)Машинный телеграф"/>
+			<item card="4" channel="12" id="166" io="3022" iotype="DO" name="LC4_Horn_C" subdev="1" textname="Горн в ГЭД"/>
+			<item card="4" channel="9" id="167" io="3022" iotype="DO" name="LC4_RedFlash_C" subdev="1" textname="Красный маячок в ГЭД"/>
+			<item card="4" channel="10" id="168" io="3022" iotype="DO" name="LC4_OrangeFlash_C" subdev="1" textname="Оранжевый маячок в ГЭД"/>
+			<item card="4" channel="11" id="169" io="3022" iotype="DO" name="LC4_GreenFlash_C" subdev="1" textname="Зелёный маячок в ГЭД"/>
 			<!-- PUS: SELCO1 -->
 			<item id="100201" iotype="AO" lamp="1" mbaddr="0x1" mbfunc="0x06" mbreg="1" mbtype="rtu" name="PUS_SELCO1_Lamp1_C" rs="tspus" textname="ПУС: SELCO1. Lamp1"/>
 			<item id="100202" iotype="AO" lamp="1" mbaddr="0x1" mbfunc="0x06" mbreg="2" mbtype="rtu" name="PUS_SELCO1_Lamp2_C" rs="tspus" textname="ПУС: SELCO1. Lamp2"/>
@@ -3145,38 +3221,74 @@
 			<!-- Псевдодатчик состояния флэш-карты !-->
 			<item id="888000" iotype="AI" name="flash_state" textname="Состояние флэш-карты"/>
 			<item id="888001" iotype="DI" name="pulsar" textname="xxpulsar"/>
-			<item id="10" iotype="AI"/>
-			<item id="11" name="LC2_Lamp1_C"/>
-			<item id="12" name="LC2_Lamp2_C"/>
-			<item id="14" name="LC2_Lamp3_C"/>
-			<item id="15" name="LC2_Lamp4_C"/>
-			<item id="16" name="LC2_Lamp5_C"/>
-			<item id="17" name="LC2_Lamp6_C"/>
-			<item id="18" name="LC2_Lamp7_C"/>
-			<item id="20" name="LC2_Lamp8_C"/>
-			<item id="21" name="LC2_Lamp9_C"/>
-			<item id="22" name="LC2_Lamp10_C"/>
-			<item id="31" iotype="DO" name="LC2_CommHorn1_C" textname="LC2_CommHorn1_C"/>
-			<item id="32" iotype="DO" name="LC2_FlashORANGE_C" textname="LC2_FlashORANGE_C"/>
-			<item id="34" iotype="DO" name="LC2_FlashORANGE1_C" textname="LC2_FlashORANGE1_C"/>
-			<item id="38" iotype="DO" name="LC2_FlashORANGE2_C" textname="LC2_FlashORANGE2_C"/>
-			<item id="39" iotype="DO" name="LC2_FlashORANGE3_C" textname="LC2_FlashORANGE3_C"/>
-			<item id="42" iotype="DO" name="LC2_CommHorn2_C" textname="LC2_CommHorn2_C"/>
-			<item id="43" iotype="DO" name="LC2_FlashRED_C" textname="LC2_FlashRED_C"/>
-			<item id="59" iotype="DO" name="LC2_FlashRED1_C" textname="LC2_FlashRED1_C"/>
-			<item id="85" iotype="DO" name="LC2_FlashRED2_C" textname="LC2_FlashRED2_C"/>
-			<item id="114" iotype="DO" name="LC2_FlashRED3_C" textname="LC2_FlashRED3_C"/>
-			<item id="116" iotype="DO" name="LC2_CommHorn3_C" textname="LC2_CommHorn3_C"/>
-			<item id="117" iotype="DO" name="LC2_FlashGREEN_C" textname="LC2_FlashGREEN_C"/>
-			<item id="119" iotype="DO" name="LC2_FlashGREEN1_C" textname="LC2_FlashGREEN1_C"/>
-			<item id="122" iotype="DO" name="LC2_FlashGREEN2_C" textname="LC2_FlashGREEN2_C"/>
-			<item id="170" iotype="DO" name="LC2_FlashGREEN3_C" textname="LC2_FlashGREEN3_C"/>
-			<item id="172" iotype="DO" name="LC2_CommHorn4_C" textname="LC2_CommHorn4_C"/>
-			<item id="173" iotype="DO" name="LC2_FlashSILENT_C" textname="LC2_FlashSILENT_C"/>
-			<item id="175" iotype="DO" name="LC2_CommHorn5_C" textname="LC2_CommHorn5_C"/>
-			<item id="176" iotype="DO" name="LC2_CommHorn6_C" textname="LC2_CommHorn6_C"/>
-			<item id="177" iotype="AI"/>
-			<item id="178" iotype="AI"/>
+			<item id="12" iotype="DO" name="LC1_CommHorn1_C" textname="LC1_CommHorn1_C"/>
+			<item id="14" iotype="DO" name="LC1_FlashORANGE_C" textname="LC1_FlashORANGE_C"/>
+			<item id="16" iotype="DO" name="LC1_FlashORANGE1_C" textname="LC1_FlashORANGE1_C"/>
+			<item id="17" iotype="DO" name="LC1_FlashORANGE2_C" textname="LC1_FlashORANGE2_C"/>
+			<item id="18" iotype="DO" name="LC1_FlashORANGE3_C" textname="LC1_FlashORANGE3_C"/>
+			<item id="21" iotype="DO" name="LC1_CommHorn2_C" textname="LC1_CommHorn2_C"/>
+			<item id="22" iotype="DO" name="LC1_FlashRED_C" textname="LC1_FlashRED_C"/>
+			<item id="31" iotype="DO" name="LC1_FlashRED1_C" textname="LC1_FlashRED1_C"/>
+			<item id="32" iotype="DO" name="LC1_FlashRED2_C" textname="LC1_FlashRED2_C"/>
+			<item id="33" iotype="DO" name="LC1_FlashRED3_C" textname="LC1_FlashRED3_C"/>
+			<item id="38" iotype="DO" name="LC1_CommHorn3_C" textname="LC1_CommHorn3_C"/>
+			<item id="39" iotype="DO" name="LC1_FlashGREEN_C" textname="LC1_FlashGREEN_C"/>
+			<item id="42" iotype="DO" name="LC1_FlashGREEN1_C" textname="LC1_FlashGREEN1_C"/>
+			<item id="43" iotype="DO" name="LC1_FlashGREEN2_C" textname="LC1_FlashGREEN2_C"/>
+			<item id="44" iotype="DO" name="LC1_FlashGREEN3_C" textname="LC1_FlashGREEN3_C"/>
+			<item id="85" iotype="DO" name="LC1_CommHorn4_C" textname="LC1_CommHorn4_C"/>
+			<item id="114" iotype="DO" name="LC1_CommHorn5_C" textname="LC1_CommHorn5_C"/>
+			<item id="116" iotype="DO" name="LC2_CommHorn1_C" textname="LC2_CommHorn1_C"/>
+			<item id="117" iotype="DO" name="LC2_FlashORANGE_C" textname="LC2_FlashORANGE_C"/>
+			<item id="119" iotype="DO" name="LC2_FlashORANGE1_C" textname="LC2_FlashORANGE1_C"/>
+			<item id="122" iotype="DO" name="LC2_FlashORANGE2_C" textname="LC2_FlashORANGE2_C"/>
+			<item id="170" iotype="DO" name="LC2_FlashORANGE3_C" textname="LC2_FlashORANGE3_C"/>
+			<item id="172" iotype="DO" name="LC2_CommHorn2_C" textname="LC2_CommHorn2_C"/>
+			<item id="173" iotype="DO" name="LC2_FlashRED_C" textname="LC2_FlashRED_C"/>
+			<item id="175" iotype="DO" name="LC2_FlashRED1_C" textname="LC2_FlashRED1_C"/>
+			<item id="176" iotype="DO" name="LC2_FlashRED2_C" textname="LC2_FlashRED2_C"/>
+			<item id="177" iotype="DO" name="LC2_FlashRED3_C" textname="LC2_FlashRED3_C"/>
+			<item id="179" iotype="DO" name="LC2_CommHorn3_C" textname="LC2_CommHorn3_C"/>
+			<item id="180" iotype="DO" name="LC2_FlashGREEN_C" textname="LC2_FlashGREEN_C"/>
+			<item id="182" iotype="DO" name="LC2_FlashGREEN1_C" textname="LC2_FlashGREEN1_C"/>
+			<item id="183" iotype="DO" name="LC2_FlashGREEN2_C" textname="LC2_FlashGREEN2_C"/>
+			<item id="184" iotype="DO" name="LC2_FlashGREEN3_C" textname="LC2_FlashGREEN3_C"/>
+			<item id="186" iotype="DO" name="LC2_CommHorn4_C" textname="LC2_CommHorn4_C"/>
+			<item id="187" iotype="DO" name="LC2_CommHorn5_C" textname="LC2_CommHorn5_C"/>
+			<item id="190" iotype="DO" name="LC3_CommHorn1_C" textname="LC3_CommHorn1_C"/>
+			<item id="191" iotype="DO" name="LC3_FlashORANGE_C" textname="LC3_FlashORANGE_C"/>
+			<item id="193" iotype="DO" name="LC3_FlashORANGE1_C" textname="LC3_FlashORANGE1_C"/>
+			<item id="194" iotype="DO" name="LC3_FlashORANGE2_C" textname="LC3_FlashORANGE2_C"/>
+			<item id="195" iotype="DO" name="LC3_FlashORANGE3_C" textname="LC3_FlashORANGE3_C"/>
+			<item id="197" iotype="DO" name="LC3_CommHorn2_C" textname="LC3_CommHorn2_C"/>
+			<item id="198" iotype="DO" name="LC3_FlashRED_C" textname="LC3_FlashRED_C"/>
+			<item id="200" iotype="DO" name="LC3_FlashRED1_C" textname="LC3_FlashRED1_C"/>
+			<item id="201" iotype="DO" name="LC3_FlashRED2_C" textname="LC3_FlashRED2_C"/>
+			<item id="202" iotype="DO" name="LC3_FlashRED3_C" textname="LC3_FlashRED3_C"/>
+			<item id="204" iotype="DO" name="LC3_CommHorn3_C" textname="LC3_CommHorn3_C"/>
+			<item id="205" iotype="DO" name="LC3_FlashGREEN_C" textname="LC3_FlashGREEN_C"/>
+			<item id="207" iotype="DO" name="LC3_FlashGREEN1_C" textname="LC3_FlashGREEN1_C"/>
+			<item id="208" iotype="DO" name="LC3_FlashGREEN2_C" textname="LC3_FlashGREEN2_C"/>
+			<item id="209" iotype="DO" name="LC3_FlashGREEN3_C" textname="LC3_FlashGREEN3_C"/>
+			<item id="211" iotype="DO" name="LC3_CommHorn4_C" textname="LC3_CommHorn4_C"/>
+			<item id="212" iotype="DO" name="LC3_CommHorn5_C" textname="LC3_CommHorn5_C"/>
+			<item id="215" iotype="DO" name="LC4_CommHorn1_C" textname="LC4_CommHorn1_C"/>
+			<item id="216" iotype="DO" name="LC4_FlashORANGE_C" textname="LC4_FlashORANGE_C"/>
+			<item id="218" iotype="DO" name="LC4_FlashORANGE1_C" textname="LC4_FlashORANGE1_C"/>
+			<item id="219" iotype="DO" name="LC4_FlashORANGE2_C" textname="LC4_FlashORANGE2_C"/>
+			<item id="220" iotype="DO" name="LC4_FlashORANGE3_C" textname="LC4_FlashORANGE3_C"/>
+			<item id="222" iotype="DO" name="LC4_CommHorn2_C" textname="LC4_CommHorn2_C"/>
+			<item id="223" iotype="DO" name="LC4_FlashRED_C" textname="LC4_FlashRED_C"/>
+			<item id="225" iotype="DO" name="LC4_FlashRED1_C" textname="LC4_FlashRED1_C"/>
+			<item id="226" iotype="DO" name="LC4_FlashRED2_C" textname="LC4_FlashRED2_C"/>
+			<item id="227" iotype="DO" name="LC4_FlashRED3_C" textname="LC4_FlashRED3_C"/>
+			<item id="229" iotype="DO" name="LC4_CommHorn3_C" textname="LC4_CommHorn3_C"/>
+			<item id="230" iotype="DO" name="LC4_FlashGREEN_C" textname="LC4_FlashGREEN_C"/>
+			<item id="232" iotype="DO" name="LC4_FlashGREEN1_C" textname="LC4_FlashGREEN1_C"/>
+			<item id="233" iotype="DO" name="LC4_FlashGREEN2_C" textname="LC4_FlashGREEN2_C"/>
+			<item id="234" iotype="DO" name="LC4_FlashGREEN3_C" textname="LC4_FlashGREEN3_C"/>
+			<item id="236" iotype="DO" name="LC4_CommHorn4_C" textname="LC4_CommHorn4_C"/>
+			<item id="237" iotype="DO" name="LC4_CommHorn5_C" textname="LC4_CommHorn5_C"/>
 		</sensors>
 		<thresholds name="thresholds">
 			<sensor iotype="AI" name="DG1_P_AS" ses="1">
@@ -3301,22 +3413,6 @@
 			<item id="21606" name="Journal"/>
 			<iten id="21622" name="TSGui"/>
 			<item id="21707" name="PultAPS_DEIF1"/>
-			<item evnt_ts2="1" id="21708" name="MO_LCAPS_RED"/>
-			<item evnt_ts1="1" id="21709" name="MKO_LCAPS_RED"/>
-			<item evnt_ts2="1" id="21710" name="MO_LCAPS_ORANGE"/>
-			<item evnt_ts1="1" id="21711" name="MKO_LCAPS_ORANGE"/>
-			<item evnt_ts1="1" id="21740" name="MKO_LCAPS_ORANGE_SILENT"/>
-			<item evnt_ts1="1" id="21741" name="MO_LCAPS_ORANGE_SILENT"/>
-			<item evnt_ts2="1" id="21712" name="MO_LCAPS_GREEN"/>
-			<item evnt_ts1="1" id="21713" name="MKO_LCAPS_GREEN"/>
-			<item evnt_ts2="1" id="21714" name="MO_CommonHorn"/>
-			<item evnt_ts1="1" id="21715" name="MKO_CommonHorn"/>
-			<item evnt_ts2="1" id="21716" name="MO_CommonRedFlash"/>
-			<item evnt_ts2="1" id="21717" name="MO_CommonOrangeFlash"/>
-			<item evnt_ts2="1" id="21718" name="MO_CommonGreenFlash"/>
-			<item evnt_ts1="1" id="21719" name="MKO_CommonRedFlash"/>
-			<item evnt_ts1="1" id="21720" name="MKO_CommonOrangeFlash"/>
-			<item evnt_ts1="1" id="21721" name="MKO_CommonGreenFlash"/>
 			<item evnt_tspus="1" id="21722" name="PUS_SELCO1"/>
 			<item evnt_tspus="1" id="21723" name="PUS_SELCO2"/>
 			<item evnt_tspus="1" id="21724" name="PUS_CommonHorn"/>
@@ -3338,15 +3434,38 @@
 			<item evnt_ts2="1" id="21744" name="MKO_DeadMan"/>
 			<item evnt_ts1="1" id="21745" name="MO_DeadMan"/>
 			<item id="21800" name="Tester"/>
-			<item id="2" name="LC2"/>
-			<item id="23" name="LC2_ORANGE"/>
-			<item id="33" name="LC2_ORANGE_CommFlash"/>
-			<item id="41" name="LC2_RED"/>
-			<item id="44" name="LC2_RED_CommFlash"/>
-			<item id="115" name="LC2_GREEN"/>
-			<item id="118" name="LC2_GREEN_CommFlash"/>
-			<item id="171" name="LC2_SILENT"/>
-			<item id="174" name="LC2_CommHorn"/>
+			<item id="2" name="LC1"/>
+			<item id="11" name="LC1_ORANGE"/>
+			<item id="15" name="LC1_ORANGE_CommFlash"/>
+			<item id="20" name="LC1_RED"/>
+			<item id="23" name="LC1_RED_CommFlash"/>
+			<item id="34" name="LC1_GREEN"/>
+			<item id="41" name="LC1_GREEN_CommFlash"/>
+			<item id="59" name="LC1_CommHorn"/>
+			<item id="10" name="LC2"/>
+			<item id="115" name="LC2_ORANGE"/>
+			<item id="118" name="LC2_ORANGE_CommFlash"/>
+			<item id="171" name="LC2_RED"/>
+			<item id="174" name="LC2_RED_CommFlash"/>
+			<item id="178" name="LC2_GREEN"/>
+			<item id="181" name="LC2_GREEN_CommFlash"/>
+			<item id="185" name="LC2_CommHorn"/>
+			<item id="188" name="LC3"/>
+			<item id="189" name="LC3_ORANGE"/>
+			<item id="192" name="LC3_ORANGE_CommFlash"/>
+			<item id="196" name="LC3_RED"/>
+			<item id="199" name="LC3_RED_CommFlash"/>
+			<item id="203" name="LC3_GREEN"/>
+			<item id="206" name="LC3_GREEN_CommFlash"/>
+			<item id="210" name="LC3_CommHorn"/>
+			<item id="213" name="LC4"/>
+			<item id="214" name="LC4_ORANGE"/>
+			<item id="217" name="LC4_ORANGE_CommFlash"/>
+			<item id="221" name="LC4_RED"/>
+			<item id="224" name="LC4_RED_CommFlash"/>
+			<item id="228" name="LC4_GREEN"/>
+			<item id="231" name="LC4_GREEN_CommFlash"/>
+			<item id="235" name="LC4_CommHorn"/>
 		</objects>
 	</ObjectsMap>
 	<messages idfromfile="1" name="messages">

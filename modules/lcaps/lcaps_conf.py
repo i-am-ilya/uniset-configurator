@@ -125,7 +125,7 @@ if __name__ == "__main__":
 
     is_system_run_flag = sys.argv[0].startswith("./")
     datdir = ( "/usr/share/uniset-configurator/" if not is_system_run_flag else "./" )
-    templdir=datdir+"/templates/"
+    templdir=datdir+"/templates/lcaps"
 
     confile = ""
     if checkArgParam("--help",False) == True or checkArgParam("-h",False) == True:
