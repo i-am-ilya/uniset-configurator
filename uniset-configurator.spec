@@ -1,5 +1,5 @@
 Name: uniset-configurator
-Version: 0.3
+Version: 0.4
 Release: eter2
 Summary: UniSet configurator
 Group: Development/Python
@@ -32,6 +32,7 @@ mv -f %buildroot%python_sitelibdir/*.py %buildroot%python_sitelibdir/%name/
 mkdir %buildroot/%_bindir/
 ln -s %python_sitelibdir/%name/%name.py %buildroot/%_bindir/%name
 ln -s %python_sitelibdir/%name/io_conf.py %buildroot/%_bindir/uniset-ioconf
+ln -s %python_sitelibdir/%name/lcaps_conf.py %buildroot/%_bindir/uniset-lcaps-conf
 
 %files
 %dir %python_sitelibdir/%name
@@ -41,6 +42,12 @@ ln -s %python_sitelibdir/%name/io_conf.py %buildroot/%_bindir/uniset-ioconf
 %_bindir/*
 
 %changelog
+* Fri Nov 05 2010 Pavel Vainerman <pv@altlinux.ru> 0.4-eter2
+- add link for uniset-lcaps-conf
+
+* Fri Nov 05 2010 Pavel Vainerman <pv@altlinux.ru> 0.4-eter1
+- add LCAPS test generator 
+
 * Wed Oct 20 2010 Pavel Vainerman <pv@altlinux.ru> 0.3-eter2
 - fixed bug in previous build
 
