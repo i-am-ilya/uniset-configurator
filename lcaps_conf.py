@@ -124,6 +124,7 @@ if __name__ == "__main__":
 
     is_system_run_flag = sys.argv[0].startswith("./")
     datdir = ( "/usr/share/uniset-configurator/" if not is_system_run_flag else "./" )
+    templdir=datdir+"/templates/"
 
     confile = ""
     if checkArgParam("--help",False) == True or checkArgParam("-h",False) == True:
@@ -146,7 +147,7 @@ if __name__ == "__main__":
     
     xml = UniXML.UniXML(confile)
     
-    lcapsconf = LCAPSConfig(xml,datdir)
+    lcapsconf = LCAPSConfig(xml,templdir)
     
     if outfile == "":
        outfile = "lcaps-%s-test.xml"%lcname.lower()

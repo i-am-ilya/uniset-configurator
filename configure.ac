@@ -24,6 +24,7 @@ dnl Python
 AM_PATH_PYTHON(2.6)
 #AM_CHECK_PYTHON_HEADERS(,[AC_MSG_ERROR([python headers not found]);exit] )
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile
+                 templates/Makefile])
 		 
 AC_OUTPUT

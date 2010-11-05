@@ -1,7 +1,9 @@
+SUBDIRS = templates
+
 pyexec_SCRIPTS 	= *.py
 
-confdir  	= $(pkgdatadir)
-conf_DATA	= *.glade ctl-comedi-skel.sh lcaps-*.xml
+confdir     = $(pkgdatadir)
+conf_DATA   = *.glade
 
 #if MAINTAINER_MODE
 #MAINTAINER=locale/lstart.mo
