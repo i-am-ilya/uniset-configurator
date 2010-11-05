@@ -214,7 +214,7 @@ class IOConfig():
 
 if __name__ == "__main__":
 
-    from io_conf import *
+    from uniset_io_conf import *
     from cmd_param import *
 
     is_system_run_flag = sys.argv[0].startswith("./")
