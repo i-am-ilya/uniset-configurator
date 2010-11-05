@@ -7,7 +7,7 @@ import datetime
 import UniXML
 import configure
 import base_editor
-import io_conf
+import uniset_io_conf
 from global_conf import *
 
 '''
@@ -24,7 +24,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
 
         conf.glade.signal_autoconnect(self)
         
-        self.ioconf = io_conf.IOConfig(conf.xml,conf.datdir)
+        self.ioconf = uniset_io_conf.IOConfig(conf.xml,conf.datdir)
         
         # подключение к редактору узлов (для отслеживания изменений в списке узлов)
         n_editor = conf.n_editor()

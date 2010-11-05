@@ -1,5 +1,6 @@
 SUBDIRS = templates
 
-#pyexec_SCRIPTS 	= *.py
+pyexec_SCRIPTS 	= lcaps_conf.py
+
 moddir    = @pythondir@/@PACKAGE@/modules/lcaps
-mod_DATA  = *.py
+mod_DATA  = lcaps.py

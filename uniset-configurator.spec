@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.5
-Release: eter4
+Release: eter5
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -31,7 +31,7 @@ mv -f %buildroot%python_sitelibdir/*.py %buildroot%python_sitelibdir/%name/
 
 mkdir %buildroot/%_bindir/
 ln -s %python_sitelibdir/%name/%name.py %buildroot/%_bindir/%name
-ln -s %python_sitelibdir/%name/modules/uniset-io/io_conf.py %buildroot/%_bindir/uniset-ioconf
+ln -s %python_sitelibdir/%name/modules/uniset-io/uniset_io_conf.py %buildroot/%_bindir/uniset-ioconf
 ln -s %python_sitelibdir/%name/modules/lcaps/lcaps_conf.py %buildroot/%_bindir/uniset-lcaps-conf
 
 %files
@@ -43,6 +43,9 @@ ln -s %python_sitelibdir/%name/modules/lcaps/lcaps_conf.py %buildroot/%_bindir/u
 %_bindir/*
 
 %changelog
+* Fri Nov 05 2010 Pavel Vainerman <pv@altlinux.ru> 0.5-eter5
+- et executable bit for lcaps-conf and uniset-ioconf
+
 * Fri Nov 05 2010 Pavel Vainerman <pv@altlinux.ru> 0.5-eter4
 - add 'ALL' for lcaps-conf --gen-test-skel
 
