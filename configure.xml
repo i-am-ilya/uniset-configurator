@@ -531,7 +531,7 @@
 		</GUI>
 		<LCAPS comment="Помещение ВДГ (платформа)" confirm="TSCPU_Confirm_S" horn="LC1_Horn_C" hornreset="TSCPU_HornReset_S" lamps="8" name="LC1">
 			<orange confirm="TSCPU_Confirm_S" flamp="LC1_FlashORANGE_C" heartbeat_max="10" horn1="LC1_CommHorn1_C" hornreset="TSCPU_HornReset_S" name="LC1_ORANGE">
-				<item lamp="LC1_Lamp2_C" lamptype="AO" name="QM2_NA_S" num="2" nohorn="1"/>
+				<item lamp="LC1_Lamp2_C" lamptype="AO" name="QM2_NA_S" nohorn="1" num="2"/>
 				<item lamp="LC1_Lamp1_C" lamptype="AO" name="QM1_NA_S" num="1"/>
 			</orange>
 			<orange_comflash iotype="DO" name="LC1_ORANGE_CommFlash" out="LC1_FlashORANGE_C">
@@ -548,8 +548,8 @@
 				<item name="LC1_FlashRED3_C"/>
 			</red_comflash>
 			<green confirm="TSCPU_Confirm_S" flamp="LC1_FlashGREEN_C" heartbeat_max="10" horn1="LC1_CommHorn3_C" hornreset="TSCPU_HornReset_S" name="LC1_GREEN">
-				<item lamp="LC1_Lamp4_C" lamptype="AO" name="SEES2_Overload95_S" num="4"/>
 				<item lamp="LC1_Lamp2_C" lamptype="AO" name="SEES1_Overload105_S" num="2"/>
+				<item lamp="LC1_Lamp4_C" lamptype="AO" name="SEES2_Overload95_S" noconfirm="1" num="4"/>
 			</green>
 			<green_comflash iotype="DO" name="LC1_GREEN_CommFlash" out="LC1_FlashGREEN_C">
 				<item name="LC1_FlashGREEN1_C"/>

@@ -392,6 +392,12 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         p[fid.l_xmlnode] = None
         return p
     
+    def update_item_param(self,iter,params):
+        num = 0
+        for p in params:
+            self.model.set_value(iter,num,p)
+            num += 1
+    
     def on_button_press_event(self, object, event):
         (model, iter) = self.get_selection().get_selected()
 
@@ -698,6 +704,22 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         if not iter:
           return
         
+        t = self.model.get_value(iter,fid.etype)
+        lc_iter = iter
+        if t == "I":
+           lc_iter = self.model.iter_parent(iter)
+        elif t == "L":
+           lc_iter = iter
+           print "*** ELEMENT TYPE != 'I'"
+           return           
+        else:
+           print "*** FAILED ELEMENT TYPE " + t
+           return        
+        
+        lc_name = self.model.get_value(lc_iter,fid.name)
+        lc_params = self.lc_list[lc_name]
+        lc_node = lc_params['xmlnode']
+        
         i_node = UniXML.EmptyNode()
         addNew = True
         xmlnode = self.model.get_value(iter,fid.xmlnode)
@@ -706,6 +728,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
            addNew = False
         
         self.init_elements_value(self.item_params,i_node)
+        self.set_combobox_element(self.item_ltype,self.get_light_name(xmlnode.parent.name))
         
         while True:
            res = self.dlg_lcaps.run()
@@ -727,33 +750,28 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
            
            break
         
-        t = self.model.get_value(iter,fid.etype)
-        lc_iter = iter
-        if t == "I":
-           lc_iter = self.model.iter_parent(iter)
-        elif t == "L":
-           lc_iter = iter
-           print "*** ELEMENT TYPE != 'I'"
-           return           
-        else:
-           print "*** FAILED ELEMENT TYPE " + t
-           return
-        
-        lc_name = self.model.get_value(lc_iter,fid.name)
-        lc_params = self.lc_list[lc_name]
-        lc_node = lc_params['xmlnode']
-        
+        prev_flamp = self.model.get_value(iter,fid.flamp)
         l_type = self.item_ltype.get_active_text()
+        flamp = None
         fparams = None
+        
         if l_type == "Оранжевый":
            fparams = lc_params['orange']
+           flamp = 'orange'
         elif l_type == "Красный":
            fparams = lc_params['red']
+           flamp = 'red'
         elif l_type == "Зелёный":
            fparams = lc_params['green']
+           flamp = 'green'
         
         l_node = fparams["node"]
-        
+
+        # если теперт данная лампочка относится к другому "маячку"
+        # надо удалять узел в предыдущей секции
+        if xmlnode != None and flamp != prev_flamp:
+           xmlnode.unlinkNode()
+
         num = self.model.get_value(iter,fid.name)
         
         xmlnode = self.create_xmlnode_if_not_exist_by_prop("num",num,l_node,"item",False)
@@ -763,17 +781,23 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         lamp_node = self.conf.check_and_create_sensor(lamp_name,"AO")
         self.item_lamp.set_text(lamp_name)
         xmlnode.setProp("lamptype",lamp_node.prop("iotype"))
-
+        
         # обновляем xmlnode по параметрам в диалоге
         self.save2xml_elements_value(self.item_params,xmlnode)
 
+#        self.model.set_value(iter,fid.noconfirm,xmlnode.prop("noconfirm"))
+#        self.model.set_value(iter,fid.noconfirm,xmlnode.prop("nohorn"))
+
         p = self.read_item_param(xmlnode,l_node.name)
         lc_params['list'][int(num)] = p
-        
+
         if addNew == True:
            it1 = self.model.insert_after(None,iter,p)
            self.set_cursor( self.model.get_path(it1) )
            self.model.remove(iter)
+           self.update_item_param(it1,p)
+        else:
+           self.update_item_param(iter,p)
         
         self.conf.mark_changes()        
     
