@@ -1,2 +1,2 @@
-	<test num="{TESTNUM}" name="{SEC} test" replace="Flash={Flash},CommHorn={CommHorn}">
+	<test num="{TESTNUM}" name="{LCNAME} {SEC} test" replace="Flash={Flash},CommHorn={CommHorn}">
 {CHECK}	</test>	  

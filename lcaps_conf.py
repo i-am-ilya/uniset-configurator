@@ -78,7 +78,7 @@ class LCAPSConfig():
             l = self.check_and_replace(l,"{HORNRESET}",lc_node.prop("hornreset"))
             l = self.check_and_replace(l,"{HORN}",lc_node.prop("horn"))
             l = self.check_and_replace(l,"{CONFIRM}",lc_node.prop("confirm"))
-            l = self.check_and_replace(l,"{LCNAME}",lc_node.prop("name"))
+            l = self.check_and_replace(l,"{LCNAME}",lc_node.prop("name").lower())
             l = self.check_and_replace(l,"{GENTIME}",gdate)
             res += l   
         return res
@@ -88,6 +88,7 @@ class LCAPSConfig():
         check = self.gen_checks_for_section(ctx_check,secnode)
         for l in ctx_item:
             l = self.check_and_replace(l,"{TESTNUM}",str(tnum))
+            l = self.check_and_replace(l,"{LCNAME}",secnode.parent.prop("name"))
             l = self.check_and_replace(l,"{SEC}",secnode.name.upper())
             l = self.check_and_replace(l,"{Flash}",secnode.prop("flamp"))
             l = self.check_and_replace(l,"{CommHorn}",secnode.prop("horn1"))
