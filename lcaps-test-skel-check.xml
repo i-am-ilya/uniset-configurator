@@ -1,0 +1,1 @@
+  		<check test="outlink" file="lcaps-template{NOHORN}.xml" link="ALL" replace="APSSensor={SENSOR},Lamp={LAMP}"/>

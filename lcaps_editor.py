@@ -761,7 +761,8 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         # имя лампочки - генерируется
         lamp_name = self.get_lamp_name(lc_name,num)
         lamp_node = self.conf.check_and_create_sensor(lamp_name,"AO")
-        self.item_lamp.set_text(lamp_name) 
+        self.item_lamp.set_text(lamp_name)
+        xmlnode.setProp("lamptype",lamp_node.prop("iotype"))
 
         # обновляем xmlnode по параметрам в диалоге
         self.save2xml_elements_value(self.item_params,xmlnode)
@@ -844,4 +845,6 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         s = self.conf.s_dlg().run(self)
         if s != None:
            self.dlg_confirm.set_text(s.prop("name"))
-     
+    
+    def on_generate_test_clicked(self, button):
+        pass

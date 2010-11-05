@@ -1,0 +1,43 @@
+<?xml version = '1.0' encoding = 'utf-8'?>
+<YauzaAPSTestScenario>
+<!--
+	Тесты предварительный и недостаточно подробно проверяющие условия. Можно 'улучшать'..
+	Номера присвоены, просто, чтобы можно было запускать тесты выборочно (по номеру).
+-->
+<TestList logfile="result.lcaps-template.txt" logfile_trunc="1">
+	<test num="1" name="Initialization" ignore_failed="1">
+<!--	
+		<action name="set" id="HornReset_S" val="1" reset_time="300" val2="0"/>
+		<action name="set" id="Confirm_S" val="1" reset_time="300" val2="0"/>
+-->		
+		<action name="set" id="APSSensor" val="0"/>
+		<action name="msleep" msec="200"/>
+    </test>
+	<test num="2" name="Lamp1 test">
+	  <action name="set" id="APSSensor" val="1"/>
+	  <action name="msleep" msec="500"/>
+  	  <check test="equal" id="Lamp" val="2"/>
+	  <check test="equal" id="CommHorn" val="1"/>
+	  <check test="equal" id="Horn" val="1"/>
+	  <check test="equal" id="Flash" val="1"/>
+	</test>	  
+	<test num="3" name="Reset horn">
+	  <action name="set" id="HornReset" val="1" reset_time="300" val2="0"/>
+	  <action name="msleep" msec="550"/>
+	  <check test="equal" id="CommHorn" val="0"/>
+	  <check test="equal" id="Horn" val="0"/>
+	  <check test="equal" id="Flash" val="1"/>
+	</test>	  
+	<test num="4" name="Confirm">
+	  <action name="set" id="Confirm" val="1" reset_time="300" val2="0"/>
+	  <action name="msleep" msec="500"/>
+  	  <check test="equal" id="Lamp" val="1"/>
+	  <check test="equal" id="Flash" val="0"/>
+	</test>	  
+	<test num="5" name="Reset APS">
+	  <action name="set" id="APSSensor" val="0"/>
+	  <action name="msleep" msec="500"/>
+  	  <check test="equal" id="Lamp" val="0"/>
+	</test>
+</TestList>
+</YauzaAPSTestScenario>
