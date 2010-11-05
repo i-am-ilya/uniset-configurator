@@ -13,6 +13,7 @@ import libxml2
 import UniXML
 import locale
 
+
 locale.setlocale(locale.LC_ALL, "ru_RU.UTF8")
 #loc = findarg("--localepath=", "./locale")
 #locale.setlocale(locale.LC_ALL,'')
@@ -65,8 +66,16 @@ class MainWindow(gtk.Widget):
 
 conf = None                                                                                                                                                                         
 
+moddir = ".modules"
+for p in sys.path:
+    if  os.path.basename(p) == "uniset-configurator":
+        moddir = p + "/modules"
+        break
+
 is_system_run_flag = sys.argv[0].startswith("./")
 datdir = ( "/usr/share/uniset-configurator/" if not is_system_run_flag else "./" )
+#moddir = ( "/usr/share/uniset-configurator/"+modules if not is_system_run_flag else "./modules" )
+
 mwinglade = datdir + "mainwin.glade"
 
 # for debug
@@ -115,7 +124,6 @@ def add_module( face, lbl, mainbook, glade ):
 mainbook = glade.get_widget("mainbook")
 # -------------------
 # load modules
-moddir = "modules"
 modlist=[]
 imodules = dict()
 for name in os.listdir(moddir):
@@ -151,7 +159,6 @@ for n in load_list:
     face = m.create_module(conf)
     add_module(face,m.module_name(),mainbook,glade)
 # ---------------
-
 mainbook.show()
 MainWindow()
 gtk.main()

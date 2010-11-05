@@ -1,5 +1,5 @@
 Name: uniset-configurator
-Version: 0.4
+Version: 0.5
 Release: eter3
 Summary: UniSet configurator
 Group: Development/Python
@@ -26,13 +26,13 @@ BuildRequires: python-devel
 %install
 %make_install install DESTDIR=%buildroot
 
-mkdir %buildroot%python_sitelibdir/%name
+#mkdir %buildroot%python_sitelibdir/%name
 mv -f %buildroot%python_sitelibdir/*.py %buildroot%python_sitelibdir/%name/
 
 mkdir %buildroot/%_bindir/
 ln -s %python_sitelibdir/%name/%name.py %buildroot/%_bindir/%name
-ln -s %python_sitelibdir/%name/io_conf.py %buildroot/%_bindir/uniset-ioconf
-ln -s %python_sitelibdir/%name/lcaps_conf.py %buildroot/%_bindir/uniset-lcaps-conf
+ln -s %python_sitelibdir/%name/modules/uniset-io/io_conf.py %buildroot/%_bindir/uniset-ioconf
+ln -s %python_sitelibdir/%name/modules/lcaps/lcaps_conf.py %buildroot/%_bindir/uniset-lcaps-conf
 
 %files
 %dir %python_sitelibdir/%name
