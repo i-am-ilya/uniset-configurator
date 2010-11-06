@@ -204,3 +204,19 @@ class Conf:
         node = self.find_sensor(name)
         if node != None:
            node.unlinkNode()
+    
+    def create_xmlnode_if_not_exist(self,name,parent,recur=True):
+        rnode = self.xml.firstNode(parent.children)
+        node = self.xml.findNode(rnode,name)[0]
+        if node == None:
+           node = parent.newChild(None,name,None)
+        return node
+  
+    def create_xmlnode_if_not_exist_by_prop(self,propname,propvalue,parent,name,recur=True):
+        rnode = self.xml.firstNode(parent.children)
+        node = self.xml.findNode_byProp(rnode,propname,propvalue,recur)[0]
+        if node == None:
+           node = parent.newChild(None,name,None)
+           node.setProp(propname,propvalue)
+        
+        return node    
