@@ -33,6 +33,8 @@ AC_CONFIG_FILES([Makefile
                  modules/uniset/Makefile
                  modules/lcaps/Makefile
                  modules/lcaps/templates/Makefile
+                 modules/apspanel/Makefile
+                 modules/apspanel/templates/Makefile
                  templates/Makefile])
 		 
 AC_OUTPUT

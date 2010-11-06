@@ -1,4 +1,4 @@
-SUBDIRS = can uniset_io uniset nodes lcaps
+SUBDIRS = can uniset_io uniset nodes lcaps apspanel
 
 moddir    = @pythondir@/@PACKAGE@/modules
 mod_DATA  = priority.list
