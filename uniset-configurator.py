@@ -76,6 +76,9 @@ is_system_run_flag = sys.argv[0].startswith("./")
 datdir = ( "/usr/share/uniset-configurator/" if not is_system_run_flag else "./" )
 #moddir = ( "/usr/share/uniset-configurator/"+modules if not is_system_run_flag else "./modules" )
 
+if is_system_run_flag:
+   sys.path.append("./")
+
 mwinglade = datdir + "mainwin.glade"
 
 # for debug

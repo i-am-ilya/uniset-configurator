@@ -4898,7 +4898,7 @@ TBI16_8</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkHBox" id="lcaps_id_select_box1">
+                  <widget class="GtkHBox" id="apspanel_id_select_box">
                     <property name="visible">True</property>
                     <child>
                       <widget class="GtkEntry" id="apspanel_dlg_name">
@@ -5960,7 +5960,7 @@ TBI16_8</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkCheckButton" id="lcaps_dlg_remoteconfirm">
+              <widget class="GtkCheckButton" id="apspane_dlg_remoteconfirm">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
@@ -6043,6 +6043,7 @@ TBI16_8</property>
         <property name="use_action_appearance">False</property>
         <property name="label" translatable="yes">Edit panel</property>
         <property name="use_underline">True</property>
+        <signal name="activate" handler="on_apspanel_edit"/>
       </widget>
     </child>
     <child>
@@ -6096,6 +6097,7 @@ TBI16_8</property>
         <property name="use_action_appearance">False</property>
         <property name="label" translatable="yes">Remove item</property>
         <property name="use_underline">True</property>
+        <signal name="activate" handler="on_apspanel_item_remove"/>
       </widget>
     </child>
     <child>

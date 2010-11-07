@@ -257,24 +257,22 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
         return False
     
     def on_apspanel_add(self,menuitem):
-        print "on add panel.."
         self.panel_edit(None)
     
     def on_apspanel_edit(self,menuitem):
-        print "on edit panel.."
         (model, iter) = self.get_selection().get_selected()
         if not iter:
            return	         
         self.panel_edit(iter)       
     
     def on_apspanel_remove(self,menuitem):
-        print "on remove panel.."
         (model, iter) = self.get_selection().get_selected()
         if not iter:
            return	         
+        
+        self.panel_remove(iter)
     
     def on_apspanel_item_add(self,menuitem):
-        print "on add item.."
         (model, iter) = self.get_selection().get_selected()
         if not iter:
            return	         
@@ -286,6 +284,7 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
         elif t == "I":
            p_iter = self.model.iter_parent(iter)
         else:
+            print "%s: Unknown element type '%s'"%(__file__,__function__(), t)
             return
         
         # добавляем пустой элемент
@@ -294,18 +293,36 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
         self.item_edit(it)
     
     def on_apspanel_item_edit(self,menuitem):
-        print "on edit item.."
         (model, iter) = self.get_selection().get_selected()
         if not iter:
            return	         
         self.item_edit(iter)       
     
     def on_apspanel_item_remove(self,menuitem):
-        print "on remove item.."
         (model, iter) = self.get_selection().get_selected()
         if not iter:
+           return 
+        
+        self.item_remove(iter)
+    
+    def panel_remove(self,iter):
+        if not iter:
            return   
+        
+        p_name = self.model.get_value(iter,fid.name)
 
+        msg = _("Are you sure remove '%s'?")%(p_name)
+        dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,msg)
+        res = dlg.run()
+        dlg.hide()
+        if res == gtk.RESPONSE_NO:
+           return
+        
+        p_node = self.model.get_value(iter,fid.xmlnode)
+        self.model.remove(iter)
+        p_node.unlinkNode()
+        self.conf.mark_changes()
+    
     def panel_edit(self,iter):
         p_node = UniXML.EmptyNode()
         if iter:
@@ -327,8 +344,23 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
            break    
         
         p_name = self.dlg_name.get_text()
+        
+#        prev_name = self.model.get_value(iter,fid.name)
+#        if prev_name!="" and prev_name!=p_name:
+#           msg = _("Удалить предыдущий идентификатор '%s'?")%(prev_name)
+#           dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,msg)
+#           res = dlg.run()
+#           dlg.hide()
+#           if res == gtk.RESPONSE_YES:
+#              self.conf.remove_object(prev_name)
+        
         self.conf.check_and_create_object(p_name)
-        p_node = self.conf.create_xmlnode_if_not_exist_by_prop("name",p_name,self.settings_node,"APSPanel",False)
+        p_node = None
+        if not iter:
+           p_node = self.conf.create_xmlnode_if_not_exist_by_prop("name",p_name,self.settings_node,"APSPanel",False)
+        else:
+           p_node = self.model.get_value(iter,fid.xmlnode)
+        
         self.save2xml_elements_value(self.panel_params,p_node)
         plist = self.read_panel_param(p_node)
         
@@ -339,6 +371,25 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
         
         self.conf.update_list()
         self.conf.mark_changes()
+    
+    def item_remove(self,iter):
+        if not iter:
+           return   
+        
+#        print "(%s)%s: remove"%(__file__,__function__())
+        i_name = self.model.get_value(iter,fid.name)
+
+        msg = _("Are you sure remove item?")
+        dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,msg)
+        res = dlg.run()
+        dlg.hide()
+        if res == gtk.RESPONSE_NO:
+           return
+        
+        i_node = self.model.get_value(iter,fid.xmlnode)
+        self.model.remove(iter)
+        i_node.unlinkNode()
+        self.conf.mark_changes()    
     
     def item_edit(self,iter):
 
@@ -378,9 +429,13 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
 
         p_iter = self.model.iter_parent(iter)
         p_node = self.model.get_value(p_iter,fid.xmlnode)
-
+        
+        l_node = self.conf.check_and_create_sensor(self.item_lamp.get_text(),"AO")
+        
         i_name = self.item_sensor.get_text()
+        
         i_node = self.conf.create_xmlnode_if_not_exist_by_prop("name",i_name,p_node,"item",False)
+        i_node.setProp("lamptype",l_node.prop("iotype"))
         
         self.save2xml_elements_value(self.item_params,i_node)
         plist = self.read_item_param(i_node)
@@ -391,7 +446,6 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
         
         self.conf.update_list()
         self.conf.mark_changes()
-        
 
     def on_apspanel_dlg_btn_id_clicked(self, button):
         s = self.conf.s_dlg().run(self)

@@ -25,3 +25,11 @@ def get_str_val(str_val):
     if str_val == None: 
        return ""
     return str_val
+
+def __line__():
+    caller = inspect.stack()[1]
+    return int (caller[2])
+
+def __function__():
+    caller = inspect.stack()[1]
+    return caller[3]
