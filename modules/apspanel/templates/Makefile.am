@@ -1,2 +1,2 @@
-#confdir  	= $(pkgdatadir)/templates/apspanel
-#conf_DATA	= *.xml
+confdir  	= $(pkgdatadir)/templates/apspanel
+conf_DATA	= *.xml

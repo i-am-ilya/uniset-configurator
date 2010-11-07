@@ -1,0 +1,11 @@
+<?xml version = '1.0' encoding = 'utf-8'?>
+<APSPanelTestScenario generate="{GENTIME}">
+<TestList logfile="result.apspanel-{NAME}.txt" logfile_trunc="1" 
+    replace="HornReset={HORNRESET},Confirm={CONFIRM},Horn={HORN}">
+	<test num="1" name="{NAME} Initialization" ignore_failed="1">
+		<action name="set" id="HornReset" val="1" reset_time="300" val2="0"/>
+		<action name="set" id="Confirm" val="1" reset_time="300" val2="0"/>
+		<action name="msleep" msec="1000"/>
+    </test>
+{TESTS}</TestList>
+</APSPanelTestScenario>

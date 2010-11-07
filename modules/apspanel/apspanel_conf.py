@@ -14,9 +14,7 @@ import UniXML
 from global_conf import *
 
 '''
-Класс реализующий всё что касается работы с настройками в/в (comedi):
-1. Типы карт, параметры, модули ядра и т.п.
-2. Он же консольный генератор скрипта настройки ctl-comedi.sx
+Генератор тестов для АПС панели
 '''
 class APSPanelConfig():
 
@@ -24,95 +22,81 @@ class APSPanelConfig():
         self.xml = xml
         self.datdir = datdir
     
-    def gen_test_skel(self,lcname,fname):
+    def gen_test_skel(self,pname,fname):
         
         self.settings_node = self.xml.findNode(self.xml.getDoc(),"settings")[0]
         if self.settings_node == None:
             print "<settings> not found?!..."
             return False
         
-        lc_node = None
         node = self.xml.firstNode(self.settings_node.children)
         while node != None:
-            if node.name.upper() == "LCAPS":
+            if node.name.upper() == "APSPANEL":
                name = get_str_val(node.prop("name"))
-               if lcname == "ALL":
-                  fname = "lcaps-%s-test.xml"%name.lower()
+               if pname == "ALL":
+                  fname = "apspanel-%s-test.xml"%name.lower()
                   self.gen_test_skel_by_name(node,name,fname)
-               elif name == lcname:
+               elif name == pname:
                   self.gen_test_skel_by_name(node,name,fname)
                   break
             
             node = self.xml.nextNode(node)
     
-    def gen_test_skel_by_name(self, lc_node, lc_name, fname):
+    def gen_test_skel_by_name(self, p_node, p_name, fname):
         
-        if lc_node == None:
-           print "<LCAPS name='%s' not found"%lcname
+        if p_node == None:
+           print "<APSPanel name='%s' not found"%p_name
            return False
-         
-        o_node = self.xml.findNode(lc_node,"orange")[0]
-        if o_node == None:
-           print "For '%s' <orange> section not found."%lc_name
-           return
-        g_node = self.xml.findNode(lc_node,"green")[0]
-        if g_node == None:
-           print "For '%s' <orange> section not found."%lc_name
-           return
-        r_node = self.xml.findNode(lc_node,"red")[0]
-        if r_node == None:
-           print "For '%s' <orange> section not found."%lc_name
-           return
         
-        ctx = open( self.datdir + "lcaps-test-skel.xml" ).readlines()
-        ctx_item = open( self.datdir + "lcaps-test-skel-item.xml" ).readlines()
-        ctx_check = open( self.datdir + "lcaps-test-skel-check.xml" ).readlines()
+        print "******* gen for " + str(p_name)
+        
+        ctx = open( self.datdir + "apspanel-test-skel.xml" ).readlines()
+        ctx_item = open( self.datdir + "apspanel-test-skel-item.xml" ).readlines()
+        ctx_check = open( self.datdir + "apspanel-test-skel-check.xml" ).readlines()
          
-        tests = self.gen_tests_for_section(ctx_item,ctx_check,o_node,2)
-        tests += self.gen_tests_for_section(ctx_item,ctx_check,r_node,3)
-        tests += self.gen_tests_for_section(ctx_item,ctx_check,g_node,4)
-        tests = self.gen_result_ctx(ctx,lc_node,tests)
+        tests = self.gen_tests(ctx_item,ctx_check,p_node)
+        tests = self.gen_result_ctx(ctx,p_node,tests)
         
         out = open(fname,"w")
         out.write(tests)
         out.close()
     
     def check_and_replace(self,s,t,v):
+        if s == None or t == None or v == None:
+           return s
+        
         if t in s:
            return s.replace(t,v)
         return s
     
-    def gen_result_ctx(self,ctx,lc_node,tests):
+    def gen_result_ctx(self,ctx,node,tests):
         res = ""
         gdate = datetime.datetime.today().strftime("uniset-configurator: %Y-%m-%d %H:%M")
         for l in ctx:
             l = self.check_and_replace(l,"{TESTS}",tests)
-            l = self.check_and_replace(l,"{HORNRESET}",lc_node.prop("hornreset"))
-            l = self.check_and_replace(l,"{HORN}",lc_node.prop("horn"))
-            l = self.check_and_replace(l,"{CONFIRM}",lc_node.prop("confirm"))
-            l = self.check_and_replace(l,"{LCNAME}",lc_node.prop("name").lower())
+            l = self.check_and_replace(l,"{HORNRESET}",node.prop("hornreset"))
+            l = self.check_and_replace(l,"{HORN}",node.prop("horn"))
+            l = self.check_and_replace(l,"{CONFIRM}",node.prop("confirm"))
+            l = self.check_and_replace(l,"{NAME}",node.prop("name").lower())
             l = self.check_and_replace(l,"{GENTIME}",gdate)
             res += l   
         return res
 
-    def gen_tests_for_section(self,ctx_item,ctx_check,secnode,tnum):
+    def gen_tests(self,ctx_item,ctx_check,node):
         res=""
-        check = self.gen_checks_for_section(ctx_check,secnode)
+        check = self.gen_checks(ctx_check,node)
         for l in ctx_item:
-            l = self.check_and_replace(l,"{TESTNUM}",str(tnum))
-            l = self.check_and_replace(l,"{LCNAME}",secnode.parent.prop("name").upper())
-            l = self.check_and_replace(l,"{SEC}",secnode.name.upper())
-            l = self.check_and_replace(l,"{Flash}",secnode.prop("flamp"))
-            l = self.check_and_replace(l,"{CommHorn}",secnode.prop("horn1"))
+            l = self.check_and_replace(l,"{NAME}",node.prop("name").upper())
+            l = self.check_and_replace(l,"{Flash}",node.prop("flamp"))
+            l = self.check_and_replace(l,"{CommHorn}",node.prop("horn1"))
             l = self.check_and_replace(l,"{CHECK}",check)
             res += l   
         
         return res
         
-    def gen_checks_for_section(self,ctx_check,secnode):
+    def gen_checks(self,ctx_check,p_node):
         res=""
-        secname = secnode.name
-        node = self.xml.firstNode(secnode.children)
+        node = self.xml.firstNode(p_node.children)
         while node != None:
             nohorn= get_int_val(node.prop("nohorn"))
             if nohorn != 0:
@@ -132,27 +116,27 @@ class APSPanelConfig():
 
 if __name__ == "__main__":
 
-    from lcaps_conf import *
+    from apspanel_conf import *
     from cmd_param import *
 
     is_system_run_flag = sys.argv[0].startswith("./")
     datdir = ( "/usr/share/uniset-configurator/" if not is_system_run_flag else "./" )
-    templdir=( datdir + "templates/lcaps/" if not is_system_run_flag else "./templates/" )
+    templdir=( datdir + "templates/apspanel/" if not is_system_run_flag else "./templates/" )
 
     confile = ""
     if checkArgParam("--help",False) == True or checkArgParam("-h",False) == True:
        print "Usage: %s [--confile configure.xml ] [--outfile filename]  --gen-test-skel [name|ALL]" % sys.argv[0]
        print "--confile confile                 - Configuration file. Default: configure.xml"
-       print "--gen-test-skel [LCAPSname|ALL]   - Generate test skeleton for LCAPS=name"
+       print "--gen-test-skel [panel name|ALL]  - Generate test skeleton for APSPanel name"
        print "--outfile filename                - Save to filename. Default: name-test"
        print "-v                                - Verbose mode"
        exit(0)
 
     confile = getArgParam("--confile","configure.xml")
-    lcname = getArgParam("--gen-test-skel","")
+    pname = getArgParam("--gen-test-skel","")
     verb = checkArgParam("-v",False)
     
-    if lcname == "":
+    if pname == "":
        print "Usage: %s [--confile configure.xml ] [--outfile filename]  --gen-test-skel [name|ALL]" % sys.argv[0]
        exit(1)
     
@@ -160,13 +144,11 @@ if __name__ == "__main__":
     
     xml = UniXML.UniXML(confile)
     
-    lcapsconf = APSPanelConfig(xml,templdir)
+    apsconf = APSPanelConfig(xml,templdir)
     
     if outfile == "":
-       outfile = "lcaps-%s-test.xml"%lcname.lower()
+       outfile = "apspanel-%s-test.xml"%pname.lower()
 
-    lcapsconf.gen_test_skel(lcname,outfile)
+    apsconf.gen_test_skel(pname,outfile)
     if verb == True:
        print "Generate %s OK." % outfile
-    
-    exit(0)

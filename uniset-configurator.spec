@@ -1,6 +1,6 @@
 Name: uniset-configurator
-Version: 0.5
-Release: eter6
+Version: 0.6
+Release: eter1
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -33,6 +33,7 @@ mkdir -p %buildroot/%_bindir/
 ln -s %python_sitelibdir/%name/%name.py %buildroot/%_bindir/%name
 ln -s %python_sitelibdir/%name/uniset_io_conf.py %buildroot/%_bindir/uniset-ioconf
 ln -s %python_sitelibdir/%name/lcaps_conf.py %buildroot/%_bindir/uniset-lcaps-conf
+ln -s %python_sitelibdir/%name/apspanel_conf.py %buildroot/%_bindir/uniset-apspanel-conf
 
 %files
 %dir %python_sitelibdir/%name
@@ -43,6 +44,9 @@ ln -s %python_sitelibdir/%name/lcaps_conf.py %buildroot/%_bindir/uniset-lcaps-co
 %_bindir/*
 
 %changelog
+* Sun Nov 07 2010 Pavel Vainerman <pv@altlinux.ru> 0.6-eter1
+- add apspanel editor
+
 * Fri Nov 05 2010 Pavel Vainerman <pv@altlinux.ru> 0.5-eter6
 - rebuild new verion
 

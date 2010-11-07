@@ -14,9 +14,7 @@ import UniXML
 from global_conf import *
 
 '''
-Класс реализующий всё что касается работы с настройками в/в (comedi):
-1. Типы карт, параметры, модули ядра и т.п.
-2. Он же консольный генератор скрипта настройки ctl-comedi.sx
+Генератор тестовых скриптов для свето-звуковой колонки
 '''
 class LCAPSConfig():
 
@@ -78,6 +76,9 @@ class LCAPSConfig():
         out.close()
     
     def check_and_replace(self,s,t,v):
+        if s == None or t == None or v == None:
+           return s	  
+        
         if t in s:
            return s.replace(t,v)
         return s

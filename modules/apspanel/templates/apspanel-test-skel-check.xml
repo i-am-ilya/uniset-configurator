@@ -1,0 +1,1 @@
+  		<check test="outlink" file="apspanel-template{NOHORN}.xml" link="ALL" replace="APS={SENSOR},Lamp={LAMP}"/>

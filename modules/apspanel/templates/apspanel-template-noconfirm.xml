@@ -1,0 +1,35 @@
+<?xml version = '1.0' encoding = 'utf-8'?>
+<YauzaAPSTestScenario>
+<!--
+	Тесты предварительный и недостаточно подробно проверяющие условия. Можно 'улучшать'..
+	Номера присвоены, просто, чтобы можно было запускать тесты выборочно (по номеру).
+-->
+<TestList>
+	<test num="1" name="Initialization" ignore_failed="1">
+		<action name="set" id="APS" val="0"/>
+		<action name="msleep" msec="200"/>
+    </test>
+	<test num="2" name="Run APS">
+	  <action name="set" id="APS" val="1"/>
+	  <action name="msleep" msec="500"/>
+  	  <check test="equal" id="Lamp" val="1"/>
+	  <check test="equal" id="Flash" val="1"/>
+	</test>	  
+	<test num="3" name="Reset APS">
+	  <action name="set" id="APS" val="0"/>
+	  <action name="msleep" msec="500"/>
+  	  <check test="equal" id="Lamp" val="0"/>
+	  <check test="equal" id="Flash" val="0"/>
+	</test>
+	<test num="4" name="repeat">
+  	  <check test="link" link="num=2"/>
+  	  <check test="link" link="num=3"/>
+	</test>
+	<test num="5" name="Finish (off)">
+	  <action name="set" id="APS" val="0"/>
+ 	  <action name="set" id="Confirm" val="1" reset_time="300" val2="0"/>
+	  <action name="set" id="HornReset" val="1" reset_time="300" val2="0"/>
+	  <action name="msleep" msec="500"/>
+	</test>
+</TestList>
+</YauzaAPSTestScenario>
