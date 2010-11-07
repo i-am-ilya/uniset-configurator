@@ -19,17 +19,16 @@ from global_conf import *
 # field id
 class fid():
    name = 0
-   sensor = 1
-   lamp = 2
-   nohorn = 3
-   noconfirm = 4
-   tname = 5
-   delay = 6
-   etype = 7
-   xmlnode = 8
-   s_xmlnode = 9
-   l_xmlnode = 10
-   maxnum = 11
+   lamp = 1
+   nohorn = 2
+   noconfirm = 3
+   tname = 4
+   delay = 5
+   etype = 6
+   xmlnode = 7
+   s_xmlnode = 8
+   l_xmlnode = 9
+   maxnum = 10
 
 '''
 Задачи: настройщик для АПС панелей
@@ -52,7 +51,6 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
                                     gobject.TYPE_STRING, \
                                     gobject.TYPE_STRING, \
                                     gobject.TYPE_STRING, \
-                                    gobject.TYPE_STRING, \
                                     object,\
                                     object,\
                                     object)
@@ -66,15 +64,10 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
         self.connect("button-press-event", self.on_button_press_event)
         
         renderer = gtk.CellRendererText()
-        column = gtk.TreeViewColumn(_("Панель"), renderer, text=fid.name)
+        column = gtk.TreeViewColumn(_("Панель/АПС"), renderer, text=fid.name)
         column.set_clickable(False)
         self.append_column(column)
 
-        renderer = gtk.CellRendererText()
-        column = gtk.TreeViewColumn(_("Датчик"), renderer,text=fid.sensor)
-        column.set_clickable(False)
-        self.append_column(column)
-        
         renderer = gtk.CellRendererText()
         column = gtk.TreeViewColumn(_("Лампочка"), renderer,text=fid.lamp)
         column.set_clickable(False)
@@ -96,11 +89,12 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
         column.set_clickable(False)
         self.append_column(column)                
 
-        self.aps_params=[ \
+        self.panel_params=[ \
             ["dlg","apspanel_dlg",None,True], \
             ["panel_popup","apspanel_popup",None,True], \
             ["item_popup","apspanel_item_popup",None,True], \
-            ["dlg_id","apspanel_dlg_name","name",False], \
+            ["noconfirm_list","apspanel_noconfirm_list",None,True], \
+            ["dlg_name","apspanel_dlg_name","name",False], \
             ["dlg_horn1","apspanel_dlg_horn1","horn1",False], \
             ["dlg_horn2","apspanel_dlg_horn2","horn2",False], \
             ["dlg_hornblink1","apspanel_dlg_hornblink1","hornblink1",False], \
@@ -116,7 +110,7 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
             ["dlg_oncontrol","apspanel_dlg_oncontrol","onControl",False] \
         ]
 
-        self.init_glade_elements(self.aps_params) 
+        self.init_glade_elements(self.panel_params) 
         
 #        self.aps_rm_params=[\
 #            ["dlg_rm","lcaps_dlg_remove",None,True], \
@@ -163,18 +157,22 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
                   node = self.conf.xml.nextNode(node)
                   continue
 
-               p=[]
-               for i in range(0,fid.maxnum):
-                   p.append(None)
-               
-               p[fid.name] = pname
-               p[fid.etype] = "P"
-
+               p = self.read_panel_param(node)
                iter = self.model.append(None,p)
                self.build_items(iter,node)
             node = self.conf.xml.nextNode(node)
+     
+    def read_panel_param(self,xmlnode):
+        p=[]
+        for i in range(0,fid.maxnum):
+            p.append(None)
+        
+        p[fid.name] = get_str_val(xmlnode.prop("name"))
+        p[fid.etype] = "P"
+        p[fid.xmlnode] = xmlnode
+        return p
     
-    def buld_items(self, iter, xmlnode):
+    def build_items(self, iter, xmlnode):
         node = self.conf.xml.firstNode(xmlnode.children)
         if node == None:
            return
@@ -201,18 +199,34 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
         
         if p[fid.s_xmlnode] != None:
            s_node = p[fid.s_xmlnode]
-           p[fid.sensor] = str("(%6s)%s" % (s_node.prop("id"),s_node.prop("name")))
+           p[fid.name] = str("(%6s)%s" % (s_node.prop("id"),s_node.prop("name")))
            p[fid.tname] = get_str_val(s_node.prop("textname"))
         else:
-           p[fid.sensor] = get_str_val(xmlnode.prop("name"))
            p[fid.tname] = ""
 
         return p
-
-    def name_if_exist(self,node):
-        if node == None:
-           return ""
-        return node.prop("name")
+     
+    def get_default_param(self,etype):
+        p=[]
+        for i in range(0,fid.maxnum):
+            p.append(None)
+        
+        p[fid.name] = ""
+        p[fid.lamp] = ""
+        p[fid.nohorn] = "0"
+        p[fid.noconfirm] = "0"
+        p[fid.delay] = "0"
+        p[fid.etype] = etype
+        p[fid.xmlnode] = None
+        p[fid.s_xmlnode] = None
+        p[fid.l_xmlnode] = None
+        return p
+    
+    def update_item_param(self,iter,params):
+        num = 0
+        for p in params:
+            self.model.set_value(iter,num,p)
+            num += 1
     
     def on_button_press_event(self, object, event):
         (model, iter) = self.get_selection().get_selected()
@@ -261,7 +275,23 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
     
     def on_apspanel_item_add(self,menuitem):
         print "on add item.."
-        self.item_edit(None)        
+        (model, iter) = self.get_selection().get_selected()
+        if not iter:
+           return	         
+        
+        p_iter = None
+        t = model.get_value(iter,fid.etype)
+        if t == "P":
+           p_iter = iter
+        elif t == "I":
+           p_iter = self.model.iter_parent(iter)
+        else:
+            return
+        
+        # добавляем пустой элемент
+        p = self.get_default_param("I")
+        it = self.model.append(p_iter,p)
+        self.item_edit(it)
     
     def on_apspanel_item_edit(self,menuitem):
         print "on edit item.."
@@ -277,10 +307,91 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
            return   
 
     def panel_edit(self,iter):
-        print "edit panel.."
+        p_node = UniXML.EmptyNode()
+        if iter:
+           p_node = self.model.get_value(iter,fid.xmlnode)
+        
+        self.init_elements_value(self.panel_params,p_node)
+        while True:
+           res = self.dlg.run()
+           self.dlg.hide()
+           if res != dlg_RESPONSE_OK:
+               return
+           
+           if self.dlg_name.get_text() == "":
+              dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,"Не задан идентификатор панели")
+              res = dlg.run()
+              dlg.hide()
+              continue
+           
+           break    
+        
+        p_name = self.dlg_name.get_text()
+        self.conf.check_and_create_object(p_name)
+        p_node = self.conf.create_xmlnode_if_not_exist_by_prop("name",p_name,self.settings_node,"APSPanel",False)
+        self.save2xml_elements_value(self.panel_params,p_node)
+        plist = self.read_panel_param(p_node)
+        
+        if not iter:
+           it1 = self.model.append(None,plist)
+        else:
+           self.update_item_param(iter,plist)
+        
+        self.conf.update_list()
+        self.conf.mark_changes()
     
     def item_edit(self,iter):
-        print "edit panel.."
+
+        if not iter:
+           return 
+        
+        i_node = self.model.get_value(iter,fid.xmlnode)
+        if i_node == None:
+           i_node = UniXML.EmptyNode()
+        
+        self.init_elements_value(self.item_params,i_node)
+        
+        if i_node.prop("noconfirm") == "":
+           self.noconfirm_list.set_sensitive(False)
+        else:
+           self.noconfirm_list.set_sensitive(True)
+        
+        while True:
+           res = self.dlg_item .run()
+           self.dlg_item.hide()
+           if res != dlg_RESPONSE_OK:
+               return
+           
+           if self.item_sensor.get_text() == "":
+              dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,"Не задан датчик АПС")
+              res = dlg.run()
+              dlg.hide()
+              continue
+           
+           if self.item_lamp.get_text() == "":
+              dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,"Не задан датчик лампочки")
+              res = dlg.run()
+              dlg.hide()
+              continue
+          
+           break    
+
+        p_iter = self.model.iter_parent(iter)
+        p_node = self.model.get_value(p_iter,fid.xmlnode)
+
+        i_name = self.item_sensor.get_text()
+        i_node = self.conf.create_xmlnode_if_not_exist_by_prop("name",i_name,p_node,"item",False)
+        
+        self.save2xml_elements_value(self.item_params,i_node)
+        plist = self.read_item_param(i_node)
+     
+        self.update_item_param(iter,plist)
+        
+        self.expand_row( self.model.get_path(p_iter),True)
+        
+        self.conf.update_list()
+        self.conf.mark_changes()
+        
 
     def on_apspanel_dlg_btn_id_clicked(self, button):
         s = self.conf.s_dlg().run(self)

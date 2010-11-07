@@ -653,6 +653,9 @@
 				<item name="LC4_CommHorn5_C"/>
 			</comhorn>
 		</LCAPS>
+		<APSPanel name="PUS_APSPanel">
+			<item alway_alarm="1" lamp="PUS_SELCO1_Lamp1_C" name="SEES1_Overload20_S" noconfirm="1" nohorn="1"/>
+		</APSPanel>
 	</settings>
 	<ObjectsMap idfromfile="1" no_dep="0">
 		<!--
@@ -3466,6 +3469,7 @@
 			<item id="228" name="LC4_GREEN"/>
 			<item id="231" name="LC4_GREEN_CommFlash"/>
 			<item id="235" name="LC4_CommHorn"/>
+			<item id="238" name="PUS_APSPanel"/>
 		</objects>
 	</ObjectsMap>
 	<messages idfromfile="1" name="messages">

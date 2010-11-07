@@ -5500,7 +5500,7 @@ TBI16_8</property>
               <widget class="GtkLabel" id="label101">
                 <property name="visible">True</property>
                 <property name="xalign">1</property>
-                <property name="label" translatable="yes">&#x414;&#x430;&#x442;&#x447;&#x438;&#x43A;:</property>
+                <property name="label" translatable="yes">&#x414;&#x430;&#x442;&#x447;&#x438;&#x43A; &#x410;&#x41F;&#x421;:</property>
                 <property name="justify">right</property>
               </widget>
               <packing>
@@ -5605,6 +5605,7 @@ TBI16_8</property>
             </child>
             <child>
               <widget class="GtkLabel" id="label107">
+                <property name="visible">True</property>
                 <property name="xalign">1</property>
                 <property name="label" translatable="yes">&#x43B;&#x430;&#x43C;&#x43F;&#x43E;&#x447;&#x43A;&#x430;:</property>
                 <property name="justify">right</property>
@@ -6031,7 +6032,7 @@ TBI16_8</property>
       <widget class="GtkMenuItem" id="menuitem12">
         <property name="visible">True</property>
         <property name="use_action_appearance">False</property>
-        <property name="label" translatable="yes">Add</property>
+        <property name="label" translatable="yes">Add panel</property>
         <property name="use_underline">True</property>
         <signal name="activate" handler="on_apspanel_add"/>
       </widget>
@@ -6040,7 +6041,7 @@ TBI16_8</property>
       <widget class="GtkMenuItem" id="menuitem14">
         <property name="visible">True</property>
         <property name="use_action_appearance">False</property>
-        <property name="label" translatable="yes">Edit</property>
+        <property name="label" translatable="yes">Edit panel</property>
         <property name="use_underline">True</property>
       </widget>
     </child>
@@ -6048,9 +6049,24 @@ TBI16_8</property>
       <widget class="GtkMenuItem" id="menuitem16">
         <property name="visible">True</property>
         <property name="use_action_appearance">False</property>
-        <property name="label" translatable="yes">Remove</property>
+        <property name="label" translatable="yes">Remove panel</property>
         <property name="use_underline">True</property>
         <signal name="activate" handler="on_apspanel_remove"/>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkSeparatorMenuItem" id="menuitem25">
+        <property name="visible">True</property>
+        <property name="use_action_appearance">False</property>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkMenuItem" id="menuitem24">
+        <property name="visible">True</property>
+        <property name="use_action_appearance">False</property>
+        <property name="label" translatable="yes">Add item</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="on_apspanel_item_add"/>
       </widget>
     </child>
   </widget>
