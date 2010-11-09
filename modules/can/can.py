@@ -8,6 +8,14 @@ import base_editor
 import can_conf
 from global_conf import *
 
+# field id
+class fid():
+   name = 0
+   param = 1
+   can_xmlnode = 2
+   etype = 3
+   node_xmlnode = 4
+   maxnum = 5
 
 class CANEditor(base_editor.BaseEditor, gtk.TreeView):
 
@@ -40,12 +48,12 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
         self.connect("button-press-event", self.on_button_press_event)
 
         renderer = gtk.CellRendererText()
-        column = gtk.TreeViewColumn(_("Net name"), renderer, text=0)
+        column = gtk.TreeViewColumn(_("Net name"), renderer, text=fid.name)
         column.set_clickable(False)
         self.append_column(column)
 
         renderer = gtk.CellRendererText()
-        column = gtk.TreeViewColumn(_("Parameters"), renderer, text=1)
+        column = gtk.TreeViewColumn(_("Parameters"), renderer, text=fid.param)
         column.set_clickable(False)
         self.append_column(column)
 
@@ -72,9 +80,9 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
 
         self.node_param_list = [ \
             ["dlg_node","can_dlg_node",None,True], \
-            ["dlg_card_btn","can_card_btn",None,True], \
-            ["dlg_card_box","can_card_box",None,True], \
-            ["dlg_card_param","can_card_param",None,True], \
+            ["dlg_card_btn","can_card1_btn",None,True], \
+            ["dlg_card_box","can_card1_box",None,True], \
+            ["dlg_card_param","can_card1_param",None,True], \
             ["node_name","can_lbl_nodename",None,True], \
             ["node_id","can_node_id","nodeID",False], \
             ["eds","can_eds","eds",False], \
@@ -94,6 +102,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
         
         self.dlg_card.show()
         self.cardinfo = dict()
+        self.card_first_iter = None
         self.build_cards_list()
         self.dlg_card_box.add(self.dlg_card)
         self.edit_xmlnode = None
@@ -131,6 +140,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
 
     def build_cards_list(self):
         model = self.dlg_card.get_model()
+        self.card_first_iter = model.append( ["None"] )
         for k,c in self.can_conf.cards.items():
             it = model.append( [c["textname"]] )
             e = dict()
@@ -151,7 +161,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
                  self.empty_popup.popup(None, None, None, event.button, event.time)
                  return False
             
-            t = model.get_value(iter,3)
+            t = model.get_value(iter,fid.etype)
             if t == "net":
                 self.net_popup.popup(None, None, None, event.button, event.time)
                 return False                                                                                                                                                         
@@ -163,7 +173,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
             if not iter:                                                                                                                                                                
                  return False
             else :
-                 t = model.get_value(iter,3)
+                 t = model.get_value(iter,fid.etype)
                  if t == "net": 
                      self.on_rename_net_activate(None)
                  elif t == "node":
@@ -196,7 +206,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
         
         it = self.model.iter_children(iter)
         while it is not None:                     
-            node = self.model.get_value(it,2)
+            node = self.model.get_value(it,fid.can_xmlnode)
             node.unlinkNode()    
             it = self.model.iter_next(it)	  
         self.model.remove(iter)        
@@ -205,7 +215,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
     def check_node( self, node, rootiter ):
        it = self.model.iter_children(rootiter)
        while it is not None:                     
-           if self.model.get_value(it,4) == node:
+           if self.model.get_value(it,fid.node_xmlnode) == node:
                return it
            it = self.model.iter_next(it)           
        
@@ -217,7 +227,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
 
        it = self.model.iter_children(rootiter)
        while it is not None:
-           n = self.model.get_value(it,2).prop("nodeID")
+           n = self.model.get_value(it,fid.can_xmlnode).prop("nodeID")
            if n!="" and n!=None and int(eval(n)) == nodeID:
                return it
            it = self.model.iter_next(it)           
@@ -233,7 +243,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
             if node == None:
                 return
         
-            etype = model.get_value(iter,3)
+            etype = model.get_value(iter,fid.etype)
             rootiter=iter
             if etype == "node":
                 rootiter = self.model.iter_parent(iter)
@@ -269,7 +279,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
         if res != dlg_RESPONSE_OK:
             return
 
-        node = self.model.get_value(iter,2)
+        node = self.model.get_value(iter,fid.can_xmlnode)
         node.unlinkNode()
         self.model.remove(iter)
         self.conf.mark_changes()
@@ -278,20 +288,20 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
         (model, iter) = self.get_selection().get_selected()
         if not iter: return
         
-        self.net_name.set_text(model.get_value(iter,0))
-        self.net_comm.set_text(model.get_value(iter,1))
+        self.net_name.set_text(model.get_value(iter,fid.name))
+        self.net_comm.set_text(model.get_value(iter,fid.param))
         res = self.dlg_net.run()
         self.dlg_net.hide()
         if res != dlg_RESPONSE_OK:
             return
         new_name = self.net_name.get_text()
         new_comm = self.net_comm.get_text()
-        self.model.set_value(iter,0,new_name)
-        self.model.set_value(iter,1,new_comm)
+        self.model.set_value(iter,fid.name,new_name)
+        self.model.set_value(iter,fid.param,new_comm)
 
         it = self.model.iter_children(iter)
         while it is not None:                     
-            node = self.model.get_value(it,2)
+            node = self.model.get_value(it,fid.can_xmlnode)
             node.setProp("net",new_name)
             node.setProp("comment",new_comm)
             it = self.model.iter_next(it)	  
@@ -339,6 +349,8 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
         ctype = cnode.prop("card")
         if ctype in self.cardinfo:
            self.dlg_card.set_active_iter( self.cardinfo[ctype]["iter"] )
+        else:
+           self.dlg_card.set_active_iter(self.card_first_iter)
     
     def get_card_by_name(self,tname):
         for k,c in self.cardinfo.items():
@@ -358,8 +370,10 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
            return self.cardinfo[ctype]
     
     def edit_node(self, iter):
-        cnode = self.model.get_value(iter,2) # can xmlnode
-        node_xmlnode = self.model.get_value(iter,4) # node xmlnode
+        cnode = self.model.get_value(iter,fid.can_xmlnode)
+        node_xmlnode = self.model.get_value(iter,fid.node_xmlnode)
+        
+        print "xmlnode: " + str(cnode)
        
         self.node_name.set_text(node_xmlnode.prop("name"))
         self.init_elements_value(self.node_param_list,cnode)
@@ -386,11 +400,11 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
                     res = dlg.run()
                     dlg.hide()
                     continue
-
-            if cname != self.dlg_card.get_active_text() \
+            
+            if self.dlg_card.get_active_text() == "None" or (cname != self.dlg_card.get_active_text() \
                   and self.can_param_is_correct == False \
                   and self.dlg_card_param.get_text() == "" \
-                  and self.dlg_card_btn.get_sensitive():
+                  and self.dlg_card_btn.get_sensitive()):
                
                msg = "Не настроены параметры CAN"
                dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
@@ -425,9 +439,9 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
             # Идём по узлам
             it1 = self.model.iter_children(it)
             while it1 is not None:
-                if self.model.get_value(it1,4) == xmlnode:
-                     self.model.set_value(it1,0,xmlnode.prop("name"))
-                     self.model.set_value(it1,1,self.get_can_info(xmlnode))
+                if self.model.get_value(it1,fid.node_xmlnode) == xmlnode:
+                     self.model.set_value(it1,fid.name,xmlnode.prop("name"))
+                     self.model.set_value(it1,fid.param,self.get_can_info(xmlnode))
                      self.conf.mark_changes()
                      break
                 it1 = self.model.iter_next(it1)
@@ -443,7 +457,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
             # Идём по узлам
             it1 = self.model.iter_children(it)
             while it1 is not None:
-                if self.model.get_value(it1,4) == xmlnode:
+                if self.model.get_value(it1,fid.node_xmlnode) == xmlnode:
 #  Пока в редакторе не сделана настройка CAN по датчикам... это "вопрос" безполезен				  
 #                    msg = _("Remove CAN configuration for sensors at node='") + str(xmlnode.prop("name")) + "'"
 #                    dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,msg)
@@ -464,8 +478,9 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
            self.dlg_card_btn.set_sensitive(True)
         else:
            self.dlg_card_btn.set_sensitive(False)
+           self.can_param_is_correct = True
 
-    def on_can_card_btn_clicked(self, button):
+    def on_can_card1_btn_clicked(self, button):
         cinfo = self.get_cardinfo_by_name(self.dlg_card.get_active_text())
         if cinfo and cinfo["dlg"] != None:
            cname = self.can_conf.cards[cinfo["key"]]["name"]
