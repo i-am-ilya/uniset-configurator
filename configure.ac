@@ -27,6 +27,7 @@ AM_PATH_PYTHON(2.6)
 AC_CONFIG_FILES([Makefile
                  modules/Makefile
                  modules/can/Makefile
+                 modules/can/templates/Makefile
                  modules/uniset_io/Makefile
                  modules/uniset_io/templates/Makefile
                  modules/nodes/Makefile

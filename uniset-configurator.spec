@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.6
-Release: eter1
+Release: eter2
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -34,6 +34,7 @@ ln -s %python_sitelibdir/%name/%name.py %buildroot/%_bindir/%name
 ln -s %python_sitelibdir/%name/uniset_io_conf.py %buildroot/%_bindir/uniset-ioconf
 ln -s %python_sitelibdir/%name/lcaps_conf.py %buildroot/%_bindir/uniset-lcaps-conf
 ln -s %python_sitelibdir/%name/apspanel_conf.py %buildroot/%_bindir/uniset-apspanel-conf
+ln -s %python_sitelibdir/%name/can_conf.py %buildroot/%_bindir/uniset-can-conf
 
 %files
 %dir %python_sitelibdir/%name
@@ -44,6 +45,9 @@ ln -s %python_sitelibdir/%name/apspanel_conf.py %buildroot/%_bindir/uniset-apspa
 %_bindir/*
 
 %changelog
+* Tue Nov 09 2010 Pavel Vainerman <pv@altlinux.ru> 0.6-eter2
+- add to CANEditor: card parameters editor
+
 * Sun Nov 07 2010 Pavel Vainerman <pv@altlinux.ru> 0.6-eter1
 - add apspanel editor
 
