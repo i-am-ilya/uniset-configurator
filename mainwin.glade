@@ -4700,7 +4700,7 @@ TBI16_8</property>
               <widget class="GtkHBox" id="hbox15">
                 <property name="visible">True</property>
                 <child>
-                  <widget class="GtkEntry" id="apspanel_dlg_horn">
+                  <widget class="GtkEntry" id="apspanel_dlg_horn2">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="invisible_char">&#x25CF;</property>
@@ -4984,7 +4984,7 @@ TBI16_8</property>
               <widget class="GtkHBox" id="hbox23">
                 <property name="visible">True</property>
                 <child>
-                  <widget class="GtkEntry" id="apspanel_dlg_horn2">
+                  <widget class="GtkEntry" id="apspanel_dlg_horn1">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="invisible_char">&#x25CF;</property>
@@ -5381,31 +5381,205 @@ TBI16_8</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkHBox" id="hbox31">
+              <widget class="GtkTable" id="table13">
                 <property name="visible">True</property>
+                <property name="border_width">4</property>
+                <property name="n_rows">4</property>
+                <property name="n_columns">2</property>
                 <child>
-                  <widget class="GtkEntry" id="apspanel_dlg_oncontrol">
+                  <widget class="GtkHBox" id="hbox31">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="invisible_char">&#x25CF;</property>
-                    <property name="invisible_char_set">True</property>
+                    <child>
+                      <widget class="GtkEntry" id="apspanel_dlg_oncontrol">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="invisible_char">&#x25CF;</property>
+                        <property name="invisible_char_set">True</property>
+                      </widget>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkButton" id="apspanel_dlg_btn_oncontrol">
+                        <property name="label" translatable="yes">...</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="use_action_appearance">False</property>
+                        <signal name="clicked" handler="on_apspanel_dlg_btn_oncontrol_clicked"/>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
                   </widget>
                   <packing>
-                    <property name="position">0</property>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
                   </packing>
                 </child>
                 <child>
-                  <widget class="GtkButton" id="apspanel_dlg_btn_oncontrol">
-                    <property name="label" translatable="yes">...</property>
+                  <widget class="GtkLabel" id="label115">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="use_action_appearance">False</property>
-                    <signal name="clicked" handler="on_apspanel_dlg_btn_oncontrol_clicked"/>
+                    <property name="xalign">1</property>
+                    <property name="label" translatable="yes">&#x41A;&#x43D;&#x43E;&#x43F;&#x43A;&#x430; "&#x432;&#x43A;&#x43B;":</property>
+                    <property name="justify">right</property>
                   </widget>
                   <packing>
-                    <property name="expand">False</property>
-                    <property name="position">1</property>
+                    <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
+                    <property name="y_options">GTK_EXPAND | GTK_SHRINK</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label116">
+                    <property name="visible">True</property>
+                    <property name="xalign">1</property>
+                    <property name="label" translatable="yes">&#x41B;&#x430;&#x43C;&#x43F;&#x43E;&#x447;&#x43A;&#x430; "&#x432;&#x43A;&#x43B;":</property>
+                    <property name="justify">right</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
+                    <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
+                    <property name="y_options">GTK_EXPAND | GTK_SHRINK</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label117">
+                    <property name="visible">True</property>
+                    <property name="xalign">1</property>
+                    <property name="label" translatable="yes">ID &#x441;&#x43E;&#x43E;&#x431;&#x449;&#x435;&#x43D;&#x438;&#x44F; "&#x432;&#x43A;&#x43B;":</property>
+                    <property name="justify">right</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">2</property>
+                    <property name="bottom_attach">3</property>
+                    <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
+                    <property name="y_options">GTK_EXPAND | GTK_SHRINK</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkLabel" id="label118">
+                    <property name="visible">True</property>
+                    <property name="xalign">1</property>
+                    <property name="label" translatable="yes">ID &#x441;&#x43E;&#x43E;&#x431;&#x449;&#x435;&#x43D;&#x438;&#x44F; "&#x43E;&#x442;&#x43A;&#x43B;":</property>
+                    <property name="justify">right</property>
+                  </widget>
+                  <packing>
+                    <property name="top_attach">3</property>
+                    <property name="bottom_attach">4</property>
+                    <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
+                    <property name="y_options">GTK_EXPAND | GTK_SHRINK</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkHBox" id="hbox36">
+                    <property name="visible">True</property>
+                    <child>
+                      <widget class="GtkEntry" id="apspanel_dlg_onlamp">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="invisible_char">&#x25CF;</property>
+                        <property name="invisible_char_set">True</property>
+                      </widget>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkButton" id="apspanel_dlg_btn_onlamp">
+                        <property name="label" translatable="yes">...</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="use_action_appearance">False</property>
+                        <signal name="clicked" handler="on_apspanel_dlg_btn_onlamp_clicked"/>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">1</property>
+                    <property name="bottom_attach">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkHBox" id="hbox37">
+                    <property name="visible">True</property>
+                    <child>
+                      <widget class="GtkEntry" id="apspanel_dlg_msg_on">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="invisible_char">&#x25CF;</property>
+                        <property name="invisible_char_set">True</property>
+                      </widget>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkButton" id="apspanel_dlg_btn_msg_on">
+                        <property name="label" translatable="yes">...</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="use_action_appearance">False</property>
+                        <signal name="clicked" handler="on_apspanel_dlg_btn_msg_on_clicked"/>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">2</property>
+                    <property name="bottom_attach">3</property>
+                  </packing>
+                </child>
+                <child>
+                  <widget class="GtkHBox" id="hbox38">
+                    <property name="visible">True</property>
+                    <child>
+                      <widget class="GtkEntry" id="apspanel_dlg_msg_off">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="invisible_char">&#x25CF;</property>
+                        <property name="invisible_char_set">True</property>
+                      </widget>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <widget class="GtkButton" id="apspanel_dlg_btn_msg_off">
+                        <property name="label" translatable="yes">...</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="use_action_appearance">False</property>
+                        <signal name="clicked" handler="on_apspanel_dlg_btn_msg_off_clicked"/>
+                      </widget>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </widget>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="right_attach">2</property>
+                    <property name="top_attach">3</property>
+                    <property name="bottom_attach">4</property>
                   </packing>
                 </child>
               </widget>

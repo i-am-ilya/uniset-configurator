@@ -107,7 +107,10 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
             ["dlg_remotelamp","apspanel_dlg_remotelamp","remote_bs",False], \
             ["dlg_confirmlamp","apspanel_dlg_confirmlamp","confirmlamp",False], \
             ["dlg_testlamp","apspanel_dlg_testlamp","testlamp",False], \
-            ["dlg_oncontrol","apspanel_dlg_oncontrol","onControl",False] \
+            ["item_oncontrol","apspanel_dlg_oncontrol","onControl",False], \
+            ["item_onlamp","apspanel_dlg_onlamp","onControlLamp",False], \
+            ["item_msg_on","apspanel_dlg_msg_on","msg_on",False], \
+            ["item_msg_off","apspanel_dlg_msg_off","msg_off",False] \
         ]
 
         self.init_glade_elements(self.panel_params) 
@@ -534,6 +537,21 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
         if s != None:
            self.item_block.set_text(s.prop("name"))
 
+    def on_apspanel_dlg_btn_onlamp_clicked(self, button):
+        s = self.conf.s_dlg().run(self)
+        if s != None:
+           self.item_onlamp.set_text(s.prop("name"))    
+    
+    def on_apspanel_dlg_btn_msg_on_clicked(self, button):
+        s = self.conf.s_dlg().run(self)
+        if s != None:
+           self.item_msg_on.set_text(s.prop("name"))    
+    
+    def on_apspanel_dlg_btn_msg_off_clicked(self, button):
+        s = self.conf.s_dlg().run(self)
+        if s != None:
+           self.item_msg_off.set_text(s.prop("name"))
+    
     def on_apspanel_dlg_noconfirm_toggled(self, cbtn):
         self.noconfirm_list.set_sensitive( cbtn.get_active() )
 
