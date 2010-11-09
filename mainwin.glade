@@ -6441,7 +6441,7 @@ minimal minor - minor-&#x43D;&#x43E;&#x43C;&#x435;&#x440; (/dev/canX) &#x43F;&#x
                         <property name="invisible_char">&#x25CF;</property>
                         <property name="invisible_char_set">True</property>
                         <property name="primary_icon_activatable">True</property>
-                        <property name="adjustment">2 0 100 1 10 10</property>
+                        <property name="adjustment">0 0 100 1 10 10</property>
                         <property name="numeric">True</property>
                       </widget>
                       <packing>
@@ -6467,7 +6467,14 @@ minimal minor - minor-&#x43D;&#x43E;&#x43C;&#x435;&#x440; (/dev/canX) &#x43F;&#x
               </packing>
             </child>
             <child>
-              <placeholder/>
+              <widget class="GtkEntry" id="can_cpc108_param">
+                <property name="can_focus">True</property>
+                <property name="editable">False</property>
+                <property name="invisible_char">&#x25CF;</property>
+              </widget>
+              <packing>
+                <property name="position">1</property>
+              </packing>
             </child>
           </widget>
           <packing>
@@ -6615,6 +6622,7 @@ minimal minor - minor-&#x43D;&#x43E;&#x43C;&#x435;&#x440; (/dev/canX) &#x43F;&#x
                         <property name="can_focus">True</property>
                         <property name="invisible_char">&#x25CF;</property>
                         <property name="invisible_char_set">True</property>
+                        <property name="adjustment">0 0 50 1 10 10</property>
                         <property name="numeric">True</property>
                       </widget>
                       <packing>
@@ -6628,7 +6636,7 @@ minimal minor - minor-&#x43D;&#x43E;&#x43C;&#x435;&#x440; (/dev/canX) &#x43F;&#x
                         <property name="can_focus">True</property>
                         <property name="invisible_char">&#x25CF;</property>
                         <property name="invisible_char_set">True</property>
-                        <property name="numeric">True</property>
+                        <property name="adjustment">0 0 15 1 10 10</property>
                       </widget>
                       <packing>
                         <property name="left_attach">1</property>
@@ -6714,7 +6722,14 @@ minimal minor - minor-&#x43D;&#x43E;&#x43C;&#x435;&#x440; (/dev/canX) &#x43F;&#x
               </packing>
             </child>
             <child>
-              <placeholder/>
+              <widget class="GtkEntry" id="can_can200mp_param">
+                <property name="can_focus">True</property>
+                <property name="editable">False</property>
+                <property name="invisible_char">&#x25CF;</property>
+              </widget>
+              <packing>
+                <property name="position">1</property>
+              </packing>
             </child>
           </widget>
           <packing>

@@ -96,6 +96,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
         self.cardinfo = dict()
         self.build_cards_list()
         self.dlg_card_box.add(self.dlg_card)
+        self.edit_xmlnode = None
         
         self.show_all()
     
@@ -137,8 +138,6 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
             e["key"] = k
             e["tname"] = c["textname"]
             dlg = self.conf.glade.get_widget( str("can_dlg_" + c["name"]) )
-            if dlg != None:
-               dlg.connect("response",self.card_dlg_response)
             e["dlg"] =dlg
             
             self.cardinfo[c["name"]] = e
@@ -365,8 +364,11 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
         self.node_name.set_text(node_xmlnode.prop("name"))
         self.init_elements_value(self.node_param_list,cnode)
         self.set_card_type(cnode)
-        self.dlg_card_param.set_text("")
-        self.setup_dlg(cnode)
+        self.dlg_card_param.set_text( get_str_val(cnode.prop("module_param")) )
+#       self.setup_dlg(cnode)
+        self.edit_xmlnode = cnode
+        self.can_param_is_correct = False
+        cname = self.dlg_card.get_active_text()
         
         while True:
             res = self.dlg_node.run()
@@ -384,6 +386,18 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
                     res = dlg.run()
                     dlg.hide()
                     continue
+
+            if cname != self.dlg_card.get_active_text() \
+                  and self.can_param_is_correct == False \
+                  and self.dlg_card_param.get_text() == "" \
+                  and self.dlg_card_btn.get_sensitive():
+               
+               msg = "Не настроены параметры CAN"
+               dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
+               res = dlg.run()
+               dlg.hide()
+               continue
+        
             break
         
         self.save2xml_elements_value(self.node_param_list,cnode)
@@ -443,52 +457,88 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
                 it1 = self.model.iter_next(it1)
             
             it = self.model.iter_next(it)
-
-    def on_can_card_btn_clicked(self, button):
-        cinfo = self.get_cardinfo_by_name(self.dlg_card.get_active_text())
-        if cinfo != None and cinfo["dlg"] != None:
-           dlg = cinfo["dlg"]
-           res = dlg.run()
-           dlg.hide()
-   
+    
     def on_can_card_changed(self,combobox):
         cinfo = self.get_cardinfo_by_name(self.dlg_card.get_active_text())
         if cinfo != None and cinfo["dlg"] != None:
            self.dlg_card_btn.set_sensitive(True)
         else:
            self.dlg_card_btn.set_sensitive(False)
-    
-    def card_dlg_response(self, dlg, res):
-        if res != dlg_RESPONSE_OK:
-           return
-        
-        cinfo = None
-        for k,c in self.cardinfo.items():
-            if c["dlg"] == dlg:
-               cinfo  = c
-               break
-        if cinfo == None:
-           return
-        
-        cname = self.can_conf.cards[cinfo["key"]]["name"]
-        if cname == "cpc108":
-           self.dlg_card_param.set_text( self.get_cpc108_module_param(dlg))
-        elif cname == "can200mp":
-           self.dlg_card_param.set_text( self.get_can200mp_module_param(dlg))
 
-    def get_cpc108_module_param(self,dlg):
+    def on_can_card_btn_clicked(self, button):
+        cinfo = self.get_cardinfo_by_name(self.dlg_card.get_active_text())
+        if cinfo and cinfo["dlg"] != None:
+           cname = self.can_conf.cards[cinfo["key"]]["name"]
+           if cname == "cpc108":
+              self.can_param_is_correct = self.cpc108_config_dlg(cinfo,self.edit_xmlnode)
+           elif cname == "can200mp":
+              self.can_param_is_correct = self.can200mp_config_dlg(cinfo,self.edit_xmlnode)
+           elif cname == "pci1680":
+              self.can_param_is_correct = True
+    
+    def cpc108_config_dlg(self,cinfo,xmlnode):
+        dlg = cinfo["dlg"]
         mmin = self.conf.glade.get_widget( "can_cpc108_minminor" )
-        return "min_minor=" + str(mmin.get_value_as_int())
-   
-    def get_can200mp_module_param(self,dlg):
+        mparam = self.conf.glade.get_widget( "can_cpc108_param" )
+        self.setup_cpc108_dlg(dlg,xmlnode)
+        while True:
+            res = dlg.run()
+            dlg.hide()
+            if res != dlg_RESPONSE_OK:
+                self.dlg_card_param.set_text("")
+                return False
+            
+            # проверка корректности...
+            
+            break
+        
+        mparam.set_text( "min_minor=" + str(mmin.get_value_as_int()) )
+        self.dlg_card_param.set_text(mparam.get_text())
+        return True
+
+    def can200mp_config_dlg(self,cinfo,xmlnode):
+        dlg = cinfo["dlg"]
         mmin = self.conf.glade.get_widget( "can_can200mp_minminor" )
         irq = self.conf.glade.get_widget( "can_can200mp_irq" )
         ba1 = self.conf.glade.get_widget( "can_can200mp_ba1" )
         ba2 = self.conf.glade.get_widget( "can_can200mp_ba2" )
-        return str("min_minor=%d irq=%d iobase1=%s iobase2=%s"%(mmin.get_value_as_int(),irq.get_value_as_int(),ba1.get_text(),ba2.get_text()))
+        mparam = self.conf.glade.get_widget( "can_can200mp_param" )
+        self.setup_can200mp_dlg(dlg,xmlnode)
+        while True:
+            res = dlg.run()
+            dlg.hide()
+            if res != dlg_RESPONSE_OK:
+                self.dlg_card_param.set_text("")
+                return False
+            
+            # проверка корректности...
+            if irq.get_value_as_int() == 0:
+               msg = "IRQ не может быть равен 0"
+               wdlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
+               res = wdlg.run()
+               wdlg.hide()
+               continue
+            
+            if ba1.get_text() == "" or ba2.get_text() == "":
+               msg = "'Base adress' должен быть задан обязательно"
+               wdlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
+               res = wdlg.run()
+               wdlg.hide()
+               continue
+            
+            break
+        
+        s =  str("min_minor=%d irq=%d iobase1=%s iobase2=%s"%(mmin.get_value_as_int(),irq.get_value_as_int(),ba1.get_text(),ba2.get_text()))
+        mparam.set_text(s)
+        self.dlg_card_param.set_text(s)
+        return True
     
     def get_param_list(self,s_param):
         p = []
+        
+        if s_param == "" or s_param == None:
+           return p
+        
         l = s_param.split(" ")
         for s in l:
             v = s.split("=")
@@ -496,19 +546,8 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
                p.append([v[0],v[1]])
             else:
                print "(can.get_param_list:WARNING): (v=x) undefined value for " + str(s)
-               p.append([to_sid(v[0]),0])
+               p.append([v[0],""])
         return p
-    
-    def setup_dlg(self,cnode):
-        cinfo = self.get_cardinfo_by_cnode(cnode)
-        if cinfo == None:
-           return
-        
-        cname = self.can_conf.cards[cinfo["key"]]["name"]
-        if cname == "cpc108":
-           self.setup_cpc108_dlg(cinfo["dlg"],cnode)
-        elif cname == "can200mp":
-           self.setup_can200mp_dlg(cinfo["dlg"],cnode)
     
     def setup_cpc108_dlg(self,dlg,xmlnode):
         mparam = xmlnode.prop("module_param")
