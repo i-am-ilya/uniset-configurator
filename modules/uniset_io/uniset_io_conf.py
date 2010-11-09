@@ -1,5 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import sys
+is_system_run_flag = sys.argv[0].startswith("./")
+if is_system_run_flag:
+   sys.path.append("../../")
+
 from gettext import gettext as _
 import re
 import datetime
@@ -219,14 +224,14 @@ if __name__ == "__main__":
 
     is_system_run_flag = sys.argv[0].startswith("./")
     datdir = ( "/usr/share/uniset-configurator/" if not is_system_run_flag else "./" )
-    templdir=datdir+"/templates/"
+    templdir=( datdir + "templates/io/" if not is_system_run_flag else "./templates/" )
 
     confile = ""
     if checkArgParam("--help",False) == True or checkArgParam("-h",False) == True:
        print "Usage: %s [--confile configure.xml ] [--outfile filename]  --gen-comedi-conf Nodename" % sys.argv[0]
        print "--confile confile           - Configuration file. Default: configure.xml"
-       print "--gen-comedi-conf nodename  - Generate ctl-comedi for nodename."
-       print "--outfile filename          - Save to filename. Default: ctl-comedi-'nodename'"
+       print "--gen-comedi-conf nodename  - Generate ctl-comedi-xxx.sh for nodename."
+       print "--outfile filename          - Save to filename. Default: ctl-comedi-'nodename'.sh"
        print "-v                          - Verbose mode"
        exit(0)
 
@@ -235,7 +240,7 @@ if __name__ == "__main__":
     verb = checkArgParam("-v",False)
     
     if nodename == "":
-       print "Usage: %s [--confile configure.xml ] [--outfile filename]  --generate-comedi-conf Nodename" % sys.argv[0]
+       print "Usage: %s [--confile configure.xml ] [--outfile filename]  --gen-comedi-conf Nodename" % sys.argv[0]
        exit(1)
     
     outfile = getArgParam("--outfile","")

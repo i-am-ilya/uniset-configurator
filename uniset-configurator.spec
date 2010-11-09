@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.6
-Release: eter2
+Release: eter3
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -45,6 +45,9 @@ ln -s %python_sitelibdir/%name/can_conf.py %buildroot/%_bindir/uniset-can-conf
 %_bindir/*
 
 %changelog
+* Tue Nov 09 2010 Pavel Vainerman <pv@altlinux.ru> 0.6-eter3
+- minor fixes in io_conf and can_conf
+
 * Tue Nov 09 2010 Pavel Vainerman <pv@altlinux.ru> 0.6-eter2
 - add to CANEditor: card parameters editor
 
