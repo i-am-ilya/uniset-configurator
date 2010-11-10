@@ -93,7 +93,7 @@ class CANConfig():
         # надо потом переделать на регулярное выражение
         if nname.find(".") != -1:
             nname = xmlnode.prop("name").lower()
-        return "ctl-comedi-" + nname + ".sh"
+        return "ctl-can-" + nname + ".sh"
 
 if __name__ == "__main__":
 
@@ -109,7 +109,7 @@ if __name__ == "__main__":
        print "Usage: %s [--confile configure.xml ] [--outfile filename]  --gen-can-conf Nodename" % sys.argv[0]
        print "--confile confile           - Configuration file. Default: configure.xml"
        print "--gen-can-conf nodename     - Generate ctl-can-config.sh for nodename."
-       print "--outfile filename          - Save to filename. Default: ctl-comedi-'nodename'"
+       print "--outfile filename          - Save to filename. Default: ctl-can-'nodename'"
        print "-v                          - Verbose mode"
        exit(0)
 
