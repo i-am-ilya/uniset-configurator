@@ -513,7 +513,6 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
 
     def can200mp_config_dlg(self,cinfo,xmlnode):
         dlg = cinfo["dlg"]
-        mmin = self.conf.glade.get_widget( "can_can200mp_minminor" )
         irq = self.conf.glade.get_widget( "can_can200mp_irq" )
         ba1 = self.conf.glade.get_widget( "can_can200mp_ba1" )
         ba2 = self.conf.glade.get_widget( "can_can200mp_ba2" )
@@ -543,7 +542,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
             
             break
         
-        s =  str("min_minor=%d irq=%d iobase1=%s iobase2=%s"%(mmin.get_value_as_int(),irq.get_value_as_int(),ba1.get_text(),ba2.get_text()))
+        s =  str("irq=%d porta0=%s portb0=%s"%(irq.get_value_as_int(),ba1.get_text(),ba2.get_text()))
         mparam.set_text(s)
         self.dlg_card_param.set_text(s)
         return True
@@ -575,19 +574,16 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
     def setup_can200mp_dlg(self,dlg,xmlnode):
         mparam = xmlnode.prop("module_param")
         plist = self.get_param_list(mparam)
-        mmin = self.conf.glade.get_widget( "can_can200mp_minminor" )
         irq = self.conf.glade.get_widget( "can_can200mp_irq" )
         ba1 = self.conf.glade.get_widget( "can_can200mp_ba1" )
         ba2 = self.conf.glade.get_widget( "can_can200mp_ba2" )
         for p in plist:
             pname = p[0]
-            if pname == "min_minor":
-               mmin.set_value(int(p[1]))
-            elif pname == "irq":
+            if pname == "irq":
                irq.set_value(int(p[1]))
-            elif pname == "iobase1":
+            elif pname == "porta0":
                ba1.set_text(p[1])
-            elif pname == "iobase2":
+            elif pname == "portb0":
                ba2.set_text(p[1])
     
 def create_module(conf):
