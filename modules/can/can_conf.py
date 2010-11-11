@@ -84,7 +84,7 @@ class CANConfig():
     def gen_rmmod_string(self,modlist,l):
         s = ""
         for m in modlist:
-            s += re.sub("{MOD_REMOVE}", str("rmmod -r " + m[0]),l)
+            s += re.sub("{MOD_REMOVE}", str("modprobe -r " + m[0]),l)
         return s
     
     def get_outfilename(self, xmlnode):
