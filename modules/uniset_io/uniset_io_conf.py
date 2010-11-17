@@ -24,14 +24,15 @@ class IOConfig():
     
     def build_channels_list(self,cardnode,model,iter):
         cname = cardnode.prop("name").upper()
+#        print "BUILD chanel list for "+ str(cname)
         if cname == "DI32":
             self.build_di32_list(cardnode,model,iter)
         if cname == "DO32":
             self.build_do32_list(cardnode,model,iter)
-        elif cname == "AI16-5A-3" or cname == "AIC123xx" \
-             or cname == "AIC120" or cname == "AIC121":
+        elif cname == "AI16-5A-3" or cname == "AIC123XX" \
+             or cname == "AIC120" or cname == "AIC121" or cname=="AI16":
             self.build_ai16_list(cardnode,model,iter)
-        elif cname == "AO16-xx":
+        elif cname == "AO16-XX" or cname=="AO16":
             self.build_ao16_list(cardnode,model,iter)
         elif cname == "UNIO48":
             self.build_unio48_list(cardnode,model,iter)
@@ -39,12 +40,16 @@ class IOConfig():
             self.build_unio96_list(cardnode,model,iter)
    
     def build_di32_list(self,card,model,iter):
-        for i in range(0,32):
-            model.append(iter, [_("ch_")+str(i),"",None,_("channel"),str(i),"0"])
-
+        for i in range(0,15):
+            model.append(iter, [_("J1:")+str(i),"",None,_("channel"),str(i),"0"])
+        for i in range(16,32):
+            model.append(iter, [_("J2:")+str(i-16),"",None,_("channel"),str(i),"0"])
+    
     def build_do32_list(self,card,model,iter):
-        for i in range(0,32):
-            model.append(iter, [_("ch_")+str(i),"",None,_("channel"),str(i),"0"])
+        for i in range(0,15):
+            model.append(iter, [_("J1:")+str(i),"",None,_("channel"),str(i),"0"])
+        for i in range(16,32):
+            model.append(iter, [_("J2:")+str(i-16),"",None,_("channel"),str(i),"0"])
 
     def build_ai16_list(self,card,model,iter):
         for i in range(0,8):

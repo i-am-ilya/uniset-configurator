@@ -496,8 +496,8 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         n = cnode.newChild(None,"item",None)
         
         self.save2xml_elements_value(self.card_params,n)
-        # т.к. название и параметры модуля определяются по xmlname
-        # то приходится сперва "обновить" значения в xmlname
+        # т.к. название и параметры модуля определяются по xmlnode
+        # то приходится сперва "обновить" значения в xmlnode
         # потом "определить" параметры модуля, а потом
         # второй раз сохранить, с уже обновленнёми параметрами модуля
         self.set_module_params(n)
