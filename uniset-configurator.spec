@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.6
-Release: eter4
+Release: eter5
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
