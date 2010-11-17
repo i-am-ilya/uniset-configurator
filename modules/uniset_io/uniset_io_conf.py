@@ -79,6 +79,29 @@ class IOConfig():
         for i in range(0,24):
             model.append(iter, ["J4:"+str(i),"",None,_("channel"),str(i),"3"])
     
+    def get_iotype(self,cname,channel):
+        cname = cname.upper()
+        if cname == "DI32":
+           return "DI"
+        
+        if cname == "DO32":
+           return "DO"
+        
+        if cname == "AI16-5A-3" or cname == "AIC123XX" \
+             or cname == "AIC120" or cname == "AIC121" or cname=="AI16":
+           return "AI"
+        
+        if cname == "AO16-XX" or cname=="AO16":
+           return "AO"
+        
+        # к UNIO можно водключать любые сигналы... 
+        # поэтому должно быть более иннтелектуально...
+        # но пока для простоты сделаем по умолчанию DI
+        if cname == "UNIO48" or cname == "UNIO96":
+           return "DI"
+        
+        return "DI"
+        
     def get_params_for_aixx5a(self,cardnode):
         # последовательность параметров см. исходники модуля aixx5a
         cname = cardnode.prop("name").upper()

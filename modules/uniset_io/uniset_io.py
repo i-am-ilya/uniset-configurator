@@ -704,7 +704,19 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         model.set_value(iter,1,info)
         self.set_module_params(cnode)
         self.conf.mark_changes()
-
+    
+    def on_cb_lamp_toggled(self,btn):
+        
+        if btn.get_active():
+           self.set_combobox_element(self.iotype,"AO")
+           self.iotype.set_sensitive(False)
+        else:
+           self.iotype.set_sensitive(True)
+           p_iter = self.model.iter_parent(self.myedit_iter)
+           cardname = self.model.get_value(p_iter,0)
+           channel = self.model.get_value(self.myedit_iter,5)
+           self.set_combobox_element(self.iotype,self.ioconf.get_iotype(cardname,channel))
+    
     def on_edit_channel(self,iter):
         card_iter = self.model.iter_parent(iter)
         card = self.model.get_value(card_iter,2)
