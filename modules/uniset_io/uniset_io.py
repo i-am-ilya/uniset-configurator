@@ -10,6 +10,13 @@ import base_editor
 import uniset_io_conf
 from global_conf import *
 
+class fid():
+  name = 0
+  param = 1
+  xmlnode = 2
+  etype = 3
+  num = 4
+  subdev = 5
 '''
 Задачи:
 1. Добавление, удаление карт ввода/вывода на узлах
@@ -47,12 +54,12 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         self.connect("button-press-event", self.on_button_press_event)
         
         renderer = gtk.CellRendererText()
-        column = gtk.TreeViewColumn(_("Name"), renderer, text=0)
+        column = gtk.TreeViewColumn(_("Name"), renderer, text=fid.name)
         column.set_clickable(False)
         self.append_column(column)
 
         renderer = gtk.CellRendererText()
-        column = gtk.TreeViewColumn(_("Parameters"), renderer, text=1)
+        column = gtk.TreeViewColumn(_("Parameters"), renderer, text=fid.param)
         column.set_clickable(False)
         self.append_column(column)
 
@@ -255,7 +262,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         it = self.model.get_iter_first()
         node_id = node.prop("io")
         while it is not None:
-           if self.model.get_value(it,4) == node_id:
+           if self.model.get_value(it,fid.num) == node_id:
                it1 = self.model.iter_children(it)
                self.find_card(it1,node)
                return
@@ -265,7 +272,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
     def find_card(self,it,node):
         card_num = node.prop("card")
         while it is not None:
-            if self.model.get_value(it,4) == card_num:
+            if self.model.get_value(it,fid.num) == card_num:
                 it2 = self.model.iter_children(it)
                 self.find_subdev(it2,node)
                 return
@@ -275,7 +282,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
     def find_subdev(self,it,node):
         sb = node.prop("subdev")
         while it is not None:
-            if self.model.get_value(it,5) == sb:
+            if self.model.get_value(it,fid.subdev) == sb:
                 self.find_channel(it,node)
                 return
 
@@ -284,16 +291,16 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
     def find_channel(self,it,node):
        ch = node.prop("channel")
        while it is not None:
-           if self.model.get_value(it,4) == ch:
-               self.model.set_value(it,2,node)
-               self.model.set_value(it,1,node.prop("name"))
+           if self.model.get_value(it,fid.num) == ch:
+               self.model.set_value(it,fid.xmlnode,node)
+               self.model.set_value(it,fid.param,node.prop("name"))
                return
 
            it = self.model.iter_next(it)
         
     def check_connection(self,snode, myiter):
        it = self.model.get_iter_first() # node level
-       myname = self.model.get_value(myiter,0)
+       myname = self.model.get_value(myiter,fid.name)
        while it is not None: 
            it_card = self.model.iter_children(it) # card level
            if it_card is not None:
@@ -301,9 +308,9 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
                     it_ch = self.model.iter_children(it_card) # channel level
                     if it_ch != None:
                          while it_ch != None:
-                             if self.model.get_value(it_ch,2) == snode:
+                             if self.model.get_value(it_ch,fid.xmlnode) == snode:
                                    # пропускаем себя..
-                                   if self.model.get_value(it_ch,0) != myname:
+                                   if self.model.get_value(it_ch,fid.name) != myname:
                                        return [it,it_card,it_ch]
                              it_ch = self.model.iter_next(it_ch)
                     it_card = self.model.iter_next(it_card)
@@ -317,7 +324,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
 
         if event.button == 3:                                                                                                                                                       
             if not iter: return False
-            t = model.get_value(iter,3)
+            t = model.get_value(iter,fid.etype)
             if t == "card":
                 self.card_popup.popup(None, None, None, event.button, event.time)                                                                                                       
                 return False                                                                                                                                                         
@@ -333,7 +340,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
             if not iter:                                                                                                                                                                
                  return False
             else :
-                 t = model.get_value(iter,3)
+                 t = model.get_value(iter,fid.etype)
 #            	 print "********* select: " + str(t)
                  if t == "node":
                      pass
@@ -362,7 +369,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
                 n_it,cd_it,ch_it = self.check_connection(s,self.myedit_iter)
                 if ch_it is not None:
                     msg = "'" + s.prop("name") + "' " + _("Already connection!") 
-                    addr = " (" + self.model.get_value(n_it,0) + ":" + self.model.get_value(cd_it,0) + ":" + self.model.get_value(ch_it,0) +_(")\n Reconnection?")
+                    addr = " (" + self.model.get_value(n_it,fid.name) + ":" + self.model.get_value(cd_it,fid.name) + ":" + self.model.get_value(ch_it,fid.name) +_(")\n Reconnection?")
                     msg = msg + addr
                     dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,msg)
                     res = dlg.run()
@@ -370,8 +377,8 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
                     if res == gtk.RESPONSE_NO:
                         return False
                     # сперва очистим привязку у старого
-                    self.model.set_value(ch_it,2,None)
-                    self.model.set_value(ch_it,1,"")
+                    self.model.set_value(ch_it,fid.xmlnode,None)
+                    self.model.set_value(ch_it,fid.param,"")
             self.sensor = s  
             break
  
@@ -459,7 +466,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
             cnum = self.card_num.get_value_as_int()
             it1 = self.check_cardnum(cnum,node_iter,iter)
             if it1 != None:
-               msg = "card number='" + str(cnum) + "' " + _("already exist for %s") % self.model.get_value(it1,0)
+               msg = "card number='" + str(cnum) + "' " + _("already exist for %s") % self.model.get_value(it1,fid.name)
                dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
                res = dlg.run()
                dlg.hide()
@@ -471,7 +478,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
                  baddr = int(eval(s_baddr))
             it1 = self.check_baddr(baddr,node_iter,iter)
             if baddr!=0 and it1 != None:
-               msg = "base address='" + s_baddr + "' " + _("already exist for %s") % self.model.get_value(it1,0)
+               msg = "base address='" + s_baddr + "' " + _("already exist for %s") % self.model.get_value(it1,fid.name)
                dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
                res = dlg.run()
                dlg.hide()
@@ -484,7 +491,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
            print "WARNING: add empty card name.. "
            return
 
-        node = model.get_value(node_iter,2)
+        node = model.get_value(node_iter,fid.xmlnode)
         cnode = self.conf.xml.findMyLevel(node.children,"iocards")[0]
         
         if cnode == None:
@@ -520,9 +527,9 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         if res == gtk.RESPONSE_NO:
             return False
         
-        cnode = self.model.get_value(iter,2)
+        cnode = self.model.get_value(iter,fid.xmlnode)
         node_iter = self.model.iter_parent(iter)
-        pnode = self.model.get_value(node_iter,2)
+        pnode = self.model.get_value(node_iter,fid.xmlnode)
 
         cn = cnode.prop("card")
         nn = pnode.prop("id")
@@ -543,12 +550,12 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
 
     def check_cardnum(self,num, iter, selfiter):
         it = self.model.iter_children(iter)
-        myname = self.model.get_value(selfiter,0)
+        myname = self.model.get_value(selfiter,fid.name)
         while it is not None:
-            if self.model.get_value(it,0) == myname:
+            if self.model.get_value(it,fid.name) == myname:
                 it = self.model.iter_next(it)  
                 continue
-            s_n = self.model.get_value(it,2).prop("card")
+            s_n = self.model.get_value(it,fid.xmlnode).prop("card")
             n = 0
             if s_n != None and s_n!="":
                 n = int(s_n)
@@ -561,12 +568,12 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
 
     def check_baddr(self,baddr, iter, selfiter):
         it = self.model.iter_children(iter)
-        myname = self.model.get_value(selfiter,0)
+        myname = self.model.get_value(selfiter,fid.name)
         while it is not None:
-            if self.model.get_value(it,0) == myname:
+            if self.model.get_value(it,fid.name) == myname:
                 it = self.model.iter_next(it)  
                 continue
-            s_n = self.model.get_value(it,2).prop("baddr")
+            s_n = self.model.get_value(it,fid.xmlnode).prop("baddr")
             n = 0
             if s_n != "" and s_n != None:
                 n = int(eval(s_n))
@@ -579,7 +586,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         self.card_param_set_sensitive()
         (model, iter) = self.get_selection().get_selected()
         if not iter: return
-        cnode = model.get_value(iter,2)
+        cnode = model.get_value(iter,fid.xmlnode)
         self.set_module_params(cnode)
     
     def on_io_params_btn_clicked(self,btn):
@@ -677,7 +684,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
             cnum = self.card_num.get_value_as_int()
             it1 = self.check_cardnum(cnum,self.model.iter_parent(iter),iter)
             if it1 != None:
-               msg = "card number='" + str(cnum) + "' " + _("already exist for %s") % self.model.get_value(it1,0)
+               msg = "card number='" + str(cnum) + "' " + _("already exist for %s") % self.model.get_value(it1,fid.name)
                dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
                res = dlg.run()
                dlg.hide()
@@ -689,7 +696,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
                  baddr = int(eval(s_baddr))
             it1 = self.check_baddr(baddr,self.model.iter_parent(iter),iter)
             if baddr!=0 and it1 != None:
-               msg = "base address='" + s_baddr + "' " + _("already exist for %s") % self.model.get_value(it1,0)
+               msg = "base address='" + s_baddr + "' " + _("already exist for %s") % self.model.get_value(it1,fid.name)
                dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
                res = dlg.run()
                dlg.hide()
@@ -698,10 +705,10 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
             break                
 
         self.save2xml_elements_value(self.card_params,cnode)
-        model.set_value(iter,4,cnum)
+        model.set_value(iter,fid.num,cnum)
         info  = 'card=' + str(cnode.prop("card"))
         info  = info + ' BA=' + str(cnode.prop("baddr"))
-        model.set_value(iter,1,info)
+        model.set_value(iter,fid.param,info)
         self.set_module_params(cnode)
         self.conf.mark_changes()
     
@@ -713,18 +720,18 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         else:
            self.iotype.set_sensitive(True)
            p_iter = self.model.iter_parent(self.myedit_iter)
-           cardname = self.model.get_value(p_iter,0)
-           channel = self.model.get_value(self.myedit_iter,5)
+           cardname = self.model.get_value(p_iter,fid.name)
+           channel = self.model.get_value(self.myedit_iter,fid.subdev)
            self.set_combobox_element(self.iotype,self.ioconf.get_iotype(cardname,channel))
     
     def on_edit_channel(self,iter):
         card_iter = self.model.iter_parent(iter)
-        card = self.model.get_value(card_iter,2)
+        card = self.model.get_value(card_iter,fid.xmlnode)
         node_iter = self.model.iter_parent(card_iter)
-        node = self.model.get_value(node_iter,2)
-        node_id = self.model.get_value(node_iter,4) # node.prop("id")
+        node = self.model.get_value(node_iter,fid.xmlnode)
+        node_id = self.model.get_value(node_iter,fid.num) # node.prop("id")
 
-        self.sensor = self.model.get_value(iter,2)
+        self.sensor = self.model.get_value(iter,fid.xmlnode)
         snode = UniXML.EmptyNode()
         if self.sensor != None:
             snode = self.sensor  
@@ -737,7 +744,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
             self.tbl_tresholds.set_sensitive(True)
         
         prev_sensor = self.sensor
-        txt = _("Setup ") + str(card.prop("name")) + ":" + str(self.model.get_value(iter,0))
+        txt = _("Setup ") + str(card.prop("name")) + ":" + str(self.model.get_value(iter,fid.name))
         self.dlg_info.set_text(txt)
         self.myedit_iter = iter
         
@@ -750,8 +757,8 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
             if self.sensor == None: # "очищаем старую привязку"
                 if prev_sensor != None:
                      self.save2xml_elements_value(self.channel_params,prev_sensor,"")
-                self.model.set_value(iter,2,None)
-                self.model.set_value(iter,1,"")
+                self.model.set_value(iter,fid.xmlnode,None)
+                self.model.set_value(iter,fid.param,"")
                 self.myedit_iter = None
                 self.conf.mark_changes()
                 return
@@ -767,8 +774,8 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         
         if self.sensor == None: # "очищаем старую привязку"
             self.save2xml_elements_value(self.channel_params,prev_sensor,"")
-            self.model.set_value(iter,2,None)
-            self.model.set_value(iter,1,"")
+            self.model.set_value(iter,fid.xmlnode,None)
+            self.model.set_value(iter,fid.param,"")
             self.myedit_iter = None
             self.conf.mark_changes()
             return
@@ -776,12 +783,12 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         self.myedit_iter = None
         
         # Сохраняем параметры
-        self.model.set_value(iter,2,self.sensor)
-        self.model.set_value(iter,1,self.sensor.prop("name"))
+        self.model.set_value(iter,fid.xmlnode,self.sensor)
+        self.model.set_value(iter,fid.param,self.sensor.prop("name"))
         self.sensor.setProp("io",node_id)
         self.sensor.setProp("card",card.prop("card"))
-        self.sensor.setProp("subdev", str(self.model.get_value(iter,5)))
-        self.sensor.setProp("channel",str(self.model.get_value(iter,4)))
+        self.sensor.setProp("subdev", str(self.model.get_value(iter,fid.subdev)))
+        self.sensor.setProp("channel",str(self.model.get_value(iter,fid.num)))
         # Остальные параметры по списку
         self.save2xml_elements_value(self.channel_params,self.sensor)
         self.conf.mark_changes()
@@ -797,16 +804,16 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         while it is not None:
             if self.model.get_value(it,2) == xmlnode:
                 # заодно обновляем параметры
-                self.model.set_value(it,4,xmlnode.prop("id")) 
-                self.model.set_value(it,0,xmlnode.prop("name")) 
-                self.model.set_value(it,1,self.get_node_info(xmlnode))
+                self.model.set_value(it,fid.num,xmlnode.prop("id")) 
+                self.model.set_value(it,fid.name,xmlnode.prop("name")) 
+                self.model.set_value(it,fid.param,self.get_node_info(xmlnode))
                 it1 = self.model.iter_children(it)
                 # Идём по картам
                 while it1 is not None:
                     it2 = self.model.iter_children(it1)
                     # Идём по каналам 
                     while it2 is not None:
-                        snode = self.model.get_value(it2,2)
+                        snode = self.model.get_value(it2,fid.xmlnode)
                         if snode != None:
                             snode.setProp("io",node_id)
                         it2 = self.model.iter_next(it2)
@@ -834,7 +841,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
                     it2 = self.model.iter_children(it1)
                     # Идём по каналам 
                     while it2 is not None:
-                        snode = self.model.get_value(it2,2)
+                        snode = self.model.get_value(it2,fid.xmlnode)
                         if snode != None:
                              # Спрашиваем только на первой встретившейся "привязке" датчика
                              if dlg_ok == False:
@@ -865,7 +872,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         (model, iter) = self.get_selection().get_selected()
         if not iter: return
         
-        t = model.get_value(iter,3)
+        t = model.get_value(iter,fid.etype)
         node_iter = None
         if t == "card":
             node_iter = model.iter_parent(iter)
@@ -875,7 +882,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
             print "*** FAILED ELEMENT TYPE " + t
             return
         
-        xmlnode = model.get_value(node_iter,2)
+        xmlnode = model.get_value(node_iter,fid.xmlnode)
         
         cardnode = self.conf.xml.findNode(xmlnode,"iocards")[0]
         if cardnode == None or cardnode.children.next == None:
