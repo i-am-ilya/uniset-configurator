@@ -5,6 +5,12 @@ import gobject
 import UniXML
 from global_conf import *
 
+class fid():
+  id = 0
+  name = 1
+  tname = 2
+  xmlnode = 3
+  
 class XListDialog():
 
     xml = None
@@ -73,9 +79,9 @@ class XListDialog():
 
     def sfunc(self,model, column, key, iter):
 
-        if model.get_value(iter,0).find(key) != -1:
+        if model.get_value(iter,fid.id).find(key) != -1:
         	return False
-        if model.get_value(iter,1).find(key) != -1:
+        if model.get_value(iter,fid.name).find(key) != -1:
             return False
 #       if model.get_value(iter,2).find(key) != -1:
 #           return False
@@ -86,19 +92,19 @@ class XListDialog():
         
         renderer = gtk.CellRendererText()
 #        renderer.set_property("xalign", 0.0)
-        column = gtk.TreeViewColumn(_("ID"), renderer, text=0)
+        column = gtk.TreeViewColumn(_("ID"), renderer, text=fid.id)
         column.set_clickable(False)
         self.tv.append_column(column)
 
         renderer = gtk.CellRendererText()
 #        renderer.set_property("xalign", 0.0)
-        column = gtk.TreeViewColumn(_("Name"), renderer, text=1)
+        column = gtk.TreeViewColumn(_("Name"), renderer, text=fid.name)
         column.set_clickable(False)
         self.tv.append_column(column)
 
         renderer = gtk.CellRendererText()
 #        renderer.set_property("xalign", 0.0)
-        column = gtk.TreeViewColumn(_("TextName"), renderer, text=1)
+        column = gtk.TreeViewColumn(_("TextName"), renderer, text=fid.tname)
         column.set_clickable(False)
         self.tv.append_column(column)
 
@@ -116,7 +122,7 @@ class XListDialog():
         ts.unselect_all()
         it = self.model.get_iter_first()
         while it is not None:
-            if self.model.get_value(it, 3) == sel: # check iterator
+            if self.model.get_value(it, fid.xmlnode) == sel: # check iterator
                 ts.select_iter( self.fmodel.convert_child_iter_to_iter(it))
                 self.tv.scroll_to_cell( self.model.get_path(it) )
                 return
@@ -129,7 +135,7 @@ class XListDialog():
         ts.unselect_all()
         it = self.model.get_iter_first()
         while it is not None:
-            if self.model.get_value(it, 1) == sel:
+            if self.model.get_value(it, fid.name) == sel:
                 ts.select_iter(self.fmodel.convert_child_iter_to_iter(it))
                 self.tv.scroll_to_cell( self.model.get_path(it) )
                 return
@@ -141,7 +147,7 @@ class XListDialog():
 
         it = self.model.get_iter_first()
         while it is not None:
-            if self.model.get_value(it,0) == sel:
+            if self.model.get_value(it,fid.id) == sel:
                 ts.select_iter( self.fmodel.convert_child_iter_to_iter(it))
                 self.tv.scroll_to_cell( self.model.get_path(it) )
                 return
@@ -169,13 +175,13 @@ class XListDialog():
            if sel_mode == gtk.SELECTION_SINGLE:
                (model, iter) = self.tv.get_selection().get_selected()
                if iter:                                                                                                                                                                
-                   return model.get_value(iter,3)
+                   return model.get_value(iter,fid.xmlnode)
           
            elif sel_mode == gtk.SELECTION_MULTIPLE:
                (model, plist) = self.tv.get_selection().get_selected_rows()
                nlist = []
                for p in plist:
-                     nlist.append( model.get_value(model.get_iter(p),3) )
+                     nlist.append( model.get_value(model.get_iter(p),fid.xmlnode) )
 #               treeselection.selected_foreach(self.foreach_sel_list,plist)
 #               model = sel.get_treeview().get_model()
 #               return (model, pathlist)               
@@ -217,13 +223,13 @@ class XListDialog():
 
         case = self.case_cb.get_active()
 
-        if self.id_check.get_active() and self.find_str(model.get_value(it,0),t,case):
+        if self.id_check.get_active() and self.find_str(model.get_value(it,fid.id),t,case):
             return True
         
-        if self.name_check.get_active() and self.find_str(model.get_value(it,1),t,case):
+        if self.name_check.get_active() and self.find_str(model.get_value(it,fid.name),t,case):
             return True
         
-        if self.tname_check.get_active() and self.find_str(model.get_value(it,2),t,case):
+        if self.tname_check.get_active() and self.find_str(model.get_value(it,fid.tname),t,case):
             return True
         
         if self.id_check.get_active() or self.name_check.get_active() or self.tname_check.get_active():
