@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.6
-Release: eter6
+Release: eter7
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -45,6 +45,9 @@ ln -s %python_sitelibdir/%name/can_conf.py %buildroot/%_bindir/uniset-can-conf
 %_bindir/*
 
 %changelog
+* Thu Nov 18 2010 Ilya Shpigor <elly@altlinux.org> 0.6-eter7
+- fix python version requires in configure.ac
+
 * Tue Nov 09 2010 Pavel Vainerman <pv@altlinux.ru> 0.6-eter3
 - minor fixes in io_conf and can_conf
 
