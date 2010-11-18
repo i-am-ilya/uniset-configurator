@@ -440,7 +440,6 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         self.lcaps_edit(None)
     
     def lcaps_edit(self,iter):
-        
         lc_node = UniXML.EmptyNode()
         addNew = True
         if iter != None:
@@ -728,7 +727,10 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
            addNew = False
         
         self.init_elements_value(self.item_params,i_node)
-        self.set_combobox_element(self.item_ltype,self.get_light_name(xmlnode.parent.name))
+        if xmlnode:
+           self.set_combobox_element(self.item_ltype,self.get_light_name(xmlnode.parent.name))
+        else:
+           self.set_combobox_element(self.item_ltype,"")
         
         while True:
            res = self.dlg_lcaps.run()
@@ -737,9 +739,14 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
                return
            
            if self.item_sensor.get_text() == "":
-              dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,"Не задан датчик")
-              res = dlg.run()
+              dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,_("Не задан датчик. Удалить привязку?"))
+              res = dlg.run()			 
+#              dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,"Не задан датчик")
+#              res = dlg.run()
               dlg.hide()
+              if res == gtk.RESPONSE_YES:
+                 self.remove_item(lc_iter,iter)
+                 return
               continue
            
            if self.item_ltype.get_active_text() not in ["Оранжевый","Красный","Зелёный"]:
@@ -816,11 +823,16 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         if t == "I":
            lc_iter = self.model.iter_parent(iter)
         elif t == "L":
-           lc_iter = iter
+            print "*** failed remove 'item' but iter type is 'L' (can be 'I')"
+#           lc_iter = iter
+            return
         else:
            print "*** FAILED ELEMENT TYPE " + t
            return
         
+        self.remove_item(lc_iter, iter)
+        
+    def remove_item(self, lc_iter, iter):
         lc_name = self.model.get_value(lc_iter,fid.name)
         lc_params = self.lc_list[lc_name]
         lc_node = lc_params['xmlnode']            
@@ -834,7 +846,6 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         self.set_cursor( self.model.get_path(it1) )
         self.model.remove(iter)        
 
-    
     def on_lcpas_dlg_btn_lamp_clicked(self, button):
         s = self.conf.s_dlg().run(self)
         if s != None:
