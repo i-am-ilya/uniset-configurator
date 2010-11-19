@@ -62,6 +62,9 @@ class LCAPSConfig():
            print "For '%s' <orange> section not found."%lc_name
            return
         
+        
+        reset_list = self.gen_reset_set(lc_node,o_node,g_node,r_node)
+        
         ctx = open( self.datdir + "lcaps-test-skel.xml" ).readlines()
         ctx_item = open( self.datdir + "lcaps-test-skel-item.xml" ).readlines()
         ctx_check = open( self.datdir + "lcaps-test-skel-check.xml" ).readlines()
@@ -69,11 +72,38 @@ class LCAPSConfig():
         tests = self.gen_tests_for_section(ctx_item,ctx_check,o_node,2)
         tests += self.gen_tests_for_section(ctx_item,ctx_check,r_node,3)
         tests += self.gen_tests_for_section(ctx_item,ctx_check,g_node,4)
-        tests = self.gen_result_ctx(ctx,lc_node,tests)
+        tests = self.gen_result_ctx(ctx,lc_node,tests,reset_list)
         
         out = open(fname,"w")
         out.write(tests)
         out.close()
+    
+    def gen_reset_set_for_section(self,lc_node,sec_node):
+        res = ""
+        node = self.xml.firstNode(sec_node.children)
+        while node != None:
+           lamp = get_str_val(node.prop("lamp"))
+           aps = get_str_val(node.prop("name"))
+           if aps != "":
+              res += aps + "=0 "
+           if lamp != "":
+              res += lamp + "=0 "
+           node = self.xml.nextNode(node)
+        
+        res = res.strip().replace(" ",",")
+        return res
+    
+    def gen_reset_set(self,lc_node,o_node,g_node,r_node):
+        
+        res1 = self.gen_reset_set_for_section(lc_node,o_node)
+        res2 = self.gen_reset_set_for_section(lc_node,g_node)
+        res3 = self.gen_reset_set_for_section(lc_node,r_node)
+        res = str(res1 + "," + res2 + "," + res3)
+        res = res.replace(",,",",")
+        if res.endswith(","): res = res[:-1]
+        if res.startswith(","): res = res[1:]
+           
+        return res.strip()
     
     def check_and_replace(self,s,t,v):
         if s == None or t == None or v == None:
@@ -83,7 +113,7 @@ class LCAPSConfig():
            return s.replace(t,v)
         return s
     
-    def gen_result_ctx(self,ctx,lc_node,tests):
+    def gen_result_ctx(self,ctx,lc_node,tests,rlist):
         res = ""
         gdate = datetime.datetime.today().strftime("uniset-configurator: %Y-%m-%d %H:%M")
         for l in ctx:
@@ -93,12 +123,17 @@ class LCAPSConfig():
             l = self.check_and_replace(l,"{CONFIRM}",lc_node.prop("confirm"))
             l = self.check_and_replace(l,"{LCNAME}",lc_node.prop("name").lower())
             l = self.check_and_replace(l,"{GENTIME}",gdate)
+            l = self.check_and_replace(l,"{RLIST}",rlist)
             res += l   
         return res
 
     def gen_tests_for_section(self,ctx_item,ctx_check,secnode,tnum):
         res=""
         check = self.gen_checks_for_section(ctx_check,secnode)
+        ignore = ""
+        if check == "":
+           ignore="1"
+        
         for l in ctx_item:
             l = self.check_and_replace(l,"{TESTNUM}",str(tnum))
             l = self.check_and_replace(l,"{LCNAME}",secnode.parent.prop("name").upper())
@@ -106,6 +141,7 @@ class LCAPSConfig():
             l = self.check_and_replace(l,"{Flash}",secnode.prop("flamp"))
             l = self.check_and_replace(l,"{CommHorn}",secnode.prop("horn1"))
             l = self.check_and_replace(l,"{CHECK}",check)
+            l = self.check_and_replace(l,"{IGN}",ignore)
             res += l   
         
         return res
@@ -116,14 +152,20 @@ class LCAPSConfig():
         node = self.xml.firstNode(secnode.children)
         while node != None:
             nohorn= get_int_val(node.prop("nohorn"))
+            t_postfix = ""
             if nohorn != 0:
-               nohorn = "-nohorn"
-            else:
-               nohorn = ""
+               t_postfix = "-nohorn"
+            
+            noconfirm = get_int_val(node.prop("noconfirm"))
+            if noconfirm != 0:
+               t_postfix = "-noconfirm"
+            
+            if nohorn and noconfirm:
+               t_postfix = "-nohorn-noconfirm"
             
             for l in ctx_check:
                 l = self.check_and_replace(l,'{LAMP}',node.prop("lamp"))
-                l = self.check_and_replace(l,"{NOHORN}",nohorn)
+                l = self.check_and_replace(l,"{POSTFIX}",t_postfix)
                 l = self.check_and_replace(l,"{SENSOR}",node.prop("name"))
                 res += l
             node = self.xml.nextNode(node)

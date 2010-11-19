@@ -1,1 +1,1 @@
-  		<check test="outlink" file="lcaps-template{NOHORN}.xml" link="ALL" replace="APSSensor={SENSOR},Lamp={LAMP}"/>
+  		<check test="outlink" file="lcaps-template{POSTFIX}.xml" link="ALL" replace="APS:{SENSOR},Lamp:{LAMP}"/>

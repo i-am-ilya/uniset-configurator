@@ -4,17 +4,13 @@
 	Тесты предварительный и недостаточно подробно проверяющие условия. Можно 'улучшать'..
 	Номера присвоены, просто, чтобы можно было запускать тесты выборочно (по номеру).
 -->
-<TestList logfile="result.lcaps-template.txt" logfile_trunc="1">
-	<test num="1" name="Initialization" ignore_failed="1">
-<!--	
-		<action name="set" id="HornReset_S" val="1" reset_time="300" val2="0"/>
-		<action name="set" id="Confirm_S" val="1" reset_time="300" val2="0"/>
--->		
-		<action name="set" id="APSSensor" val="0"/>
+<TestList>
+	<test num="1" name="Initialization" ignore_failed="0">
+		<action name="set" id="APS" val="0"/>
 		<action name="msleep" msec="200"/>
     </test>
-	<test num="2" name="Lamp1 test">
-	  <action name="set" id="APSSensor" val="1"/>
+	<test num="2" name="Lamp">
+	  <action name="set" id="APS" val="1"/>
 	  <action name="msleep" msec="500"/>
   	  <check test="equal" id="Lamp" val="2"/>
 	  <check test="equal" id="CommHorn" val="1"/>
@@ -23,7 +19,7 @@
 	</test>	  
 	<test num="3" name="Reset horn">
 	  <action name="set" id="HornReset" val="1" reset_time="300" val2="0"/>
-	  <action name="msleep" msec="550"/>
+	  <action name="msleep" msec="600"/>
 	  <check test="equal" id="CommHorn" val="0"/>
 	  <check test="equal" id="Horn" val="0"/>
 	  <check test="equal" id="Flash" val="1"/>
@@ -35,9 +31,36 @@
 	  <check test="equal" id="Flash" val="0"/>
 	</test>	  
 	<test num="5" name="Reset APS">
-	  <action name="set" id="APSSensor" val="0"/>
+	  <action name="set" id="APS" val="0"/>
 	  <action name="msleep" msec="500"/>
   	  <check test="equal" id="Lamp" val="0"/>
 	</test>
+    <test num="6" name="APS-ResetHorn-ResetAPS-Confirm">
+	  <check test="link" link="num=1"/>
+	  <check test="link" link="num=2"/>
+	  <check test="link" link="num=3"/>
+      <action name="set" id="APS" val="0"/>
+	  <action name="msleep" msec="200"/>
+	  <check test="equal" id="Lamp" val="2"/>
+	  <action name="set" id="Confirm" val="1" reset_time="300" val2="0"/>
+	  <action name="msleep" msec="500"/>
+	  <check test="equal" id="Lamp" val="0"/>
+	  <check test="equal" id="Flash" val="0"/>
+	</test>	
+    <test num="7" name="Repeat APS">
+      <check test="link" link="num=1"/>
+      <action name="set" id="APS" val="1"/>
+	  <action name="msleep" msec="200"/>
+  	  <check test="equal" id="Lamp" val="2"/>
+  	  <action name="set" id="APS" val="1"/>
+  	  <check test="equal" id="Lamp" val="2"/>
+  	  <action name="set" id="APS" val="0"/>
+  	  <action name="msleep" msec="200"/>
+  	  <action name="set" id="APS" val="1"/>
+	  <check test="link" link="num=2"/>
+	  <check test="link" link="num=3"/>
+	  <check test="link" link="num=4"/>
+	  <check test="link" link="num=5"/>
+	</test>	
 </TestList>
 </LCAPSTestScenario>
