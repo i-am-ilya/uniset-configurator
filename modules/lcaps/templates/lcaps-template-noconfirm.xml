@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'utf-8'?>
-<YauzaAPSTestScenario>
+<LCAPSTestScenario>
 <!--
 	Тесты предварительный и недостаточно подробно проверяющие условия. Можно 'улучшать'..
 	Номера присвоены, просто, чтобы можно было запускать тесты выборочно (по номеру).
@@ -30,4 +30,4 @@
 	  <action name="msleep" msec="500"/>
 	</test>
 </TestList>
-</YauzaAPSTestScenario>
+</LCAPSTestScenario>

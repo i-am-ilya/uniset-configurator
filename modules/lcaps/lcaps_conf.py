@@ -42,6 +42,10 @@ class LCAPSConfig():
                   break
             
             node = self.xml.nextNode(node)
+        
+        # и скопировать сами тестовые шаблоны
+        self.copy_templates(self.datdir,"./")
+         
     
     def gen_test_skel_by_name(self, lc_node, lc_name, fname):
         
@@ -77,6 +81,20 @@ class LCAPSConfig():
         out = open(fname,"w")
         out.write(tests)
         out.close()
+        
+    def copy_templates(self, datdir, todir):
+        flist = ["lcaps-template.xml","lcaps-template-noconfirm.xml","lcaps-template-nohorn.xml"]
+        
+        for f in flist:
+            self.copy_file(datdir+f, todir+f)
+    
+    def copy_file(self, src, dest):
+        f_src=file(src,'rb')
+        f_dest=file(dest,'wb')
+        f_src.seek(0)
+        f_dest.write(f_src.read())
+        f_src.close()
+        f_dest.close()	  
     
     def gen_reset_set_for_section(self,lc_node,sec_node):
         res = ""
