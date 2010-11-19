@@ -21,6 +21,7 @@ class LCAPSConfig():
     def __init__(self,xml,datdir):
         self.xml = xml
         self.datdir = datdir
+        self.copy_templates_flag = False
     
     def gen_test_skel(self,lcname,fname):
         
@@ -44,7 +45,8 @@ class LCAPSConfig():
             node = self.xml.nextNode(node)
         
         # и скопировать сами тестовые шаблоны
-        self.copy_templates(self.datdir,"./")
+        if self.copy_templates_flag == True:
+           self.copy_templates(self.datdir,"./")
          
     
     def gen_test_skel_by_name(self, lc_node, lc_name, fname):
@@ -206,6 +208,7 @@ if __name__ == "__main__":
        print "--confile confile                 - Configuration file. Default: configure.xml"
        print "--gen-test-skel [LCAPSname|ALL]   - Generate test skeleton for LCAPS=name"
        print "--outfile filename                - Save to filename. Default: name-test"
+       print "--copy-templates                  - Copy templates files."
        print "-v                                - Verbose mode"
        exit(0)
 
@@ -214,7 +217,7 @@ if __name__ == "__main__":
     verb = checkArgParam("-v",False)
     
     if lcname == "":
-       print "Usage: %s [--confile configure.xml ] [--outfile filename]  --gen-test-skel [name|ALL]" % sys.argv[0]
+       print "Usage: %s [--confile configure.xml ] [--outfile filename]  --gen-test-skel [name|ALL] [--copy-templates]" % sys.argv[0]
        exit(1)
     
     outfile = getArgParam("--outfile","")
@@ -222,6 +225,7 @@ if __name__ == "__main__":
     xml = UniXML.UniXML(confile)
     
     lcapsconf = LCAPSConfig(xml,templdir)
+    lcapsconf.copy_templates_flag = checkArgParam("--copy-templates",False)
     
     if outfile == "":
        outfile = "lcaps-%s-test.xml"%lcname.lower()
