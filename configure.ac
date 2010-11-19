@@ -21,7 +21,7 @@ AC_PROG_MAKE_SET
 # Checks for libraries.
 
 dnl Python
-AM_PATH_PYTHON(2.6)
+AM_PATH_PYTHON(2.5)
 #AM_CHECK_PYTHON_HEADERS(,[AC_MSG_ERROR([python headers not found]);exit] )
 
 AC_CONFIG_FILES([Makefile
