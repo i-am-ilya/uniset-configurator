@@ -379,7 +379,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         p=[]
         for i in range(0,fid.maxnum):
             p.append(None)
-        
+        xmlnode = lc['xmlnode']
         p[fid.name] = lc['name']
         p[fid.sensor] = ""
         p[fid.flamp] = ""
@@ -387,9 +387,12 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         p[fid.noconfirm] = ""
         p[fid.delay] = ""
         p[fid.etype] = "L"
-        p[fid.xmlnode] = lc['xmlnode']
+        p[fid.xmlnode] = xmlnode
         p[fid.s_xmlnode] = None
         p[fid.l_xmlnode] = None
+        if xmlnode != None:
+           p[fid.tname] = get_str_val(xmlnode.prop("comment"))
+        
         return p
     
     def update_item_param(self,iter,params):

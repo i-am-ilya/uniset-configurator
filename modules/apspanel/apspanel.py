@@ -293,7 +293,7 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
         # добавляем пустой элемент
         p = self.get_default_param("I")
         it = self.model.append(p_iter,p)
-        self.item_edit(it)
+        self.item_edit(it,True)
     
     def on_apspanel_item_edit(self,menuitem):
         (model, iter) = self.get_selection().get_selected()
@@ -391,10 +391,11 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
         
         i_node = self.model.get_value(iter,fid.xmlnode)
         self.model.remove(iter)
-        i_node.unlinkNode()
+        if i_node != None:
+           i_node.unlinkNode()
         self.conf.mark_changes()    
     
-    def item_edit(self,iter):
+    def item_edit(self,iter, addNew=False):
 
         if not iter:
            return 
@@ -414,6 +415,9 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
            res = self.dlg_item .run()
            self.dlg_item.hide()
            if res != dlg_RESPONSE_OK:
+               if addNew == True:
+                  # удаляем элемент т.к. мы его создали в on_apspanel_item_add
+                  self.model.remove(iter)
                return
            
            if self.item_sensor.get_text() == "":
