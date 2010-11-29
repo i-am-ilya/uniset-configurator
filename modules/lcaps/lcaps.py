@@ -235,7 +235,10 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
                    continue
                 
                 i_node.setProp("num",i[fid.name])
-                i_node.setProp("name",i[fid.sensor])
+                if i[fid.s_xmlnode] != None:
+                   i_node.setProp("name",i[fid.s_xmlnode].prop("name"))
+                else:
+                   i_node.setProp("name","")
                 i_node.setProp("lamp",self.get_lamp_name(lc_name,i[fid.name]))
                 i_node.setProp("nohorn",str(i[fid.nohorn]))
                 i_node.setProp("noconfirm",str(i[fid.noconfirm]))
