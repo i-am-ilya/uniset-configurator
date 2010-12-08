@@ -120,6 +120,7 @@ class XListDialog():
     def set_selected_xmlnode(self, sel):
         ts = self.tv.get_selection()
         ts.unselect_all()
+        self.fentry.set_text("")
         it = self.model.get_iter_first()
         while it is not None:
             if self.model.get_value(it, fid.xmlnode) == sel: # check iterator
@@ -133,6 +134,7 @@ class XListDialog():
            return
         ts = self.tv.get_selection()
         ts.unselect_all()
+        self.fentry.set_text("")
         it = self.model.get_iter_first()
         while it is not None:
             if self.model.get_value(it, fid.name) == sel:
@@ -144,6 +146,7 @@ class XListDialog():
     def set_selected_id(self, sel):
         ts = self.tv.get_selection()
         ts.unselect_all()
+        self.fentry.set_text("")
 
         it = self.model.get_iter_first()
         while it is not None:
