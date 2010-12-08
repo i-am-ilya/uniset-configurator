@@ -107,7 +107,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
             ["dlg_param","io_dlg_channel",None,True], \
             ["parambook","ioparam_book",None,True], \
             ["dlg_info","io_lbl_info",None,True], \
-            ["iotype","io_cbox_iotype","iotype",False], \
+            ["iotype","io_cbox_iotype","iotype",False,True], \
             # Common parameters
             ["tbl_comm","io_tbl_comm",None,True], \
             ["lamp","io_cb_lamp","lamp",False], \
@@ -146,7 +146,14 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
             ["thr_sensibility","io_sensibility","sensibility",False], \
             ["thr_inverse","io_cb_thr_invert","inverse",False], \
             ["thr_lbl_aID","io_lbl_aID","threshold_aid",False] \
-           ]
+        ]
+
+        self.io_params=[ \
+            ["","","channel",False], \
+            ["","","card",False], \
+            ["","","subdev",False], \
+            ["","","io",False] \
+        ]
 
         # список доступных диалогов настройки (должны быть в glade)
         # список пар [class field, название в glade]
@@ -156,7 +163,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
              ["dlg_aixx5a_average_cb","dlg_aixx5a_average_cb"]
         ]
         self.init_glade_elements(self.mod_dlg_list)
-        
+
         # список соответсвия названий карт и диалогов настройки параметров для них
         # диалоги должны быть сделаны в glade
         # (не все модуля ядра имеют настройки и соотвественно не для всех нужны диалоги)
@@ -376,9 +383,11 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
                     dlg.hide()
                     if res == gtk.RESPONSE_NO:
                         return False
+
                     # сперва очистим привязку у старого
                     self.model.set_value(ch_it,fid.xmlnode,None)
                     self.model.set_value(ch_it,fid.param,"")
+
             self.sensor = s  
             break
  
@@ -654,7 +663,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
            self.mod_params_btn.set_sensitive(True)
         else:
            self.mod_params_btn.set_sensitive(False)
-        
+
     def set_module_params(self,cardnode):
         p = self.ioconf.get_module_params_for_card(cardnode)
         self.mod_name.set_text(p[0])
@@ -672,7 +681,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         # сменить тип карты можно только удалив старую
         # (со всеми привязками и т.п)
         self.cb_cardlist.set_sensitive(False)
-        
+
         while True:
             res = self.dlg_card.run()
             self.dlg_card.hide()
@@ -711,9 +720,9 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         model.set_value(iter,fid.param,info)
         self.set_module_params(cnode)
         self.conf.mark_changes()
-    
+
     def on_cb_lamp_toggled(self,btn):
-        
+
         if btn.get_active():
            self.set_combobox_element(self.iotype,"AO")
            self.iotype.set_sensitive(False)
@@ -723,7 +732,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
            cardname = self.model.get_value(p_iter,fid.name)
            channel = self.model.get_value(self.myedit_iter,fid.subdev)
            self.set_combobox_element(self.iotype,self.ioconf.get_iotype(cardname,channel))
-    
+
     def on_edit_channel(self,iter):
         card_iter = self.model.iter_parent(iter)
         card = self.model.get_value(card_iter,fid.xmlnode)
@@ -737,26 +746,28 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
             snode = self.sensor  
         self.set_sensitive_pages()
         self.init_elements_value(self.channel_params,snode)
-        
+
         if self.thr_lbl_aID.get_text() == "":
             self.tbl_tresholds.set_sensitive(False)
         else:
             self.tbl_tresholds.set_sensitive(True)
-        
+
         prev_sensor = self.sensor
         txt = _("Setup ") + str(card.prop("name")) + ":" + str(self.model.get_value(iter,fid.name))
         self.dlg_info.set_text(txt)
         self.myedit_iter = iter
-        
+
         while True:
             res = self.dlg_param.run()
             self.dlg_param.hide()
             if res != dlg_RESPONSE_OK:
                 return
-            
+
+            # "очищаем старую привязку"
+            if prev_sensor != self.sensor and prev_sensor is not None:
+                self.save2xml_elements_value(self.io_params,prev_sensor,"")
+
             if self.sensor == None: # "очищаем старую привязку"
-                if prev_sensor != None:
-                     self.save2xml_elements_value(self.channel_params,prev_sensor,"")
                 self.model.set_value(iter,fid.xmlnode,None)
                 self.model.set_value(iter,fid.param,"")
                 self.myedit_iter = None
@@ -771,14 +782,16 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
                  dlg.hide()
                  continue
             break
-        
-        if self.sensor == None: # "очищаем старую привязку"
-            self.save2xml_elements_value(self.channel_params,prev_sensor,"")
-            self.model.set_value(iter,fid.xmlnode,None)
-            self.model.set_value(iter,fid.param,"")
-            self.myedit_iter = None
-            self.conf.mark_changes()
-            return
+
+        if self.sensor != prev_sensor: # "очищаем старую привязку"
+           self.save2xml_elements_value(self.io_params,prev_sensor,"")
+           self.model.set_value(iter,fid.xmlnode,None)
+           self.model.set_value(iter,fid.param,"")
+           self.myedit_iter = None
+           self.conf.mark_changes()
+
+        if self.sensor == None:
+           return
 
         self.myedit_iter = None
         

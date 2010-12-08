@@ -59,7 +59,7 @@ class BaseEditor():
                 self.set_combobox_element(self.__dict__[e[0]], get_str_val(snode.prop(e[2])))
             elif cname == "Label":
                 self.__dict__[e[0]].set_text(get_str_val(snode.prop(e[2])))
-       
+
     def validate_elements(self,elist):
         ''' Проверка корректности данны 
             по списку элементов вида [class field,gladename,xmlname,xml_save_ignore]'''
@@ -73,14 +73,16 @@ class BaseEditor():
                       return [False,e[2]]
 
         return [True,""]
-    
+
     def save2xml_elements_value(self,elist,snode,setval=None):
         ''' Сохранение переменных в xml-узел
-            по списку элементов вида [class field,gladename,xmlname,xml_save_ignore]'''
+            по списку элементов вида [class field,gladename,xmlname,xml_save_ignore, reset_ignore]'''
         for e in elist:
             if e[0]==None or e[2] == None or e[3]==True:
                 continue
             if setval != None:
+                if len(e)>4 and e[4]!=True: # проверяем, гнорировать ли при обновлении значением
+                   continue
                 snode.setProp(e[2],setval)
             else:
                 cname = str(self.__dict__[e[0]].__class__.__name__)
@@ -102,12 +104,12 @@ class BaseEditor():
                         snode.setProp(e[2],"")
                     else:
                         snode.setProp(e[2],t)
-    
+
     def get_cb_param(self, checkbutton):
         if checkbutton.get_active():
             return "1"
         return ""
-    
+
     def set_combobox_element(self,cbox,val):
         if val == None:
             val = ""
