@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.6
-Release: eter9
+Release: eter10
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -45,6 +45,9 @@ ln -s %python_sitelibdir/%name/can_conf.py %buildroot/%_bindir/uniset-can-conf
 %_bindir/*
 
 %changelog
+* Tue Jan 11 2011 Pavel Vainerman <pv@altlinux.ru> 0.6-eter10
+- fixed bug (add new sensor)
+
 * Wed Dec 08 2010 Pavel Vainerman <pv@altlinux.ru> 0.6-eter9
 - fixed bug in i/o (thank's yv@ again)
 
