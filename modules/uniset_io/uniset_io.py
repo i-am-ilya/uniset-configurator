@@ -784,7 +784,8 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
             break
 
         if self.sensor != prev_sensor: # "очищаем старую привязку"
-           self.save2xml_elements_value(self.io_params,prev_sensor,"")
+           if prev_sensor != None:
+              self.save2xml_elements_value(self.io_params,prev_sensor,"")
            self.model.set_value(iter,fid.xmlnode,None)
            self.model.set_value(iter,fid.param,"")
            self.myedit_iter = None
