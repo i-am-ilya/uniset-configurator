@@ -40,13 +40,13 @@ class IOConfig():
             self.build_unio96_list(cardnode,model,iter)
    
     def build_di32_list(self,card,model,iter):
-        for i in range(0,15):
+        for i in range(0,16):
             model.append(iter, [_("J1:")+str(i),"",None,_("channel"),str(i),"0"])
         for i in range(16,32):
             model.append(iter, [_("J2:")+str(i-16),"",None,_("channel"),str(i),"0"])
     
     def build_do32_list(self,card,model,iter):
-        for i in range(0,15):
+        for i in range(0,16):
             model.append(iter, [_("J1:")+str(i),"",None,_("channel"),str(i),"0"])
         for i in range(16,32):
             model.append(iter, [_("J2:")+str(i-16),"",None,_("channel"),str(i),"0"])

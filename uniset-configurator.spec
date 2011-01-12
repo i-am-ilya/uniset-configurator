@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.6
-Release: eter10
+Release: eter11
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -45,6 +45,9 @@ ln -s %python_sitelibdir/%name/can_conf.py %buildroot/%_bindir/uniset-can-conf
 %_bindir/*
 
 %changelog
+* Wed Jan 12 2011 Pavel Vainerman <pv@altlinux.ru> 0.6-eter11
+- fixed bug in io-conf (number of channels for DO32 and DI32)
+
 * Tue Jan 11 2011 Pavel Vainerman <pv@altlinux.ru> 0.6-eter10
 - fixed bug (add new sensor)
 
