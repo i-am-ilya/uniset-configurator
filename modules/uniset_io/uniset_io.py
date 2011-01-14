@@ -719,7 +719,19 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         info  = info + ' BA=' + str(cnode.prop("baddr"))
         model.set_value(iter,fid.param,info)
         self.set_module_params(cnode)
+        self.update_card_info_for_sensors(iter,cnode)
         self.conf.mark_changes()
+
+    def update_card_info_for_sensors(self,iter,cnode):
+
+        # Идём по каналам
+        it2 = self.model.iter_children(iter)
+        cnum = self.model.get_value(iter,fid.num)
+        while it2 is not None:
+            snode = self.model.get_value(it2,fid.xmlnode)
+            if snode != None:
+               snode.setProp("card",cnum)
+            it2 = self.model.iter_next(it2)
 
     def on_cb_lamp_toggled(self,btn):
 
