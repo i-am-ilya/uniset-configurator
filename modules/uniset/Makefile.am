@@ -1,4 +1,4 @@
-#pyexec_SCRIPTS 	= *.py
+#python_SCRIPTS 	= *.py
 
 moddir    = @pythondir@/@PACKAGE@/modules/uniset
 mod_DATA  = *.py

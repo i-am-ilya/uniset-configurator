@@ -1,6 +1,6 @@
 SUBDIRS = modules templates
 
-pyexec_SCRIPTS 	= *.py
+python_SCRIPTS 	= *.py
 
 confdir     = $(pkgdatadir)
 conf_DATA   = *.glade
