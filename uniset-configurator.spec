@@ -1,10 +1,13 @@
 Name: uniset-configurator
 Version: 0.6
-Release: eter12
+Release: alt13
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
 Url: http://wiki.office.etersoft.ru/asu/Jauza?v=1fw
+
+Packager: Pavel Vainerman <pv@altlinux.ru>
+
 Source: %name-%version.tar
 BuildArch: noarch
 # Automatically added by buildreq on Sat Sep 25 2010 (-bi)
@@ -45,6 +48,9 @@ ln -s %python_sitelibdir/%name/can_conf.py %buildroot/%_bindir/uniset-can-conf
 %_bindir/*
 
 %changelog
+* Mon Jan 17 2011 Ilya Shpigor <elly@altlinux.org> 0.6-alt13
+- initial build for ALT Linux Sisyphus
+
 * Fri Jan 14 2011 Pavel Vainerman <pv@altlinux.ru> 0.6-eter12
 - fixed bug in io-conf (change card number for sensors)
 
