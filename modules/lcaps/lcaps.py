@@ -228,21 +228,8 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
             
             if lc["comhorn"]["node"] != None:
                self.set_xml_properties(lc["comhorn"]["node"],lc["comhorn"]["xmlprop"])
-            
-            for i in lc['list'].values():
-                i_node = i[fid.xmlnode]
-                if i_node == None:
-                   continue
-                
-                i_node.setProp("num",i[fid.name])
-                if i[fid.s_xmlnode] != None:
-                   i_node.setProp("name",i[fid.s_xmlnode].prop("name"))
-                else:
-                   i_node.setProp("name","")
-                i_node.setProp("lamp",self.get_lamp_name(lc_name,i[fid.name]))
-                i_node.setProp("nohorn",str(i[fid.nohorn]))
-                i_node.setProp("noconfirm",str(i[fid.noconfirm]))
-                i_node.setProp("delay",str(i[fid.delay]))
+
+            self.set_xml_list(lc['list'],lc_name)
 
     def set_xml_properties(self,node, proplist):
         if node == None or proplist == None:
@@ -250,6 +237,26 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         
         for key, val in proplist.items():
             node.setProp(key,val)
+
+    def set_xml_list(self, lc_list,lc_name):
+        for i in lc_list.values():
+            i_node = i[fid.xmlnode]
+            if i_node == None:
+               continue
+            nm = str(i[fid.name])
+            if nm == "" or nm == None:
+               i_node.unlinkNode()
+               continue
+            
+            i_node.setProp("num",nm)
+            if i[fid.s_xmlnode] != None:
+                i_node.setProp("name",i[fid.s_xmlnode].prop("name"))
+            else:
+                i_node.setProp("name","")
+            i_node.setProp("lamp",self.get_lamp_name(lc_name,i[fid.name]))
+            i_node.setProp("nohorn",str(i[fid.nohorn]))
+            i_node.setProp("noconfirm",str(i[fid.noconfirm]))
+            i_node.setProp("delay",str(i[fid.delay]))
 
     def name_if_exist(self,node):
         if node == None:
@@ -812,7 +819,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         else:
            self.update_item_param(iter,p)
         
-        self.conf.mark_changes()        
+        self.conf.mark_changes()
     
     def on_remove_item(self,iter):
         if not iter:
@@ -835,22 +842,25 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         else:
            print "*** FAILED ELEMENT TYPE " + t
            return
-        
+
         self.remove_item(lc_iter, iter)
-        
+
     def remove_item(self, lc_iter, iter):
         lc_name = self.model.get_value(lc_iter,fid.name)
         lc_params = self.lc_list[lc_name]
         lc_node = lc_params['xmlnode']            
-        
+
         num = get_int_val(self.model.get_value(iter,fid.name))
-        
         p = self.get_default_item(lc_name,num)
-        lc_params['list'][int(num)] = p
+        lc_params['list'][num] = p
+
+        xmlnode = self.model.get_value(iter,fid.xmlnode)
+        xmlnode.unlinkNode()
 
         it1 = self.model.insert_after(None,iter,p)
         self.set_cursor( self.model.get_path(it1) )
-        self.model.remove(iter)        
+        self.model.remove(iter)
+        self.conf.mark_changes()
 
     def on_lcpas_dlg_btn_lamp_clicked(self, button):
         s = self.conf.s_dlg().run(self)
