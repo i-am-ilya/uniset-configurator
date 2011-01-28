@@ -494,7 +494,9 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
                continue
 
             break                
-        
+
+        self.iodev.set_text("/dev/comedi%d"%self.card_num.get_value_as_int())
+
         cname = self.cb_cardlist.get_active_text()
         if cname == "":
            print "WARNING: add empty card name.. "
@@ -668,7 +670,10 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         p = self.ioconf.get_module_params_for_card(cardnode)
         self.mod_name.set_text(p[0])
         self.mod_params.set_text(p[1])
- 
+
+    def io_sp_cardnum_value_changed_cb(self,sp):
+        self.iodev.set_text("/dev/comedi%d"%self.card_num.get_value_as_int())
+
     def on_edit_card_activate(self,menuitem):
         (model, iter) = self.get_selection().get_selected()
         if not iter: return
@@ -681,6 +686,9 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         # сменить тип карты можно только удалив старую
         # (со всеми привязками и т.п)
         self.cb_cardlist.set_sensitive(False)
+
+        if self.iodev.get_text() == "":
+           self.iodev.set_text("/dev/comedi%d"%self.card_num.get_value_as_int())
 
         while True:
             res = self.dlg_card.run()
