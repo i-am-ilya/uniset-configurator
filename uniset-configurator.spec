@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.6
-Release: alt16
+Release: alt17
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -48,6 +48,9 @@ ln -s %python_sitelibdir/%name/can_conf.py %buildroot/%_bindir/uniset-can-conf
 %_bindir/*
 
 %changelog
+* Mon Jan 31 2011 Pavel Vainerman <pv@altlinux.ru> 0.6-alt17
+- fixed bug in apspanel module (don`t save comment)
+
 * Fri Jan 28 2011 Pavel Vainerman <pv@altlinux.ru> 0.6-alt16
 - add generic 'dev' for ioconf 
 
