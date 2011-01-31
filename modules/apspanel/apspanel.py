@@ -98,7 +98,7 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
             ["dlg_horn1","apspanel_dlg_horn1","horn1",False], \
             ["dlg_horn2","apspanel_dlg_horn2","horn2",False], \
             ["dlg_hornblink1","apspanel_dlg_hornblink1","hornblink1",False], \
-            ["dlg_hornblink2","apspanel_dlg_hornblink2","hornblink1",False], \
+            ["dlg_hornblink2","apspanel_dlg_hornblink2","hornblink2",False], \
             ["dlg_hornreset","apspanel_dlg_hornreset","hornreset",False], \
             ["dlg_hornreset2","apspanel_dlg_hornreset2","hornreset2",False], \
             ["dlg_flamp","apspanel_dlg_flamp","flamp",False], \
@@ -312,7 +312,7 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
     def panel_remove(self,iter):
         if not iter:
            return   
-        
+
         p_name = self.model.get_value(iter,fid.name)
 
         msg = _("Are you sure remove '%s'?")%(p_name)
@@ -321,17 +321,17 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
         dlg.hide()
         if res == gtk.RESPONSE_NO:
            return
-        
+
         p_node = self.model.get_value(iter,fid.xmlnode)
         self.model.remove(iter)
         p_node.unlinkNode()
         self.conf.mark_changes()
-    
+
     def panel_edit(self,iter):
         p_node = UniXML.EmptyNode()
         if iter:
            p_node = self.model.get_value(iter,fid.xmlnode)
-        
+
         self.init_elements_value(self.panel_params,p_node)
         while True:
            res = self.dlg.run()
@@ -364,8 +364,11 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
            p_node = self.conf.create_xmlnode_if_not_exist_by_prop("name",p_name,self.settings_node,"APSPanel",False)
         else:
            p_node = self.model.get_value(iter,fid.xmlnode)
-        
+
+#        print "(0): ******* %s"%p_node
         self.save2xml_elements_value(self.panel_params,p_node)
+#        print "(1): ******* %s"%p_node
+#        print "(2): ******* %s"%self.dlg_hornblink1.get_text()
         plist = self.read_panel_param(p_node)
         
         if not iter:
