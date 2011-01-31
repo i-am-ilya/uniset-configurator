@@ -5060,7 +5060,7 @@ TBI16_8</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="GtkEntry" id="apspanel_dlg_comm">
+                      <widget class="GtkEntry" id="apspanel_dlg_comment">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="invisible_char">&#x25CF;</property>
@@ -6004,7 +6004,7 @@ TBI16_8</property>
               </packing>
             </child>
             <child>
-              <widget class="GtkEntry" id="apspanel_dlg_comment">
+              <widget class="GtkEntry" id="apspanel_dlg_item_comment">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="invisible_char">&#x25CF;</property>

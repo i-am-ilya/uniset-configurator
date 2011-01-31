@@ -110,7 +110,8 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
             ["item_oncontrol","apspanel_dlg_oncontrol","onControl",False], \
             ["item_onlamp","apspanel_dlg_onlamp","onControlLamp",False], \
             ["item_msg_on","apspanel_dlg_msg_on","msg_on",False], \
-            ["item_msg_off","apspanel_dlg_msg_off","msg_off",False] \
+            ["item_msg_off","apspanel_dlg_msg_off","msg_off",False], \
+            ["dlg_comment","apspanel_dlg_comment","comment",False] \
         ]
 
         self.init_glade_elements(self.panel_params) 
@@ -139,7 +140,7 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
             ["item_delay","apspanel_dlg_offtime","offtime",False], \
             ["item_block","apspanel_dlg_block","block",False], \
             ["item_remoteconfirm","apspanel_dlg_remoteconfirm","remote_reset",False], \
-            ["item_comment","apspanel_dlg_comment","comment",False] \
+            ["item_comment","apspanel_dlg_item_comment","comment",False] \
         ]
         self.init_glade_elements(self.item_params)
         
