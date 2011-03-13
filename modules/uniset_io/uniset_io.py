@@ -234,7 +234,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
 #        iter0 = self.model.append(None, [_("Nodes"),"",None,"",-1,-1,None])
         while node != None:
             info = self.get_node_info(node)
-            iter1 = self.model.append(None,[node.prop("name"),info,node,"node",node.prop("id"),0])
+            iter1 = self.model.append(None,[node.prop("name"),info,node,"node",node.prop("id"),"0"])
             self.read_cards(node,iter1)
             node = self.conf.xml.nextNode(node)
 
@@ -245,7 +245,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         
         while node != None:
             info = self.get_card_info(node)
-            iter2 = self.model.append(iter, [node.prop("name").upper(),info,node,"card",node.prop("card"),0])
+            iter2 = self.model.append(iter, [node.prop("name").upper(),info,node,"card",node.prop("card"),"0"])
             self.build_channels_list(node,self.model,iter2)
             node = self.conf.xml.nextNode(node)
 

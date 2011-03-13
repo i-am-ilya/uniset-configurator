@@ -43,7 +43,6 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         conf.glade.signal_autoconnect(self)
         self.model = None
         self.modelfilter = None
-  
         self.model = gtk.TreeStore(gobject.TYPE_STRING,\
                                     gobject.TYPE_STRING, \
                                     gobject.TYPE_STRING, \
@@ -312,9 +311,9 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         
         p[fid.name] = get_str_val(xmlnode.prop("num"))
         p[fid.flamp] = self.get_light_name(l_name)
-        p[fid.nohorn] = get_int_val(xmlnode.prop("nohorn"))
-        p[fid.noconfirm] = get_int_val(xmlnode.prop("noconfirm"))
-        p[fid.delay] = get_int_val(xmlnode.prop("delay"))
+        p[fid.nohorn] = str(get_int_val(xmlnode.prop("nohorn")))
+        p[fid.noconfirm] = str(get_int_val(xmlnode.prop("noconfirm")))
+        p[fid.delay] = str(get_int_val(xmlnode.prop("delay")))
         p[fid.etype] = "I"
         p[fid.xmlnode] = xmlnode
         p[fid.s_xmlnode] = self.conf.find_sensor(get_str_val(xmlnode.prop("name")))
