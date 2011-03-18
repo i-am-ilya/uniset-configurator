@@ -5,6 +5,15 @@ import gobject
 import UniXML
 import configure
 import base_editor
+
+pic_NODE = 'node.png'
+
+class fid():
+  name = 0
+  text = 1
+  xmlnode = 2
+  pic = 3
+
 '''
 Редактирование списка узлов
 '''
@@ -26,8 +35,8 @@ class NodesEditor(base_editor.BaseEditor,gtk.TreeView):
        
         self.model = None
         self.modelfilter = None
-        #                          Name | Parameters | xmlnode
-        self.model = gtk.TreeStore(gobject.TYPE_STRING,gobject.TYPE_STRING,object)
+        #                          Name | Parameters | xmlnode | pic
+        self.model = gtk.TreeStore(gobject.TYPE_STRING,gobject.TYPE_STRING,object,gtk.gdk.Pixbuf)
         self.modelfilter = self.model.filter_new()
 
 #        self.modelfilter.set_visible_column(1)
@@ -36,14 +45,19 @@ class NodesEditor(base_editor.BaseEditor,gtk.TreeView):
         self.set_model(self.model)
         self.set_rules_hint(True)
         self.connect("button-press-event", self.on_button_press_event)
-        
-        renderer = gtk.CellRendererText()
-        column = gtk.TreeViewColumn(_("Name"), renderer, text=0)
+
+        column = gtk.TreeViewColumn(_("Name"))
+        nmcell = gtk.CellRendererText()
+        pbcell = gtk.CellRendererPixbuf()
+        column.pack_start(pbcell, False)
+        column.pack_start(nmcell, False)
+        column.set_attributes(pbcell,pixbuf=fid.pic)
+        column.set_attributes(nmcell,text=fid.name)
         column.set_clickable(False)
         self.append_column(column)
-
+        
         renderer = gtk.CellRendererText()
-        column = gtk.TreeViewColumn(_("Parameters"), renderer, text=1)
+        column = gtk.TreeViewColumn(_("Parameters"), renderer, text=fid.text)
         column.set_clickable(False)
         self.append_column(column)
 
@@ -71,8 +85,9 @@ class NodesEditor(base_editor.BaseEditor,gtk.TreeView):
 
     def build_tree(self):
         node = self.conf.xml.findNode(self.conf.xml.getDoc(),"nodes")[0].children.next 
+        img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_NODE)
         while node != None:
-            iter1 = self.model.append(None,[node.prop("name"),self.get_info(node),node])
+            iter1 = self.model.append(None,[node.prop("name"),self.get_info(node),node,img])
             node = self.conf.xml.nextNode(node)
 
     def on_button_press_event(self, object, event):                                                                                                                                 
@@ -107,7 +122,7 @@ class NodesEditor(base_editor.BaseEditor,gtk.TreeView):
             f = open(dlg.get_filename(),"w");
             it = self.model.get_iter_first()
             while it is not None:
-               xmlnode = self.model.get_value(it,2)
+               xmlnode = self.model.get_value(it,fid.text)
                hname = str(xmlnode.prop("ip")) + '\n'
                f.write(hname)
                it = self.model.iter_next(it)	  
@@ -123,7 +138,7 @@ class NodesEditor(base_editor.BaseEditor,gtk.TreeView):
         if res == gtk.RESPONSE_NO:
             return False
         
-        xmlnode = model.get_value(iter,2)
+        xmlnode = model.get_value(iter,fid.xmlnode)
         try:
            self.emit("remove-node",xmlnode)
         except :
@@ -149,7 +164,8 @@ class NodesEditor(base_editor.BaseEditor,gtk.TreeView):
             node.unlinkNode()
             return
 
-        self.model.append(None,[xmlnode.prop("name"),self.get_info(xmlnode),xmlnode])
+        img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_NODE)
+        self.model.append(None,[xmlnode.prop("name"),self.get_info(xmlnode),xmlnode,img])
         self.conf.mark_changes()
         self.conf.n_reopen()
         try:
@@ -161,10 +177,10 @@ class NodesEditor(base_editor.BaseEditor,gtk.TreeView):
         (model, iter) = self.get_selection().get_selected()
         if not iter: return
         
-        xmlnode = model.get_value(iter,2)
+        xmlnode = model.get_value(iter,fid.xmlnode)
         if self.edit_node(xmlnode) == True:
-            model.set_value(iter,0,xmlnode.prop("name"))
-            model.set_value(iter,1,self.get_info(xmlnode))
+            model.set_value(iter,fid.name,xmlnode.prop("name"))
+            model.set_value(iter,fid.text,self.get_info(xmlnode))
             self.conf.mark_changes()
             self.conf.n_reopen()
             try:

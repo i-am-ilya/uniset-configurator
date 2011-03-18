@@ -503,7 +503,15 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
             s_baddr = self.card_ba.get_text()
             baddr = 0
             if s_baddr != "":
-                 baddr = int(eval(s_baddr))
+                 try:
+                     baddr = int(eval(s_baddr))
+                 except NameError:
+                    msg = _("Wrong 'Base address' value")
+                    dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
+                    res = dlg.run()
+                    dlg.hide()
+                    continue
+            
             it1 = self.check_baddr(baddr,node_iter,iter)
             if baddr!=0 and it1 != None:
                msg = "base address='" + s_baddr + "' " + _("already exist for %s") % self.model.get_value(it1,fid.name)
@@ -541,8 +549,8 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         self.save2xml_elements_value(self.card_params,n)
 
         self.conf.mark_changes()
-        
-        it = self.model.append(node_iter, [n.prop("name"),self.get_card_info(n),n,"card",n.prop("card"),0])
+        img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_CARD)
+        it = self.model.append(node_iter, [n.prop("name"),self.get_card_info(n),n,"card",n.prop("card"),"0",img])
         self.build_channels_list(n,self.model,it)
         self.conf.mark_changes()
 
@@ -878,7 +886,8 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
             it = self.model.iter_next(it)
     
     def nodeslist_add(self,obj, xmlnode):
-        self.model.append(None,[xmlnode.prop("name"),self.get_node_info(xmlnode),xmlnode,"node",xmlnode.prop("id"),0])
+        img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_NODE)
+        self.model.append(None,[xmlnode.prop("name"),self.get_node_info(xmlnode),xmlnode,"node",xmlnode.prop("id"),"0",img])
     
     def nodeslist_remove(self,obj, xmlnode):
         node_id = xmlnode.prop("id")
