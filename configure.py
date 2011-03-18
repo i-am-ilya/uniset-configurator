@@ -17,6 +17,7 @@ class Conf:
         self.changes = 0
         self.nodes_editor = None
         self.datdir = datdir
+        self.imgdir = datdir + "images/"
 
         self.s_node = self.find_s_node()
         self.o_node = self.find_o_node()

@@ -17,6 +17,11 @@ class fid():
   etype = 3
   num = 4
   subdev = 5
+  pic = 6
+  
+pic_CARD = 'card.png'
+pic_NODE = 'node.png'  
+pic_CHAN = 'channel.png' 
 '''
 Задачи:
 1. Добавление, удаление карт ввода/вывода на узлах
@@ -42,8 +47,14 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
 
         self.model = None
         self.modelfilter = None
-        #                          Name | Parameters | xmlnode | element type | number | subdev
-        self.model = gtk.TreeStore(gobject.TYPE_STRING,gobject.TYPE_STRING,object,gobject.TYPE_STRING,gobject.TYPE_STRING,gobject.TYPE_STRING)
+        self.model = gtk.TreeStore(gobject.TYPE_STRING, # name
+                                   gobject.TYPE_STRING, # Parameters
+                                   object,              # xmlnode
+                                   gobject.TYPE_STRING, # element type
+                                   gobject.TYPE_STRING, # number
+                                   gobject.TYPE_STRING, # subdev
+                                   gtk.gdk.Pixbuf)      # picture
+        
         self.modelfilter = self.model.filter_new()
 
 #        self.modelfilter.set_visible_column(1)
@@ -53,8 +64,13 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         self.set_rules_hint(True)
         self.connect("button-press-event", self.on_button_press_event)
         
-        renderer = gtk.CellRendererText()
-        column = gtk.TreeViewColumn(_("Name"), renderer, text=fid.name)
+        column = gtk.TreeViewColumn(_("Name"))
+        nmcell = gtk.CellRendererText()
+        pbcell = gtk.CellRendererPixbuf()
+        column.pack_start(pbcell, False)
+        column.pack_start(nmcell, False)
+        column.set_attributes(pbcell,pixbuf=fid.pic)
+        column.set_attributes(nmcell,text=fid.name)
         column.set_clickable(False)
         self.append_column(column)
 
@@ -232,9 +248,11 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
     def build_tree(self):
         node = self.conf.xml.findNode(self.conf.xml.getDoc(),"nodes")[0].children.next 
 #        iter0 = self.model.append(None, [_("Nodes"),"",None,"",-1,-1,None])
+        img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_NODE)
         while node != None:
             info = self.get_node_info(node)
-            iter1 = self.model.append(None,[node.prop("name"),info,node,"node",node.prop("id"),"0"])
+            #img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_NODE)
+            iter1 = self.model.append(None,[node.prop("name"),info,node,"node",node.prop("id"),"0",img])
             self.read_cards(node,iter1)
             node = self.conf.xml.nextNode(node)
 
@@ -242,10 +260,10 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         rnode = self.conf.xml.findMyLevel(rootnode.children,"iocards")[0] # .children.next
         if rnode == None: return
         node = rnode.children.next
-        
+        img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_CARD)
         while node != None:
             info = self.get_card_info(node)
-            iter2 = self.model.append(iter, [node.prop("name").upper(),info,node,"card",node.prop("card"),"0"])
+            iter2 = self.model.append(iter, [node.prop("name").upper(),info,node,"card",node.prop("card"),"0",img])
             self.build_channels_list(node,self.model,iter2)
             node = self.conf.xml.nextNode(node)
 
@@ -255,7 +273,8 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         return info
     
     def build_channels_list(self,cardnode,model,iter):
-        self.ioconf.build_channels_list(cardnode,model,iter)
+        img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_CHAN)
+        self.ioconf.build_channels_list(cardnode,model,iter,img)
 
     def init_channels(self):
         # проходим по <sensors> и если поля заполнены ищем в нашем TreeView
