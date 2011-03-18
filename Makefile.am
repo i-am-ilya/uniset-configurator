@@ -1,4 +1,4 @@
-SUBDIRS = modules templates
+SUBDIRS = modules templates images
 
 python_SCRIPTS 	= *.py
 

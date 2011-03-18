@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.6
-Release: alt18
+Release: alt19
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -45,9 +45,13 @@ ln -s %python_sitelibdir/%name/can_conf.py %buildroot/%_bindir/uniset-can-conf
 %dir %_datadir/%name/
 %_datadir/%name/
 %_datadir/%name/templates
+%_datadir/%name/images
 %_bindir/*
 
 %changelog
+* Fri Mar 18 2011 Pavel Vainerman <pv@altlinux.ru> 0.6-alt19
+- add pictures for node-editor and  io-editor
+
 * Tue Feb 01 2011 Pavel Vainerman <pv@altlinux.ru> 0.6-alt18
 - fixed bug in apspanel module
 

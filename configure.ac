@@ -36,6 +36,7 @@ AC_CONFIG_FILES([Makefile
                  modules/lcaps/templates/Makefile
                  modules/apspanel/Makefile
                  modules/apspanel/templates/Makefile
-                 templates/Makefile])
+                 templates/Makefile
+                 images/Makefile])
 		 
 AC_OUTPUT
