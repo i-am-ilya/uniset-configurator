@@ -749,7 +749,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
             break                
 
         self.save2xml_elements_value(self.card_params,cnode)
-        model.set_value(iter,fid.num,cnum)
+        model.set_value(iter,fid.num,str(cnum))
         info  = 'card=' + str(cnode.prop("card"))
         info  = info + ' BA=' + str(cnode.prop("baddr"))
         model.set_value(iter,fid.param,info)
