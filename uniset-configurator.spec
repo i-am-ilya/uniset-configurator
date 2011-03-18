@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.6
-Release: alt20
+Release: alt21
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -49,6 +49,9 @@ ln -s %python_sitelibdir/%name/can_conf.py %buildroot/%_bindir/uniset-can-conf
 %_bindir/*
 
 %changelog
+* Sat Mar 19 2011 Pavel Vainerman <pv@altlinux.ru> 0.6-alt21
+- add pictures for can-editor
+
 * Fri Mar 18 2011 Pavel Vainerman <pv@altlinux.ru> 0.6-alt20
 - add pictures for node-editor and  io-editor
 
