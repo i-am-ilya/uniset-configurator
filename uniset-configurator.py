@@ -101,8 +101,10 @@ if confile == "":
    buttons=(gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL,gtk.STOCK_OPEN,gtk.RESPONSE_OK))
    res = dlg.run()
    dlg.hide()
-   if res == gtk.RESPONSE_OK:
-       confile = dlg.get_filename()
+   if res != gtk.RESPONSE_OK:
+      exit(0)
+   
+   confile = dlg.get_filename()
 
 try:
    conf = configure.Conf(confile,glade,datdir) 
