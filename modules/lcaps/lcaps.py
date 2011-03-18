@@ -381,6 +381,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         i_dict = lc['list']
         sorted_keys = sorted(i_dict, key=lambda x: int(x))
         for i in sorted_keys:
+            # временный хак!
             i_dict[i][fid.name] = str(i_dict[i][fid.name])
             it2 = self.model.append(it1,i_dict[i])    
         return it1
