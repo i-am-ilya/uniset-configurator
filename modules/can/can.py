@@ -15,7 +15,12 @@ class fid():
    can_xmlnode = 2
    etype = 3
    node_xmlnode = 4
-   maxnum = 5
+   pic = 5
+   maxnum = 6
+
+pic_NET = 'can-net.png'
+pic_NODE = 'node.png'  
+
 
 class CANEditor(base_editor.BaseEditor, gtk.TreeView):
 
@@ -39,7 +44,12 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
         self.model = None
         self.modelfilter = None
         #                          Name | Parameters | can_xmlnode | element type | node_xmlnode
-        self.model = gtk.TreeStore(gobject.TYPE_STRING,gobject.TYPE_STRING,object,gobject.TYPE_STRING,object)
+        self.model = gtk.TreeStore(gobject.TYPE_STRING, # name
+                                   gobject.TYPE_STRING, # parameters
+                                   object,              # can xmlnode
+                                   gobject.TYPE_STRING, # element type
+                                   object,              # node xmlnode
+                                   gtk.gdk.Pixbuf)      # picture
         self.modelfilter = self.model.filter_new()
 
         # create treeview
@@ -47,11 +57,16 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
         self.set_rules_hint(True)
         self.connect("button-press-event", self.on_button_press_event)
 
-        renderer = gtk.CellRendererText()
-        column = gtk.TreeViewColumn(_("Net name"), renderer, text=fid.name)
+        column = gtk.TreeViewColumn(_("Net name"))
+        nmcell = gtk.CellRendererText()
+        pbcell = gtk.CellRendererPixbuf()
+        column.pack_start(pbcell, False)
+        column.pack_start(nmcell, False)
+        column.set_attributes(pbcell,pixbuf=fid.pic)
+        column.set_attributes(nmcell,text=fid.name)
         column.set_clickable(False)
         self.append_column(column)
-
+        
         renderer = gtk.CellRendererText()
         column = gtk.TreeViewColumn(_("Parameters"), renderer, text=fid.param)
         column.set_clickable(False)
@@ -123,20 +138,22 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
              node = self.conf.xml.nextNode(node)
     
     def add_net(self,cannode, node):
+         img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_NET)
          name = cannode.prop("net")
          for n in self.netlist:
                if n[0] == name:
                     self.add_node(cannode,node,n[1])
                     return False
          
-         iter = self.model.append(None,[name,get_str_val(cannode.prop("comment")),None,"net",None])
+         iter = self.model.append(None,[name,get_str_val(cannode.prop("comment")),None,"net",None,img])
          self.netlist.append([name,iter,cannode.prop("comment")])
          self.add_node(cannode,node,iter)
          return True
 
     def add_node(self,cannode,node,iter):
+         img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_NODE)
          info  = self.get_can_info(cannode)
-         return self.model.append(iter,[node.prop("name"),info,cannode,"node",node])
+         return self.model.append(iter,[node.prop("name"),info,cannode,"node",node,img])
 
     def build_cards_list(self):
         model = self.dlg_card.get_model()
@@ -187,9 +204,10 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
         if res != dlg_RESPONSE_OK:
             return
 
+        img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_NET)
         name = self.net_name.get_text()
         comm = self.net_comm.get_text()
-        iter = self.model.append(None,[name,comm,None,"net",None])
+        iter = self.model.append(None,[name,comm,None,"net",None,img])
         self.netlist.append([name,iter,comm])
         self.conf.mark_changes()
         self.get_selection().select_iter(iter)
