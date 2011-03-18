@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.6
-Release: alt18
+Release: alt19
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -48,6 +48,9 @@ ln -s %python_sitelibdir/%name/can_conf.py %buildroot/%_bindir/uniset-can-conf
 %_bindir/*
 
 %changelog
+* Fri Mar 18 2011 Pavel Vainerman <pv@server> 0.6-alt19
+- add 'hack' for run with new python
+
 * Tue Feb 01 2011 Pavel Vainerman <pv@altlinux.ru> 0.6-alt18
 - fixed bug in apspanel module
 
