@@ -420,6 +420,7 @@ AO</property>
                             <property name="can_focus">True</property>
                             <property name="invisible_char">&#x25CF;</property>
                             <property name="invisible_char_set">True</property>
+                            <property name="adjustment">0 0 5 1 10 10</property>
                           </widget>
                           <packing>
                             <property name="left_attach">1</property>
@@ -445,6 +446,7 @@ AO</property>
                             <property name="can_focus">True</property>
                             <property name="invisible_char">&#x25CF;</property>
                             <property name="invisible_char_set">True</property>
+                            <property name="adjustment">0 0 5 1 10 10</property>
                           </widget>
                           <packing>
                             <property name="left_attach">1</property>
@@ -914,6 +916,8 @@ AO</property>
                     <property name="can_focus">True</property>
                     <property name="invisible_char">&#x25CF;</property>
                     <property name="invisible_char_set">True</property>
+                    <property name="adjustment">0 0 100000 1 10 10</property>
+                    <property name="numeric">True</property>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
@@ -928,6 +932,8 @@ AO</property>
                     <property name="can_focus">True</property>
                     <property name="invisible_char">&#x25CF;</property>
                     <property name="invisible_char_set">True</property>
+                    <property name="adjustment">0 0 10000 1 10 10</property>
+                    <property name="climb_rate">0.029999999999999999</property>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
@@ -942,6 +948,7 @@ AO</property>
                     <property name="can_focus">True</property>
                     <property name="invisible_char">&#x25CF;</property>
                     <property name="invisible_char_set">True</property>
+                    <property name="adjustment">0 0 100000 1 10 10</property>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
@@ -956,6 +963,7 @@ AO</property>
                     <property name="can_focus">True</property>
                     <property name="invisible_char">&#x25CF;</property>
                     <property name="invisible_char_set">True</property>
+                    <property name="adjustment">0 0 100000 1 10 10</property>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
@@ -970,6 +978,7 @@ AO</property>
                     <property name="can_focus">True</property>
                     <property name="invisible_char">&#x25CF;</property>
                     <property name="invisible_char_set">True</property>
+                    <property name="adjustment">0 0 100000 1 10 10</property>
                     <property name="digits">2</property>
                   </widget>
                   <packing>
