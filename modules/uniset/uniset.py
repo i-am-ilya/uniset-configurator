@@ -76,6 +76,10 @@ class UniSetEditor(base_editor.BaseEditor,gtk.Viewport):
         self.init_xmlnodes()
         self.init_params()
     
+    def reopen(self):
+        self.init_xmlnodes()
+        self.init_params()
+    
     def init_xmlnodes(self):
         for p in self.params:
             if p[2] != None:

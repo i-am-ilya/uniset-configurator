@@ -161,9 +161,13 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         self.comhorn["xmlprop"] = None
         
         self.lc_list = dict()
+        self.reopen()
+    
+    def reopen(self):
+        self.model.clear()
         self.load_lcaps_list()
         self.build_lcaps_tree()
-        self.show_all()
+        self.show_all()        
     
     def load_lcaps_list(self):
         self.settings_node = self.conf.xml.findNode(self.conf.xml.getDoc(),"settings")[0]

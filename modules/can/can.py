@@ -82,8 +82,6 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
         ]
         self.init_glade_elements(self.menu_list)
         
-        self.build_tree()
-        
         self.net_param_list = [ \
             ["dlg_net","can_dlg_net",None,True], \
             ["net_name","can_net_name","net",False], \
@@ -114,15 +112,22 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
 
         self.dlg_card = gtk.combo_box_new_text()
         self.dlg_card.connect("changed", self.on_can_card_changed)
-        
+
+        self.dlg_card_box.add(self.dlg_card)
+        self.edit_xmlnode = None
+
         self.dlg_card.show()
         self.cardinfo = dict()
         self.card_first_iter = None
-        self.build_cards_list()
-        self.dlg_card_box.add(self.dlg_card)
-        self.edit_xmlnode = None
         
+        self.reopen()
         self.show_all()
+    
+    def reopen(self):
+        self.model.clear()
+        self.netlist = []
+        self.build_tree()
+        self.edit_xmlnode = None    
     
     def build_tree(self):
         node = self.conf.xml.findNode(self.conf.xml.getDoc(),"nodes")[0].children.next 

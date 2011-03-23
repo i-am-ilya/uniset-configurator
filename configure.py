@@ -13,6 +13,7 @@ class Conf:
 
         self.dlg_xlist = dlg_xlist.XListDialog(self.xml,self.glade)
         self.dlg_cur = None
+        self.modlist = []
 
         self.changes = 0
         self.nodes_editor = None
@@ -23,9 +24,10 @@ class Conf:
         self.o_node = self.find_o_node()
         
         self.load_dicts()
-#        self.id_dict = self.load_id_dict()
-#        self.name_dict = self.load_name_dict()
    
+    def add_module(self,m):
+        self.modlist.append(m)   	
+    
     def load_dicts(self):
         self.id_dict = dict()
         self.name_dict = dict()
@@ -99,7 +101,9 @@ class Conf:
         self.changes = 0
         self.s_node = self.find_s_node()
         self.o_node = self.find_o_node()
-        self.id_dict = self.load_id_dict()
+        self.load_dicts()
+        for m in self.modlist:
+            m.reopen()
         
     def find_s_node(self):
         return self.find_section("sensors")

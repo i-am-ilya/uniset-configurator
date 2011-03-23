@@ -125,6 +125,7 @@ def add_module( face, lbl, mainbook, glade ):
     l = gtk.Label(lbl)
     l.show()
     mainbook.append_page(scwin,l)
+    conf.add_module(face)
 
 mainbook = glade.get_widget("mainbook")
 # -------------------

@@ -88,9 +88,6 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         ]
         self.init_glade_elements(self.menu_list)
 
-        self.build_tree()
-        self.init_channels()
-
         # Список параметров для карты
         # ["class field","glade name","xmlname",save_xml_ignore_flag]
         self.card_params=[ \
@@ -196,10 +193,17 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         self.sensor = None
         self.myedit_iter = None
         self.init_notebook_pages()
-        self.build_cdiagram_list()
         self.dlg_param.set_title( _("Setup channel") )
+        
+        self.reopen()
         self.show_all()
-
+    
+    def reopen(self):
+        self.model.clear()
+        self.build_tree()
+        self.init_channels()
+        self.build_cdiagram_list()
+    
     def init_notebook_pages(self):
         # читаем все страницы и создаём нужные нам поля класса
         # (для управления доступностью закладок)

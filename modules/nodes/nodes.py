@@ -80,6 +80,10 @@ class NodesEditor(base_editor.BaseEditor,gtk.TreeView):
 
         self.build_tree()
     
+    def reopen(self):
+        self.model.clear()
+        self.build_tree() 
+    
     def get_info(self,xmlnode):
         return str("id=" + str(xmlnode.prop("id")) + " ip=" + xmlnode.prop("ip"))
 

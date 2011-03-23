@@ -144,8 +144,12 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
         ]
         self.init_glade_elements(self.item_params)
         
+        self.reopen()
+    
+    def reopen(self):
+        self.model.clear()
         self.build_tree()
- 
+    
     def build_tree(self):
         self.settings_node = self.conf.xml.findNode(self.conf.xml.getDoc(),"settings")[0]
         if self.settings_node == None:
@@ -193,9 +197,9 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
         
         p[fid.name] = get_str_val(xmlnode.prop("name"))
         p[fid.lamp] = get_str_val(xmlnode.prop("lamp"))
-        p[fid.nohorn] = get_int_val(xmlnode.prop("nohorn"))
-        p[fid.noconfirm] = get_int_val(xmlnode.prop("noconfirm"))
-        p[fid.delay] = get_int_val(xmlnode.prop("delay"))
+        p[fid.nohorn] = str(get_int_val(xmlnode.prop("nohorn")))
+        p[fid.noconfirm] = str(get_int_val(xmlnode.prop("noconfirm")))
+        p[fid.delay] = str(get_int_val(xmlnode.prop("delay")))
         p[fid.etype] = "I"
         p[fid.xmlnode] = xmlnode
         p[fid.s_xmlnode] = self.conf.find_sensor(get_str_val(xmlnode.prop("name")))
