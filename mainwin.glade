@@ -6830,4 +6830,34 @@ minimal minor - minor-&#x43D;&#x43E;&#x43C;&#x435;&#x440; (/dev/canX) &#x43F;&#x
       </widget>
     </child>
   </widget>
+  <widget class="GtkMenu" id="io_channel_popup">
+    <property name="visible">True</property>
+    <child>
+      <widget class="GtkMenuItem" id="io_mi_channel_remove">
+        <property name="visible">True</property>
+        <property name="use_action_appearance">False</property>
+        <property name="label" translatable="yes">&#x423;&#x434;&#x430;&#x43B;&#x438;&#x442;&#x44C; &#x43F;&#x440;&#x438;&#x432;&#x44F;&#x437;&#x43A;&#x443;</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="on_io_channel_remove_activate"/>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkMenuItem" id="io_mi_channel_edit">
+        <property name="visible">True</property>
+        <property name="use_action_appearance">False</property>
+        <property name="label" translatable="yes">&#x420;&#x435;&#x434;&#x430;&#x43A;&#x442;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x442;&#x44C;</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="on_io_channel_edit_activate"/>
+      </widget>
+    </child>
+    <child>
+      <widget class="GtkMenuItem" id="io_mi_channel_add">
+        <property name="visible">True</property>
+        <property name="use_action_appearance">False</property>
+        <property name="label" translatable="yes">&#x41F;&#x43E;&#x434;&#x43A;&#x43B;&#x44E;&#x447;&#x438;&#x442;&#x44C; &#x434;&#x430;&#x442;&#x447;&#x438;&#x43A;</property>
+        <property name="use_underline">True</property>
+        <signal name="activate" handler="on_io_channel_add_activate"/>
+      </widget>
+    </child>
+  </widget>
 </glade-interface>

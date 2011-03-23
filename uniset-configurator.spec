@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.6
-Release: alt21
+Release: alt22
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -49,6 +49,10 @@ ln -s %python_sitelibdir/%name/can_conf.py %buildroot/%_bindir/uniset-can-conf
 %_bindir/*
 
 %changelog
+* Wed Mar 23 2011 Pavel Vainerman <pv@altlinux.ru> 0.6-alt22
+- add popupmenu for io channel
+- minor fixes
+
 * Sat Mar 19 2011 Pavel Vainerman <pv@altlinux.ru> 0.6-alt21
 - add pictures for can-editor
 

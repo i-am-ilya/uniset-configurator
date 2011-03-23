@@ -84,7 +84,11 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
 
         self.menu_list = [ \
             ["card_popup","io_card_popup",None,True], \
-            ["node_popup","io_node_popup",None,True] \
+            ["node_popup","io_node_popup",None,True], \
+            ["channel_popup","io_channel_popup",None,True], \
+            ["mi_channel_edit","io_mi_channel_edit",None,True], \
+            ["mi_channel_add","io_mi_channel_add",None,True], \
+            ["mi_channel_remove","io_mi_channel_remove",None,True] \
         ]
         self.init_glade_elements(self.menu_list)
 
@@ -361,6 +365,19 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
             if t == "node":
                 self.node_popup.popup(None, None, None, event.button, event.time)                                                                                                       
                 return False
+            if t == "channel":
+                con = model.get_value(iter,fid.xmlnode)
+                if con != None:
+                   self.mi_channel_remove.set_sensitive(True)
+                   self.mi_channel_edit.set_sensitive(True)
+                   self.mi_channel_add.set_sensitive(False)
+                else:
+                   self.mi_channel_remove.set_sensitive(False)
+                   self.mi_channel_edit.set_sensitive(False)
+                   self.mi_channel_add.set_sensitive(True)
+                   
+                self.channel_popup.popup(None, None, None, event.button, event.time)                                                                                                       
+                return False
 
 #        if event.button == 1 and event.type != gtk.gdk._2BUTTON_PRESS:
 #            self.expand_row( model.get_path(iter), False )
@@ -472,12 +489,45 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
              self.on_io_cbox_iotype_changed(self.iotype)
              self.tbl_comm.set_sensitive(True)
     
+    def on_io_channel_edit_activate(self,menuitem):
+        (model, iter) = self.get_selection().get_selected()
+        if not iter: return	  
+        self.on_edit_channel(iter)	  
+    
+    def on_io_channel_add_activate(self,menuitem):
+        (model, iter) = self.get_selection().get_selected()
+        if not iter: return	  
+        self.on_edit_channel(iter)
+    
+    def on_io_channel_remove_activate(self,menuitem):
+        (model, iter) = self.get_selection().get_selected()
+        if not iter: return
+        
+        t = model.get_value(iter,fid.etype)
+        if t != "channel": 
+           return
+        
+        dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,_("Are you sure?"))
+        res = dlg.run()
+        dlg.hide()
+        if res == gtk.RESPONSE_NO:
+            return False        
+        
+        xmlnode = model.get_value(iter,fid.xmlnode)
+        if xmlnode == None: 
+           return
+        
+        self.save2xml_elements_value(self.io_params,xmlnode,"")
+        self.model.set_value(iter,fid.xmlnode,None)
+        self.model.set_value(iter,fid.param,"")
+        self.conf.mark_changes()
+                
     def on_add_card_activate(self,menuitem):
     
         (model, iter) = self.get_selection().get_selected()
         if not iter: return
 
-        t = model.get_value(iter,3)
+        t = model.get_value(iter,fid.etype)
         node_iter = None
         if t == "card":
             node_iter = self.model.iter_parent(iter)
@@ -835,7 +885,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
             break
 
         if self.sensor != prev_sensor: # "очищаем старую привязку"
-           if prev_sensor != None:
+           if prev_sensor != None and prev_sensor is not None:
               self.save2xml_elements_value(self.io_params,prev_sensor,"")
            self.model.set_value(iter,fid.xmlnode,None)
            self.model.set_value(iter,fid.param,"")
