@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.6
-Release: alt22
+Release: alt23
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -49,6 +49,9 @@ ln -s %python_sitelibdir/%name/can_conf.py %buildroot/%_bindir/uniset-can-conf
 %_bindir/*
 
 %changelog
+* Sat Mar 26 2011 Pavel Vainerman <pv@altlinux.ru> 0.6-alt23
+- fixed bug in subdev number for ai16, ao16 cards
+
 * Wed Mar 23 2011 Pavel Vainerman <pv@altlinux.ru> 0.6-alt22
 - add popupmenu for io channel
 - minor fixes

@@ -53,15 +53,15 @@ class IOConfig():
 
     def build_ai16_list(self,card,model,iter,pic=None):
         for i in range(0,8):
-            model.append(iter, ["J2:"+str(i),"",None,_("channel"),str(i),"0",pic])
-        for i in range(0,8):
-            model.append(iter, ["J3:"+str(i),"",None,_("channel"),str(i),"1",pic])
+            model.append(iter, ["J2:"+str(i),"",None,_("channel"),str(i),"2",pic])
+        for i in range(8,16):
+            model.append(iter, ["J3:"+str(i-8),"",None,_("channel"),str(i),"2",pic])
 
     def build_ao16_list(self,card,model,iter,pic=None):
         for i in range(0,8):
             model.append(iter, ["J2:"+str(i),"",None,_("channel"),str(i),"0",pic])
-        for i in range(0,8):
-            model.append(iter, ["J3:"+str(i),"",None,_("channel"),str(i),"1",pic])
+        for i in range(8,16):
+            model.append(iter, ["J3:"+str(i-8),"",None,_("channel"),str(i),"0",pic])
 
     def build_unio48_list(self,card,model,iter,pic=None):
         for i in range(0,24):
