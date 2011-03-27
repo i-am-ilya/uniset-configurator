@@ -844,7 +844,15 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         self.sensor = self.model.get_value(iter,fid.xmlnode)
         snode = UniXML.EmptyNode()
         if self.sensor != None:
-            snode = self.sensor  
+            snode = self.sensor
+        else:
+            # если добавление новой привязки
+            # то выставляем значения настроек канала по умолчанию для данной карты
+            def_params = self.ioconf.get_default_channel_param(card.prop("name"))
+            if len(def_params) > 0:
+               snode.setProp("aref",def_params["aref"])
+               snode.setProp("range",def_params["range"])
+            
         self.set_sensitive_pages()
         self.init_elements_value(self.channel_params,snode)
 

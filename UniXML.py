@@ -7,8 +7,20 @@ import xml.dom.minidom as md
 import re
 # ----------------------------- 
 class EmptyNode():
-     def prop(self,name):
+    
+    def __init__(self):
+        self.props = dict()
+     
+    def prop(self,name):
+        try:
+            return self.props[name]
+        except KeyError,ValueError:
+            pass
+        
         return ""
+     
+    def setProp(self,name,val):
+        self.props[name] = val
 # -----------------------------  
 class UniXML(str):
     def __init__(self, str):

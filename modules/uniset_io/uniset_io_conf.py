@@ -97,8 +97,9 @@ class IOConfig():
         if cname == "DO32":
            return "DO"
         
-        if cname == "AI16-5A-3" or cname == "AIC123XX" \
-             or cname == "AIC120" or cname == "AIC121" or cname=="AI16":
+        if cname == "AI16-5A-3" or cname=="AI16" \
+             or cname == "AIC123XX/16" or cname == "AIC120/16" or cname == "AIC121/16" \
+             or cname == "AIC123XX/8" or cname == "AIC120/8" or cname == "AIC121/8":
            return "AI"
         
         if cname == "AO16-XX" or cname=="AO16":
@@ -111,17 +112,42 @@ class IOConfig():
            return "DI"
         
         return "DI"
+   
+    def get_default_channel_param(self,cname):
+        cname = cname.upper()
+        ret = dict()
         
+        if cname == "AI16-5A-3" or cname=="AI16" \
+             or cname == "AIC123XX/16" or cname == "AIC120/16" or cname == "AIC121/16":
+           
+           ret["aref"] = 0
+           ret["range"] = 0
+           return ret
+
+        if cname == "AIC123XX/8" or cname == "AIC120/8" or cname == "AIC121/8":
+           ret["aref"] = 2
+           ret["range"] = 0
+           return ret
+        
+#        if cname == "AO16-XX" or cname=="AO16":
+        
+        return ret
+    
     def get_params_for_aixx5a(self,cardnode):
         # последовательность параметров см. исходники модуля aixx5a
         cname = cardnode.prop("name").upper()
         avr = get_str_val(cardnode.prop("average"))
         if avr == "":
            avr = "1"
-        if cname == "AIC120" or cname == "AIC121":
+        
+        if cname == "AIC120/16" or cname == "AIC121/16" or \
+           cname == "AIC120/8" or cname == "AIC121/8":
             return "0," + avr
-        if cname == "AIC123" or cname == "AIC123XX":
+        
+        if cname == "AIC123/16" or cname == "AIC123XX/16" or \
+           cname == "AIC123/8" or cname == "AIC123XX/8":
             return "1," + avr
+        
         return ""
     
     def get_typenum_for_unio_subdev(self,sname):
@@ -160,7 +186,8 @@ class IOConfig():
             return ["di32_5",""]
         if cname == "DO32":
             return ["do32",""]
-        if cname == "AI16-5A-3" or cname == "AIC123XX" or cname == "AIC120" or cname == "AIC121":
+        if cname == "AI16-5A-3" or cname == "AIC123XX/16" or cname == "AIC120/16" or cname == "AIC121/16" or \
+           cname == "AIC123XX/8" or cname == "AIC120/8" or cname == "AIC121/8":
             return ["aixx5a", self.get_params_for_aixx5a(cardnode) ]
         if cname == "AO16-XX":
             return ["ao16",""]
