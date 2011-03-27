@@ -525,13 +525,12 @@
 -->
 		<nodes port="2809">
 			<item dbserver="DBServer1" id="3000" ip="127.0.0.1" name="localhost" textname="Локальный узел"/>
-			<item dbserver="DBServer1" id="3001" ip="gui1" name="gui1" textname="Графическая станция N1"/>
-			<item dbserver="DBServer1" id="3002" ip="gui2" name="gui2" textname="Графическая станция N2"/>
 			<item id="3003" ip="sescpu" name="sescpu" textname="Пульт ЦПУ (контроллер СЭС)">
 				<iocards>
-					<item baddr="0x110" name="DI32"/>
-					<item baddr="0x120" name="DO32"/>
-					<item baddr="0x130" name="DO32"/>
+					<item baddr="0x110" card="1" dev="/dev/comedi1" module="di32_5" name="DI32"/>
+					<item baddr="0x120" card="2" dev="/dev/comedi2" module="do32" name="DO32"/>
+					<item baddr="0x130" card="3" dev="/dev/comedi3" module="do32" name="DO32"/>
+					<item card="4" dev="/dev/comedi4" name="AIC120/8"/>
 				</iocards>
 				<can>
 					<item eds="sescpu.eds" net="SES" nodeID="50"/>
@@ -539,7 +538,7 @@
 			</item>
 			<item id="3004" ip="ses" name="ses" textname="КСЭС">
 				<iocards>
-					<item baddr="0x110" name="DO32"/>
+					<item baddr="0x110" card="1" dev="/dev/comedi1" module="do32" name="DO32"/>
 					<item baddr="0x120" name="DI32"/>
 					<item baddr="0x130" name="DI32"/>
 				</iocards>
@@ -747,7 +746,7 @@
 					<consumer geunode="1" name="GEU1" type="objects"/>
 				</consumers>
 			</item>
-			<item id="22301" iotype="AI" name="FQC1_Mode_AS" textname="ПЧ1: режим">
+			<item card="4" channel="0" id="22301" io="3003" iotype="AI" name="FQC1_Mode_AS" subdev="2" textname="ПЧ1: режим">
 				<consumers>
 					<consumer geunode="1" name="GEU1" type="objects"/>
 				</consumers>
