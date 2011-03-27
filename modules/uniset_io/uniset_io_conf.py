@@ -22,6 +22,19 @@ class IOConfig():
         self.xml = xml
         self.datdir = datdir
     
+    def like_ai16(self,cname):
+      if cname == "AI16-5A-3" or cname == "AIC123XX/16" or \
+         cname == "AIC120/16" or cname == "AIC121/16" or cname=="AI16":
+         return True
+         
+      return False
+    
+    def like_ai8(self,cname):
+      if cname == "AIC123XX/8" or cname == "AIC120/8" or cname == "AIC121/8":
+         return True
+         
+      return False
+    
     def build_channels_list(self,cardnode,model,iter,pic=None):
         cname = cardnode.prop("name").upper()
 #        print "BUILD chanel list for "+ str(cname)
@@ -29,10 +42,9 @@ class IOConfig():
             self.build_di32_list(cardnode,model,iter,pic)
         if cname == "DO32":
             self.build_do32_list(cardnode,model,iter,pic)
-        elif cname == "AI16-5A-3" or cname == "AIC123XX/16" \
-             or cname == "AIC120/16" or cname == "AIC121/16" or cname=="AI16":
+        elif self.like_ai16(cname):
             self.build_ai16_list(cardnode,model,iter,pic)
-        elif cname == "AIC123XX/8" or cname == "AIC120/8" or cname == "AIC121/8":
+        elif self.like_ai8(cname):
             self.build_ai8_list(cardnode,model,iter,pic)
         elif cname == "AO16-XX" or cname=="AO16":
             self.build_ao16_list(cardnode,model,iter,pic)
@@ -97,9 +109,7 @@ class IOConfig():
         if cname == "DO32":
            return "DO"
         
-        if cname == "AI16-5A-3" or cname=="AI16" \
-             or cname == "AIC123XX/16" or cname == "AIC120/16" or cname == "AIC121/16" \
-             or cname == "AIC123XX/8" or cname == "AIC120/8" or cname == "AIC121/8":
+        if self.like_ai16(cname) or self.like_ai8(cname):
            return "AI"
         
         if cname == "AO16-XX" or cname=="AO16":
@@ -117,14 +127,12 @@ class IOConfig():
         cname = cname.upper()
         ret = dict()
         
-        if cname == "AI16-5A-3" or cname=="AI16" \
-             or cname == "AIC123XX/16" or cname == "AIC120/16" or cname == "AIC121/16":
-           
+        if self.like_ai16(cname):
            ret["aref"] = 0
            ret["range"] = 0
            return ret
 
-        if cname == "AIC123XX/8" or cname == "AIC120/8" or cname == "AIC121/8":
+        if self.like_ai8(cname):
            ret["aref"] = 2
            ret["range"] = 0
            return ret
@@ -140,12 +148,10 @@ class IOConfig():
         if avr == "":
            avr = "1"
         
-        if cname == "AIC120/16" or cname == "AIC121/16" or \
-           cname == "AIC120/8" or cname == "AIC121/8":
+        if self.like_ai16(cname):
             return "0," + avr
         
-        if cname == "AIC123/16" or cname == "AIC123XX/16" or \
-           cname == "AIC123/8" or cname == "AIC123XX/8":
+        if self.like_ai8(cname):
             return "1," + avr
         
         return ""
@@ -186,8 +192,7 @@ class IOConfig():
             return ["di32_5",""]
         if cname == "DO32":
             return ["do32",""]
-        if cname == "AI16-5A-3" or cname == "AIC123XX/16" or cname == "AIC120/16" or cname == "AIC121/16" or \
-           cname == "AIC123XX/8" or cname == "AIC120/8" or cname == "AIC121/8":
+        if self.like_ai16(cname) or self.like_ai8(cname):
             return ["aixx5a", self.get_params_for_aixx5a(cardnode) ]
         if cname == "AO16-XX":
             return ["ao16",""]
