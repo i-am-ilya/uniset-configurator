@@ -48,7 +48,6 @@
                     <child>
                       <widget class="GtkImageMenuItem" id="m_save_as">
                         <property name="label">gtk-save-as</property>
-                        <property name="visible">True</property>
                         <property name="use_action_appearance">False</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
@@ -77,7 +76,6 @@
             </child>
             <child>
               <widget class="GtkMenuItem" id="menuitem2">
-                <property name="visible">True</property>
                 <property name="use_action_appearance">False</property>
                 <property name="label" translatable="yes">_&#x41F;&#x440;&#x430;&#x432;&#x43A;&#x430;</property>
                 <property name="use_underline">True</property>
@@ -126,7 +124,6 @@
             </child>
             <child>
               <widget class="GtkMenuItem" id="menuitem4">
-                <property name="visible">True</property>
                 <property name="use_action_appearance">False</property>
                 <property name="label" translatable="yes">_&#x421;&#x43F;&#x440;&#x430;&#x432;&#x43A;&#x430;</property>
                 <property name="use_underline">True</property>
