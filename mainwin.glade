@@ -1335,9 +1335,12 @@ AO</property>
           <widget class="GtkComboBox" id="io_cb_cardlist">
             <property name="visible">True</property>
             <property name="button_sensitivity">on</property>
-            <property name="items">AIC120
-AIC121
-AIC123xx
+            <property name="items">AIC120/16
+AIC120/8
+AIC121/16
+AIC121/8
+AIC123xx/16
+AIC123/8
 AI16-5a-3
 AO16-xx
 DI32

@@ -29,9 +29,11 @@ class IOConfig():
             self.build_di32_list(cardnode,model,iter,pic)
         if cname == "DO32":
             self.build_do32_list(cardnode,model,iter,pic)
-        elif cname == "AI16-5A-3" or cname == "AIC123XX" \
-             or cname == "AIC120" or cname == "AIC121" or cname=="AI16":
+        elif cname == "AI16-5A-3" or cname == "AIC123XX/16" \
+             or cname == "AIC120/16" or cname == "AIC121/16" or cname=="AI16":
             self.build_ai16_list(cardnode,model,iter,pic)
+        elif cname == "AIC123XX/8" or cname == "AIC120/8" or cname == "AIC121/8":
+            self.build_ai8_list(cardnode,model,iter,pic)
         elif cname == "AO16-XX" or cname=="AO16":
             self.build_ao16_list(cardnode,model,iter,pic)
         elif cname == "UNIO48":
@@ -56,6 +58,14 @@ class IOConfig():
             model.append(iter, ["J2:"+str(i),"",None,_("channel"),str(i),"2",pic])
         for i in range(8,16):
             model.append(iter, ["J3:"+str(i-8),"",None,_("channel"),str(i),"2",pic])
+    
+    def build_ai8_list(self,card,model,iter,pic=None):
+        for i in range(0,4):
+            name = "Ch%d [J1:%d-%d]"%(i,2*i,2*i+1)
+            model.append(iter, [name,"",None,_("channel"),str(i),"2",pic])
+        for i in range(4,8):
+            name = "Ch%d [J2:%d-%d]"%(i,2*(i-4),2*(i-4)+1)
+            model.append(iter, [name,"",None,_("channel"),str(i),"2",pic])
 
     def build_ao16_list(self,card,model,iter,pic=None):
         for i in range(0,8):
