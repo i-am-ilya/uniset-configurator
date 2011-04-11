@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.7
-Release: alt1
+Release: alt2
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -49,6 +49,9 @@ ln -s %python_sitelibdir/%name/can_conf.py %buildroot/%_bindir/uniset-can-conf
 %_bindir/*
 
 %changelog
+* Mon Apr 11 2011 Pavel Vainerman <pv@altlinux.ru> 0.7-alt2
+- decrease dependence on python
+
 * Sun Mar 27 2011 Pavel Vainerman <pv@altlinux.ru> 0.7-alt1
 - add new card type (AIxxx/8 and AIxx/16)
 
