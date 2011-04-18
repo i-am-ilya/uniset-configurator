@@ -10,7 +10,6 @@ Packager: Pavel Vainerman <pv@altlinux.ru>
 
 Source: %name-%version.tar
 BuildArch: noarch
-ExclusiveArch: i586 x86_64
 
 # Automatically added by buildreq on Sat Sep 25 2010 (-bi)
 BuildRequires: python-devel
@@ -26,21 +25,21 @@ BuildRequires(pre): rpm-build-python
 
 %build
 %autoreconf
-%configure
+%configure --libdir=%buildroot%python_sitelibdir
 %make_build
 
 %install
 %make_install install DESTDIR=%buildroot
 
-mkdir -p %buildroot%python_sitelibdir/%name
-mv -f %buildroot%python_sitelibdir/*.py %buildroot%python_sitelibdir/%name/
+mkdir -p %buildroot%python_sitelibdir_noarch/%name
+mv -f %buildroot%python_sitelibdir/*.py %buildroot%python_sitelibdir_noarch/%name/
 
 mkdir -p %buildroot/%_bindir/
-ln -s %python_sitelibdir/%name/%name.py %buildroot/%_bindir/%name
-ln -s %python_sitelibdir/%name/uniset_io_conf.py %buildroot/%_bindir/uniset-ioconf
-ln -s %python_sitelibdir/%name/lcaps_conf.py %buildroot/%_bindir/uniset-lcaps-conf
-ln -s %python_sitelibdir/%name/apspanel_conf.py %buildroot/%_bindir/uniset-apspanel-conf
-ln -s %python_sitelibdir/%name/can_conf.py %buildroot/%_bindir/uniset-can-conf
+ln -s %python_sitelibdir_noarch/%name/%name.py %buildroot/%_bindir/%name
+ln -s %python_sitelibdir_noarch/%name/uniset_io_conf.py %buildroot/%_bindir/uniset-ioconf
+ln -s %python_sitelibdir_noarch/%name/lcaps_conf.py %buildroot/%_bindir/uniset-lcaps-conf
+ln -s %python_sitelibdir_noarch/%name/apspanel_conf.py %buildroot/%_bindir/uniset-apspanel-conf
+ln -s %python_sitelibdir_noarch/%name/can_conf.py %buildroot/%_bindir/uniset-can-conf
 
 %files
 %dir %python_sitelibdir/%name
