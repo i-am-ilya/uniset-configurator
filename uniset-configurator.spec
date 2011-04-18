@@ -9,8 +9,8 @@ Url: http://wiki.office.etersoft.ru/asu/Jauza?v=1fw
 Packager: Pavel Vainerman <pv@altlinux.ru>
 
 Source: %name-%version.tar
-#BuildArch: noarch
-ExclusiveArch: noarch
+BuildArch: noarch
+ExclusiveArch: i586 x86_64
 
 # Automatically added by buildreq on Sat Sep 25 2010 (-bi)
 BuildRequires: python-devel
