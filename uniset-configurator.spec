@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.7
-Release: alt3
+Release: alt2
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -57,9 +57,6 @@ ln -s %python_sitelibdir_noarch/%name/can_conf.py %buildroot/%_bindir/uniset-can
 %_bindir/*
 
 %changelog
-* Mon Apr 18 2011 Pavel Vainerman <pv@altlinux.ru> 0.7-alt3
-- (ioconf): change io="nodeID" to io="nodeName"
-
 * Mon Apr 11 2011 Pavel Vainerman <pv@altlinux.ru> 0.7-alt2
 - decrease dependence on python
 
