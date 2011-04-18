@@ -16,6 +16,7 @@ BuildRequires: python-devel
 BuildRequires(pre): rpm-build-python
 
 %add_findreq_skiplist %_datadir/%name/*.sh
+%_python_set_noarch
 
 %description
 %summary
@@ -25,14 +26,19 @@ BuildRequires(pre): rpm-build-python
 
 %build
 %autoreconf
-%configure --libdir=%buildroot%python_sitelibdir
+%configure
 %make_build
 
 %install
 %make_install install DESTDIR=%buildroot
 
+#%%ifarch x86_64
+#%%define python_sitelib64dir %_libdir%_python_version
+#mkdir -p %buildroot%python_sitelibdir_noarch/%name
+#%%else
 mkdir -p %buildroot%python_sitelibdir_noarch/%name
 mv -f %buildroot%python_sitelibdir/*.py %buildroot%python_sitelibdir_noarch/%name/
+#%%endif
 
 mkdir -p %buildroot/%_bindir/
 ln -s %python_sitelibdir_noarch/%name/%name.py %buildroot/%_bindir/%name
