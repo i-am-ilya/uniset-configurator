@@ -16,7 +16,7 @@ BuildRequires: python-devel
 BuildRequires(pre): rpm-build-python
 
 %add_findreq_skiplist %_datadir/%name/*.sh
-%_python_set_noarch
+%global _target_python_libdir %_target_libdir_noarch
 
 %description
 %summary
