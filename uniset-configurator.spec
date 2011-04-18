@@ -12,6 +12,7 @@ Source: %name-%version.tar
 BuildArch: noarch
 # Automatically added by buildreq on Sat Sep 25 2010 (-bi)
 BuildRequires: python-devel
+BuildRequires(pre): rpm-build-python
 
 %add_findreq_skiplist %_datadir/%name/*.sh
 
