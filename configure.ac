@@ -15,8 +15,8 @@ AM_MAINTAINER_MODE
 
 dnl Checks for programs.
 AC_PROG_INSTALL
-AC_PROG_LN_S
-AC_PROG_MAKE_SET
+#AC_PROG_LN_S
+#AC_PROG_MAKE_SET
 
 # Checks for libraries.
 
