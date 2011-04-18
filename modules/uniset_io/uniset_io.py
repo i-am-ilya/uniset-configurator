@@ -260,7 +260,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         while node != None:
             info = self.get_node_info(node)
             #img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_NODE)
-            iter1 = self.model.append(None,[node.prop("name"),info,node,"node",node.prop("id"),"0",img])
+            iter1 = self.model.append(None,[node.prop("name"),info,node,"node",node.prop("name"),"0",img])
             self.read_cards(node,iter1)
             node = self.conf.xml.nextNode(node)
 
@@ -920,14 +920,14 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         return str("id=" + str(xmlnode.prop("id")) + " ip=" + xmlnode.prop("ip"))
         
     def nodeslist_change(self,obj, xmlnode):
-        node_id = xmlnode.prop("id")
+        node_id = xmlnode.prop("name")
         # Ищем узел проходим по всем его картам и датчикам
         # и подменяем io="old_id" на io="new_id"
         it = self.model.get_iter_first()
         while it is not None:
             if self.model.get_value(it,2) == xmlnode:
                 # заодно обновляем параметры
-                self.model.set_value(it,fid.num,xmlnode.prop("id")) 
+                self.model.set_value(it,fid.num,xmlnode.prop("name"))
                 self.model.set_value(it,fid.name,xmlnode.prop("name")) 
                 self.model.set_value(it,fid.param,self.get_node_info(xmlnode))
                 it1 = self.model.iter_children(it)
@@ -949,10 +949,10 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
     
     def nodeslist_add(self,obj, xmlnode):
         img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_NODE)
-        self.model.append(None,[xmlnode.prop("name"),self.get_node_info(xmlnode),xmlnode,"node",xmlnode.prop("id"),"0",img])
+        self.model.append(None,[xmlnode.prop("name"),self.get_node_info(xmlnode),xmlnode,"node",xmlnode.prop("name"),"0",img])
     
     def nodeslist_remove(self,obj, xmlnode):
-        node_id = xmlnode.prop("id")
+        node_id = xmlnode.prop("name")
         # Ищем узел проходим по всем его картам и датчикам
         # и удаляем io="id"
         it = self.model.get_iter_first()
