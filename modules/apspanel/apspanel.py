@@ -137,7 +137,7 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
             ["item_nohorn","apspanel_dlg_nohorn","nohorn",False], \
             ["item_always_alarm","apspanel_dlg_always_alarm","alway_alarm",False], \
             ["item_delay","apspanel_dlg_delay","delay",False], \
-            ["item_delay","apspanel_dlg_offtime","offtime",False], \
+            ["item_offtime","apspanel_dlg_offtime","offtime",False], \
             ["item_block","apspanel_dlg_block","block",False], \
             ["item_remoteconfirm","apspanel_dlg_remoteconfirm","remote_reset",False], \
             ["item_comment","apspanel_dlg_item_comment","comment",False] \
