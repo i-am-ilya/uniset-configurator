@@ -40,7 +40,8 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
         gtk.TreeView.__init__(self)
         base_editor.BaseEditor.__init__(self,conf)
 
-        conf.glade.signal_autoconnect(self)
+        self.glade = conf.glade
+        self.glade.signal_autoconnect(self)
         self.model = None
         self.modelfilter = None
   
@@ -114,7 +115,7 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
             ["dlg_comment","apspanel_dlg_comment","comment",False] \
         ]
 
-        self.init_glade_elements(self.panel_params) 
+        self.init_glade_elements(self.panel_params,self.glade) 
         
 #        self.aps_rm_params=[\
 #            ["dlg_rm","lcaps_dlg_remove",None,True], \
@@ -142,7 +143,7 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
             ["item_remoteconfirm","apspanel_dlg_remoteconfirm","remote_reset",False], \
             ["item_comment","apspanel_dlg_item_comment","comment",False] \
         ]
-        self.init_glade_elements(self.item_params)
+        self.init_glade_elements(self.item_params,self.glade)
         
         self.reopen()
     

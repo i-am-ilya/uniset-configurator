@@ -30,8 +30,9 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
         base_editor.BaseEditor.__init__(self,conf)
         
         self.can_conf = can_conf.CANConfig(conf.xml,conf.datdir)
-        
-        conf.glade.signal_autoconnect(self)
+
+        self.glade = conf.glade
+        self.glade.signal_autoconnect(self)
         
         n_editor = conf.n_editor()
         if n_editor != None:
@@ -80,7 +81,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
             ["net_popup","can_net_popup",None,True], \
             ["node_popup","can_node_popup",None,True] \
         ]
-        self.init_glade_elements(self.menu_list)
+        self.init_glade_elements(self.menu_list,self.glade)
         
         self.net_param_list = [ \
             ["dlg_net","can_dlg_net",None,True], \
@@ -89,7 +90,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
             ["net_btnOK","can_net_btnOK",None,True], \
             ["net_btnCancel","can_net_btnCancel",None,True] \
         ]
-        self.init_glade_elements(self.net_param_list)
+        self.init_glade_elements(self.net_param_list,self.glade)
 
         self.node_param_list = [ \
             ["dlg_node","can_dlg_node",None,True], \
@@ -108,7 +109,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
             ["respond2","can_respond2","respond2",False], \
             ["btn_respond2","can_btn_respond2",None,True] \
         ]
-        self.init_glade_elements(self.node_param_list)
+        self.init_glade_elements(self.node_param_list,self.glade)
 
         self.dlg_card = gtk.combo_box_new_text()
         self.dlg_card.connect("changed", self.on_can_card_changed)

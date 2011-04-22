@@ -34,8 +34,9 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         gtk.TreeView.__init__(self)
         base_editor.BaseEditor.__init__(self,conf)
 
-        conf.glade.signal_autoconnect(self)
-        
+        self.glade = gtk.glade.XML(conf.datdir+"uniset-io.glade")
+        self.glade.signal_autoconnect(self)
+
         self.ioconf = uniset_io_conf.IOConfig(conf.xml,conf.datdir)
         
         # подключение к редактору узлов (для отслеживания изменений в списке узлов)
@@ -90,7 +91,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
             ["mi_channel_add","io_mi_channel_add",None,True], \
             ["mi_channel_remove","io_mi_channel_remove",None,True] \
         ]
-        self.init_glade_elements(self.menu_list)
+        self.init_glade_elements(self.menu_list,self.glade)
 
         # Список параметров для карты
         # ["class field","glade name","xmlname",save_xml_ignore_flag]
@@ -108,7 +109,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
             ["mod_name","io_module","module",False], \
             ["mod_params_btn","io_params_btn",None,True] \
         ]
-        self.init_glade_elements(self.card_params)        
+        self.init_glade_elements(self.card_params,self.glade)        
         self.dlg_card.set_title(_("Select card"))
 
         self.subdev1.set_sensitive(False)
@@ -179,7 +180,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
              ["dlg_unioxx", "io_dlg_unio"], \
              ["dlg_aixx5a_average_cb","dlg_aixx5a_average_cb"]
         ]
-        self.init_glade_elements(self.mod_dlg_list)
+        self.init_glade_elements(self.mod_dlg_list,self.glade)
 
         # список соответсвия названий карт и диалогов настройки параметров для них
         # диалоги должны быть сделаны в glade
@@ -192,7 +193,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         self.mod_param_dlg_list["UNIO48"] = self.dlg_unioxx
         self.mod_param_dlg_list["UNIO96"] = self.dlg_unioxx
 
-        self.init_glade_elements(self.channel_params)
+        self.init_glade_elements(self.channel_params,self.glade)
 
         self.sensor = None
         self.myedit_iter = None

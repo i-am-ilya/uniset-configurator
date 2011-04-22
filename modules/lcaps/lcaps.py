@@ -40,7 +40,8 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         gtk.TreeView.__init__(self)
         base_editor.BaseEditor.__init__(self,conf)
 
-        conf.glade.signal_autoconnect(self)
+        self.glade = conf.glade #gtk.glade.XML(datdir+"uniset-io.glade")
+#       conf.glade.signal_autoconnect(self)
         self.model = None
         self.modelfilter = None
         self.model = gtk.TreeStore(gobject.TYPE_STRING,\
@@ -110,7 +111,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
             ["dlg_heartbeat","lcaps_dlg_heartbeat","heartbeat",False], \
             ["dlg_heartbeat_max","lcaps_dlg_heartbeat_max","heartbeat_max",False] \
         ]
-        self.init_glade_elements(self.lc_params) 
+        self.init_glade_elements(self.lc_params,self.glade) 
         
         self.lc_rm_params=[\
             ["dlg_rm","lcaps_dlg_remove",None,True], \
@@ -119,7 +120,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
             ["rm_helpers","lcaps_rm_helpsens",None,True], \
             ["rm_title","lcaps_dlg_rm_title",None,True] \
         ]                
-        self.init_glade_elements(self.lc_rm_params) 
+        self.init_glade_elements(self.lc_rm_params,self.glade) 
                
         self.item_params=[ \
             ["dlg_lcaps","lcaps_dlg",None,True], \
@@ -132,7 +133,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
             ["item_delay","lcaps_dlg_delay","delay",False], \
             ["item_comment","lcaps_dlg_comment","comment",False] \
         ]
-        self.init_glade_elements(self.item_params)
+        self.init_glade_elements(self.item_params,self.glade)
 
         self.s_node = self.conf.xml.findNode(self.conf.xml.getDoc(),"sensors")[0]
         if self.s_node == None:

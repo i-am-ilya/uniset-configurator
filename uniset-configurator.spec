@@ -1,6 +1,6 @@
 Name: uniset-configurator
-Version: 0.7
-Release: alt5
+Version: 0.8
+Release: alt1
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL

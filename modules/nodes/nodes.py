@@ -23,7 +23,9 @@ class NodesEditor(base_editor.BaseEditor,gtk.TreeView):
         
         gtk.TreeView.__init__(self)
         base_editor.BaseEditor.__init__(self,conf)
-        conf.glade.signal_autoconnect(self)
+
+        self.glade = conf.glade
+        self.glade.signal_autoconnect(self)
 
         # --------  my signals ------------
 #        gobject.type_register(NodesEditor)
@@ -67,7 +69,7 @@ class NodesEditor(base_editor.BaseEditor,gtk.TreeView):
         self.menu_list = [ \
             ["node_popup","nodes_popup",None,True] \
         ]
-        self.init_glade_elements(self.menu_list)
+        self.init_glade_elements(self.menu_list,self.glade)
         
         self.params = [ \
             ["dlg","nodes_dlg",None,True], \
@@ -76,7 +78,7 @@ class NodesEditor(base_editor.BaseEditor,gtk.TreeView):
             ["n_tname","nodes_tname","textname",False], \
             ["n_ip","nodes_ip","ip",False] \
         ]
-        self.init_glade_elements(self.params)
+        self.init_glade_elements(self.params,self.glade)
 
         self.build_tree()
     

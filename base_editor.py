@@ -34,13 +34,13 @@ class BaseEditor():
 
         self.conf = conf
 
-    def init_glade_elements(self, elist):
+    def init_glade_elements(self, elist, glade):
         ''' Инициализация переменных из glade файла...
             по списку элементов вида [class field,gladename,xmlname,xml_save_ignore]'''
         for e in elist:
             if e[0] == None or e[1] == None:
                 continue
-            self.__dict__[e[0]] = self.conf.glade.get_widget(e[1])
+            self.__dict__[e[0]] = glade.get_widget(e[1])
 
     def init_elements_value(self,elist,snode):
         ''' Инициализация переменных из xml

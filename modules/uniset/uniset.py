@@ -21,9 +21,11 @@ class UniSetEditor(base_editor.BaseEditor,gtk.Viewport):
         
         base_editor.BaseEditor.__init__(self,conf)
         gtk.Viewport.__init__(self)
-        conf.glade.signal_autoconnect(self)
+
+        self.glade = conf.glade
+        self.glade.signal_autoconnect(self)
         
-        nbook = conf.glade.get_widget("uniset_nbook")
+        nbook = self.glade.get_widget("uniset_nbook")
         nbook.reparent(self)
        
         self.connect("button-press-event", self.on_button_press_event)
@@ -71,7 +73,7 @@ class UniSetEditor(base_editor.BaseEditor,gtk.Viewport):
             ["deb_l8","uniset_deb_l8",None,True,None,None], \
             ["deb_l9","uniset_deb_l9",None,True,None,None] \
         ]
-        self.init_glade_elements(self.params)
+        self.init_glade_elements(self.params,self.glade)
         
         self.init_xmlnodes()
         self.init_params()
