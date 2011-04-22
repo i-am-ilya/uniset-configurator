@@ -22,7 +22,7 @@ class UniSetEditor(base_editor.BaseEditor,gtk.Viewport):
         base_editor.BaseEditor.__init__(self,conf)
         gtk.Viewport.__init__(self)
 
-        self.glade = conf.glade
+        self.glade = gtk.glade.XML(conf.datdir+"uniset.glade")
         self.glade.signal_autoconnect(self)
         
         nbook = self.glade.get_widget("uniset_nbook")

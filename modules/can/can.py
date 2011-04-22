@@ -31,7 +31,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
         
         self.can_conf = can_conf.CANConfig(conf.xml,conf.datdir)
 
-        self.glade = conf.glade
+        self.glade = gtk.glade.XML(conf.datdir+"can.glade")
         self.glade.signal_autoconnect(self)
         
         n_editor = conf.n_editor()
@@ -120,6 +120,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
         self.dlg_card.show()
         self.cardinfo = dict()
         self.card_first_iter = None
+        self.build_cards_list()
         
         self.reopen()
         self.show_all()
@@ -170,7 +171,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
             e["iter"] = it
             e["key"] = k
             e["tname"] = c["textname"]
-            dlg = self.conf.glade.get_widget( str("can_dlg_" + c["name"]) )
+            dlg = self.glade.get_widget( str("can_dlg_" + c["name"]) )
             e["dlg"] =dlg
             
             self.cardinfo[c["name"]] = e
@@ -397,7 +398,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
         cnode = self.model.get_value(iter,fid.can_xmlnode)
         node_xmlnode = self.model.get_value(iter,fid.node_xmlnode)
         
-        print "xmlnode: " + str(cnode)
+        #print "xmlnode: " + str(cnode)
        
         self.node_name.set_text(node_xmlnode.prop("name"))
         self.init_elements_value(self.node_param_list,cnode)
@@ -517,8 +518,8 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
     
     def cpc108_config_dlg(self,cinfo,xmlnode):
         dlg = cinfo["dlg"]
-        mmin = self.conf.glade.get_widget( "can_cpc108_minminor" )
-        mparam = self.conf.glade.get_widget( "can_cpc108_param" )
+        mmin = self.glade.get_widget( "can_cpc108_minminor" )
+        mparam = self.glade.get_widget( "can_cpc108_param" )
         self.setup_cpc108_dlg(dlg,xmlnode)
         while True:
             res = dlg.run()
@@ -537,10 +538,10 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
 
     def can200mp_config_dlg(self,cinfo,xmlnode):
         dlg = cinfo["dlg"]
-        irq = self.conf.glade.get_widget( "can_can200mp_irq" )
-        ba1 = self.conf.glade.get_widget( "can_can200mp_ba1" )
-        ba2 = self.conf.glade.get_widget( "can_can200mp_ba2" )
-        mparam = self.conf.glade.get_widget( "can_can200mp_param" )
+        irq = self.glade.get_widget( "can_can200mp_irq" )
+        ba1 = self.glade.get_widget( "can_can200mp_ba1" )
+        ba2 = self.glade.get_widget( "can_can200mp_ba2" )
+        mparam = self.glade.get_widget( "can_can200mp_param" )
         self.setup_can200mp_dlg(dlg,xmlnode)
         while True:
             res = dlg.run()
@@ -590,7 +591,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
     def setup_cpc108_dlg(self,dlg,xmlnode):
         mparam = xmlnode.prop("module_param")
         plist = self.get_param_list(mparam)
-        mmin = self.conf.glade.get_widget( "can_cpc108_minminor" )
+        mmin = self.glade.get_widget( "can_cpc108_minminor" )
         for p in plist:
             if p[0] == "min_minor":
                mmin.set_value(int(p[1]))
@@ -598,9 +599,9 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
     def setup_can200mp_dlg(self,dlg,xmlnode):
         mparam = xmlnode.prop("module_param")
         plist = self.get_param_list(mparam)
-        irq = self.conf.glade.get_widget( "can_can200mp_irq" )
-        ba1 = self.conf.glade.get_widget( "can_can200mp_ba1" )
-        ba2 = self.conf.glade.get_widget( "can_can200mp_ba2" )
+        irq = self.glade.get_widget( "can_can200mp_irq" )
+        ba1 = self.glade.get_widget( "can_can200mp_ba1" )
+        ba2 = self.glade.get_widget( "can_can200mp_ba2" )
         for p in plist:
             pname = p[0]
             if pname == "irq":

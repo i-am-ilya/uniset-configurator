@@ -24,7 +24,7 @@ class NodesEditor(base_editor.BaseEditor,gtk.TreeView):
         gtk.TreeView.__init__(self)
         base_editor.BaseEditor.__init__(self,conf)
 
-        self.glade = conf.glade
+        self.glade = gtk.glade.XML(conf.datdir+"nodes.glade")
         self.glade.signal_autoconnect(self)
 
         # --------  my signals ------------
