@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.8
-Release: alt1
+Release: alt2
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -59,6 +59,9 @@ ln -s %python_sitelibdir_noarch/%name/can_conf.py %buildroot/%_bindir/uniset-can
 %_bindir/*
 
 %changelog
+* Sat Apr 23 2011 Pavel Vainerman <pv@altlinux.ru> 0.8-alt2
+- remove the packing of unnecessary glade-files
+
 * Fri Apr 22 2011 Evgeny Sinelnikov <sin@altlinux.ru> 0.8-alt1
 - Strip common glade-file on separate glade-files for every module
 
