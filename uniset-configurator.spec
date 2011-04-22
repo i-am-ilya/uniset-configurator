@@ -59,6 +59,9 @@ ln -s %python_sitelibdir_noarch/%name/can_conf.py %buildroot/%_bindir/uniset-can
 %_bindir/*
 
 %changelog
+* Fri Apr 22 2011 Evgeny Sinelnikov <sin@altlinux.ru> 0.8-alt1
+- Strip common glade-file on separate glade-files for every module
+
 * Fri Apr 22 2011 Pavel Vainerman <pv@altlinux.ru> 0.7-alt5
 - minor fixes in lcaps editor
 
