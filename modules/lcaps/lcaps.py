@@ -40,7 +40,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         gtk.TreeView.__init__(self)
         base_editor.BaseEditor.__init__(self,conf)
 
-        self.glade = conf.glade #gtk.glade.XML(datdir+"uniset-io.glade")
+        self.glade = gtk.glade.XML(conf.datdir+"lcaps.glade")
 #       conf.glade.signal_autoconnect(self)
         self.model = None
         self.modelfilter = None
