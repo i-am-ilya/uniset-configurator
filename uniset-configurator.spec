@@ -37,9 +37,10 @@ BuildRequires(pre): rpm-build-python
 if [ %python_sitelibdir_arch != %python_sitelibdir_noarch -a -d %buildroot%python_sitelibdir_arch/%name ]; then
     mkdir -p %buildroot%python_sitelibdir_noarch
     mv %buildroot%python_sitelibdir_arch/%name %buildroot%python_sitelibdir_noarch/
+    mv %buildroot%python_sitelibdir_arch/*.py %buildroot%python_sitelibdir_noarch/
 fi
 mkdir -p %buildroot%python_sitelibdir_noarch/%name
-mv -f %buildroot%python_sitelibdir_arch/*.py %buildroot%python_sitelibdir_noarch/%name/
+mv -f %buildroot%python_sitelibdir_noarch/*.py %buildroot%python_sitelibdir_noarch/%name/
 
 mkdir -p %buildroot/%_bindir/
 ln -s %python_sitelibdir_noarch/%name/%name.py %buildroot/%_bindir/%name
