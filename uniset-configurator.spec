@@ -17,6 +17,8 @@ BuildRequires(pre): rpm-build-python
 
 %add_findreq_skiplist %_datadir/%name/*.sh
 %global _target_python_libdir %_target_libdir_noarch
+%define python_sitelibdir_noarch %python_sitelibdir
+%define python_sitelibdir_arch %_libdir/python%__python_version/site-packages
 
 %description
 %summary
@@ -32,13 +34,12 @@ BuildRequires(pre): rpm-build-python
 %install
 %make_install install DESTDIR=%buildroot
 
-#%%ifarch x86_64
-#%%define python_sitelib64dir %_libdir%_python_version
-#mkdir -p %buildroot%python_sitelibdir_noarch/%name
-#%%else
+if [ %python_sitelibdir_arch != %python_sitelibdir_noarch -a -d %buildroot%python_sitelibdir_arch/%name ]; then
+    mkdir -p %buildroot%python_sitelibdir_noarch
+    mv %buildroot%python_sitelibdir_arch/%name %buildroot%python_sitelibdir_noarch/
+fi
 mkdir -p %buildroot%python_sitelibdir_noarch/%name
-mv -f %buildroot%python_sitelibdir/*.py %buildroot%python_sitelibdir_noarch/%name/
-#%%endif
+mv -f %buildroot%python_sitelibdir_arch/*.py %buildroot%python_sitelibdir_noarch/%name/
 
 mkdir -p %buildroot/%_bindir/
 ln -s %python_sitelibdir_noarch/%name/%name.py %buildroot/%_bindir/%name
