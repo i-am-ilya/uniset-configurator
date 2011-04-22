@@ -107,7 +107,8 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
             ["dlg_hornreset","lcaps_dlg_hornreset","hornreset",False], \
             ["dlg_confirm","lcaps_dlg_confirm","confirm",False], \
             ["dlg_lc_count","lcaps_dlg_lc_count","lamps",False], \
-            ["dlg_heartbeat","lcaps_dlg_heartbeat","heartbeat",False] \
+            ["dlg_heartbeat","lcaps_dlg_heartbeat","heartbeat",False], \
+            ["dlg_heartbeat_max","lcaps_dlg_heartbeat_max","heartbeat_max",False] \
         ]
         self.init_glade_elements(self.lc_params) 
         
@@ -546,7 +547,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         lc_params['hornreset'] = hr_node
         lc_params['confirm'] = c_node
         lc_params['heartbeat_id'] = hb_node
-        lc_params['heartbeat_max'] = "10"
+        lc_params['heartbeat_max'] = self.dlg_heartbeat_max.get_value_as_int()
         
         h_postfix = self.comhorn["comm_idname"]
         num = 1
@@ -620,8 +621,8 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         
     
     def set_new_flamp_prop(self, node):
-        node.setProp("heartbeat_max","10")
-        node.setProp("heartbeat",self.dlg_heartbeat.get_text())
+        #node.setProp("heartbeat_max",str(self.dlg_heartbeat_max.get_value_as_int()))
+        #node.setProp("heartbeat",self.dlg_heartbeat.get_text())
         node.setProp("hornreset",self.dlg_hornreset.get_text())
         node.setProp("confirm",self.dlg_confirm.get_text())
      

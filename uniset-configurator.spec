@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.7
-Release: alt4
+Release: alt5
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -57,6 +57,9 @@ ln -s %python_sitelibdir_noarch/%name/can_conf.py %buildroot/%_bindir/uniset-can
 %_bindir/*
 
 %changelog
+* Fri Apr 22 2011 Pavel Vainerman <pv@altlinux.ru> 0.7-alt5
+- minor fixes in lcaps editor
+
 * Thu Apr 21 2011 Pavel Vainerman <pv@altlinux.ru> 0.7-alt4
 - fixed minor bug in apspanel editor
 
