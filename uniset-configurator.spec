@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.8
-Release: alt2
+Release: alt3
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
