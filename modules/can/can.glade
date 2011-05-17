@@ -943,6 +943,7 @@ minimal minor - minor-&#x43D;&#x43E;&#x43C;&#x435;&#x440; (/dev/canX) &#x43F;&#x
                         <property name="invisible_char">&#x25CF;</property>
                         <property name="invisible_char_set">True</property>
                         <property name="adjustment">0 0 15 1 10 10</property>
+                        <property name="numeric">True</property>
                       </widget>
                       <packing>
                         <property name="left_attach">1</property>

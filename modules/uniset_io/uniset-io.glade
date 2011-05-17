@@ -1196,7 +1196,9 @@ UNIO96</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="invisible_char">&#x25CF;</property>
-                <property name="adjustment">1 0 10 1 10 10</property>
+                <property name="width_chars">0</property>
+                <property name="adjustment">0 0 10 1 5 5</property>
+                <property name="numeric">True</property>
                 <signal name="value_changed" handler="io_sp_cardnum_value_changed_cb"/>
               </widget>
               <packing>
