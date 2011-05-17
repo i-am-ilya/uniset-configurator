@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.8
-Release: alt3
+Release: alt4
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -59,6 +59,9 @@ ln -s %python_sitelibdir_noarch/%name/can_conf.py %buildroot/%_bindir/uniset-can
 %_bindir/*
 
 %changelog
+* Tue May 17 2011 Pavel Vainerman <pv@altlinux.ru> 0.8-alt4
+- minor fixed in glade-files (spinbutton problem)
+
 * Sat Apr 23 2011 Pavel Vainerman <pv@altlinux.ru> 0.8-alt2
 - remove the packing of unnecessary glade-files
 
