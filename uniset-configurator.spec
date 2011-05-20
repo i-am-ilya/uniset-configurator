@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.8
-Release: alt5
+Release: alt6
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -59,6 +59,9 @@ ln -s %python_sitelibdir_noarch/%name/can_conf.py %buildroot/%_bindir/uniset-can
 %_bindir/*
 
 %changelog
+* Fri May 20 2011 Pavel Vainerman <pv@altlinux.ru> 0.8-alt6
+- (can-editor): fixed bug in can200mp config dialog
+
 * Tue May 17 2011 Pavel Vainerman <pv@altlinux.ru> 0.8-alt5
 - minor fixes in can.glade
 

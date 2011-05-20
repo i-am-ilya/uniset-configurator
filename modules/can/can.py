@@ -567,7 +567,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
             
             break
         
-        s =  str("irq=%d porta0=%s portb0=%s"%(irq.get_value_as_int(),ba1.get_text(),ba2.get_text()))
+        s =  str("irq0=%d porta0=%s portb0=%s"%(irq.get_value_as_int(),ba1.get_text(),ba2.get_text()))
         mparam.set_text(s)
         self.dlg_card_param.set_text(s)
         return True
@@ -604,7 +604,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
         ba2 = self.glade.get_widget( "can_can200mp_ba2" )
         for p in plist:
             pname = p[0]
-            if pname == "irq":
+            if pname == "irq0":
                irq.set_value(int(p[1]))
             elif pname == "porta0":
                ba1.set_text(p[1])
