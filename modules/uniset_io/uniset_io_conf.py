@@ -23,17 +23,35 @@ class IOConfig():
         self.datdir = datdir
     
     def like_ai16(self,cname):
-      if cname == "AI16-5A-3" or cname == "AIC123XX/16" or \
-         cname == "AIC120/16" or cname == "AIC121/16" or cname=="AI16":
-         return True
+        if cname == "AI16-5A-3" or cname == "AIC123XX/16" or \
+           cname == "AIC120/16" or cname == "AIC121/16" or cname=="AI16":
+            return True
          
-      return False
+        return False
     
     def like_ai8(self,cname):
-      if cname == "AIC123XX/8" or cname == "AIC120/8" or cname == "AIC121/8":
-         return True
+         if cname == "AIC123XX/8" or cname == "AIC120/8" or cname == "AIC121/8":
+            return True
          
-      return False
+         return False
+
+    def like_aic123(self,cname):
+        if cname == "AIC123XX/8" or cname == "AIC123XX/16":
+           return True
+
+        return False
+
+    def like_aic120(self,cname):
+        if cname == "AIC120/8" or cname == "AIC120/16":
+           return True
+
+        return False
+
+    def like_aic121(self,cname):
+        if cname == "AIC121/8" or cname == "AIC121/16":
+           return True
+
+        return False
     
     def build_channels_list(self,cardnode,model,iter,pic=None):
         cname = cardnode.prop("name").upper()
@@ -148,11 +166,11 @@ class IOConfig():
         if avr == "":
            avr = "1"
         
-        if self.like_ai16(cname):
-            return "0," + avr
-        
-        if self.like_ai8(cname):
+        if self.like_aic123(cname):
             return "1," + avr
+
+        if self.like_aic120(cname) or self.like_aic121(cname):
+            return "0," + avr
         
         return ""
     
