@@ -36,7 +36,7 @@ class IOConfig():
          return False
 
     def like_aic123(self,cname):
-        if cname == "AIC123XX/8" or cname == "AIC123XX/16":
+        if cname == "AIC123XX/8" or cname == "AIC123XX/16" or cname == "AI16-5A-3":
            return True
 
         return False
