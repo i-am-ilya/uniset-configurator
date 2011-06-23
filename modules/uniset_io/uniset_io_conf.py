@@ -265,7 +265,7 @@ class IOConfig():
     def gen_rmmod_string(self,modlist,l):
         s = ""
         for m in modlist:
-            s += re.sub("{MOD_REMOVE}", str("modprobe -r " + m),l)
+            s += re.sub("{MOD_REMOVE}", str("rmmod " + m),l)
         return s
     
     def gen_rmcards_string(self,cardsinfo,l):
