@@ -567,7 +567,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
             n_horn = self.conf.check_and_create_sensor(h_name,"DO")
             fnode.setProp("horn1",h_name)
             
-            f_name = str("%s_Flash%s_C"%(lc_name,sec.upper()))
+            f_name = str("%s_Flash%s1_C"%(lc_name,sec.upper()))
             n_flash = self.conf.check_and_create_sensor(f_name,"DO")
             fnode.setProp("flamp",f_name)
             self.set_new_flamp_prop(fnode)
