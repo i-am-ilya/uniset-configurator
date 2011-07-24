@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.8
-Release: alt7
+Release: alt8
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -59,6 +59,9 @@ ln -s %python_sitelibdir_noarch/%name/can_conf.py %buildroot/%_bindir/uniset-can
 %_bindir/*
 
 %changelog
+* Sun Jul 24 2011 Pavel Vainerman <pv@altlinux.ru> 0.8-alt8
+- fixed bug in io-modules (processing threshold_aid)
+
 * Tue Jun 21 2011 Pavel Vainerman <pv@altlinux.ru> 0.8-alt7
 - fixed minor bug in io-module
 

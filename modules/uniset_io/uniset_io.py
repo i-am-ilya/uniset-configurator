@@ -289,7 +289,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         # проходим по <sensors> и если поля заполнены ищем в нашем TreeView
         node = self.conf.xml.findNode(self.conf.xml.getDoc(),"sensors")[0].children.next 
         while node != None:
-            if node.prop("io") != None:
+            if node.prop("io") != None and node.prop("threshold_aid") == None:
                  self.find_node(node)
             node = self.conf.xml.nextNode(node)    
 
