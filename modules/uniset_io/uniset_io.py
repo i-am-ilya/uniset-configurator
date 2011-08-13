@@ -328,7 +328,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
        while it is not None:
            if self.model.get_value(it,fid.num) == ch:
                self.model.set_value(it,fid.xmlnode,node)
-               self.model.set_value(it,fid.param,node.prop("name"))
+               self.model.set_value(it,fid.param,self.get_sensor_info(node))
                return
 
            it = self.model.iter_next(it)
@@ -908,7 +908,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         
         # Сохраняем параметры
         self.model.set_value(iter,fid.xmlnode,self.sensor)
-        self.model.set_value(iter,fid.param,self.sensor.prop("name"))
+        self.model.set_value(iter,fid.param,self.get_sensor_info(self.sensor))
         self.sensor.setProp("io",node_id)
         self.sensor.setProp("card",card.prop("card"))
         self.sensor.setProp("subdev", str(self.model.get_value(iter,fid.subdev)))
@@ -919,7 +919,10 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
   
     def get_node_info(self, xmlnode):
         return str("id=" + str(xmlnode.prop("id")) + " ip=" + xmlnode.prop("ip"))
-        
+
+    def get_sensor_info(self, xmlnode):
+        return "[%s]%s"%(xmlnode.prop("id"),xmlnode.prop("name"))
+
     def nodeslist_change(self,obj, xmlnode):
         node_id = xmlnode.prop("name")
         # Ищем узел проходим по всем его картам и датчикам
