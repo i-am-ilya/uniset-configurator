@@ -226,6 +226,11 @@ class IOConfig():
          modlist = {} # делаем словарь, чтобы исключить повторяющиеся модули..
 
          while xmlnode != None:
+            
+            if get_str_val(xmlnode.prop("ignore")) != "":
+               xmlnode = self.xml.nextNode(xmlnode)
+               continue         
+            
             mod_name = get_str_val(xmlnode.prop("module"))
             mod_params = get_str_val(xmlnode.prop("module_params"))
             if mod_name != "":
