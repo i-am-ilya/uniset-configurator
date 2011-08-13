@@ -41,7 +41,8 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         base_editor.BaseEditor.__init__(self,conf)
 
         self.glade = gtk.glade.XML(conf.datdir+"lcaps.glade")
-#       conf.glade.signal_autoconnect(self)
+        self.glade.signal_autoconnect(self)
+
         self.model = None
         self.modelfilter = None
         self.model = gtk.TreeStore(gobject.TYPE_STRING,\
@@ -101,6 +102,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
             ["dlg_lc","lcaps_dlg_lc",None,True], \
             ["lcaps_popup","lcaps_popup",None,True], \
             ["item_popup","lcaps_item_popup",None,True], \
+            ["noconfirm_list","lcaps_noconfirm_list",None,True], \
             ["dlg_id_select_box","lcaps_id_select_box",None,True], \
             ["dlg_lc_name","lcaps_dlg_name","name",False], \
             ["dlg_lc_comm","lcaps_dlg_comm","comment",False], \
@@ -130,6 +132,12 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
             ["item_lamp","lcaps_dlg_lamp","lamp",False], \
             ["item_horn","lcaps_dlg_cb_nohorn","nohorn",False], \
             ["item_noconfirm","lcaps_dlg_noconfirm","noconfirm",False], \
+            ["item_noconfirm","dlg_noconfirm","noconfirm",False], \
+            ["item_blink","dlg_blink","blink",False], \
+            ["item_onhorn","dlg_onhorn","onhorn",False], \
+            ["item_onflash","dlg_onflash","onflash",False], \
+            ["item_nohorn","dlg_nohorn","nohorn",False], \
+            ["item_always_alarm","dlg_always_alarm","alway_alarm",False], \
             ["item_delay","lcaps_dlg_delay","delay",False], \
             ["item_comment","lcaps_dlg_comment","comment",False] \
         ]
@@ -907,6 +915,8 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
     def on_generate_test_clicked(self, button):
         pass
 
+    def on_lcaps_dlg_noconfirm_toggled(self, cbtn):
+        self.noconfirm_list.set_sensitive( cbtn.get_active() )
 
 
 def create_module(conf):
