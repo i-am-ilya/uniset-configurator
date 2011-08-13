@@ -27,16 +27,28 @@ pic_CHAN = 'channel.png'
 1. Добавление, удаление карт ввода/вывода на узлах
 2. Редактирование параметров каждого канала
 '''
-class IOEditor(base_editor.BaseEditor,gtk.TreeView):
+class IOEditor(base_editor.BaseEditor,gtk.Viewport):
 
     def __init__(self, conf):
 
-        gtk.TreeView.__init__(self)
         base_editor.BaseEditor.__init__(self,conf)
+        gtk.Viewport.__init__(self)
+        #gtk.VBox.__init__(self)
 
         self.glade = gtk.glade.XML(conf.datdir+"uniset-io.glade")
         self.glade.signal_autoconnect(self)
 
+        vbox = self.glade.get_widget("mainbox")
+        vbox.reparent(self)
+
+        box = self.glade.get_widget("tree_win")
+        self.tv = gtk.TreeView()
+        self.tv.show_all()
+        box.add(self.tv)
+
+        self.fentry = self.glade.get_widget("io_filter_entry")
+        self.filter_cb_case = self.glade.get_widget("io_filter_cb_case")
+        
         self.ioconf = uniset_io_conf.IOConfig(conf.xml,conf.datdir)
         
         # подключение к редактору узлов (для отслеживания изменений в списке узлов)
@@ -56,14 +68,11 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
                                    gobject.TYPE_STRING, # subdev
                                    gtk.gdk.Pixbuf)      # picture
         
-        self.modelfilter = self.model.filter_new()
-
-#        self.modelfilter.set_visible_column(1)
-
-        # create treeview
-        self.set_model(self.model)
-        self.set_rules_hint(True)
-        self.connect("button-press-event", self.on_button_press_event)
+        self.fmodel = self.model.filter_new()
+        self.fmodel.set_visible_func(self.view_filter_func)
+        self.tv.set_model(self.fmodel)
+        self.tv.set_rules_hint(True)
+        self.tv.connect("button-press-event", self.on_button_press_event)
         
         column = gtk.TreeViewColumn(_("Name"))
         nmcell = gtk.CellRendererText()
@@ -73,12 +82,12 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         column.set_attributes(pbcell,pixbuf=fid.pic)
         column.set_attributes(nmcell,text=fid.name)
         column.set_clickable(False)
-        self.append_column(column)
+        self.tv.append_column(column)
 
         renderer = gtk.CellRendererText()
         column = gtk.TreeViewColumn(_("Parameters"), renderer, text=fid.param)
         column.set_clickable(False)
-        self.append_column(column)
+        self.tv.append_column(column)
 
         # expand all rows after the treeview widget has been realized
 #       self.connect('realize', lambda tv: tv.expand_all())
@@ -355,7 +364,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
 
     def on_button_press_event(self, object, event):                                                                                                                                 
 #        print "*** on_button_press_event"
-        (model, iter) = self.get_selection().get_selected()
+        (model, iter) = self.tv.get_selection().get_selected()
 
         if event.button == 3:                                                                                                                                                       
             if not iter: return False
@@ -491,17 +500,17 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
              self.tbl_comm.set_sensitive(True)
     
     def on_io_channel_edit_activate(self,menuitem):
-        (model, iter) = self.get_selection().get_selected()
+        (model, iter) = self.tv.get_selection().get_selected()
         if not iter: return	  
         self.on_edit_channel(iter)	  
     
     def on_io_channel_add_activate(self,menuitem):
-        (model, iter) = self.get_selection().get_selected()
+        (model, iter) = self.tv.get_selection().get_selected()
         if not iter: return	  
         self.on_edit_channel(iter)
     
     def on_io_channel_remove_activate(self,menuitem):
-        (model, iter) = self.get_selection().get_selected()
+        (model, iter) = self.tv.get_selection().get_selected()
         if not iter: return
         
         t = model.get_value(iter,fid.etype)
@@ -525,7 +534,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
                 
     def on_add_card_activate(self,menuitem):
     
-        (model, iter) = self.get_selection().get_selected()
+        (model, iter) = self.tv.get_selection().get_selected()
         if not iter: return
 
         t = model.get_value(iter,fid.etype)
@@ -611,7 +620,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
 
     def on_remove_card_activate(self,menuitem):
 
-        (model, iter) = self.get_selection().get_selected()
+        (model, iter) = self.tv.get_selection().get_selected()
         if not iter: return
 
         dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,_("Are you sure?"))
@@ -677,7 +686,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
 
     def on_io_cb_cardlist_changed(self,cb):
         self.card_param_set_sensitive()
-        (model, iter) = self.get_selection().get_selected()
+        (model, iter) = self.tv.get_selection().get_selected()
         if not iter: return
         cnode = model.get_value(iter,fid.xmlnode)
         self.set_module_params(cnode)
@@ -757,7 +766,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         self.iodev.set_text("/dev/comedi%d"%self.card_num.get_value_as_int())
 
     def on_edit_card_activate(self,menuitem):
-        (model, iter) = self.get_selection().get_selected()
+        (model, iter) = self.tv.get_selection().get_selected()
         if not iter: return
 
         cnode = model.get_value(iter,2)
@@ -836,6 +845,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
            self.set_combobox_element(self.iotype,self.ioconf.get_iotype(cardname,channel))
 
     def on_edit_channel(self,iter):
+        iter = self.fmodel.convert_iter_to_child_iter(iter)
         card_iter = self.model.iter_parent(iter)
         card = self.model.get_value(card_iter,fid.xmlnode)
         node_iter = self.model.iter_parent(card_iter)
@@ -997,7 +1007,7 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
 
     def on_gen_comediconf_activate(self,menuitem):
         
-        (model, iter) = self.get_selection().get_selected()
+        (model, iter) = self.tv.get_selection().get_selected()
         if not iter: return
         
         t = model.get_value(iter,fid.etype)
@@ -1028,6 +1038,63 @@ class IOEditor(base_editor.BaseEditor,gtk.TreeView):
         
         if res == gtk.RESPONSE_OK:
            self.ioconf.gen_comedi_script(cardnode,dlg.get_filename())
+
+    def find_str(self, s1, s2, case):
+
+        if s1 == None or s2 == None:
+           return False
+
+        if case == False:
+           if s1.upper().find(s2.upper()) != -1:
+                return True
+           return False
+
+        if s1.find(s2) != -1:
+             return True
+
+        return False
+
+    def filter_entry_changed(self,entry):
+        self.fmodel.refilter()
+
+    def filter_cb_toggled(self,checkbtn):
+        self.fmodel.refilter()
+             
+    def view_filter_func(self, model, it):
+
+        if it == None:
+           return True
+
+        t = self.fentry.get_text()
+        if t == "":
+             return True
+
+        etype = model.get_value(it,fid.etype)
+        if etype == "channel":
+           xmlnode = model.get_value(it,fid.xmlnode)
+
+           # если привязки ещё нет, то не отображаем
+           if xmlnode == None:
+              return False
+
+           # если имя датчика "пустое"(то тоже  не отображаем)
+           sname = str(xmlnode.prop("name"))
+           if sname == "":
+              return False
+
+           ok = self.find_str(sname, t, self.filter_cb_case.get_active())
+
+           # раскрываем те деревья, где найден датчика
+           path = model.get_path(it)
+           self.tv.expand_to_path(path)
+           return ok
+           
+
+        return True
+
+
+    def btn_collaps_clicked(self,btn):
+        self.tv.collapse_all()
 
 
 def create_module(conf):
