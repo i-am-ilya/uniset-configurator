@@ -224,29 +224,39 @@ class IOConfig():
     def gen_comedi_script(self,xmlnode,fname):
          cardsinfo = [] # [module,params,dev,baddr]
          modlist = {} # делаем словарь, чтобы исключить повторяющиеся модули..
+         modlist_ignore = {}
+         modlist_all = {}
 
          while xmlnode != None:
             
-            if get_str_val(xmlnode.prop("ignore")) != "":
-               xmlnode = self.xml.nextNode(xmlnode)
-               continue         
+#            if get_str_val(xmlnode.prop("ignore")) != "":
+#               xmlnode = self.xml.nextNode(xmlnode)
+#               continue         
             
             mod_name = get_str_val(xmlnode.prop("module"))
             mod_params = get_str_val(xmlnode.prop("module_params"))
+            IGN = get_str_val(xmlnode.prop("ignore"))
             if mod_name != "":
-			   modlist[mod_name] = mod_name
-            cardsinfo.append( [mod_name,mod_params,get_str_val(xmlnode.prop("dev")),get_str_val(xmlnode.prop("baddr"))] )
+               modlist_all[mod_name] = mod_name
+               if IGN == "":
+                  modlist[mod_name] = mod_name
+               
+            cardsinfo.append( [mod_name,mod_params,get_str_val(xmlnode.prop("dev")),get_str_val(xmlnode.prop("baddr")),IGN] )
             xmlnode = self.xml.nextNode(xmlnode)
+
+         for m in modlist_all:
+             if m not in modlist:
+                modlist_ignore[m] = m
          
          gdate = datetime.datetime.today()
          ctx = open( self.datdir + "ctl-comedi-skel.sh" ).readlines()
          out = open(fname,"w")
          for l in ctx:
              if re.search("{MOD_PROBE}",l):
-                l = self.gen_modprobe_string(modlist,l)
+                l = self.gen_modprobe_string(modlist,modlist_ignore,l)
              
              if re.search("{MOD_REMOVE}",l):
-                l = self.gen_rmmod_string(modlist,l)
+                l = self.gen_rmmod_string(modlist,modlist_ignore,l)
              
              if re.search("{CARDS_CONFIG}",l):
                 l = self.gen_cardsconf_string(cardsinfo,l)
@@ -261,16 +271,22 @@ class IOConfig():
          
          out.close()
     
-    def gen_modprobe_string(self,modlist,l):
+    def gen_modprobe_string(self,modlist,modlist_ignore,l):
         s = ""
         for m in modlist:
             s += re.sub("{MOD_PROBE}", str("modprobe " + m),l)
+        for m in modlist_ignore:
+            s += re.sub("{MOD_PROBE}", str("# modprobe " + m),l)
+
         return s
     
-    def gen_rmmod_string(self,modlist,l):
+    def gen_rmmod_string(self,modlist,modlist_ignore,l):
         s = ""
         for m in modlist:
             s += re.sub("{MOD_REMOVE}", str("rmmod " + m),l)
+        for m in modlist_ignore:
+            s += re.sub("{MOD_REMOVE}", str("# modprobe " + m),l)
+
         return s
     
     def gen_rmcards_string(self,cardsinfo,l):
@@ -279,7 +295,11 @@ class IOConfig():
             dev = m[2]
             if dev == "":
                dev = "/dev/comedi???"
-            s += re.sub("{CARDS_REMOVE}", str("/usr/sbin/comedi_config -r " + dev + " || RETVAL=1"),l)
+
+            IGN=""
+            if m[4]!="": IGN="#"
+
+            s += re.sub("{CARDS_REMOVE}", str(IGN+"/usr/sbin/comedi_config -r " + dev + " || RETVAL=1"),l)
         return s
 
 #  /usr/sbin/comedi_config /dev/comedi0 di32_5 0x100 || RETVAL=1
@@ -298,8 +318,11 @@ class IOConfig():
             params = m[1]
             if params != "":
                params = "," + params
+
+            IGN=""
+            if m[4]!="": IGN="#"
             
-            s += re.sub("{CARDS_CONFIG}", str("/usr/sbin/comedi_config " + dev + " " + mod + " " + ba + params + " || RETVAL=1"),l)
+            s += re.sub("{CARDS_CONFIG}", str(IGN+"/usr/sbin/comedi_config " + dev + " " + mod + " " + ba + params + " || RETVAL=1"),l)
         return s
 
     def get_outfilename(self, xmlnode):
