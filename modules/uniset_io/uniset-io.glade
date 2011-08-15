@@ -238,7 +238,7 @@ AO</property>
                             <property name="can_focus">True</property>
                             <property name="invisible_char">&#x25CF;</property>
                             <property name="invisible_char_set">True</property>
-                            <property name="adjustment">0 0 4 1 2 5</property>
+                            <property name="adjustment">0 0 4 1 10 0</property>
                             <property name="numeric">True</property>
                           </widget>
                           <packing>
@@ -265,7 +265,7 @@ AO</property>
                             <property name="can_focus">True</property>
                             <property name="invisible_char">&#x25CF;</property>
                             <property name="invisible_char_set">True</property>
-                            <property name="adjustment">0 0 5 1 10 10</property>
+                            <property name="adjustment">0 0 5 1 10 0</property>
                             <property name="snap_to_ticks">True</property>
                             <property name="numeric">True</property>
                           </widget>
@@ -592,7 +592,8 @@ AO</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="invisible_char">&#x25CF;</property>
-                        <property name="adjustment">0 0 10 1 10 10</property>
+                        <property name="adjustment">0 0 10 1 10 0</property>
+                        <property name="numeric">True</property>
                       </widget>
                       <packing>
                         <property name="left_attach">1</property>
@@ -737,6 +738,8 @@ AO</property>
                     <property name="can_focus">True</property>
                     <property name="invisible_char">&#x25CF;</property>
                     <property name="invisible_char_set">True</property>
+                    <property name="adjustment">0 0 100 1 10 0</property>
+                    <property name="numeric">True</property>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
@@ -751,6 +754,8 @@ AO</property>
                     <property name="can_focus">True</property>
                     <property name="invisible_char">&#x25CF;</property>
                     <property name="invisible_char_set">True</property>
+                    <property name="adjustment">0 0 100 1 10 0</property>
+                    <property name="numeric">True</property>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
@@ -765,6 +770,8 @@ AO</property>
                     <property name="can_focus">True</property>
                     <property name="invisible_char">&#x25CF;</property>
                     <property name="invisible_char_set">True</property>
+                    <property name="adjustment">0 0 100 1 10 0</property>
+                    <property name="numeric">True</property>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
@@ -779,6 +786,8 @@ AO</property>
                     <property name="can_focus">True</property>
                     <property name="invisible_char">&#x25CF;</property>
                     <property name="invisible_char_set">True</property>
+                    <property name="adjustment">0 0 100 1 10 0</property>
+                    <property name="numeric">True</property>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>
@@ -793,7 +802,9 @@ AO</property>
                     <property name="can_focus">True</property>
                     <property name="invisible_char">&#x25CF;</property>
                     <property name="invisible_char_set">True</property>
+                    <property name="adjustment">0 0 100 1 10 0</property>
                     <property name="digits">2</property>
+                    <property name="numeric">True</property>
                   </widget>
                   <packing>
                     <property name="left_attach">1</property>

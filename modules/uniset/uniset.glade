@@ -328,7 +328,8 @@
                 <property name="can_focus">True</property>
                 <property name="invisible_char">&#x25CF;</property>
                 <property name="invisible_char_set">True</property>
-                <property name="adjustment">0 0 1000000 1 10 10</property>
+                <property name="adjustment">500 0 1000000 1 10 0</property>
+                <property name="numeric">True</property>
               </widget>
               <packing>
                 <property name="left_attach">1</property>
@@ -344,7 +345,8 @@
                 <property name="can_focus">True</property>
                 <property name="invisible_char">&#x25CF;</property>
                 <property name="invisible_char_set">True</property>
-                <property name="adjustment">0 0 1000000 1 10 10</property>
+                <property name="adjustment">1000 0 1000000 1 10 0</property>
+                <property name="numeric">True</property>
               </widget>
               <packing>
                 <property name="left_attach">1</property>
@@ -360,7 +362,8 @@
                 <property name="can_focus">True</property>
                 <property name="invisible_char">&#x25CF;</property>
                 <property name="invisible_char_set">True</property>
-                <property name="adjustment">0 0 1000000 1 10 10</property>
+                <property name="adjustment">1000 0 1000000 1 10 0</property>
+                <property name="numeric">True</property>
               </widget>
               <packing>
                 <property name="left_attach">1</property>
@@ -376,7 +379,8 @@
                 <property name="can_focus">True</property>
                 <property name="invisible_char">&#x25CF;</property>
                 <property name="invisible_char_set">True</property>
-                <property name="adjustment">0 0 1000000 1 10 10</property>
+                <property name="adjustment">0 0 1000000 1 10 0</property>
+                <property name="numeric">True</property>
               </widget>
               <packing>
                 <property name="left_attach">1</property>
@@ -590,26 +594,13 @@
               </packing>
             </child>
             <child>
-              <widget class="GtkSpinButton" id="uniset_net_cnt">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="invisible_char">&#x25CF;</property>
-                <property name="invisible_char_set">True</property>
-              </widget>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-                <property name="x_options">GTK_EXPAND</property>
-                <property name="y_options">GTK_EXPAND | GTK_SHRINK</property>
-              </packing>
-            </child>
-            <child>
               <widget class="GtkSpinButton" id="uniset_repeat_cnt">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="invisible_char">&#x25CF;</property>
                 <property name="invisible_char_set">True</property>
-                <property name="adjustment">0 0 10 1 10 10</property>
+                <property name="adjustment">3 0 10 1 10 0</property>
+                <property name="numeric">True</property>
               </widget>
               <packing>
                 <property name="left_attach">1</property>
@@ -626,7 +617,8 @@
                 <property name="can_focus">True</property>
                 <property name="invisible_char">&#x25CF;</property>
                 <property name="invisible_char_set">True</property>
-                <property name="adjustment">0 0 1000000 1 10 10</property>
+                <property name="adjustment">10 0 1000000 1 10 0</property>
+                <property name="numeric">True</property>
               </widget>
               <packing>
                 <property name="left_attach">1</property>
@@ -634,6 +626,21 @@
                 <property name="top_attach">2</property>
                 <property name="bottom_attach">3</property>
                 <property name="x_options">GTK_EXPAND</property>
+                <property name="y_options">GTK_EXPAND | GTK_SHRINK</property>
+              </packing>
+            </child>
+            <child>
+              <widget class="GtkSpinButton" id="uniset_net_cnt">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="invisible_char">&#x25CF;</property>
+                <property name="adjustment">1 0 99 1 10 0</property>
+                <property name="numeric">True</property>
+              </widget>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+                <property name="x_options">GTK_SHRINK</property>
                 <property name="y_options">GTK_EXPAND | GTK_SHRINK</property>
               </packing>
             </child>
