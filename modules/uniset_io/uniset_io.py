@@ -556,9 +556,9 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
                 return
             # check card number
             cnum = self.card_num.get_value_as_int()
-            it1 = self.check_cardnum(cnum,node_iter,iter)
+            it1 = self.check_cardnum(cnum,node_iter,iter,model)
             if it1 != None:
-               msg = "card number='" + str(cnum) + "' " + _("already exist for %s") % self.model.get_value(it1,fid.name)
+               msg = "card number='" + str(cnum) + "' " + _("already exist for %s") % model.get_value(it1,fid.name)
                dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
                res = dlg.run()
                dlg.hide()
@@ -576,9 +576,9 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
                     dlg.hide()
                     continue
             
-            it1 = self.check_baddr(baddr,node_iter,iter)
+            it1 = self.check_baddr(baddr,node_iter,iter,model)
             if baddr!=0 and it1 != None:
-               msg = "base address='" + s_baddr + "' " + _("already exist for %s") % self.model.get_value(it1,fid.name)
+               msg = "base address='" + s_baddr + "' " + _("already exist for %s") % model.get_value(it1,fid.name)
                dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
                res = dlg.run()
                dlg.hide()
@@ -614,7 +614,9 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
 
         self.conf.mark_changes()
         img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_CARD)
-        it = self.model.append(node_iter, [n.prop("name"),self.get_card_info(n),n,"card",n.prop("card"),"0",img])
+
+        i_node_iter = self.fmodel.convert_iter_to_child_iter(node_iter);
+        it = self.model.append(i_node_iter, [n.prop("name"),self.get_card_info(n),n,"card",n.prop("card"),"0",img])
         self.build_channels_list(n,self.model,it)
         self.conf.mark_changes()
 
@@ -629,9 +631,9 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         if res == gtk.RESPONSE_NO:
             return False
         
-        cnode = self.model.get_value(iter,fid.xmlnode)
-        node_iter = self.model.iter_parent(iter)
-        pnode = self.model.get_value(node_iter,fid.xmlnode)
+        cnode = model.get_value(iter,fid.xmlnode)
+        node_iter = model.iter_parent(iter)
+        pnode = model.get_value(node_iter,fid.xmlnode)
 
         cn = cnode.prop("card")
         nn = pnode.prop("id")
@@ -646,43 +648,45 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
 
             node = self.conf.xml.nextNode(node)
     
-        cnode.unlinkNode()    
-        model.remove(iter)
+        cnode.unlinkNode()
+
+        i_iter = self.fmodel.convert_iter_to_child_iter(iter);
+        self.model.remove(i_iter)
         self.conf.mark_changes()
 
-    def check_cardnum(self,num, iter, selfiter):
-        it = self.model.iter_children(iter)
-        myname = self.model.get_value(selfiter,fid.name)
+    def check_cardnum(self,num, iter, selfiter, model):
+        it = model.iter_children(iter)
+        myname = model.get_value(selfiter,fid.name)
         while it is not None:
-            if self.model.get_value(it,fid.name) == myname:
-                it = self.model.iter_next(it)  
+            if model.get_value(it,fid.name) == myname:
+                it = model.iter_next(it)
                 continue
-            s_n = self.model.get_value(it,fid.xmlnode).prop("card")
+            s_n = model.get_value(it,fid.xmlnode).prop("card")
             n = 0
             if s_n != None and s_n!="":
                 n = int(s_n)
 
             if n == num:
                 return it
-            it = self.model.iter_next(it)
+            it = model.iter_next(it)
        
         return None 	  
 
-    def check_baddr(self,baddr, iter, selfiter):
-        it = self.model.iter_children(iter)
-        myname = self.model.get_value(selfiter,fid.name)
+    def check_baddr(self,baddr, iter, selfiter, model):
+        it = model.iter_children(iter)
+        myname = model.get_value(selfiter,fid.name)
         while it is not None:
-            if self.model.get_value(it,fid.name) == myname:
-                it = self.model.iter_next(it)  
+            if model.get_value(it,fid.name) == myname:
+                it = model.iter_next(it)
                 continue
-            s_n = self.model.get_value(it,fid.xmlnode).prop("baddr")
+            s_n = model.get_value(it,fid.xmlnode).prop("baddr")
             n = 0
             if s_n != "" and s_n != None:
                 n = int(eval(s_n))
 
             if n == baddr:
                 return it
-            it = self.model.iter_next(it)
+            it = model.iter_next(it)
 
     def on_io_cb_cardlist_changed(self,cb):
         self.card_param_set_sensitive()
@@ -790,9 +794,9 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
             
             # check card number
             cnum = self.card_num.get_value_as_int()
-            it1 = self.check_cardnum(cnum,self.model.iter_parent(iter),iter)
+            it1 = self.check_cardnum(cnum,model.iter_parent(iter),iter,model)
             if it1 != None:
-               msg = "card number='" + str(cnum) + "' " + _("already exist for %s") % self.model.get_value(it1,fid.name)
+               msg = "card number='" + str(cnum) + "' " + _("already exist for %s") % model.get_value(it1,fid.name)
                dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
                res = dlg.run()
                dlg.hide()
@@ -802,9 +806,9 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
             baddr = 0
             if s_baddr != "":
                  baddr = int(eval(s_baddr))
-            it1 = self.check_baddr(baddr,self.model.iter_parent(iter),iter)
+            it1 = self.check_baddr(baddr,model.iter_parent(iter),iter,model)
             if baddr!=0 and it1 != None:
-               msg = "base address='" + s_baddr + "' " + _("already exist for %s") % self.model.get_value(it1,fid.name)
+               msg = "base address='" + s_baddr + "' " + _("already exist for %s") % model.get_value(it1,fid.name)
                dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
                res = dlg.run()
                dlg.hide()
@@ -813,12 +817,13 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
             break                
 
         self.save2xml_elements_value(self.card_params,cnode)
-        model.set_value(iter,fid.num,str(cnum))
+        i_iter = self.fmodel.convert_iter_to_child_iter(iter)
+        self.model.set_value(i_iter,fid.num,str(cnum))
         info  = 'card=' + str(cnode.prop("card"))
         info  = info + ' BA=' + str(cnode.prop("baddr"))
-        model.set_value(iter,fid.param,info)
+        self.model.set_value(i_iter,fid.param,info)
         self.set_module_params(cnode)
-        self.update_card_info_for_sensors(iter,cnode)
+        self.update_card_info_for_sensors(i_iter,cnode)
         self.conf.mark_changes()
 
     def update_card_info_for_sensors(self,iter,cnode):
