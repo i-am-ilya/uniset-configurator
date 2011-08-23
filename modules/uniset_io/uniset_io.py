@@ -528,8 +528,10 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
            return
         
         self.save2xml_elements_value(self.io_params,xmlnode,"")
-        self.model.set_value(iter,fid.xmlnode,None)
-        self.model.set_value(iter,fid.param,"")
+
+        i_iter = self.fmodel.convert_iter_to_child_iter(iter)
+        self.model.set_value(i_iter,fid.xmlnode,None)
+        self.model.set_value(i_iter,fid.param,"")
         self.conf.mark_changes()
                 
     def on_add_card_activate(self,menuitem):
@@ -615,7 +617,7 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         self.conf.mark_changes()
         img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_CARD)
 
-        i_node_iter = self.fmodel.convert_iter_to_child_iter(node_iter);
+        i_node_iter = self.fmodel.convert_iter_to_child_iter(node_iter)
         it = self.model.append(i_node_iter, [n.prop("name"),self.get_card_info(n),n,"card",n.prop("card"),"0",img])
         self.build_channels_list(n,self.model,it)
         self.conf.mark_changes()
