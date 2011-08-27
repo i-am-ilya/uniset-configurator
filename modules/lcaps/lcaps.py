@@ -130,8 +130,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
             ["item_sensor","lcaps_dlg_sensor","name",False], \
             ["item_ltype","lcaps_dlg_flash",None,True], \
             ["item_lamp","lcaps_dlg_lamp","lamp",False], \
-            ["item_horn","lcaps_dlg_cb_nohorn","nohorn",False], \
-            ["item_noconfirm","lcaps_dlg_noconfirm","noconfirm",False], \
+            ["item_noconfirm_list","lcaps_noconfirm_list",None,True], \
             ["item_noconfirm","dlg_noconfirm","noconfirm",False], \
             ["item_blink","dlg_blink","blink",False], \
             ["item_onhorn","dlg_onhorn","onhorn",False], \
@@ -753,6 +752,11 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         if xmlnode != None:
            i_node = xmlnode
            addNew = False
+           if get_str_val(xmlnode.prop("noconfirm")) == "":
+              xmlnode.setProp("blink","")
+              xmlnode.setProp("onflash","")
+              xmlnode.setProp("onhorn","")
+              self.noconfirm_list.set_sensitive(False)
         
         self.init_elements_value(self.item_params,i_node)
         if xmlnode:
@@ -816,7 +820,12 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         lamp_node = self.conf.check_and_create_sensor(lamp_name,"AO")
         self.item_lamp.set_text(lamp_name)
         xmlnode.setProp("lamptype",lamp_node.prop("iotype"))
-        
+
+        if self.item_noconfirm.get_active() == False:
+           self.item_blink.set_active(False)
+           self.item_onhorn.set_active(False)
+           self.item_onflash.set_active(False)
+
         # обновляем xmlnode по параметрам в диалоге
         self.save2xml_elements_value(self.item_params,xmlnode)
 
