@@ -3,8 +3,8 @@
   <!-- interface-requires gtk+ 2.20 -->
   <!-- interface-naming-policy project-wide -->
   <widget class="GtkWindow" id="MainWindow">
-    <property name="width_request">500</property>
-    <property name="height_request">400</property>
+    <property name="width_request">800</property>
+    <property name="height_request">480</property>
     <property name="visible">True</property>
     <property name="window_position">center</property>
     <property name="icon_name">preferences-system</property>
