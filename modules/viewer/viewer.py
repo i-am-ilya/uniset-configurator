@@ -146,10 +146,11 @@ class Viewer(base_editor.BaseEditor,gtk.Viewport):
         if self.entField.get_text() != "":
            xmlnode = model.get_value(it,fid.xmlnode)
            if self.entValue.get_text() != "":
-              return ( xmlnode.prop(self.entField.get_text()) ==  self.entValue.get_text() )
-
-           return ( xmlnode.prop(self.entField.get_text()) != "" )
-
+              if xmlnode.prop(self.entField.get_text()) !=  self.entValue.get_text():
+                 return False
+           elif get_str_val(xmlnode.prop(self.entField.get_text())) == "":
+              return False
+           
         t = self.fentry.get_text()
         if t == "":
              return True
