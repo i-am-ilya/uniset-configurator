@@ -101,7 +101,7 @@ if len(sys.argv) > 1:
    rewrite_confile = checkArgParam("--rewrite",False)
    if rewrite_confile == True:
       if confile == "":
-         print "Unkown confile. Use --confile filename\n"
+         print "Unknown confile. Use --confile filename\n"
          exit(1)
 
       rewrite_filename = getArgParam("--rewrite",confile)
