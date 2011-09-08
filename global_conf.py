@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import sys
+
 # универсальный код для диалогов
 # чтобы не делать обработку всех возможных кнопок 'OK'
 # можно в glade назначать для всех 'OK'(в диалогах) заранее известный код возврата 
@@ -33,3 +35,30 @@ def __line__():
 def __function__():
     caller = inspect.stack()[1]
     return caller[3]
+
+def getArgParam(param,defval=""):
+    for i in range(0, len(sys.argv)):
+        if sys.argv[i] == param:
+           if i+1 < len(sys.argv):
+              return sys.argv[i+1]
+           else:
+              break;
+
+    return defval
+
+def getArgInt(param,defval=0):
+    for i in range(0, len(sys.argv)):
+        if sys.argv[i] == param:
+           if i+1 < len(sys.argv):
+              return to_int(strsys.argv[i+1])
+           else:
+              break;
+
+    return defval
+
+def checkArgParam(param,defval=""):
+    for i in range(0, len(sys.argv)):
+        if sys.argv[i] == param:
+           return True
+
+    return defval

@@ -12,6 +12,7 @@ import configure
 import libxml2
 import UniXML
 import locale
+from global_conf import *
 
 
 locale.setlocale(locale.LC_ALL, "ru_RU.UTF8")
@@ -85,6 +86,8 @@ mwinglade = datdir + "mainwin.glade"
 #confile="configure.xml"
 confile=""
 
+rewrite_confile = False
+
 try:
     glade = gtk.glade.XML(mwinglade)
 except: 
@@ -94,7 +97,25 @@ except:
    dialog.destroy()
 
 if len(sys.argv) > 1:
-   confile = sys.argv[1]
+   confile = getArgParam("--confile",sys.argv[1])
+   rewrite_confile = checkArgParam("--rewrite",False)
+   if rewrite_confile == True:
+      if confile == "":
+         print "Unkown confile. Use --confile filename\n"
+         exit(1)
+
+      rewrite_filename = getArgParam("--rewrite",confile)
+      try:
+           xml = UniXML.UniXML(confile)
+      except:
+           print "Can`t open XML file '%s'\n"%confile
+           exit(1)
+
+      if rewrite_filename == confile:
+         os.rename(xml.getFileName(),str(xml.getFileName())+".bak")
+
+      xml.save(rewrite_filename)
+      exit(0)
 
 if confile == "":
    dlg = gtk.FileChooserDialog(_("File selection"),action=gtk.FILE_CHOOSER_ACTION_OPEN,
@@ -113,6 +134,7 @@ except:
    dialog.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("gray")) 
    dialog.run()
    dialog.destroy()
+
 
 
 def add_module( face, lbl, mainbook, glade ):
