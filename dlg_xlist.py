@@ -70,7 +70,7 @@ class XListDialog():
     def build_tree(self, section):
         self.model.clear()
         self.model.append([_("None"),"","",None])
-        node = self.xml.findNode(self.xml.getDoc(),section)[0].children.next 
+        node = self.xml.findNode(self.xml.getDoc(),section)[0].children
         while node != None:
             self.model.append([get_str_val(node.prop("id")), \
                  get_str_val(node.prop("name")), \
