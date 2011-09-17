@@ -62,8 +62,6 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         self.fentry = self.glade.get_widget("io_filter_entry")
         self.filter_cb_case = self.glade.get_widget("io_filter_cb_case")
         
-        
-        
         # подключение к редактору узлов (для отслеживания изменений в списке узлов)
         n_editor = conf.n_editor()
         if n_editor != None:
@@ -117,30 +115,18 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
 
         # Список параметров для карты
         # ["class field","glade name","xmlname",save_xml_ignore_flag]
-        '''        
         self.card_params=[ \
 #            ["dlg_card","io_dlg_card","name",False], \
             ["card_num","io_sp_cardnum","card",False], \
             ["card_ba","io_baddr","baddr",False], \
             ["cb_cardlist","io_cb_cardlist","name",False], \
             ["iodev","io_dev","dev",False], \
-            ["subdev1","io_subdev1","subdev1",False], \
-            ["subdev2","io_subdev2","subdev2",False], \
-            ["subdev3","io_subdev3","subdev3",False], \
-            ["subdev4","io_subdev4","subdev4",False], \
             ["mod_params","io_params","module_params",False], \
-            ["mod_name","io_module","module",False], \
-            ["mod_params_btn","io_params_btn",None,True] \
+            ["mod_name","io_module","module",False] \
         ]
-        self.init_glade_elements(self.card_params,self.glade)        
+        self.init_builder_elements(self.card_params,self.editor)
         #self.dlg_card.set_title(_("Select card"))
-
-        self.subdev1.set_sensitive(False)
-        self.subdev2.set_sensitive(False)
-        self.subdev3.set_sensitive(False)
-        self.subdev4.set_sensitive(False)
-        '''
-        
+       
         # Список параметров для канала
         # ["class field","glade name","xmlname",save_xml_ignore_flag]
         self.channel_params=[ \
@@ -707,19 +693,16 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
 
     def on_io_cb_cardlist_changed(self,cb):
 
-        self.card_param_set_sensitive()
-
         (model, iter) = self.tv.get_selection().get_selected()
         if not iter: return
 
         cnode = model.get_value(iter,fid.xmlnode)
 
         #print "******* SELECT CARD: %s (%s)"%(cb.get_model().get_value(cb.get_active_iter(),0),cb.get_model().get_value(cb.get_active_iter(),1))
-        module = cb.get_model().get_value(cb.get_active_iter(),1)
-        face = module.get_face()
+        editor = cb.get_model().get_value(cb.get_active_iter(),1)
+        face = editor.get_face()
         face.reparent(self.cardmain)
-
-        #self.set_module_params(cnode,cname)
+        editor.init(self.editor,cnode)
     
     def on_io_params_btn_clicked(self,btn):
         cname = self.cb_cardlist.get_active_text().upper()

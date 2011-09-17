@@ -22,6 +22,11 @@ class Card_UNIO96():
 
         self.clist = self.build_channel_list()
 
+        self.node_xmlnode = None
+        self.editor_ui = None
+
+        self.module_name = "unioxx5a"
+
     def get_name( self ):
         return module_name()
 
@@ -41,6 +46,14 @@ class Card_UNIO96():
 
         return clist
 
+    def init(self, editor_ui, xmlnode):
+        self.editor_ui = editor_ui
+        ent_mod_name  = editor_ui.get_object("io_module")
+        ent_mod_param  = editor_ui.get_object("io_params")
+
+        ent_mod_name.set_text(self.module_name)
+        ent_mod_param.set_text("")
+    
     def get_channel_list( self ):
         return self.clist
         

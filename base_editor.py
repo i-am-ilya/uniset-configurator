@@ -42,6 +42,14 @@ class BaseEditor():
                 continue
             self.__dict__[e[0]] = glade.get_widget(e[1])
 
+    def init_builder_elements(self, elist, builder):
+        ''' Инициализация переменных из ui файла...
+            по списку элементов вида [class field,gladename,xmlname,xml_save_ignore]'''
+        for e in elist:
+            if e[0] == None or e[1] == None:
+                continue
+            self.__dict__[e[0]] = builder.get_object(e[1])
+
     def init_elements_value(self,elist,snode):
         ''' Инициализация переменных из xml
             по списку элементов вида [class field,gladename,xmlname,xml_save_ignore]'''
