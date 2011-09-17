@@ -1172,7 +1172,6 @@ DI32
 DO32
 UNIO48
 UNIO96</property>
-            <signal name="changed" handler="on_io_cb_cardlist_changed"/>
           </widget>
           <packing>
             <property name="expand">False</property>

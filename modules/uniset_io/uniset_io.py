@@ -33,7 +33,20 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
 
         base_editor.BaseEditor.__init__(self,conf)
         gtk.Viewport.__init__(self)
-        #gtk.VBox.__init__(self)
+
+        self.ioconf = uniset_io_conf.IOConfig(conf.xml,conf.datdir)
+
+        self.editor = gtk.Builder()
+        self.editor.add_from_file(conf.datdir+"editor.ui")
+        self.editor.connect_signals(self)
+        self.cardlist = self.editor.get_object("cardlist")
+        self.cardmain = self.editor.get_object("cardmain")
+        cmodel = gtk.ListStore(str, object)
+        self.cardlist.set_model(cmodel)
+        for k, v in self.ioconf.cardlist.items():
+            cmodel.append([v.get_name(),v])
+
+        self.dlg_card = self.editor.get_object("dlg_card")
 
         self.glade = gtk.glade.XML(conf.datdir+"uniset-io.glade")
         self.glade.signal_autoconnect(self)
@@ -49,7 +62,7 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         self.fentry = self.glade.get_widget("io_filter_entry")
         self.filter_cb_case = self.glade.get_widget("io_filter_cb_case")
         
-        self.ioconf = uniset_io_conf.IOConfig(conf.xml,conf.datdir)
+        
         
         # подключение к редактору узлов (для отслеживания изменений в списке узлов)
         n_editor = conf.n_editor()
@@ -104,8 +117,9 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
 
         # Список параметров для карты
         # ["class field","glade name","xmlname",save_xml_ignore_flag]
+        '''        
         self.card_params=[ \
-            ["dlg_card","io_dlg_card","name",False], \
+#            ["dlg_card","io_dlg_card","name",False], \
             ["card_num","io_sp_cardnum","card",False], \
             ["card_ba","io_baddr","baddr",False], \
             ["cb_cardlist","io_cb_cardlist","name",False], \
@@ -119,12 +133,13 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
             ["mod_params_btn","io_params_btn",None,True] \
         ]
         self.init_glade_elements(self.card_params,self.glade)        
-        self.dlg_card.set_title(_("Select card"))
+        #self.dlg_card.set_title(_("Select card"))
 
         self.subdev1.set_sensitive(False)
         self.subdev2.set_sensitive(False)
         self.subdev3.set_sensitive(False)
         self.subdev4.set_sensitive(False)
+        '''
         
         # Список параметров для канала
         # ["class field","glade name","xmlname",save_xml_ignore_flag]
@@ -691,11 +706,20 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
             it = model.iter_next(it)
 
     def on_io_cb_cardlist_changed(self,cb):
+
         self.card_param_set_sensitive()
+
         (model, iter) = self.tv.get_selection().get_selected()
         if not iter: return
+
         cnode = model.get_value(iter,fid.xmlnode)
-        self.set_module_params(cnode)
+
+        #print "******* SELECT CARD: %s (%s)"%(cb.get_model().get_value(cb.get_active_iter(),0),cb.get_model().get_value(cb.get_active_iter(),1))
+        module = cb.get_model().get_value(cb.get_active_iter(),1)
+        face = module.get_face()
+        face.reparent(self.cardmain)
+
+        #self.set_module_params(cnode,cname)
     
     def on_io_params_btn_clicked(self,btn):
         cname = self.cb_cardlist.get_active_text().upper()
@@ -730,6 +754,7 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         
         
     def card_param_set_sensitive(self):
+        '''
         cname = self.cb_cardlist.get_active_text()
         if cname != None:
             cname = cname.upper()
@@ -762,11 +787,12 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
            self.mod_params_btn.set_sensitive(True)
         else:
            self.mod_params_btn.set_sensitive(False)
+        '''
 
-    def set_module_params(self,cardnode):
-        p = self.ioconf.get_module_params_for_card(cardnode)
-        self.mod_name.set_text(p[0])
-        self.mod_params.set_text(p[1])
+    def set_module_params(self,cardnode,cname):
+        p = self.ioconf.get_module_params_for_card(cardnode,cname)
+        #self.mod_name.set_text(p[0])
+        #self.mod_params.set_text(p[1])
 
     def io_sp_cardnum_value_changed_cb(self,sp):
         self.iodev.set_text("/dev/comedi%d"%self.card_num.get_value_as_int())

@@ -9,6 +9,7 @@ from gettext import gettext as _
 import re
 import datetime
 import UniXML
+import os
 from global_conf import *
 
 '''
@@ -18,10 +19,26 @@ from global_conf import *
 '''
 class IOConfig():
 
-    def __init__(self,xml,datdir,pic_CHAN=None):
+    def __init__(self,xml,datdir):
         self.xml = xml
         self.datdir = datdir
+        self.templdir = self.datdir + "templates/"
+        self.moddir = self.datdir + "cards/"
+        self.cardlist = dict()
+        self.load_cards_modules()
     
+    def load_cards_modules(self):
+        #modlist=[]
+        sys.path.append(self.moddir[:-1])
+        for name in os.listdir(self.moddir):
+            if name.startswith('card_') == False or name.endswith('.py') == False:
+               continue
+
+            #modlist.append(name)
+            m = __import__(name[:-3],globals())
+            editor = m.create_module(self.moddir)
+            self.cardlist[name] = editor
+
     def like_ai16(self,cname):
         if cname == "AI16-5A-3" or cname == "AIC123XX/16" or \
            cname == "AIC120/16" or cname == "AIC121/16" or cname=="AI16":
@@ -249,7 +266,7 @@ class IOConfig():
                 modlist_ignore[m] = m
          
          gdate = datetime.datetime.today()
-         ctx = open( self.datdir + "ctl-comedi-skel.sh" ).readlines()
+         ctx = open( self.templdir + "ctl-comedi-skel.sh" ).readlines()
          out = open(fname,"w")
          for l in ctx:
              if re.search("{MOD_PROBE}",l):
@@ -378,7 +395,7 @@ if __name__ == "__main__":
        print "<iocards> not found for node='%s' (confile: %s)" % (nodename,confile)
        exit(1)
 
-    ioconf = IOConfig(xml,templdir)
+    ioconf = IOConfig(xml,datdir)
 
     if outfile == "":
        outfile = ioconf.get_outfilename(xmlnode)
