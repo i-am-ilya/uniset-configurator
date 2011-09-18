@@ -48,6 +48,7 @@
               <object class="GtkComboBox" id="cbox_subdev1">
                 <property name="visible">True</property>
                 <property name="model">liststore1</property>
+                <signal name="changed" handler="on_unioxx_subdev_changed"/>
                 <child>
                   <object class="GtkCellRendererText" id="cellrenderertext1"/>
                   <attributes>
@@ -97,6 +98,7 @@
               <object class="GtkComboBox" id="cbox_subdev2">
                 <property name="visible">True</property>
                 <property name="model">liststore1</property>
+                <signal name="changed" handler="on_unioxx_subdev_changed"/>
                 <child>
                   <object class="GtkCellRendererText" id="cellrenderertext2"/>
                   <attributes>
@@ -115,6 +117,7 @@
               <object class="GtkComboBox" id="cbox_subdev3">
                 <property name="visible">True</property>
                 <property name="model">liststore1</property>
+                <signal name="changed" handler="on_unioxx_subdev_changed"/>
                 <child>
                   <object class="GtkCellRendererText" id="cellrenderertext3"/>
                   <attributes>
@@ -133,6 +136,7 @@
               <object class="GtkComboBox" id="cbox_subdev4">
                 <property name="visible">True</property>
                 <property name="model">liststore1</property>
+                <signal name="changed" handler="on_unioxx_subdev_changed"/>
                 <child>
                   <object class="GtkCellRendererText" id="cellrenderertext4"/>
                   <attributes>

@@ -39,14 +39,19 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         self.editor = gtk.Builder()
         self.editor.add_from_file(conf.datdir+"editor.ui")
         self.editor.connect_signals(self)
+        self.dlg_card = self.editor.get_object("dlg_card")
         self.cardlist = self.editor.get_object("cardlist")
         self.cardmain = self.editor.get_object("cardmain")
         cmodel = gtk.ListStore(str, object)
         self.cardlist.set_model(cmodel)
         for k, v in self.ioconf.cardlist.items():
-            cmodel.append([v.get_name(),v])
-
-        self.dlg_card = self.editor.get_object("dlg_card")
+            #self.cardmain.add(v.get_face())
+            v.get_face().reparent(self.cardmain)
+            v.get_face().hide()
+            for c in v.get_supported_cards():
+                cmodel.append([c,v])
+            
+        
 
         self.glade = gtk.glade.XML(conf.datdir+"uniset-io.glade")
         self.glade.signal_autoconnect(self)
@@ -691,7 +696,7 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
                 return it
             it = model.iter_next(it)
 
-    def on_io_cb_cardlist_changed(self,cb):
+    def on_io_cardlist_changed(self,cb):
 
         (model, iter) = self.tv.get_selection().get_selected()
         if not iter: return
@@ -699,10 +704,21 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         cnode = model.get_value(iter,fid.xmlnode)
 
         #print "******* SELECT CARD: %s (%s)"%(cb.get_model().get_value(cb.get_active_iter(),0),cb.get_model().get_value(cb.get_active_iter(),1))
+        cname = cb.get_model().get_value(cb.get_active_iter(),0)
         editor = cb.get_model().get_value(cb.get_active_iter(),1)
         face = editor.get_face()
         face.reparent(self.cardmain)
-        editor.init(self.editor,cnode)
+        editor.init(cname,self.editor,cnode)
+
+        it = cb.get_model().get_iter_first()
+        while it is not None:
+            e = cb.get_model().get_value(it,1)
+            if e.check_support(cname):
+               e.get_face().show()
+            else:
+               e.get_face().hide()
+
+            it = cb.get_model().iter_next(it)
     
     def on_io_params_btn_clicked(self,btn):
         cname = self.cb_cardlist.get_active_text().upper()

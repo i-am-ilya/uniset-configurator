@@ -26,9 +26,23 @@ class Card_UNIO96():
         self.editor_ui = None
 
         self.module_name = "unioxx5a"
+        cbox1 = self.builder.get_object("cbox_subdev1")
+        cbox2 = self.builder.get_object("cbox_subdev2")
+        cbox3 = self.builder.get_object("cbox_subdev3")
+        cbox4 = self.builder.get_object("cbox_subdev4")
+        cbox1.set_active_iter(cbox1.get_model().get_iter_first())
+        cbox2.set_active_iter(cbox2.get_model().get_iter_first())
+        cbox3.set_active_iter(cbox3.get_model().get_iter_first())
+        cbox4.set_active_iter(cbox4.get_model().get_iter_first())
 
-    def get_name( self ):
-        return module_name()
+    def get_supported_cards( self ):
+        return ["UNIO96","UNIO48"]
+
+    def check_support( self, cname ):
+        if cname.upper() in self.get_supported_cards():
+           return True
+
+        return False
 
     def get_face( self ):
         return self.builder.get_object("main")
@@ -46,7 +60,7 @@ class Card_UNIO96():
 
         return clist
 
-    def init(self, editor_ui, xmlnode):
+    def init( self, cname, editor_ui, xmlnode ):
         self.editor_ui = editor_ui
         ent_mod_name  = editor_ui.get_object("io_module")
         ent_mod_param  = editor_ui.get_object("io_params")
@@ -94,8 +108,24 @@ class Card_UNIO96():
 
         return s
 
-def create_module(datdir):
+    def on_unioxx_subdev_changed(self,cb):
+        cbox1 = self.builder.get_object("cbox_subdev1")
+        cbox2 = self.builder.get_object("cbox_subdev2")
+        cbox3 = self.builder.get_object("cbox_subdev3")
+        cbox4 = self.builder.get_object("cbox_subdev4")
+
+        s = "%s,%s,%s,%s"%(
+           self.get_typenum_for_unio_subdev( cbox1.get_model().get_value(cbox1.get_active_iter(),0) ),
+           self.get_typenum_for_unio_subdev( cbox2.get_model().get_value(cbox2.get_active_iter(),0) ),
+           self.get_typenum_for_unio_subdev( cbox3.get_model().get_value(cbox3.get_active_iter(),0) ),
+           self.get_typenum_for_unio_subdev( cbox4.get_model().get_value(cbox4.get_active_iter(),0) )
+        )
+
+        ent_mod_param  = self.editor_ui.get_object("io_params")
+        ent_mod_param.set_text(s)
+
+def create_editor(datdir):
     return Card_UNIO96(datdir)
 
-def module_name():
-    return "UNIO96"
+def editor_name():
+    return "UNIOxx"

@@ -36,7 +36,7 @@ class IOConfig():
 
             #modlist.append(name)
             m = __import__(name[:-3],globals())
-            editor = m.create_module(self.moddir)
+            editor = m.create_editor(self.moddir)
             self.cardlist[name] = editor
 
     def like_ai16(self,cname):

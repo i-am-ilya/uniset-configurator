@@ -18,7 +18,7 @@
             <property name="visible">True</property>
             <property name="model">liststore1</property>
             <property name="button_sensitivity">on</property>
-            <signal name="changed" handler="on_io_cb_cardlist_changed"/>
+            <signal name="changed" handler="on_io_cardlist_changed"/>
             <child>
               <object class="GtkCellRendererText" id="cellrenderertext1"/>
               <attributes>
@@ -167,12 +167,6 @@
                   </packing>
                 </child>
                 <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
                   <object class="GtkEntry" id="io_params">
                     <property name="visible">True</property>
                     <property name="sensitive">False</property>
@@ -187,6 +181,12 @@
                     <property name="top_attach">4</property>
                     <property name="bottom_attach">5</property>
                   </packing>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
                 </child>
               </object>
               <packing>
