@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+<interface>
+  <requires lib="gtk+" version="2.20"/>
+  <!-- interface-naming-policy project-wide -->
+  <object class="GtkWindow" id="window1">
+    <child>
+      <object class="GtkVBox" id="main">
+        <property name="visible">True</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">4</property>
+        <child>
+          <object class="GtkLabel" id="lblName">
+            <property name="visible">True</property>
+            <attributes>
+              <attribute name="weight" value="bold"/>
+            </attributes>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkTable" id="table1">
+            <property name="visible">True</property>
+            <property name="n_rows">2</property>
+            <property name="n_columns">2</property>
+            <property name="column_spacing">4</property>
+            <property name="row_spacing">4</property>
+            <child>
+              <object class="GtkLabel" id="label2">
+                <property name="visible">True</property>
+                <property name="xalign">1</property>
+                <property name="label" translatable="yes">&#x432;&#x440;&#x435;&#x43C;&#x44F; &#x43F;&#x43E;&#x434;&#x430;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x44F;
+&#x434;&#x440;&#x435;&#x431;&#x435;&#x437;&#x433;&#x430;, &#x43C;&#x43A;&#x441;&#x435;&#x43A;:</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkComboBox" id="cbox_jartime">
+                <property name="visible">True</property>
+                <property name="model">liststore1</property>
+                <property name="active">0</property>
+                <signal name="changed" handler="on_cbox_jar_changed"/>
+                <child>
+                  <object class="GtkCellRendererText" id="cellrenderertext1"/>
+                  <attributes>
+                    <attribute name="text">0</attribute>
+                  </attributes>
+                </child>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="right_attach">2</property>
+              </packing>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+          </object>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+      </object>
+    </child>
+  </object>
+  <object class="GtkListStore" id="liststore1">
+    <columns>
+      <!-- column-name name -->
+      <column type="gchararray"/>
+      <!-- column-name param -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">None</col>
+        <col id="1" translatable="yes"></col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">40 nsec</col>
+        <col id="1" translatable="yes">0</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">400 nsec</col>
+        <col id="1" translatable="yes">1</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">4.5 usec</col>
+        <col id="1" translatable="yes">2</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">140 usec</col>
+        <col id="1" translatable="yes">3</col>
+      </row>
+    </data>
+  </object>
+</interface>
