@@ -40,11 +40,11 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         self.editor.add_from_file(conf.datdir+"editor.ui")
         self.editor.connect_signals(self)
         self.dlg_card = self.editor.get_object("dlg_card")
-        self.cardlist = self.editor.get_object("cardlist")
+        self.cardlist = self.editor.get_object("io_cardlist")
         self.cardmain = self.editor.get_object("cardmain")
         cmodel = gtk.ListStore(str, object)
         self.cardlist.set_model(cmodel)
-        for k, v in self.ioconf.cardlist.items():
+        for k, v in self.ioconf.editors.items():
             #self.cardmain.add(v.get_face())
             v.get_face().reparent(self.cardmain)
             v.get_face().hide()
@@ -124,7 +124,7 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
 #            ["dlg_card","io_dlg_card","name",False], \
             ["card_num","io_sp_cardnum","card",False], \
             ["card_ba","io_baddr","baddr",False], \
-            ["cb_cardlist","io_cb_cardlist","name",False], \
+            ["cb_cardlist","io_cardlist","name",False], \
             ["iodev","io_dev","dev",False], \
             ["mod_params","io_params","module_params",False], \
             ["mod_name","io_module","module",False] \
@@ -298,7 +298,11 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
     
     def build_channels_list(self,cardnode,model,iter):
         img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_CHAN)
-        self.ioconf.build_channels_list(cardnode,model,iter,img)
+        clst = self.ioconf.get_channel_list(cardnode)
+        for c in clst:
+            model.append(iter, [c[1],"",None,"channel",str(c[0]),str(c[3]),img])
+
+        #self.ioconf.build_channels_list(cardnode,model,iter,img)
 
     def init_channels(self):
         # проходим по <sensors> и если поля заполнены ищем в нашем TreeView
@@ -596,7 +600,8 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
 
         self.iodev.set_text("/dev/comedi%d"%self.card_num.get_value_as_int())
 
-        cname = self.cb_cardlist.get_active_text()
+        c_it = self.cardlist.get_active_iter()
+        cname = self.cardlist.get_model().get_value(c_it,0)
         if cname == "":
            print "WARNING: add empty card name.. "
            return
@@ -611,15 +616,9 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
                return
  
         n = cnode.newChild(None,"item",None)
-        
+        editor = self.cardlist.get_model().get_value(c_it,1)
+        editor.save(n,cname)
         self.save2xml_elements_value(self.card_params,n)
-        # т.к. название и параметры модуля определяются по xmlnode
-        # то приходится сперва "обновить" значения в xmlnode
-        # потом "определить" параметры модуля, а потом
-        # второй раз сохранить, с уже обновленнёми параметрами модуля
-        self.set_module_params(n)
-        self.save2xml_elements_value(self.card_params,n)
-
         self.conf.mark_changes()
         img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_CARD)
 
@@ -788,11 +787,6 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
            self.mod_params_btn.set_sensitive(False)
         '''
 
-    def set_module_params(self,cardnode,cname):
-        p = self.ioconf.get_module_params_for_card(cardnode,cname)
-        #self.mod_name.set_text(p[0])
-        #self.mod_params.set_text(p[1])
-
     def io_sp_cardnum_value_changed_cb(self,sp):
         self.iodev.set_text("/dev/comedi%d"%self.card_num.get_value_as_int())
 
@@ -803,11 +797,12 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         cnode = model.get_value(iter,2)
         self.init_elements_value(self.card_params,cnode)
         self.card_param_set_sensitive()
-        self.set_module_params(cnode)
         # при редактировании отключаем выбор, т.к.
         # сменить тип карты можно только удалив старую
         # (со всеми привязками и т.п)
         self.cb_cardlist.set_sensitive(False)
+        editor = self.cb_cardlist.get_model().get_value(self.cb_cardlist.get_active_iter(),1)
+        editor.init(self.cb_cardlist.get_active_text(),self.editor,cnode)
 
         if self.iodev.get_text() == "":
            self.iodev.set_text("/dev/comedi%d"%self.card_num.get_value_as_int())
@@ -843,13 +838,14 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
 
             break                
 
+        
+        editor.save(cnode,self.cb_cardlist.get_active_text())
         self.save2xml_elements_value(self.card_params,cnode)
         i_iter = self.fmodel.convert_iter_to_child_iter(iter)
         self.model.set_value(i_iter,fid.num,str(cnum))
         info  = 'card=' + str(cnode.prop("card"))
         info  = info + ' BA=' + str(cnode.prop("baddr"))
         self.model.set_value(i_iter,fid.param,info)
-        self.set_module_params(cnode)
         self.update_card_info_for_sensors(i_iter,cnode)
         self.conf.mark_changes()
 

@@ -25,19 +25,29 @@ class IOConfig():
         self.templdir = self.datdir + "templates/"
         self.moddir = self.datdir + "cards/"
         self.cardlist = dict()
-        self.load_cards_modules()
+        self.editors = dict()
+        self.load_card_editors()
     
-    def load_cards_modules(self):
+    def load_card_editors(self):
         #modlist=[]
         sys.path.append(self.moddir[:-1])
         for name in os.listdir(self.moddir):
             if name.startswith('card_') == False or name.endswith('.py') == False:
                continue
 
-            #modlist.append(name)
             m = __import__(name[:-3],globals())
             editor = m.create_editor(self.moddir)
-            self.cardlist[name] = editor
+            self.editors[m] = editor
+            for cname in editor.get_supported_cards():
+                self.cardlist[cname] = editor
+
+    def get_channel_list(self, cardnode):
+        cname = cardnode.prop("name").upper()
+        if cname in self.cardlist:
+           editor = self.cardlist[cname]
+           return editor.get_channel_list(cname)
+
+        return [[0,"Unknown CARD","DI",0]]
 
     def like_ai16(self,cname):
         if cname == "AI16-5A-3" or cname == "AIC123XX/16" or \

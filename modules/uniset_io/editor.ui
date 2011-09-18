@@ -14,7 +14,7 @@
         <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child>
-          <object class="GtkComboBox" id="cardlist">
+          <object class="GtkComboBox" id="io_cardlist">
             <property name="visible">True</property>
             <property name="model">liststore1</property>
             <property name="button_sensitivity">on</property>
