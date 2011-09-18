@@ -32,7 +32,7 @@ class APSPanelConfig():
         node = self.xml.firstNode(self.settings_node.children)
         while node != None:
             if node.name.upper() == "APSPANEL":
-               name = get_str_val(node.prop("name"))
+               name = to_str(node.prop("name"))
                if pname == "ALL":
                   fname = "apspanel-%s-test.xml"%name.lower()
                   self.gen_test_skel_by_name(node,name,fname)
@@ -98,7 +98,7 @@ class APSPanelConfig():
         res=""
         node = self.xml.firstNode(p_node.children)
         while node != None:
-            nohorn= get_int_val(node.prop("nohorn"))
+            nohorn= to_int(node.prop("nohorn"))
             if nohorn != 0:
                nohorn = "-nohorn"
             else:

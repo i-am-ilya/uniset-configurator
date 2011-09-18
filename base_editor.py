@@ -58,15 +58,15 @@ class BaseEditor():
                 continue
             cname = str(self.__dict__[e[0]].__class__.__name__)
             if cname == "SpinButton":
-                self.__dict__[e[0]].set_value(get_int_val(snode.prop(e[2])))
+                self.__dict__[e[0]].set_value(to_int(snode.prop(e[2])))
             elif cname == "Entry":
-                self.__dict__[e[0]].set_text(get_str_val(snode.prop(e[2])))
+                self.__dict__[e[0]].set_text(to_str(snode.prop(e[2])))
             elif cname == "CheckButton":
-                self.__dict__[e[0]].set_active(get_int_val(snode.prop(e[2])))
+                self.__dict__[e[0]].set_active(to_int(snode.prop(e[2])))
             elif cname == "ComboBox":
-                self.set_combobox_element(self.__dict__[e[0]], get_str_val(snode.prop(e[2])))
+                self.set_combobox_element(self.__dict__[e[0]], to_str(snode.prop(e[2])))
             elif cname == "Label":
-                self.__dict__[e[0]].set_text(get_str_val(snode.prop(e[2])))
+                self.__dict__[e[0]].set_text(to_str(snode.prop(e[2])))
 
     def validate_elements(self,elist):
         ''' Проверка корректности данны 

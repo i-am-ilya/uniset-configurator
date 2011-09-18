@@ -189,7 +189,7 @@ class IOConfig():
     def get_params_for_aixx5a(self,cardnode):
         # последовательность параметров см. исходники модуля aixx5a
         cname = cardnode.prop("name").upper()
-        avr = get_str_val(cardnode.prop("average"))
+        avr = to_str(cardnode.prop("average"))
         if avr == "":
            avr = "1"
         
@@ -222,7 +222,7 @@ class IOConfig():
 #            maxnum = 3
         for i in range(1,maxnum):
           p = "subdev" + str(i)
-          sname = get_str_val(cardnode.prop(p))
+          sname = to_str(cardnode.prop(p))
           if s != "":
              s = s + "," + self.get_typenum_for_unio_subdev(sname.upper())
           else:
@@ -256,19 +256,19 @@ class IOConfig():
 
          while xmlnode != None:
             
-#            if get_str_val(xmlnode.prop("ignore")) != "":
+#            if to_str(xmlnode.prop("ignore")) != "":
 #               xmlnode = self.xml.nextNode(xmlnode)
 #               continue         
             
-            mod_name = get_str_val(xmlnode.prop("module"))
-            mod_params = get_str_val(xmlnode.prop("module_params"))
-            IGN = get_str_val(xmlnode.prop("ignore"))
+            mod_name = to_str(xmlnode.prop("module"))
+            mod_params = to_str(xmlnode.prop("module_params"))
+            IGN = to_str(xmlnode.prop("ignore"))
             if mod_name != "":
                modlist_all[mod_name] = mod_name
                if IGN == "":
                   modlist[mod_name] = mod_name
                
-            cardsinfo.append( [mod_name,mod_params,get_str_val(xmlnode.prop("dev")),get_str_val(xmlnode.prop("baddr")),IGN] )
+            cardsinfo.append( [mod_name,mod_params,to_str(xmlnode.prop("dev")),to_str(xmlnode.prop("baddr")),IGN] )
             xmlnode = self.xml.nextNode(xmlnode)
 
          for m in modlist_all:

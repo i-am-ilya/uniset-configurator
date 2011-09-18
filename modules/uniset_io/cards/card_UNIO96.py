@@ -3,24 +3,14 @@ from gettext import gettext as _
 import gtk
 import gobject
 import UniXML
-import base_editor
+import simple_card
 from global_conf import *
 
-class cid():
-  cnum = 0
-  cname = 1
-  iotype = 2
-  subdev = 3
-
-  
-class Card_UNIO96():
+class Card_UNIO96(simple_card.SimpleCard):
 
     def __init__(self,datdir,uifile="card_UNIO96.ui"):
 
-        self.builder = gtk.Builder()
-        uifile = datdir+uifile
-        self.builder.add_from_file(uifile)
-        self.builder.connect_signals(self)
+        simple_card.SimpleCard.__init__(self,datdir,uifile)
 
         self.cname = "UNIO86"
         self.clist = self.build_channel_list(self.cname)
@@ -28,15 +18,16 @@ class Card_UNIO96():
         self.node_xmlnode = None
         self.editor_ui = None
 
+        self.params=[
+            ["cbox1","cbox_subdev1","subdev1",False],
+            ["cbox2","cbox_subdev2","subdev2",False],
+            ["cbox3","cbox_subdev3","subdev3",False],
+            ["cbox4","cbox_subdev4","subdev4",False],
+        ]
+        self.init_builder_elements(self.params,self.builder)
+
         self.module_name = "unioxx5a"
-        self.cbox1 = self.builder.get_object("cbox_subdev1")
-        self.cbox2 = self.builder.get_object("cbox_subdev2")
-        self.cbox3 = self.builder.get_object("cbox_subdev3")
-        self.cbox4 = self.builder.get_object("cbox_subdev4")
-        self.cbox1.set_active_iter(self.cbox1.get_model().get_iter_first())
-        self.cbox2.set_active_iter(self.cbox2.get_model().get_iter_first())
-        self.cbox3.set_active_iter(self.cbox3.get_model().get_iter_first())
-        self.cbox4.set_active_iter(self.cbox4.get_model().get_iter_first())
+        self.default_init(self.cname)
 
         # номера см. исходники модуля unioxx
         #   0 - no use
@@ -51,15 +42,6 @@ class Card_UNIO96():
 
     def get_supported_cards( self ):
         return ["UNIO96","UNIO48"]
-
-    def check_support( self, cname ):
-        if cname.upper() in self.get_supported_cards():
-           return True
-
-        return False
-
-    def get_face( self ):
-        return self.builder.get_object("main")
 
     def build_channel_list( self, cname ):
         clist=[]
@@ -78,46 +60,35 @@ class Card_UNIO96():
 
         return clist
 
-    def init( self, cname, editor_ui, xmlnode ):
-        self.editor_ui = editor_ui
-        ent_mod_name  = editor_ui.get_object("io_module")
-        ent_mod_param  = editor_ui.get_object("io_params")
+    def default_init(self,cname):
+        self.cbox1.set_active(0)
+        self.cbox2.set_active(0)
+        self.cbox3.set_active(0)
+        self.cbox4.set_active(0)
 
-        ent_mod_name.set_text(self.module_name)
-        ent_mod_param.set_text("")
-        self.cname = cname
-        be = base_editor.BaseEditor(None)
-        be.set_combobox_element(self.cbox1,get_str_val(xmlnode.prop("subdev1")))
-        be.set_combobox_element(self.cbox2,get_str_val(xmlnode.prop("subdev2")))
-        be.set_combobox_element(self.cbox3,get_str_val(xmlnode.prop("subdev3")))
-        be.set_combobox_element(self.cbox4,get_str_val(xmlnode.prop("subdev4")))
-        
-        self.on_unioxx_subdev_changed(self.builder.get_object("cbox_subdev1"))
+    def init( self, cname, editor_ui, xmlnode ):
+ 
+        self.simple_init(cname,editor_ui,xmlnode)
+
+        # имтитируем изменения, чтобы обновилась запись в mod_param
+        self.on_unioxx_subdev_changed(self.cbox1)
+
+        self.cbox1.set_sensitive(True)
+        self.cbox2.set_sensitive(True)
+        if cname == "UNIO48":
+           self.cbox3.set_active(0)
+           self.cbox4.set_active(0)
+           self.cbox3.set_sensitive(False)
+           self.cbox4.set_sensitive(False)
+        else:
+           self.cbox3.set_sensitive(True)
+           self.cbox4.set_sensitive(True)
 
     def save( self, xmlnode, cname ):
-        #xmlnode.setProp("name",self.cname)
-        xmlnode.setProp("subdev1",self.cbox1.get_active_text())
-        xmlnode.setProp("subdev2",self.cbox2.get_active_text())
+        self.simple_save(xmlnode,cname)
         if cname == "UNIO48":
            xmlnode.setProp("subdev3","")
            xmlnode.setProp("subdev4","")
-        else:
-           xmlnode.setProp("subdev3",self.cbox3.get_active_text())
-           xmlnode.setProp("subdev4",self.cbox4.get_active_text())
-
-    def get_channel_list( self, cname ):
-        if cname.upper() != self.cname.upper():
-           self.clist = self.build_channel_list(cname.upper())
-
-        return self.clist
-        
-    def get_iotype( self, channel ):
-        nchan = to
-        for c in self.clist:
-            if c[cid.cnum] == channel:
-               return c[cid.iotype]
-
-        return "DI"
 
     def get_typenum_for_unio_subdev(self,sname):
         for k,v in self.subdev_type.items():
@@ -126,14 +97,14 @@ class Card_UNIO96():
 
         return "0"
 
-    def get_params(self,cardxmlnode):
+    def get_params(self,cnode):
         s = ""
         maxnum = 5
 #        if cardnode.prop("name").upper() == UNIO48:
 #            maxnum = 3
         for i in range(1,maxnum):
           p = "subdev" + str(i)
-          sname = get_str_val(cardxmlnode.prop(p))
+          sname = to_str(cnode.prop(p))
           if s != "":
              s = s + "," + self.get_typenum_for_unio_subdev(sname.upper())
           else:

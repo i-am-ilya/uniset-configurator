@@ -152,7 +152,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
                     self.add_node(cannode,node,n[1])
                     return False
          
-         iter = self.model.append(None,[name,get_str_val(cannode.prop("comment")),None,"net",None,img])
+         iter = self.model.append(None,[name,to_str(cannode.prop("comment")),None,"net",None,img])
          self.netlist.append([name,iter,cannode.prop("comment")])
          self.add_node(cannode,node,iter)
          return True
@@ -360,7 +360,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
         
         s = self.conf.s_dlg().run(self)
         if s != None:
-            lbl.set_text(get_str_val(s.prop("name")))
+            lbl.set_text(to_str(s.prop("name")))
         else:
             lbl.set_text("")
         self.conf.mark_changes()            
@@ -403,7 +403,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
         self.node_name.set_text(node_xmlnode.prop("name"))
         self.init_elements_value(self.node_param_list,cnode)
         self.set_card_type(cnode)
-        self.dlg_card_param.set_text( get_str_val(cnode.prop("module_param")) )
+        self.dlg_card_param.set_text( to_str(cnode.prop("module_param")) )
 #       self.setup_dlg(cnode)
         self.edit_xmlnode = cnode
         self.can_param_is_correct = False

@@ -51,8 +51,8 @@ class CANConfig():
          
          modlist = [] # делаем словарь, чтобы исключить повторяющиеся модули..
          while xmlnode != None:
-            mod_name = get_str_val(xmlnode.prop("module"))
-            mod_params = get_str_val(xmlnode.prop("module_param"))
+            mod_name = to_str(xmlnode.prop("module"))
+            mod_params = to_str(xmlnode.prop("module_param"))
             modlist.append([mod_name, mod_params])
             xmlnode = self.xml.nextNode(xmlnode)
          

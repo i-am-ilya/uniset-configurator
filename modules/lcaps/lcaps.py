@@ -188,13 +188,13 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         while node != None:
             if node.name.upper() == "LCAPS":
                
-               lname = get_str_val(node.prop("name"))
+               lname = to_str(node.prop("name"))
                if lname == "":
                   print '**** Unknown <LCAPS name="?"'
                   node = self.conf.xml.nextNode(node)
                   continue
                
-               numlamps  = get_int_val(node.prop("lamps"))
+               numlamps  = to_int(node.prop("lamps"))
                 
                item_list = self.load_item_dict(node,"orange")
                item_list.update(self.load_item_dict(node,"red"))
@@ -206,7 +206,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
                lc_params['name'] = lname
                lc_params['xmlnode'] = node
                lc_params['list'] = item_list
-               lc_params['numlamps'] = get_int_val(node.prop("lamps"))
+               lc_params['numlamps'] = to_int(node.prop("lamps"))
                
                for sec in self.flamp_sections:
                    fparams = self.flamp_params[sec].copy()
@@ -292,7 +292,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         return node    
     
     def init_sensor(self,xmlnode,prop):
-        name = get_str_val(xmlnode.prop(prop))
+        name = to_str(xmlnode.prop(prop))
         node = None
         if name != "":
            return self.conf.find_sensor(name)
@@ -306,7 +306,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         node = self.conf.xml.firstNode(o_node.children)
         while node != None:
             plist = self.read_item_param(node,l_name)
-            ret[get_int_val(plist[fid.name])] = plist
+            ret[to_int(plist[fid.name])] = plist
             node = self.conf.xml.nextNode(node)
         
         return ret
@@ -322,22 +322,22 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         for i in range(0,fid.maxnum):
             p.append(None)
         
-        p[fid.name] = get_str_val(xmlnode.prop("num"))
+        p[fid.name] = to_str(xmlnode.prop("num"))
         p[fid.flamp] = self.get_light_name(l_name)
-        p[fid.nohorn] = str(get_int_val(xmlnode.prop("nohorn")))
-        p[fid.noconfirm] = str(get_int_val(xmlnode.prop("noconfirm")))
-        p[fid.delay] = str(get_int_val(xmlnode.prop("delay")))
+        p[fid.nohorn] = str(to_int(xmlnode.prop("nohorn")))
+        p[fid.noconfirm] = str(to_int(xmlnode.prop("noconfirm")))
+        p[fid.delay] = str(to_int(xmlnode.prop("delay")))
         p[fid.etype] = "I"
         p[fid.xmlnode] = xmlnode
-        p[fid.s_xmlnode] = self.conf.find_sensor(get_str_val(xmlnode.prop("name")))
-        p[fid.l_xmlnode] = self.conf.find_sensor(get_str_val(xmlnode.prop("lamp")))
+        p[fid.s_xmlnode] = self.conf.find_sensor(to_str(xmlnode.prop("name")))
+        p[fid.l_xmlnode] = self.conf.find_sensor(to_str(xmlnode.prop("lamp")))
         
         if p[fid.s_xmlnode] != None:
            s_node = p[fid.s_xmlnode]
            p[fid.sensor] = str("(%6s)%s" % (s_node.prop("id"),s_node.prop("name")))
-           p[fid.tname] = get_str_val(s_node.prop("textname"))
+           p[fid.tname] = to_str(s_node.prop("textname"))
         else:
-           p[fid.sensor] = get_str_val(xmlnode.prop("name"))
+           p[fid.sensor] = to_str(xmlnode.prop("name"))
            p[fid.tname] = ""
 
         return p
@@ -348,7 +348,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
             p.append(None)
         
         lampname = self.get_lamp_name(lc_name,num)
-        p[fid.name] = get_str_val(num)
+        p[fid.name] = to_str(num)
         p[fid.flamp] = ""
         p[fid.nohorn] = "0"
         p[fid.noconfirm] = "0"
@@ -415,7 +415,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         p[fid.s_xmlnode] = None
         p[fid.l_xmlnode] = None
         if xmlnode != None:
-           p[fid.tname] = get_str_val(xmlnode.prop("comment"))
+           p[fid.tname] = to_str(xmlnode.prop("comment"))
         
         return p
     
@@ -681,7 +681,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
        self.rm_id.set_active(True)
        self.rm_lamps.set_active(True)
        self.rm_helpers.set_active(True)
-       self.rm_title.set_text( str("Удаление '%s'\n/ %s /"%(lc_name,get_str_val(lc_node.prop("comment")))) )
+       self.rm_title.set_text( str("Удаление '%s'\n/ %s /"%(lc_name,to_str(lc_node.prop("comment")))) )
        res = self.dlg_rm.run()
        self.dlg_rm.hide()
        if res != dlg_RESPONSE_OK:
@@ -699,7 +699,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
              self.conf.remove_object(fparams["comm_node"].prop("name"))
        
        if self.rm_lamps.get_active() == True:
-          self.remove_sensors(lc_name,"Lamp", get_int_val(lc_node.prop("lamps")))
+          self.remove_sensors(lc_name,"Lamp", to_int(lc_node.prop("lamps")))
        
        h_postfix = self.comhorn["comm_idname"]
        if self.rm_helpers.get_active() == True:
@@ -752,7 +752,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         if xmlnode != None:
            i_node = xmlnode
            addNew = False
-           if get_str_val(xmlnode.prop("noconfirm")) == "":
+           if to_str(xmlnode.prop("noconfirm")) == "":
               xmlnode.setProp("blink","")
               xmlnode.setProp("onflash","")
               xmlnode.setProp("onhorn","")
@@ -874,7 +874,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
         lc_params = self.lc_list[lc_name]
         lc_node = lc_params['xmlnode']            
 
-        num = get_int_val(self.model.get_value(iter,fid.name))
+        num = to_int(self.model.get_value(iter,fid.name))
         p = self.get_default_item(lc_name,num)
         lc_params['list'][num] = p
 

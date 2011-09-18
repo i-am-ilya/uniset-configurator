@@ -8,6 +8,7 @@ import UniXML
 import configure
 import base_editor
 import uniset_io_conf
+import card_editor
 from global_conf import *
 
 class fid():
@@ -35,23 +36,7 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         gtk.Viewport.__init__(self)
 
         self.ioconf = uniset_io_conf.IOConfig(conf.xml,conf.datdir)
-
-        self.editor = gtk.Builder()
-        self.editor.add_from_file(conf.datdir+"editor.ui")
-        self.editor.connect_signals(self)
-        self.dlg_card = self.editor.get_object("dlg_card")
-        self.cardlist = self.editor.get_object("io_cardlist")
-        self.cardmain = self.editor.get_object("cardmain")
-        cmodel = gtk.ListStore(str, object)
-        self.cardlist.set_model(cmodel)
-        for k, v in self.ioconf.editors.items():
-            #self.cardmain.add(v.get_face())
-            v.get_face().reparent(self.cardmain)
-            v.get_face().hide()
-            for c in v.get_supported_cards():
-                cmodel.append([c,v])
-            
-        
+        self.editor = card_editor.CardEditor(conf,self.ioconf,conf.datdir)
 
         self.glade = gtk.glade.XML(conf.datdir+"uniset-io.glade")
         self.glade.signal_autoconnect(self)
@@ -118,19 +103,6 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         ]
         self.init_glade_elements(self.menu_list,self.glade)
 
-        # Список параметров для карты
-        # ["class field","glade name","xmlname",save_xml_ignore_flag]
-        self.card_params=[ \
-#            ["dlg_card","io_dlg_card","name",False], \
-            ["card_num","io_sp_cardnum","card",False], \
-            ["card_ba","io_baddr","baddr",False], \
-            ["cb_cardlist","io_cardlist","name",False], \
-            ["iodev","io_dev","dev",False], \
-            ["mod_params","io_params","module_params",False], \
-            ["mod_name","io_module","module",False] \
-        ]
-        self.init_builder_elements(self.card_params,self.editor)
-        #self.dlg_card.set_title(_("Select card"))
        
         # Список параметров для канала
         # ["class field","glade name","xmlname",save_xml_ignore_flag]
@@ -559,15 +531,12 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
             print "*** FAILED ELEMENT TYPE " + t
             return
 
-        self.card_param_set_sensitive()
-        
         while True:
-            res = self.dlg_card.run()
-            self.dlg_card.hide()
+            res = self.editor.run()
             if res != dlg_RESPONSE_OK:  
                 return
             # check card number
-            cnum = self.card_num.get_value_as_int()
+            cnum = self.editor.card_num()
             it1 = self.check_cardnum(cnum,node_iter,iter,model)
             if it1 != None:
                msg = "card number='" + str(cnum) + "' " + _("already exist for %s") % model.get_value(it1,fid.name)
@@ -576,7 +545,7 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
                dlg.hide()
                continue
             # check baddr
-            s_baddr = self.card_ba.get_text()
+            s_baddr = self.editor.ba()
             baddr = 0
             if s_baddr != "":
                  try:
@@ -598,10 +567,7 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
 
             break                
 
-        self.iodev.set_text("/dev/comedi%d"%self.card_num.get_value_as_int())
-
-        c_it = self.cardlist.get_active_iter()
-        cname = self.cardlist.get_model().get_value(c_it,0)
+        cname = self.editor.card_name()
         if cname == "":
            print "WARNING: add empty card name.. "
            return
@@ -616,9 +582,7 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
                return
  
         n = cnode.newChild(None,"item",None)
-        editor = self.cardlist.get_model().get_value(c_it,1)
-        editor.save(n,cname)
-        self.save2xml_elements_value(self.card_params,n)
+        self.editor.save(n)
         self.conf.mark_changes()
         img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_CARD)
 
@@ -695,30 +659,7 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
                 return it
             it = model.iter_next(it)
 
-    def on_io_cardlist_changed(self,cb):
-
-        (model, iter) = self.tv.get_selection().get_selected()
-        if not iter: return
-
-        cnode = model.get_value(iter,fid.xmlnode)
-
-        #print "******* SELECT CARD: %s (%s)"%(cb.get_model().get_value(cb.get_active_iter(),0),cb.get_model().get_value(cb.get_active_iter(),1))
-        cname = cb.get_model().get_value(cb.get_active_iter(),0)
-        editor = cb.get_model().get_value(cb.get_active_iter(),1)
-        face = editor.get_face()
-        face.reparent(self.cardmain)
-        editor.init(cname,self.editor,cnode)
-
-        it = cb.get_model().get_iter_first()
-        while it is not None:
-            e = cb.get_model().get_value(it,1)
-            if e.check_support(cname):
-               e.get_face().show()
-            else:
-               e.get_face().hide()
-
-            it = cb.get_model().iter_next(it)
-    
+  
     def on_io_params_btn_clicked(self,btn):
         cname = self.cb_cardlist.get_active_text().upper()
         if cname == None or cname == "":
@@ -750,72 +691,18 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
            
         self.mod_params.set_text(p)
         
-        
-    def card_param_set_sensitive(self):
-        '''
-        cname = self.cb_cardlist.get_active_text()
-        if cname != None:
-            cname = cname.upper()
-         
-        if cname == "UNIO96":
-            self.subdev1.set_sensitive(True)
-            self.subdev2.set_sensitive(True)
-            self.subdev3.set_sensitive(True)
-            self.subdev4.set_sensitive(True)
-        elif cname == "UNIO48":
-            self.subdev1.set_sensitive(True)
-            self.subdev2.set_sensitive(True)
-            self.subdev3.set_sensitive(False)
-            self.subdev4.set_sensitive(False)
-            self.set_combobox_element(self.subdev3,"None")
-            self.set_combobox_element(self.subdev4,"None")
-        else:
-            self.set_combobox_element(self.subdev1,"None")
-            self.set_combobox_element(self.subdev2,"None")
-            self.set_combobox_element(self.subdev3,"None")
-            self.set_combobox_element(self.subdev4,"None")
-            self.subdev1.set_sensitive(False)
-            self.subdev2.set_sensitive(False)
-            self.subdev3.set_sensitive(False)
-            self.subdev4.set_sensitive(False)
-        
-        if cname == "AI16-5A-3" or cname == "AIC123XX" or cname == "AIC120" or cname == "AIC121":
-           self.mod_params_btn.set_sensitive(True)
-        elif cname == "UNIO48" or cname == "UNIO96":
-           self.mod_params_btn.set_sensitive(True)
-        else:
-           self.mod_params_btn.set_sensitive(False)
-        '''
-
-    def io_sp_cardnum_value_changed_cb(self,sp):
-        self.iodev.set_text("/dev/comedi%d"%self.card_num.get_value_as_int())
-
     def on_edit_card_activate(self,menuitem):
         (model, iter) = self.tv.get_selection().get_selected()
         if not iter: return
 
         cnode = model.get_value(iter,2)
-        self.init_elements_value(self.card_params,cnode)
-        self.card_param_set_sensitive()
-        # при редактировании отключаем выбор, т.к.
-        # сменить тип карты можно только удалив старую
-        # (со всеми привязками и т.п)
-        self.cb_cardlist.set_sensitive(False)
-        editor = self.cb_cardlist.get_model().get_value(self.cb_cardlist.get_active_iter(),1)
-        editor.init(self.cb_cardlist.get_active_text(),self.editor,cnode)
-
-        if self.iodev.get_text() == "":
-           self.iodev.set_text("/dev/comedi%d"%self.card_num.get_value_as_int())
-
         while True:
-            res = self.dlg_card.run()
-            self.dlg_card.hide()
-            self.cb_cardlist.set_sensitive(True)
+            res = self.editor.run(cnode)
             if res != dlg_RESPONSE_OK:
                 return
             
             # check card number
-            cnum = self.card_num.get_value_as_int()
+            cnum = self.editor.card_num()
             it1 = self.check_cardnum(cnum,model.iter_parent(iter),iter,model)
             if it1 != None:
                msg = "card number='" + str(cnum) + "' " + _("already exist for %s") % model.get_value(it1,fid.name)
@@ -824,7 +711,7 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
                dlg.hide()
                continue
             # check baddr
-            s_baddr = self.card_ba.get_text()
+            s_baddr = self.editor.ba()
             baddr = 0
             if s_baddr != "":
                  baddr = int(eval(s_baddr))
@@ -839,8 +726,8 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
             break                
 
         
-        editor.save(cnode,self.cb_cardlist.get_active_text())
-        self.save2xml_elements_value(self.card_params,cnode)
+        self.editor.save(cnode)
+     
         i_iter = self.fmodel.convert_iter_to_child_iter(iter)
         self.model.set_value(i_iter,fid.num,str(cnum))
         info  = 'card=' + str(cnode.prop("card"))

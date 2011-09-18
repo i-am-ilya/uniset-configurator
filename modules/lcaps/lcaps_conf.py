@@ -34,7 +34,7 @@ class LCAPSConfig():
         node = self.xml.firstNode(self.settings_node.children)
         while node != None:
             if node.name.upper() == "LCAPS":
-               name = get_str_val(node.prop("name"))
+               name = to_str(node.prop("name"))
                if lcname == "ALL":
                   fname = "lcaps-%s-test.xml"%name.lower()
                   self.gen_test_skel_by_name(node,name,fname)
@@ -102,8 +102,8 @@ class LCAPSConfig():
         res = ""
         node = self.xml.firstNode(sec_node.children)
         while node != None:
-           lamp = get_str_val(node.prop("lamp"))
-           aps = get_str_val(node.prop("name"))
+           lamp = to_str(node.prop("lamp"))
+           aps = to_str(node.prop("name"))
            if aps != "":
               res += aps + "=0 "
            if lamp != "":
@@ -171,12 +171,12 @@ class LCAPSConfig():
         secname = secnode.name
         node = self.xml.firstNode(secnode.children)
         while node != None:
-            nohorn= get_int_val(node.prop("nohorn"))
+            nohorn= to_int(node.prop("nohorn"))
             t_postfix = ""
             if nohorn != 0:
                t_postfix = "-nohorn"
             
-            noconfirm = get_int_val(node.prop("noconfirm"))
+            noconfirm = to_int(node.prop("noconfirm"))
             if noconfirm != 0:
                t_postfix = "-noconfirm"
             

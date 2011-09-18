@@ -160,7 +160,7 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
         node = self.conf.xml.firstNode(self.settings_node.children)
         while node != None:
             if node.name.upper() == "APSPANEL":
-               pname = get_str_val(node.prop("name"))
+               pname = to_str(node.prop("name"))
                if pname == "":
                   print '**** Unknown <APSPanel name="?"'
                   node = self.conf.xml.nextNode(node)
@@ -176,7 +176,7 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
         for i in range(0,fid.maxnum):
             p.append(None)
         
-        p[fid.name] = get_str_val(xmlnode.prop("name"))
+        p[fid.name] = to_str(xmlnode.prop("name"))
         p[fid.etype] = "P"
         p[fid.xmlnode] = xmlnode
         return p
@@ -196,20 +196,20 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
         for i in range(0,fid.maxnum):
             p.append(None)
         
-        p[fid.name] = get_str_val(xmlnode.prop("name"))
-        p[fid.lamp] = get_str_val(xmlnode.prop("lamp"))
-        p[fid.nohorn] = str(get_int_val(xmlnode.prop("nohorn")))
-        p[fid.noconfirm] = str(get_int_val(xmlnode.prop("noconfirm")))
-        p[fid.delay] = str(get_int_val(xmlnode.prop("delay")))
+        p[fid.name] = to_str(xmlnode.prop("name"))
+        p[fid.lamp] = to_str(xmlnode.prop("lamp"))
+        p[fid.nohorn] = str(to_int(xmlnode.prop("nohorn")))
+        p[fid.noconfirm] = str(to_int(xmlnode.prop("noconfirm")))
+        p[fid.delay] = str(to_int(xmlnode.prop("delay")))
         p[fid.etype] = "I"
         p[fid.xmlnode] = xmlnode
-        p[fid.s_xmlnode] = self.conf.find_sensor(get_str_val(xmlnode.prop("name")))
-        p[fid.l_xmlnode] = self.conf.find_sensor(get_str_val(xmlnode.prop("lamp")))
+        p[fid.s_xmlnode] = self.conf.find_sensor(to_str(xmlnode.prop("name")))
+        p[fid.l_xmlnode] = self.conf.find_sensor(to_str(xmlnode.prop("lamp")))
         
         if p[fid.s_xmlnode] != None:
            s_node = p[fid.s_xmlnode]
            p[fid.name] = str("(%6s)%s" % (s_node.prop("id"),s_node.prop("name")))
-           p[fid.tname] = get_str_val(s_node.prop("textname"))
+           p[fid.tname] = to_str(s_node.prop("textname"))
         else:
            p[fid.tname] = ""
 

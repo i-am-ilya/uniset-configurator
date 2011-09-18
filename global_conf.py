@@ -18,12 +18,12 @@ def check_value_int(val):
     except ValueError, NameError:
        return False
     
-def get_int_val(str_val):
+def to_int(str_val):
     if str_val == "" or str_val == None: 
        return 0
     return int(str_val)
 
-def get_str_val(str_val):
+def to_str(str_val):
     if str_val == None: 
        return ""
     return str_val

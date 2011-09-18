@@ -41,10 +41,10 @@ class Conf:
     def build_id_dict(self, secname):
         node = self.find_section(secname)
         while node != None:
-           i_id = get_int_val(node.prop("id"))
+           i_id = to_int(node.prop("id"))
            if i_id > 0 :
               self.id_dict[i_id] = node
-           i_nm = get_str_val(node.prop("name"))
+           i_nm = to_str(node.prop("name"))
            if i_nm != "":
               self.name_dict[i_nm] = node
            
