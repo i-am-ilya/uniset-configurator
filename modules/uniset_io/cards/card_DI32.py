@@ -33,6 +33,9 @@ class Card_DI32(simple_card.SimpleCard):
 
     def init( self, cname, editor_ui, xmlnode ):
         self.simple_init(cname,editor_ui,xmlnode)
+        if xmlnode:
+           self.set_combobox_element(self.jar,xmlnode.prop("jar"),1)
+
         self.on_cbox_jar_changed(self.jar)
 
     def build_channel_list( self, cname ):

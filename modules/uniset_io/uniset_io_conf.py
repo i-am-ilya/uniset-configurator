@@ -80,42 +80,6 @@ class IOConfig():
 
         return False
     
-    def build_channels_list(self,cardnode,model,iter,pic=None):
-        cname = cardnode.prop("name").upper()
-#        print "BUILD chanel list for "+ str(cname)
-        if cname == "DI32":
-            self.build_di32_list(cardnode,model,iter,pic)
-        if cname == "DO32":
-            self.build_do32_list(cardnode,model,iter,pic)
-        elif self.like_ai16(cname):
-            self.build_ai16_list(cardnode,model,iter,pic)
-        elif self.like_ai8(cname):
-            self.build_ai8_list(cardnode,model,iter,pic)
-        elif cname == "AO16-XX" or cname=="AO16":
-            self.build_ao16_list(cardnode,model,iter,pic)
-        elif cname == "UNIO48":
-            self.build_unio48_list(cardnode,model,iter,pic)
-        elif cname == "UNIO96":
-            self.build_unio96_list(cardnode,model,iter,pic)
-   
-    def build_di32_list(self,card,model,iter,pic=None):
-        for i in range(0,16):
-            model.append(iter, [_("J1:")+str(i),"",None,_("channel"),str(i),"0",pic])
-        for i in range(16,32):
-            model.append(iter, [_("J2:")+str(i-16),"",None,_("channel"),str(i),"0",pic])
-    
-    def build_do32_list(self,card,model,iter,pic=None):
-        for i in range(0,16):
-            model.append(iter, [_("J1:")+str(i),"",None,_("channel"),str(i),"0",pic])
-        for i in range(16,32):
-            model.append(iter, [_("J2:")+str(i-16),"",None,_("channel"),str(i),"0",pic])
-
-    def build_ai16_list(self,card,model,iter,pic=None):
-        for i in range(0,8):
-            model.append(iter, ["J2:"+str(i),"",None,_("channel"),str(i),"2",pic])
-        for i in range(8,16):
-            model.append(iter, ["J3:"+str(i-8),"",None,_("channel"),str(i),"2",pic])
-    
     def build_ai8_list(self,card,model,iter,pic=None):
         for i in range(0,4):
             name = "Ch%d [J1:%d-%d]"%(i,2*i,2*i+1)
@@ -124,28 +88,6 @@ class IOConfig():
             name = "Ch%d [J2:%d-%d]"%(i,2*(i-4),2*(i-4)+1)
             model.append(iter, [name,"",None,_("channel"),str(i),"2",pic])
 
-    def build_ao16_list(self,card,model,iter,pic=None):
-        for i in range(0,8):
-            model.append(iter, ["J2:"+str(i),"",None,_("channel"),str(i),"0",pic])
-        for i in range(8,16):
-            model.append(iter, ["J3:"+str(i-8),"",None,_("channel"),str(i),"0",pic])
-
-    def build_unio48_list(self,card,model,iter,pic=None):
-        for i in range(0,24):
-            model.append(iter, ["J1:"+str(i),"",None,_("channel"),str(i),"0",pic])
-        for i in range(0,24):
-            model.append(iter, ["J2:"+str(i),"",None,_("channel"),str(i),"1",pic])
-
-    def build_unio96_list(self,card,model,iter,pic=None):
-        for i in range(0,24):
-            model.append(iter, ["J1:"+str(i),"",None,_("channel"),str(i),"0",pic])
-        for i in range(0,24):
-            model.append(iter, ["J2:"+str(i),"",None,_("channel"),str(i),"1",pic])
-        for i in range(0,24):
-            model.append(iter, ["J3:"+str(i),"",None,_("channel"),str(i),"2",pic])
-        for i in range(0,24):
-            model.append(iter, ["J4:"+str(i),"",None,_("channel"),str(i),"3",pic])
-    
     def get_iotype(self,cname,channel):
         cname = cname.upper()
         if cname == "DI32":
