@@ -659,38 +659,6 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
                 return it
             it = model.iter_next(it)
 
-  
-    def on_io_params_btn_clicked(self,btn):
-        cname = self.cb_cardlist.get_active_text().upper()
-        if cname == None or cname == "":
-           return
-
-        if self.mod_param_dlg_list[cname] == None:
-           print "******** dlg for %s not found.." % cname
-        else:
-           dlg = self.mod_param_dlg_list[cname]
-           dlg.cardname = cname
-           res = dlg.run()
-           dlg.hide()
-    
-    def on_io_aixx5a_btnOK_clicked(self, btn):
-        cname = self.dlg_aixx5a.cardname
-        p = ""
-        if cname == "AIC120" or cname == "AIC121":
-           p="0"
-        elif cname == "AIC123XX" or cname == "AI16-5A-3":
-           p="1"
-        else:
-           p="0"
-        
-        avr = self.dlg_aixx5a_average_cb.get_active_text()
-        if avr == None or avr == "None":
-           p +=",1"
-        else:
-           p += "," + avr
-           
-        self.mod_params.set_text(p)
-        
     def on_edit_card_activate(self,menuitem):
         (model, iter) = self.tv.get_selection().get_selected()
         if not iter: return

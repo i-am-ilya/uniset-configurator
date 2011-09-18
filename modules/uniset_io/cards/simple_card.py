@@ -48,6 +48,9 @@ class SimpleCard(base_editor.BaseEditor):
     def default_init(self,cname):
         pass
 
+    def init(self,cname,editor_ui,xmlnode):
+        self.simple_init(cname,editor_ui,xmlnode)
+
     def simple_init( self, cname, editor_ui, xmlnode ):
  
         self.editor_ui = editor_ui
@@ -62,6 +65,9 @@ class SimpleCard(base_editor.BaseEditor):
            self.init_elements_value(self.params,xmlnode)
         else:
            self.default_init(cname)
+
+    def save(self,xmlnode,cname):
+        self.simple_save(xmlnode,cname)
 
     def simple_save( self, xmlnode, cname ):
         self.save2xml_elements_value(self.params,xmlnode)
