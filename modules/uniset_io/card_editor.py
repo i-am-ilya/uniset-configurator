@@ -103,7 +103,6 @@ class CardEditor(base_editor.BaseEditor):
         #if not self.cnode:
         #   return
 
-        #print "******* SELECT CARD: %s (%s)"%(cb.get_model().get_value(cb.get_active_iter(),0),cb.get_model().get_value(cb.get_active_iter(),1))
         cname = cb.get_active_text()
         editor = cb.get_model().get_value(cb.get_active_iter(),1)
         face = editor.get_face()

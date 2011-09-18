@@ -37,7 +37,7 @@ class SimpleCard(base_editor.BaseEditor):
         return False
 
     def get_name(self):
-        editor_name()
+        return editor_name()
 
     def get_face( self ):
         return self.builder.get_object("main")
