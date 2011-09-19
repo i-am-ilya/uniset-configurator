@@ -1,4 +1,4 @@
-SUBDIRS = templates
+SUBDIRS = templates cards
 
 python_SCRIPTS 	= uniset_io_conf.py
 

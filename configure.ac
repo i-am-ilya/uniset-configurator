@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 # AC_PREREQ(2.59)
-AC_INIT([uniset-configurator], [0.8])
+AC_INIT([uniset-configurator], [0.9])
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME,AC_PACKAGE_VERSION)
 
 #AM_GNU_GETTEXT([external])
@@ -30,6 +30,7 @@ AC_CONFIG_FILES([Makefile
                  modules/can/templates/Makefile
                  modules/uniset_io/Makefile
                  modules/uniset_io/templates/Makefile
+                 modules/uniset_io/cards/Makefile
                  modules/nodes/Makefile
                  modules/uniset/Makefile
                  modules/lcaps/Makefile
