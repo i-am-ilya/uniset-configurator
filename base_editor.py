@@ -118,13 +118,13 @@ class BaseEditor():
             return "1"
         return ""
 
-    def set_combobox_element(self,cbox,val):
+    def set_combobox_element(self,cbox,val,fid=0):
         if val == None:
             val = ""
         model = cbox.get_model()
         it = model.get_iter_first()
         while it is not None:                     
-            if val.upper() == str(model.get_value(it,0)).upper():
+            if val.upper() == str(model.get_value(it,fid)).upper():
                  cbox.set_active_iter(it)
                  return
             it = model.iter_next(it)

@@ -27,7 +27,7 @@ class Card_AIxx5a(simple_card.SimpleCard):
         self.default_init(self.cname)
 
     def get_supported_cards( self ):
-        return ["AIC120","AIC121","AIC123XX"]
+        return ["AIC120","AIC121","AIC123XX","AI16-5A-3"]
 
     def build_channel_list( self, cname ):
         clist=[]
@@ -51,11 +51,11 @@ class Card_AIxx5a(simple_card.SimpleCard):
     def save( self, xmlnode, cname ):
         self.simple_save(xmlnode,cname)
 
-    def get_module_params(self,cname,avg):
+    def get_params(self,cname,avg):
         p = ""
         if self.cname == "AIC120" or self.cname == "AIC121":
            p="0"
-        elif self.cname == "AIC123XX":
+        elif self.cname == "AIC123XX" or cname == "AI16-5A-3":
            p="1"
         else:
            p="0"
@@ -66,17 +66,23 @@ class Card_AIxx5a(simple_card.SimpleCard):
         s = "%s,%s"%(p,to_str(avg))
         return s
 
-    def get_params(self,cnode):
-        return self.get_module_params(cnode.prop("name"),cnode.prop("avg"))
+    def get_module_params(self,cnode):
+        return self.get_params(cnode.prop("name"),cnode.prop("avg"))
 
     def on_cbox_avg_changed(self,cb):
 
         if self.editor_ui == None:
            return
 
-        s = self.get_module_params(self.cname,self.avg.get_active_text())
+        s = self.get_params(self.cname,self.avg.get_active_text())
         ent_mod_param  = self.editor_ui.get_object("io_params")
         ent_mod_param.set_text(s)
+
+    def get_default_channel_param(self,cname):
+        ret = dict()
+        ret["aref"] = 2
+        ret["range"] = 0
+        return ret
 
 def create_editor(datdir):
     return Card_AIxx5a(datdir)

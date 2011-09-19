@@ -97,7 +97,7 @@ class Card_UNIO96(simple_card.SimpleCard):
 
         return "0"
 
-    def get_params(self,cnode):
+    def get_module_params(self,cnode):
         s = ""
         maxnum = 5
 #        if cardnode.prop("name").upper() == UNIO48:

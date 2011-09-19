@@ -26,6 +26,7 @@ class SimpleCard(base_editor.BaseEditor):
         self.node_xmlnode = None
         self.editor_ui = None
         self.params = []
+        self.module_name = ""
 
     def get_supported_cards( self ):
         return []
@@ -35,6 +36,12 @@ class SimpleCard(base_editor.BaseEditor):
            return True
 
         return False
+
+    def get_module_name(self):
+        return self.module_name
+
+    def get_module_params(self,cnode):
+        return ""
 
     def get_name(self):
         return editor_name()
@@ -85,6 +92,12 @@ class SimpleCard(base_editor.BaseEditor):
                return c[cid.iotype]
 
         return "DI"
+
+    def get_default_channel_param(self,cname):
+        ret = dict()
+        ret["aref"] = 0
+        ret["range"] = 0
+        return ret
 
 
 def editor_name():

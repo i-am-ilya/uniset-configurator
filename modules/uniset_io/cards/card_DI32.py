@@ -47,7 +47,7 @@ class Card_DI32(simple_card.SimpleCard):
 
         return clist
 
-    def get_params(self,cnode):
+    def get_module_params(self,cnode):
         return to_str(cnode.prop("jar"))
 
     def on_cbox_jar_changed(self,cb):

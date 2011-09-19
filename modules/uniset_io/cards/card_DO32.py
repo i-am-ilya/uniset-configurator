@@ -33,7 +33,7 @@ class Card_DO32(simple_card.SimpleCard):
 
         return clist
 
-    def get_params(self,cnode):
+    def get_module_params(self,cnode):
         return ""
 
 def create_editor(datdir):

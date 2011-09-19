@@ -49,144 +49,28 @@ class IOConfig():
 
         return [[0,"Unknown CARD","DI",0]]
 
-    def like_ai16(self,cname):
-        if cname == "AI16-5A-3" or cname == "AIC123XX/16" or \
-           cname == "AIC120/16" or cname == "AIC121/16" or cname=="AI16":
-            return True
-         
-        return False
-    
-    def like_ai8(self,cname):
-         if cname == "AIC123XX/8" or cname == "AIC120/8" or cname == "AIC121/8":
-            return True
-         
-         return False
-
-    def like_aic123(self,cname):
-        if cname == "AIC123XX/8" or cname == "AIC123XX/16" or cname == "AI16-5A-3":
-           return True
-
-        return False
-
-    def like_aic120(self,cname):
-        if cname == "AIC120/8" or cname == "AIC120/16":
-           return True
-
-        return False
-
-    def like_aic121(self,cname):
-        if cname == "AIC121/8" or cname == "AIC121/16":
-           return True
-
-        return False
-    
-    def build_ai8_list(self,card,model,iter,pic=None):
-        for i in range(0,4):
-            name = "Ch%d [J1:%d-%d]"%(i,2*i,2*i+1)
-            model.append(iter, [name,"",None,_("channel"),str(i),"2",pic])
-        for i in range(4,8):
-            name = "Ch%d [J2:%d-%d]"%(i,2*(i-4),2*(i-4)+1)
-            model.append(iter, [name,"",None,_("channel"),str(i),"2",pic])
-
     def get_iotype(self,cname,channel):
         cname = cname.upper()
-        if cname == "DI32":
-           return "DI"
-        
-        if cname == "DO32":
-           return "DO"
-        
-        if self.like_ai16(cname) or self.like_ai8(cname):
-           return "AI"
-        
-        if cname == "AO16-XX" or cname=="AO16":
-           return "AO"
-        
-        # к UNIO можно водключать любые сигналы... 
-        # поэтому должно быть более иннтелектуально...
-        # но пока для простоты сделаем по умолчанию DI
-        if cname == "UNIO48" or cname == "UNIO96":
-           return "DI"
-        
+        if cname in self.cardlist:
+           editor = self.cardlist[cname]
+           return editor.get_iotype(channel)
+
         return "DI"
    
     def get_default_channel_param(self,cname):
         cname = cname.upper()
+        if cname in self.cardlist:
+           editor = self.cardlist[cname]
+           return editor.get_default_channel_param(cname)
+
         ret = dict()
-        
-        if self.like_ai16(cname):
-           ret["aref"] = 0
-           ret["range"] = 0
-           return ret
-
-        if self.like_ai8(cname):
-           ret["aref"] = 2
-           ret["range"] = 0
-           return ret
-        
-#        if cname == "AO16-XX" or cname=="AO16":
-        
         return ret
-    
-    def get_params_for_aixx5a(self,cardnode):
-        # последовательность параметров см. исходники модуля aixx5a
-        cname = cardnode.prop("name").upper()
-        avr = to_str(cardnode.prop("average"))
-        if avr == "":
-           avr = "1"
-        
-        if self.like_aic123(cname):
-            return "1," + avr
-
-        if self.like_aic120(cname) or self.like_aic121(cname):
-            return "0," + avr
-        
-        return ""
-    
-    def get_typenum_for_unio_subdev(self,sname):
-        # номера см. исходники модуля unioxx
-        #   0 - no use
-        #	1 - TBI 24/0
-        #	2 - TBI 0/24
-        #	3 - TBI 16/8        
-        if sname == "TBI24_0":
-           return "1"
-        if sname == "TBI0_24":
-           return "2"
-        if sname == "TBI16_8":
-           return "3"
-        return "0"
-    
-    def get_params_for_unioxx(self,cardnode):
-        s = ""
-        maxnum = 5
-#        if cardnode.prop("name").upper() == UNIO48:
-#            maxnum = 3
-        for i in range(1,maxnum):
-          p = "subdev" + str(i)
-          sname = to_str(cardnode.prop(p))
-          if s != "":
-             s = s + "," + self.get_typenum_for_unio_subdev(sname.upper())
-          else:
-             s = self.get_typenum_for_unio_subdev(sname.upper())
-        
-        return s
     
     def get_module_params_for_card(self,cardnode):
         cname = cardnode.prop("name").upper()
-        
-        if cname == "DI32":
-            return ["di32_5",""]
-        if cname == "DO32":
-            return ["do32",""]
-        if self.like_ai16(cname) or self.like_ai8(cname):
-            return ["aixx5a", self.get_params_for_aixx5a(cardnode) ]
-        if cname == "AO16-XX":
-            return ["ao16",""]
-        if cname == "UNIO48":
-            return ["unioxx5", self.get_params_for_unioxx(cardnode)]
-        if cname == "UNIO96":
-            return ["unioxx5", self.get_params_for_unioxx(cardnode)]
+        if cname in self.cardlist:
+           editor = self.cardlist[cname]
+           return [editor.get_module_name(),editor.get_module_params(cardnode,cname)]
         
         return ["",""]
 
