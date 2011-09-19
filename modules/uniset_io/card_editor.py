@@ -98,6 +98,14 @@ class CardEditor(base_editor.BaseEditor):
 
         self.save2xml_elements_value(self.card_params,cnode)
 
+    def delete(self,cnode):
+        c_it = self.cardlist.get_active_iter()
+        if c_it:
+           editor = self.cardlist.get_model().get_value(c_it,1)
+           editor.delete(cnode,self.cardlist.get_active_text())
+        
+        self.save2xml_elements_value(self.card_params,cnode,"")
+
     def on_io_cardlist_changed(self,cb):
 
         #if not self.cnode:

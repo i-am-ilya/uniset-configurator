@@ -87,6 +87,12 @@ class Card_UNIO96(simple_card.SimpleCard):
            xmlnode.setProp("subdev3","")
            xmlnode.setProp("subdev4","")
 
+    def delete(self,xmlnode,cname):
+        xmlnode.setProp("subdev1","")
+        xmlnode.setProp("subdev2","")
+        xmlnode.setProp("subdev3","")
+        xmlnode.setProp("subdev4","")
+
     def get_typenum_for_unio_subdev(self,sname):
         for k,v in self.subdev_type.items():
             if v == sname:

@@ -48,6 +48,9 @@ class Card_AIxx5a(simple_card.SimpleCard):
     def save( self, xmlnode, cname ):
         self.simple_save(xmlnode,cname)
 
+    def delete(self,xmlnode,cname):
+        xmlnode.setProp("avg","")
+
     def get_params(self,cname,avg):
         p = ""
         if self.cname == "AIC120" or self.cname == "AIC121":

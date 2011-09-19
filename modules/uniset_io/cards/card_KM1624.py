@@ -53,6 +53,13 @@ class Card_KM1624(simple_card.SimpleCard):
     def save( self, xmlnode, cname ):
         self.simple_save(xmlnode,cname)
 
+    def delete(self,xmlnode,cname):
+        xmlnode.setProp("pwr_adc","")
+        xmlnode.setProp("pwr_dac0","")
+        xmlnode.setProp("pwr_dac1","")
+        xmlnode.setProp("pwr_dac2","")
+        xmlnode.setProp("pwr_dac3","")
+
     def get_params(self,adc,dac0,dac1,dac2,dac3):
         pwr = 0
         # см. модль ядра km1624        

@@ -618,7 +618,8 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
                   node.unsetProp("channel")
 
             node = self.conf.xml.nextNode(node)
-    
+
+        self.editor.delete(cnode)
         cnode.unlinkNode()
 
         i_iter = self.fmodel.convert_iter_to_child_iter(iter);

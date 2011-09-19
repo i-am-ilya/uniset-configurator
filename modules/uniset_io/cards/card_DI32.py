@@ -38,6 +38,9 @@ class Card_DI32(simple_card.SimpleCard):
 
         self.on_cbox_jar_changed(self.jar)
 
+    def delete(self,xmlnode,cname):
+        xmlnode.setProp("jar","")
+
     def build_channel_list( self, cname ):
         clist=[]
         for i in range(0,16):

@@ -76,6 +76,9 @@ class SimpleCard(base_editor.BaseEditor):
     def save(self,xmlnode,cname):
         self.simple_save(xmlnode,cname)
 
+    def delete(self,xmlnode,cname):
+        pass
+
     def simple_save( self, xmlnode, cname ):
         self.save2xml_elements_value(self.params,xmlnode)
 
