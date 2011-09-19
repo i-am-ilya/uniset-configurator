@@ -15,9 +15,6 @@ class Card_UNIO96(simple_card.SimpleCard):
         self.cname = "UNIO86"
         self.clist = self.build_channel_list(self.cname)
 
-        self.node_xmlnode = None
-        self.editor_ui = None
-
         self.params=[
             ["cbox1","cbox_subdev1","subdev1",False],
             ["cbox2","cbox_subdev2","subdev2",False],

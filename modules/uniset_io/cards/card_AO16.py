@@ -15,9 +15,6 @@ class Card_AO16(simple_card.SimpleCard):
         self.cname = "AO16"
         self.clist = self.build_channel_list(self.cname)
 
-        self.node_xmlnode = None
-        self.editor_ui = None
-
         self.module_name = "ao16"
         self.default_init(self.cname)
 

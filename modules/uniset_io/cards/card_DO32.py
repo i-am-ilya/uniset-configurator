@@ -15,9 +15,6 @@ class Card_DO32(simple_card.SimpleCard):
         self.cname = "DO32"
         self.clist = self.build_channel_list(self.cname)
 
-        self.node_xmlnode = None
-        self.editor_ui = None
-
         self.module_name = "do32"
         self.default_init(self.cname)
 

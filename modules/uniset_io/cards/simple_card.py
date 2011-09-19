@@ -85,10 +85,11 @@ class SimpleCard(base_editor.BaseEditor):
 
         return self.clist
         
-    def get_iotype( self, channel ):
-        nchan = to
+    def get_iotype( self, subdev, channel ):
+        subdev = to_int(subdev)
+        channel = to_int(channel)
         for c in self.clist:
-            if c[cid.cnum] == channel:
+            if c[cid.cnum] == channel and c[cid.subdev] == subdev:
                return c[cid.iotype]
 
         return "DI"

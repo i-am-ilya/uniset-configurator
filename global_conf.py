@@ -26,7 +26,7 @@ def to_int(str_val):
 def to_str(str_val):
     if str_val == None: 
        return ""
-    return str_val
+    return str(str_val)
 
 def __line__():
     caller = inspect.stack()[1]

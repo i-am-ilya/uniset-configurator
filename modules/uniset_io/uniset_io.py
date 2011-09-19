@@ -724,8 +724,9 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
            self.iotype.set_sensitive(True)
            p_iter = self.model.iter_parent(self.myedit_iter)
            cardname = self.model.get_value(p_iter,fid.name)
-           channel = self.model.get_value(self.myedit_iter,fid.subdev)
-           self.set_combobox_element(self.iotype,self.ioconf.get_iotype(cardname,channel))
+           chan = self.model.get_value(self.myedit_iter,fid.num)
+           subdev = self.model.get_value(self.myedit_iter,fid.subdev)
+           self.set_combobox_element(self.iotype,self.ioconf.get_iotype(cardname,subdev,chan))
 
     def on_edit_channel(self,iter):
         iter = self.fmodel.convert_iter_to_child_iter(iter)
@@ -759,6 +760,11 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         txt = _("Setup ") + str(card.prop("name")) + ":" + str(self.model.get_value(iter,fid.name))
         self.dlg_info.set_text(txt)
         self.myedit_iter = iter
+
+        cardname = self.model.get_value(card_iter,fid.name)
+        chan = self.model.get_value(self.myedit_iter,fid.num)
+        subdev = self.model.get_value(self.myedit_iter,fid.subdev)
+        self.set_combobox_element(self.iotype,self.ioconf.get_iotype(cardname,subdev,chan))
 
         while True:
             res = self.dlg_param.run()

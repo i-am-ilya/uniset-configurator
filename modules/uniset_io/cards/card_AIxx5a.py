@@ -15,9 +15,6 @@ class Card_AIxx5a(simple_card.SimpleCard):
         self.cname = "AIxx5a"
         self.clist = self.build_channel_list(self.cname)
 
-        self.node_xmlnode = None
-        self.editor_ui = None
-
         self.params=[
             ["avg","cbox_avg","avg",False]
         ]

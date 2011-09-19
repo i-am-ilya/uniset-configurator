@@ -57,11 +57,11 @@ class IOConfig():
 
         return [[0,"Unknown CARD","DI",0]]
 
-    def get_iotype(self,cname,channel):
+    def get_iotype(self,cname,subdev,channel):
         cname = cname.upper()
         if cname in self.cardlist:
            editor = self.cardlist[cname]
-           return editor.get_iotype(channel)
+           return editor.get_iotype(subdev,channel)
 
         return "DI"
    
