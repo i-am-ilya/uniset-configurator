@@ -31,7 +31,7 @@
               <object class="GtkLabel" id="label2">
                 <property name="visible">True</property>
                 <property name="xalign">1</property>
-                <property name="label" translatable="yes">averaging:</property>
+                <property name="label" translatable="yes">&#x423;&#x441;&#x440;&#x435;&#x434;&#x43D;&#x435;&#x43D;&#x438;&#x435;:</property>
               </object>
             </child>
             <child>

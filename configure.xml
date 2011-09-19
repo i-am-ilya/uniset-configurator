@@ -829,7 +829,7 @@
 			<item id="3005" ip="gdg1" name="gdg1" textname="ЩС ГДГ1">
 				<iocards>
 					<item baddr="0x110" card="1" dev="/dev/comedi1" module="di32_5" name="DI32"/>
-					<item baddr="0x120" card="2" dev="/dev/comedi2" module="aixx5a" module_params="0,1" name="AI16-5a-3"/>
+					<item avg="16" baddr="0x120" card="2" dev="/dev/comedi2" module="aixx5a" module_params="1,16" name="AI16-5A-3"/>
 					<item baddr="0x130" card="3" dev="/dev/comedi3" module="aixx5a" module_params="0,1" name="AI16-5a-3"/>
 				</iocards>
 				<can>
