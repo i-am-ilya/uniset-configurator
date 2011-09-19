@@ -93,94 +93,73 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         # expand all rows after the treeview widget has been realized
 #       self.connect('realize', lambda tv: tv.expand_all())
 
-        self.menu_list = [ \
-            ["card_popup","io_card_popup",None,True], \
-            ["node_popup","io_node_popup",None,True], \
-            ["channel_popup","io_channel_popup",None,True], \
-            ["mi_channel_edit","io_mi_channel_edit",None,True], \
-            ["mi_channel_add","io_mi_channel_add",None,True], \
-            ["mi_channel_remove","io_mi_channel_remove",None,True] \
+        self.menu_list = [
+            ["card_popup","io_card_popup",None,True],
+            ["node_popup","io_node_popup",None,True],
+            ["channel_popup","io_channel_popup",None,True],
+            ["mi_channel_edit","io_mi_channel_edit",None,True],
+            ["mi_channel_add","io_mi_channel_add",None,True],
+            ["mi_channel_remove","io_mi_channel_remove",None,True]
         ]
         self.init_glade_elements(self.menu_list,self.glade)
 
-       
         # Список параметров для канала
         # ["class field","glade name","xmlname",save_xml_ignore_flag]
-        self.channel_params=[ \
+        self.channel_params=[
             # Common objects
-            ["lbl_sensor","io_lbl_sensor","name",True], \
-            ["dlg_param","io_dlg_channel",None,True], \
-            ["parambook","ioparam_book",None,True], \
-            ["dlg_info","io_lbl_info",None,True], \
-            ["iotype","io_cbox_iotype","iotype",False,True], \
+            ["lbl_sensor","io_lbl_sensor","name",True],
+            ["dlg_param","io_dlg_channel",None,True],
+            ["parambook","ioparam_book",None,True],
+            ["dlg_info","io_lbl_info",None,True],
+            ["iotype","io_cbox_iotype","iotype",False,True],
             # Common parameters
-            ["tbl_comm","io_tbl_comm",None,True], \
-            ["lamp","io_cb_lamp","lamp",False], \
-            ["notestlamp","io_cb_notestlamp","notestlamp",False], \
-            ["io_range","io_sp_range","range",False], \
-            ["io_aref","io_sp_aref","aref",False], \
-            ["safety","io_safety","safety",False], \
-            ["breaklim","io_breaklim","breaklim",False], \
-            ["defval","io_defval","default",False], \
-            ["ioignore","io_cb_ignore","ioignore",False], \
-            ["ioinvert","io_cb_invert","ioinvert",False], \
+            ["tbl_comm","io_tbl_comm",None,True],
+            ["lamp","io_cb_lamp","lamp",False],
+            ["notestlamp","io_cb_notestlamp","notestlamp",False],
+            ["io_range","io_sp_range","range",False],
+            ["io_aref","io_sp_aref","aref",False],
+            ["safety","io_safety","safety",False],
+            ["breaklim","io_breaklim","breaklim",False],
+            ["defval","io_defval","default",False],
+            ["ioignore","io_cb_ignore","ioignore",False],
+            ["ioinvert","io_cb_invert","ioinvert",False],
             # Calibrations
-            ["calibr_param","io_tbl_calibration",None,True], \
-            ["cdiagram","io_cbox_cdiagram","cdiagram",False], \
-            ["cmin","io_cmin","cmin",False], \
-            ["cmax","io_cmax","cmax",False], \
-            ["rmin","io_rmin","rmin",False], \
-            ["rmax","io_rmax","rmax",False], \
+            ["calibr_param","io_tbl_calibration",None,True],
+            ["cdiagram","io_cbox_cdiagram","cdiagram",False],
+            ["cmin","io_cmin","cmin",False],
+            ["cmax","io_cmax","cmax",False],
+            ["rmin","io_rmin","rmin",False],
+            ["rmax","io_rmax","rmax",False],
             ["prec","io_sp_precision","precision",False],
-            ["noprec","io_cb_noprecision","noprecision",False], \
+            ["noprec","io_cb_noprecision","noprecision",False],
             # Delay`s
-            ["ondelay","io_on_delay","ondelay",False], \
-            ["offdelay","io_off_delay","offdelay",False], \
-            ["jardelay","io_jar_delay","jardelay",False], \
+            ["ondelay","io_on_delay","ondelay",False],
+            ["offdelay","io_off_delay","offdelay",False],
+            ["jardelay","io_jar_delay","jardelay",False],
             # Filters
-            ["nofilter","io_cb_nofilter","nofilter",False], \
-            ["median","io_sp_median","median",False], \
-            ["leastsqr","io_sp_leastsqr","leatsqr",False], \
-            ["filterIIR","io_sp_filterIIR","filterIIR",False], \
-            ["filterRC","io_sp_filterRC","filterT",False], \
-            ["average","io_sp_average","average",False], \
+            ["nofilter","io_cb_nofilter","nofilter",False],
+            ["median","io_sp_median","median",False],
+            ["leastsqr","io_sp_leastsqr","leatsqr",False],
+            ["filterIIR","io_sp_filterIIR","filterIIR",False],
+            ["filterRC","io_sp_filterRC","filterT",False],
+            ["average","io_sp_average","average",False],
             # Thresholds
-            ["tbl_tresholds","io_tbl_tresholds",None,True], \
-            ["thr_hilimit","io_hilimit","hilimit",False], \
-            ["thr_lowlimit","io_lowlimit","lowlimit",False], \
-            ["thr_sensibility","io_sensibility","sensibility",False], \
-            ["thr_inverse","io_cb_thr_invert","inverse",False], \
-            ["thr_lbl_aID","io_lbl_aID","threshold_aid",False] \
+            ["tbl_tresholds","io_tbl_tresholds",None,True],
+            ["thr_hilimit","io_hilimit","hilimit",False],
+            ["thr_lowlimit","io_lowlimit","lowlimit",False],
+            ["thr_sensibility","io_sensibility","sensibility",False],
+            ["thr_inverse","io_cb_thr_invert","inverse",False],
+            ["thr_lbl_aID","io_lbl_aID","threshold_aid",False]
         ]
-
-        self.io_params=[ \
-            ["","","channel",False], \
-            ["","","card",False], \
-            ["","","subdev",False], \
-            ["","","io",False] \
-        ]
-
-        # список доступных диалогов настройки (должны быть в glade)
-        # список пар [class field, название в glade]
-        self.mod_dlg_list = [ \
-             ["dlg_aixx5a","io_dlg_aixx5a"], \
-             ["dlg_unioxx", "io_dlg_unio"], \
-             ["dlg_aixx5a_average_cb","dlg_aixx5a_average_cb"]
-        ]
-        self.init_glade_elements(self.mod_dlg_list,self.glade)
-
-        # список соответсвия названий карт и диалогов настройки параметров для них
-        # диалоги должны быть сделаны в glade
-        # (не все модуля ядра имеют настройки и соотвественно не для всех нужны диалоги)
-        self.mod_param_dlg_list = {} 
-        self.mod_param_dlg_list["AI16-5A-3"] = self.dlg_aixx5a
-        self.mod_param_dlg_list["AIC120"] = self.dlg_aixx5a
-        self.mod_param_dlg_list["AIC121"] = self.dlg_aixx5a
-        self.mod_param_dlg_list["AIC123XX"] = self.dlg_aixx5a
-        self.mod_param_dlg_list["UNIO48"] = self.dlg_unioxx
-        self.mod_param_dlg_list["UNIO96"] = self.dlg_unioxx
 
         self.init_glade_elements(self.channel_params,self.glade)
+
+        self.io_params=[
+            ["","","channel",False],
+            ["","","card",False],
+            ["","","subdev",False],
+            ["","","io",False]
+        ]
 
         self.sensor = None
         self.myedit_iter = None
