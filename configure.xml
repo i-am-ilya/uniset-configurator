@@ -173,6 +173,12 @@
 				<item name="aQGM4"/>
 				<item name="aQB1"/>
 			</automatlist>
+            <panellist>
+				<item name="SEES1_CPanel"/>
+                <item name="SEES2_CPanel"/>
+                <item name="SEES3_CPanel"/>
+                <item name="SEES4_CPanel"/>
+			</panellist>
 			<offlist>
 				<!--
 				    <item cur="aQGM3" off_msec="20000" prev="aQGM1"/>
@@ -301,7 +307,7 @@
 			</APSPanel>
 		</SEES1_CPanel>
 		<!--			 keyTestLamp="SEESPanel_TestLamp_S" -->
-		<SEES2_CPanel DG_OFF_c="DG2_LampOFF_C" DG_ON_c="DG2_LampON_C" QG_OFF_c="QGM2_LampOFF_C" QG_ON_c="QGM2_LampON_C" ctlHeartbeat="_41_35_S" ctlMode_s="DG2_CtlMode_AS" ctlRespond="CAN_SESCPU_Not_Respond_FS" heartbeat_id="_31_37_AS" idPost="SEES2_PostID" lmpCtlAuto_c="CPU_DG2_AutoCtl_BS" lmpCtlLocal_c="CPU_DG2_LocalCtl_BS" lmpCtlPult_c="CPU_DG2_PultCtl_BS" lmpDG_OFF_c="CPU_DG2_LampOFF_C" lmpDG_ON_c="CPU_DG2_LampON_C" lmpQG_OFF_c="CPU_QGM2_LampOFF_C" lmpQG_ON_c="CPU_QGM2_LampON_C" name="SEES1_CPanel" panelFailure="SEES2_CPanel_Failed_F">
+		<SEES2_CPanel DG_OFF_c="DG2_LampOFF_C" DG_ON_c="DG2_LampON_C" QG_OFF_c="QGM2_LampOFF_C" QG_ON_c="QGM2_LampON_C" ctlHeartbeat="_41_35_S" ctlMode_s="DG2_CtlMode_AS" ctlRespond="CAN_SESCPU_Not_Respond_FS" heartbeat_id="_31_37_AS" idPost="SEES2_PostID" lmpCtlAuto_c="CPU_DG2_AutoCtl_BS" lmpCtlLocal_c="CPU_DG2_LocalCtl_BS" lmpCtlPult_c="CPU_DG2_PultCtl_BS" lmpDG_OFF_c="CPU_DG2_LampOFF_C" lmpDG_ON_c="CPU_DG2_LampON_C" lmpQG_OFF_c="CPU_QGM2_LampOFF_C" lmpQG_ON_c="CPU_QGM2_LampON_C" name="SEES2_CPanel" panelFailure="SEES2_CPanel_Failed_F">
 			<APSPanel confirm="SEES_Confirm_S" confirmlamp="SEES2_ConfirmLamp_C" hornblink1="SEES2_Horn_C" hornreset="SEES_ResetHorn_S" name="SEES2_APSPanel" testlamp="SEESPanel_TestLamp_S">
 				<item delay="0" lamp="CPU_QGM2_Protection_BS" lamptype="AO" name="QGM2_Protection_BS"/>
 				<item blink="1" delay="0" lamp="CPU_SEES2_Protection_BS" lamptype="AO" name="SEES2_Protection_BS" noconfirm="1"/>

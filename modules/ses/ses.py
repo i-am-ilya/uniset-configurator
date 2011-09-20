@@ -10,7 +10,9 @@ from global_conf import *
 class ot():
    scontrol = 1
    ses = 2
-   cpanel = 3
+   panel = 3
+   seslist = 4
+   panellist = 5
    
 class fid():
    name = 0
@@ -20,7 +22,9 @@ class fid():
    xmlnode = 4
 
 pic_MAIN = 'ses_main.png'
+pic_SES_LIST = 'ses_main.png'
 pic_SES = 'ses.png'
+pic_PANEL_LIST = 'ses_main.png'
 pic_PANEL = 'ses_panel.png'
 
 class SESEditor(base_editor.BaseEditor, gtk.Viewport):
@@ -75,6 +79,8 @@ class SESEditor(base_editor.BaseEditor, gtk.Viewport):
 
         node = self.conf.xml.firstNode(self.settings_node.children)
         img_main = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_MAIN)
+        img_ses_list = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_SES_LIST)
+        img_panel_list = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_PANEL_LIST)
         while node != None:
             if node.name.upper() != "SEESCONTROL":
                node = self.conf.xml.nextNode(node)
@@ -85,21 +91,28 @@ class SESEditor(base_editor.BaseEditor, gtk.Viewport):
                nm = "SEESControl"
 
             it = self.model.append(None,[nm,"",img_main,ot.scontrol,node])
-            self.read_ses_objects(node,it)
+
+            s_it = self.model.append(it,["Процессы управления","",img_ses_list,ot.seslist,None])
+            self.read_ses_objects(node,s_it,it)
+            p_it = self.model.append(it,["Панели управления","",img_panel_list,ot.panellist,None])
+            self.read_panel_objects(node,p_it,it)
 
             node = self.conf.xml.nextNode(node)
 
-    def read_ses_objects(self, main_node, iter):
-        snode = self.conf.xml.findNode(main_node.children,"seslist")[0]
+    def read_ses_objects(self, main_node, iter, p_iter):
+        mnode = self.conf.xml.firstNode(main_node.children)
+        snode = self.conf.xml.findNode(mnode,"seslist")[0]
         if snode == None:
             print "(SESEditor::read_configuration): <seslist> for <SEESControl name='%s'...> not found?!..."%to_str(main_node.prop("name"))
             return
-
+        self.model.set_value(p_iter,fid.xmlnode,snode)
+         
+        
         img_ses = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_SES)
-        node = self.conf.xml.firstNode(main_node.children)
+        node = self.conf.xml.firstNode(snode.children)
         if node == None:
            return
-        node = node.children
+
         while node != None:
             nm = to_str(node.prop("name"))
             if nm == "":
@@ -114,6 +127,36 @@ class SESEditor(base_editor.BaseEditor, gtk.Viewport):
                continue
 
             it = self.model.append(iter,[nm,"",img_ses,ot.ses,ses_node])
+
+            node = self.conf.xml.nextNode(node)
+
+    def read_panel_objects(self, main_node, iter,p_iter):
+        mnode = self.conf.xml.firstNode(main_node.children)
+        snode = self.conf.xml.findNode(mnode,"panellist")[0]
+        if snode == None:
+            print "(SESEditor::read_panel_objects): <panellist> for <SEESControl name='%s'...> not found?!..."%to_str(main_node.prop("name"))
+            return
+        self.model.set_value(p_iter,fid.xmlnode,snode)
+
+        img_panel = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_PANEL)
+        node = self.conf.xml.firstNode(snode.children)
+        if node == None:
+           return
+
+        while node != None:
+            nm = to_str(node.prop("name"))
+            if nm == "":
+               print "(SESEditor::read_panel_objects): empty name?!! in <panellist> for <SEESControl name='%s'>"%to_str(main_node.prop("name"))
+               node = self.conf.xml.nextNode(node)
+               continue
+
+            p_node = self.conf.xml.findNode_byPropValue(self.settings_node.children,nm,nm,"name",False)[0]
+            if not p_node:
+               print "(SESEditor::read_panel_objects): Not found SEESPanel! name=%s for <SEESControl name='%s'>"%(nm,to_str(main_node.prop("name")))
+               node = self.conf.xml.nextNode(node)
+               continue
+
+            it = self.model.append(iter,[nm,"",img_panel,ot.panel,p_node])
 
             node = self.conf.xml.nextNode(node)
  
