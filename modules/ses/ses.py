@@ -7,21 +7,27 @@ import configure
 import base_editor
 from global_conf import *
 
+class ot():
+   scontrol = 1
+   ses = 2
+   cpanel = 3
+   
 class fid():
    name = 0
    info = 1
    pic = 2
    etype = 3
-   editor = 4
+   xmlnode = 4
 
-'''
-Задачи: настройщик для алгоритма управления свето-звуковой сигнализацией на колонках
-'''
-class SESEditor(base_editor.BaseEditor, gtk.HBox):
+pic_MAIN = 'ses_main.png'
+pic_SES = 'ses.png'
+pic_PANEL = 'ses_panel.png'
+
+class SESEditor(base_editor.BaseEditor, gtk.Viewport):
 
     def __init__(self, conf):
 
-        gtk.HBox.__init__(self)
+        gtk.Viewport.__init__(self)
         base_editor.BaseEditor.__init__(self,conf)
 
         self.builder = gtk.Builder()
@@ -41,8 +47,10 @@ class SESEditor(base_editor.BaseEditor, gtk.HBox):
         self.model = gtk.TreeStore(gobject.TYPE_STRING,
                                     gobject.TYPE_STRING,
                                     gtk.gdk.Pixbuf,
-                                    gobject.TYPE_STRING,
+                                    int,
                                     object)
+
+        #self.model.append("SEESControl","",ot.scontrol,None)
         
         self.modelfilter = self.model.filter_new()
 #       self.modelfilter.set_visible_column(1)
@@ -51,11 +59,34 @@ class SESEditor(base_editor.BaseEditor, gtk.HBox):
         self.tv.set_model(self.model)
         self.tv.set_rules_hint(True)
         self.tv.connect("button-press-event", self.on_button_press_event)
+
+        self.read_configuration()
     
     def reopen(self):
 #        self.model.clear()
 #        self.show_all()
         pass
+
+    def read_configuration(self):
+        self.settings_node = self.conf.xml.findNode(self.conf.xml.getDoc(),"settings")[0]
+        if self.settings_node == None:
+            print "(SESEditor::read_configuration): <settings> not found?!..."
+            return
+
+        node = self.conf.xml.firstNode(self.settings_node.children)
+        img_main = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_MAIN)
+        while node != None:
+            if node.name.upper() != "SEESCONTROL":
+               node = self.conf.xml.nextNode(node)
+               continue
+
+            nm = to_str(node.prop("name"))
+            if nm == "":
+               nm = "SEESControl"
+
+            it = self.model.append(None,[nm,"",img_main,ot.scontrol,node])
+
+            node = self.conf.xml.nextNode(node)
 
     def on_button_press_event(self, object, event):
 #        print "*** on_button_press_event"
