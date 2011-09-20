@@ -572,4 +572,4 @@ def create_module(conf):
     return APSPanelEditor(conf)
 
 def module_name():
-    return "APSPanel"
+    return "Панели АПС"
