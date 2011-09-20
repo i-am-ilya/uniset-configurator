@@ -54,11 +54,26 @@ class UniXML(str):
         while node != None:
             if node.name == nodestr:
                 return [node, node.name, node.prop(propstr)]
+
             if recur == True:
                ret = self.findNode(node.children, nodestr, propstr)
                if ret[0] != None:
                   return ret
             node = node.next
+        return [None, None, None]
+
+    def findNode_byPropValue(self, node, node_name, prop_val, prop_name="name", recur=True):
+        while node != None:
+            if node.name == node_name:
+                if node.prop(prop_name) == prop_val:
+                   return [node, node.name, node.prop(prop_name)]
+
+            if recur == True:
+               ret = self.findNode_byPropValue(node.children, node_name, prop_val, prop_name, recur)
+               if ret[0] != None:
+                  return ret
+            node = node.next
+
         return [None, None, None]
 
     def findMyLevel(self, node, nodestr="", propstr=""):
@@ -73,7 +88,7 @@ class UniXML(str):
             if node.prop(propstr) == valuestr:
                 return [node, node.name, node.prop(propstr)]
             if recur == True:
-               ret = self.findNode_byProp (node.children, propstr, valuestr)
+               ret = self.findNode_byProp (node.children, propstr, valuestr, recur)
                if ret[0] != None:
                   return ret
             node = node.next

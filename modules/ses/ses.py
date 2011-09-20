@@ -85,9 +85,38 @@ class SESEditor(base_editor.BaseEditor, gtk.Viewport):
                nm = "SEESControl"
 
             it = self.model.append(None,[nm,"",img_main,ot.scontrol,node])
+            self.read_ses_objects(node,it)
 
             node = self.conf.xml.nextNode(node)
 
+    def read_ses_objects(self, main_node, iter):
+        snode = self.conf.xml.findNode(main_node.children,"seslist")[0]
+        if snode == None:
+            print "(SESEditor::read_configuration): <seslist> for <SEESControl name='%s'...> not found?!..."%to_str(main_node.prop("name"))
+            return
+
+        img_ses = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_SES)
+        node = self.conf.xml.firstNode(main_node.children)
+        if node == None:
+           return
+        node = node.children
+        while node != None:
+            nm = to_str(node.prop("name"))
+            if nm == "":
+               print "(SESEditor::read_ses_objects): empty name?!! in <seslist> for <SEESControl name='%s'>"%to_str(main_node.prop("name"))
+               node = self.conf.xml.nextNode(node)
+               continue
+
+            ses_node = self.conf.xml.findNode_byPropValue(self.settings_node.children,nm,nm,"name",False)[0]
+            if not ses_node:
+               print "(SESEditor::read_ses_objects): Not found SES! name=%s for <SEESControl name='%s'>"%(nm,to_str(main_node.prop("name")))
+               node = self.conf.xml.nextNode(node)
+               continue
+
+            it = self.model.append(iter,[nm,"",img_ses,ot.ses,ses_node])
+
+            node = self.conf.xml.nextNode(node)
+ 
     def on_button_press_event(self, object, event):
 #        print "*** on_button_press_event"
         (model, iter) = self.tv.get_selection().get_selected()
