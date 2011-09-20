@@ -970,4 +970,4 @@ def create_module(conf):
     return IOEditor(conf)
 
 def module_name():
-    return "I/O"
+    return "Ввод/вывод"

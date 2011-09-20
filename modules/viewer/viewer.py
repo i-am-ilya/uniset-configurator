@@ -184,4 +184,4 @@ def create_module(conf):
     return Viewer(conf)
 
 def module_name():
-    return "Sensors viewer"
+    return "Список датчиков"

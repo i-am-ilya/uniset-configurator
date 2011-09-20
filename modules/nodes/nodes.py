@@ -223,4 +223,4 @@ def create_module(conf):
     return NodesEditor(conf)
 
 def module_name():
-    return "Nodes"
+    return "Узлы"

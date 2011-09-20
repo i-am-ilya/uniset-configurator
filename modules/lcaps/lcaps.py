@@ -932,4 +932,4 @@ def create_module(conf):
     return LCAPSEditor(conf)
 
 def module_name():
-    return "LCAPS"
+    return "Светозвуковые колонки"

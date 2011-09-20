@@ -122,4 +122,4 @@ def create_module(conf):
     return UniSetEditor(conf)
 
 def module_name():
-    return "UniSet"
+    return "Общие параметры"
