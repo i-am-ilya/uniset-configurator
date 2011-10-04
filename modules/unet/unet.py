@@ -30,6 +30,7 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
         
         self.builder = gtk.Builder()
         self.builder.add_from_file(conf.datdir+"unet.ui")
+        self.builder.connect_signals(self)
         
         n_editor = conf.n_editor()
         if n_editor != None:
@@ -73,31 +74,43 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
         # expand all rows after the treeview widget has been realized
 #       self.connect('realize', lambda tv: tv.expand_all())
         
-        self.menu_list = [ \
-            ["empty_popup","unet_empty_popup",None,True], \
-            ["net_popup","unet_net_popup",None,True], \
-            ["node_popup","unet_node_popup",None,True] \
+        self.menu_list = [
+            ["empty_popup","unet_empty_popup",None,True],
+            ["net_popup","unet_net_popup",None,True],
+            ["node_popup","unet_node_popup",None,True]
         ]
         self.init_builder_elements(self.menu_list,self.builder)
         
-        self.net_param_list = [ \
-            ["dlg_net","unet_dlg_net",None,True], \
-            ["net_name","unet_net_name","net",False], \
-            ["net_comm","unet_net_comm","comment",False], \
-            ["net_btnOK","unet_net_btnOK",None,True], \
-            ["net_btnCancel","unet_net_btnCancel",None,True] \
+        self.net_param_list = [
+            ["dlg_net","unet_dlg_net",None,True],
+            ["net_name","unet_net_name","net",False],
+            ["net_comm","unet_net_comm","comment",False],
+            ["net_btnOK","unet_net_btnOK",None,True],
+            ["net_btnCancel","unet_net_btnCancel",None,True]
         ]
         self.init_builder_elements(self.net_param_list,self.builder)
 
-        self.node_param_list = [ \
-            ["dlg_node","unet_dlg_node",None,True], \
-            ["node_name","unet_lbl_nodename",None,True], \
-            ["hbsensor","unet_hb_sensor","hbSensor",False], \
-            ["btn_hbsensor","unet_btn_hbsensor",None,True], \
-            ["respond","unet_respond","respond",False], \
-            ["btn_respond","unet_btn_respond",None,True] \
+        self.node_param_list = [
+            ["dlg_node","unet_dlg_node",None,True],
+            ["node_name","unet_lbl_nodename",None,True],
+#            ["hbsensor","unet_hb_sensor","hbSensor",False],
+#            ["btn_hbsensor","unet_btn_hbsensor",None,True],
+            ["btn_respond","unet_btn_respond",None,True],
+            ["respond","unet_respond","unet_respond_id",False],
+            ["btn_lpsensor","unet_btn_lpsensor",None,True],
+            ["lostpacket","unet_lpsensor","unet_lostpackets_id",False],
+            ["btn_ignore","unet_cb_ignore","unet_ignore",False]
         ]
         self.init_builder_elements(self.node_param_list,self.builder)
+
+        # чтобы сделать функцию выбора привязки датчиков одной на все кнопки
+        # то для универсальности, обработку делаем через список пар "кнопка-label"
+        # см. on_btn_sensor_activate()
+        self.btn_lst = [
+               [self.btn_respond,self.respond],
+#               [self.btn_hbsensor,self.hbsensor],
+               [self.btn_lpsensor,self.lostpacket]
+              ]
 
         self.edit_xmlnode = None
         self.reopen()
@@ -112,19 +125,22 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
     def build_tree(self):
         node = self.conf.xml.findNode(self.conf.xml.getDoc(),"nodes")[0].children.next 
         while node != None:
-             cannode = self.conf.xml.findMyLevel(node.children,"can")
-             cnode = None
-             if cannode[0] != None:
-                 cnode = cannode[0].children.next
-             while cnode != None:
-                   self.add_net(cnode,node)
-                   cnode = self.conf.xml.nextNode(cnode)
+             # пока не unet не предусматривает выделение отдельного тега <unet> внутри <node>
+             #cannode = self.conf.xml.findMyLevel(node.children,"unet")
+             #cnode = node
+             #if cannode[0] != None:
+             #    cnode = cannode[0].children.next
+             #while cnode != None:
+             #       self.add_net(cnode,node)
+             #      cnode = self.conf.xml.nextNode(cnode)
+             cnode = node
+             self.add_net(cnode,node)
 
              node = self.conf.xml.nextNode(node)
     
     def add_net(self,cannode, node):
          img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_NET)
-         name = cannode.prop("net")
+         name = cannode.prop("unet")
          for n in self.netlist:
                if n[0] == name:
                     self.add_node(cannode,node,n[1])
@@ -232,15 +248,15 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
                 continue
             break
         
-        cnode = self.conf.xml.findMyLevel(node.children,"can")[0]
+        cnode = self.conf.xml.findMyLevel(node.children,"unet")[0]
         if cnode == None:
             cnode = node.newChild(None,"unet",None)
             if cnode == None:
-               print "************** FAILED CREATE <can> for " + str(node.prop("name"))
+               print "************** FAILED CREATE <unet> for " + str(node.prop("name"))
                return        
 
         n = cnode.newChild(None,"item",None)
-        n.setProp("net", self.model.get_value(rootiter,0))
+        n.setProp("unet", self.model.get_value(rootiter,0))
         n.setProp("comment", self.model.get_value(rootiter,1))
         it = self.add_node(n,node,rootiter)
         self.edit_node(it)
@@ -278,7 +294,7 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
         it = self.model.iter_children(iter)
         while it is not None:                     
             node = self.model.get_value(it,fid.unet_xmlnode)
-            node.setProp("net",new_name)
+            node.setProp("unet",new_name)
             node.setProp("comment",new_comm)
             it = self.model.iter_next(it)	  
         
@@ -291,15 +307,8 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
         return t
     
     def on_btn_sensor_activate(self,btn):
-        # т.к. функция универсальная для всех копок привязки к датчику
-        # то для универсальности, обработку сделал через список пар "кнопка-label"
-        lst = [ \
-               [self.btn_respond,self.respond], \
-               [self.btn_hbsensor,self.hbsensor] \
-              ]
-        
         lbl = None
-        for v in lst:
+        for v in self.btn_lst:
             if v[0] == btn:
                lbl = v[1]
                break
@@ -323,7 +332,7 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
         cnode = self.model.get_value(iter,fid.unet_xmlnode)
         node_xmlnode = self.model.get_value(iter,fid.node_xmlnode)
         
-        #print "xmlnode: " + str(cnode)
+        #print "EDIT: xmlnode: " + str(cnode)
        
         self.node_name.set_text(node_xmlnode.prop("name"))
         self.init_elements_value(self.node_param_list,cnode)
@@ -341,15 +350,16 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
             break
         
         self.save2xml_elements_value(self.node_param_list,cnode)
-        
-        cinfo = self.get_card_by_name(self.dlg_card.get_active_text())
-        print "xmlnode: " + str(cnode)
-        
+
         self.model.set_value(iter,1,self.get_unet_info(cnode))
         self.conf.mark_changes()
     
     def get_unet_info(self,xmlnode):
-        info  = ';...'
+        info  = ''
+        if to_str(xmlnode.prop("unet_ignore")) != "":
+           info = "IGNORE!"
+        info  = "%s respond_id=%s, lostpackets_id=%s"%(info,to_str(xmlnode.prop("respond_id")),
+                 to_str(xmlnode.prop("lostpackets_id")))
         return info
     
     def nodeslist_change(self,obj, xmlnode):
