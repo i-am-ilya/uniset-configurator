@@ -10,7 +10,7 @@
         <property name="use_action_appearance">False</property>
         <property name="label" translatable="yes">add new node</property>
         <property name="use_underline">True</property>
-        <signal name="activate" handler="on_add_node_activate"/>
+        <signal name="activate" handler="on_node_add_activate"/>
       </object>
     </child>
     <child>
@@ -61,30 +61,30 @@
   <object class="GtkMenu" id="unet_node_popup">
     <property name="visible">True</property>
     <child>
-      <object class="GtkMenuItem" id="unet_edit_node">
+      <object class="GtkMenuItem" id="unet_node_edit">
         <property name="visible">True</property>
         <property name="use_action_appearance">False</property>
         <property name="label" translatable="yes">edit node</property>
         <property name="use_underline">True</property>
-        <signal name="activate" handler="on_edit_node_activate"/>
+        <signal name="activate" handler="on_node_edit_activate"/>
       </object>
     </child>
     <child>
-      <object class="GtkMenuItem" id="unet_add_new_node">
+      <object class="GtkMenuItem" id="unet_node_add">
         <property name="visible">True</property>
         <property name="use_action_appearance">False</property>
         <property name="label" translatable="yes">add new node</property>
         <property name="use_underline">True</property>
-        <signal name="activate" handler="on_add_node_activate"/>
+        <signal name="activate" handler="on_node_add_activate"/>
       </object>
     </child>
     <child>
-      <object class="GtkMenuItem" id="unet_remove_node">
+      <object class="GtkMenuItem" id="unet_node_remove">
         <property name="visible">True</property>
         <property name="use_action_appearance">False</property>
         <property name="label" translatable="yes">remove node</property>
         <property name="use_underline">True</property>
-        <signal name="activate" handler="on_remove_node_activate"/>
+        <signal name="activate" handler="on_node_remove_activate"/>
       </object>
     </child>
   </object>

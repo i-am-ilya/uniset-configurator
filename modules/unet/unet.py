@@ -19,7 +19,7 @@ class fid():
 
 pic_NET = 'can-net.png'
 pic_NODE = 'node.png'  
-
+default_NET_NAME="Default"
 
 class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
 
@@ -49,7 +49,8 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
                                    gobject.TYPE_STRING, # element type
                                    object,              # node xmlnode
                                    gtk.gdk.Pixbuf)      # picture
-        self.modelfilter = self.model.filter_new()
+
+        #self.modelfilter = self.model.filter_new()
 
         # create treeview
         self.set_model(self.model)
@@ -77,14 +78,18 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
         self.menu_list = [
             ["empty_popup","unet_empty_popup",None,True],
             ["net_popup","unet_net_popup",None,True],
-            ["node_popup","unet_node_popup",None,True]
+            ["node_popup","unet_node_popup",None,True],
+            ["mi_net_rename","unet_net_rename",None,True],
+            ["mi_net_remove","unet_net_remove",None,True],
+            ["mi_node_add","unet_node_add",None,True],
+            ["mi_node_remove","unet_node_remove",None,True]
         ]
         self.init_builder_elements(self.menu_list,self.builder)
         
         self.net_param_list = [
             ["dlg_net","unet_dlg_net",None,True],
-            ["net_name","unet_net_name","net",False],
-            ["net_comm","unet_net_comm","comment",False],
+            ["net_name","unet_net_name","unet_net",False],
+            ["net_comm","unet_net_comm","unet_comment",False],
             ["net_btnOK","unet_net_btnOK",None,True],
             ["net_btnCancel","unet_net_btnCancel",None,True]
         ]
@@ -113,6 +118,7 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
               ]
 
         self.edit_xmlnode = None
+        self.default_list_it = None
         self.reopen()
         self.show_all()
     
@@ -140,21 +146,34 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
     
     def add_net(self,cannode, node):
          img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_NET)
-         name = cannode.prop("unet")
+         name = to_str(cannode.prop("unet"))
+         if name == "":
+            name=default_NET_NAME
+
          for n in self.netlist:
                if n[0] == name:
                     self.add_node(cannode,node,n[1])
                     return False
-         
-         iter = self.model.append(None,[name,to_str(cannode.prop("comment")),None,"net",None,img])
-         self.netlist.append([name,iter,cannode.prop("comment")])
+
+         iter = self.model.append(None,[name,to_str(cannode.prop("unet_comment")),None,"net",None,img])
+         if name == default_NET_NAME:
+            self.default_list_it = iter
+
+         self.netlist.append([name,iter,to_str(cannode.prop("unet_comment"))])
          self.add_node(cannode,node,iter)
          return True
 
     def add_node(self,cannode,node,iter):
          img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_NODE)
          info  = self.get_unet_info(cannode)
-         return self.model.append(iter,[node.prop("name"),info,cannode,"node",node,img])
+         return self.model.append(iter,[to_str(node.prop("name")),info,cannode,"node",node,img])
+
+    def is_iter_equal(self, l_iter, r_iter):
+
+        if not l_iter or not r_iter:
+           return False
+
+        return ( self.model.get_string_from_iter(l_iter) == self.model.get_string_from_iter(r_iter) )
 
     def on_button_press_event(self, object, event):                                                                                                                                 
 #        print "*** on_button_press_event"
@@ -164,14 +183,30 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
             if not iter: 
                  self.empty_popup.popup(None, None, None, event.button, event.time)
                  return False
-            
+
             t = model.get_value(iter,fid.etype)
             if t == "net":
+                if self.is_iter_equal(iter,self.default_list_it):
+                   self.mi_net_rename.set_sensitive(False)
+                   self.mi_net_remove.set_sensitive(False)
+                else:
+                   self.mi_net_rename.set_sensitive(True)
+                   self.mi_net_remove.set_sensitive(True)
+
                 self.net_popup.popup(None, None, None, event.button, event.time)
                 return False                                                                                                                                                         
+
             if t == "node":
-                self.node_popup.popup(None, None, None, event.button, event.time)
-                return False
+               rootiter = model.iter_parent(iter)
+               if self.is_iter_equal(rootiter,self.default_list_it):
+                  self.mi_node_add.set_sensitive(False)
+                  self.mi_node_remove.set_sensitive(False)
+               else:
+                  self.mi_node_add.set_sensitive(True)
+                  self.mi_node_remove.set_sensitive(True)
+
+               self.node_popup.popup(None, None, None, event.button, event.time)
+               return False
 
         if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
             if not iter:                                                                                                                                                                
@@ -181,7 +216,7 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
                  if t == "net": 
                      self.on_rename_net_activate(None)
                  elif t == "node":
-                     self.on_edit_node_activate(None)
+                     self.on_node_edit_activate(None)
         return False
 
     def on_add_net_activate(self, menuitem):
@@ -198,38 +233,74 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
         self.netlist.append([name,iter,comm])
         self.conf.mark_changes()
         self.get_selection().select_iter(iter)
-        self.on_add_node_activate(menuitem)
+        self.on_node_add_activate(menuitem)
         
     def on_remove_net_activate(self, menuitem):
         (model, iter) = self.get_selection().get_selected()
         if not iter: return
+
+        if model.get_value(iter,0) == default_NET_NAME:
+           msg = "Network '%s' can not be deleted..."%default_NET_NAME
+           dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
+           res = dlg.run()
+           dlg.hide()
+           return
+
         dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,_("Are you sure?"))
         res = dlg.run()
         dlg.hide()
-        if res != dlg_RESPONSE_OK:
+        if res != gtk.RESPONSE_YES:
             return
         
         it = self.model.iter_children(iter)
         while it is not None:                     
-            node = self.model.get_value(it,fid.unet_xmlnode)
-            node.unlinkNode()    
+            self.remove_node(it)
             it = self.model.iter_next(it)	  
+
         self.model.remove(iter)        
         self.conf.mark_changes()
 
     def check_node( self, node, rootiter ):
-       it = self.model.iter_children(rootiter)
-       while it is not None:                     
-           if self.model.get_value(it,fid.node_xmlnode) == node:
+        it = self.model.iter_children(rootiter)
+        while it is not None:                     
+            if self.model.get_value(it,fid.node_xmlnode) == node:
                return it
-           it = self.model.iter_next(it)           
+            it = self.model.iter_next(it)           
        
-       return None     
+        return None
 
-    def on_add_node_activate(self, menuitem):
+    def find_defaultlist( self ):
+        it = self.model.get_iter_first()
+        def_it = None
+        while it is not None:
+            if self.model.get_value(it,0) == default_NET_NAME:
+               def_it = it
+               break;
+
+            it = self.model.iter_next(it)
+
+        return def_it
+
+    def find_in_defaultlist( self, node ):
+        def_it = self.find_defaultlist()
+        if not def_it:
+           return None
+
+        # Идём по узлам
+        it1 = self.model.iter_children(def_it)
+        while it1 is not None:
+            if self.model.get_value(it1,fid.node_xmlnode) == node:
+               return it1
+
+            it1 = self.model.iter_next(it1)
+
+        return None
+
+    def on_node_add_activate(self, menuitem):
         (model, iter) = self.get_selection().get_selected()
         if not iter: return
-       
+
+        node = None
         while True:
             node = self.conf.n_dlg().run(self,None)
             if node == None:
@@ -238,7 +309,7 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
             etype = model.get_value(iter,fid.etype)
             rootiter=iter
             if etype == "node":
-                rootiter = self.model.iter_parent(iter)
+               rootiter = self.model.iter_parent(iter)
         
             if self.check_node(node,rootiter) != None:
                 msg = "'" + node.prop("name") + "' " + _("already added!") 
@@ -246,40 +317,63 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
                 res = dlg.run()
                 dlg.hide()
                 continue
-            break
-        
-        cnode = self.conf.xml.findMyLevel(node.children,"unet")[0]
-        if cnode == None:
-            cnode = node.newChild(None,"unet",None)
-            if cnode == None:
-               print "************** FAILED CREATE <unet> for " + str(node.prop("name"))
-               return        
 
-        n = cnode.newChild(None,"item",None)
-        n.setProp("unet", self.model.get_value(rootiter,0))
-        n.setProp("comment", self.model.get_value(rootiter,1))
+            break
+
+#        Оставлено на случай если для <unet> будет выделена отдельная подсекция в <node>        
+#        cnode = self.conf.xml.findMyLevel(node.children,"unet")[0]
+#        if cnode == None:
+#            cnode = node.newChild(None,"unet",None)
+#            if cnode == None:
+#               print "************** FAILED CREATE <unet> for " + str(node.prop("name"))
+#               return
+#        n = cnode.newChild(None,"item",None)
+
+#		Поэтому пока что свойства unet пишутся прямо в <node ...>
+        n = node
+
+        rm_iter = self.find_in_defaultlist(n)
+        if rm_iter:
+           self.model.remove(rm_iter)
+
+        n.setProp("unet", model.get_value(rootiter,0))
+        n.setProp("unet_comment", model.get_value(rootiter,1))
         it = self.add_node(n,node,rootiter)
         self.edit_node(it)
         self.conf.mark_changes()
 
-    def on_remove_node_activate(self, menuitem):
+    def on_node_remove_activate(self, menuitem):
         (model, iter) = self.get_selection().get_selected()
         if not iter: return
         dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,_("Are you sure?"))
         res = dlg.run()
         dlg.hide()
-        if res != dlg_RESPONSE_OK:
+        if res != gtk.RESPONSE_YES:
             return
 
         node = self.model.get_value(iter,fid.unet_xmlnode)
-        node.unlinkNode()
+        self.remove_node(iter)
+        
+    def remove_node(self,iter):
+
+        node = self.model.get_value(iter,fid.unet_xmlnode)
+        #node.unlinkNode()
+        node.setProp("unet","")
         self.model.remove(iter)
+        self.add_node(node,node,self.default_list_it)
         self.conf.mark_changes()
 
     def on_rename_net_activate(self, menuitem):
         (model, iter) = self.get_selection().get_selected()
         if not iter: return
-        
+
+        if model.get_value(iter,0) == default_NET_NAME:
+           msg = "Network '%s' can not be renamed..."%default_NET_NAME
+           dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
+           res = dlg.run()
+           dlg.hide()
+           return        
+
         self.net_name.set_text(model.get_value(iter,fid.name))
         self.net_comm.set_text(model.get_value(iter,fid.param))
         res = self.dlg_net.run()
@@ -323,7 +417,7 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
             lbl.set_text("")
         self.conf.mark_changes()            
     
-    def on_edit_node_activate(self, menuitem):
+    def on_node_edit_activate(self, menuitem):
         (model, iter) = self.get_selection().get_selected()
         if not iter: return
         self.edit_node(iter)
@@ -346,7 +440,6 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
                 return
 
             rootiter = self.model.iter_parent(iter) # NET level iterator
-            
             break
         
         self.save2xml_elements_value(self.node_param_list,cnode)
@@ -357,7 +450,7 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
     def get_unet_info(self,xmlnode):
         info  = ''
         if to_str(xmlnode.prop("unet_ignore")) != "":
-           info = "IGNORE!"
+           info = "**IGNORE=1!**"
         info  = "%s respond_id=%s, lostpackets_id=%s"%(info,to_str(xmlnode.prop("respond_id")),
                  to_str(xmlnode.prop("lostpackets_id")))
         return info
@@ -395,14 +488,6 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
             
             it = self.model.iter_next(it)
     
-    def on_unet_card_changed(self,combobox):
-        cinfo = self.get_cardinfo_by_name(self.dlg_card.get_active_text())
-        if cinfo != None and cinfo["dlg"] != None:
-           self.dlg_card_btn.set_sensitive(True)
-        else:
-           self.dlg_card_btn.set_sensitive(False)
-           self.unet_param_is_correct = True
-
 def create_module(conf):
     return UNETEditor(conf)
 
