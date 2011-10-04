@@ -98,8 +98,6 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
         self.node_param_list = [
             ["dlg_node","unet_dlg_node",None,True],
             ["node_name","unet_lbl_nodename",None,True],
-#            ["hbsensor","unet_hb_sensor","hbSensor",False],
-#            ["btn_hbsensor","unet_btn_hbsensor",None,True],
             ["btn_respond","unet_btn_respond",None,True],
             ["respond","unet_respond","unet_respond_id",False],
             ["btn_lpsensor","unet_btn_lpsensor",None,True],
@@ -107,15 +105,17 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
             ["btn_ignore","unet_cb_ignore","unet_ignore",False]
         ]
         self.init_builder_elements(self.node_param_list,self.builder)
+#            ["hbsensor","unet_hb_sensor","hbSensor",False],
+#            ["btn_hbsensor","unet_btn_hbsensor",None,True],
 
         # чтобы сделать функцию выбора привязки датчиков одной на все кнопки
         # то для универсальности, обработку делаем через список пар "кнопка-label"
         # см. on_btn_sensor_activate()
         self.btn_lst = [
                [self.btn_respond,self.respond],
-#               [self.btn_hbsensor,self.hbsensor],
                [self.btn_lpsensor,self.lostpacket]
               ]
+#             [self.btn_hbsensor,self.hbsensor],
 
         self.edit_xmlnode = None
         self.default_list_it = None
@@ -389,7 +389,7 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
         while it is not None:                     
             node = self.model.get_value(it,fid.unet_xmlnode)
             node.setProp("unet",new_name)
-            node.setProp("comment",new_comm)
+            node.setProp("unet_comment",new_comm)
             it = self.model.iter_next(it)	  
         
         self.conf.mark_changes()
@@ -451,8 +451,8 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
         info  = ''
         if to_str(xmlnode.prop("unet_ignore")) != "":
            info = "**IGNORE=1!**"
-        info  = "%s respond_id=%s, lostpackets_id=%s"%(info,to_str(xmlnode.prop("respond_id")),
-                 to_str(xmlnode.prop("lostpackets_id")))
+        info  = "%s respond_id=%s, lostpackets_id=%s"%(info,to_str(xmlnode.prop("unet_respond_id")),
+                 to_str(xmlnode.prop("unet_lostpackets_id")))
         return info
     
     def nodeslist_change(self,obj, xmlnode):
