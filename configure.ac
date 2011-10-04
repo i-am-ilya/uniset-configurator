@@ -38,6 +38,7 @@ AC_CONFIG_FILES([Makefile
                  modules/apspanel/Makefile
                  modules/apspanel/templates/Makefile
                  modules/viewer/Makefile
+                 modules/unet/Makefile
                  templates/Makefile
                  images/Makefile])
 		 
