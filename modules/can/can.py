@@ -226,7 +226,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
         dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,_("Are you sure?"))
         res = dlg.run()
         dlg.hide()
-        if res != dlg_RESPONSE_OK:
+        if res != gtk.RESPONSE_YES:
             return
         
         it = self.model.iter_children(iter)
@@ -301,7 +301,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
         dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,_("Are you sure?"))
         res = dlg.run()
         dlg.hide()
-        if res != dlg_RESPONSE_OK:
+        if res != gtk.RESPONSE_YES:
             return
 
         node = self.model.get_value(iter,fid.can_xmlnode)
