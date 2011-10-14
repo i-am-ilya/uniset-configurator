@@ -30,7 +30,7 @@ class IOConfig():
     def __init__(self,xml,datdir):
         self.xml = xml
         self.datdir = datdir
-        self.templdir = self.datdir + "templates/"
+        self.templdir = self.datdir + "templates/io/"
         self.moddir = self.datdir + "cards/"
         self.cardlist = dict()
         self.editors = dict()

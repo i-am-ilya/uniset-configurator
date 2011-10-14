@@ -244,7 +244,6 @@
             </child>
             <child>
               <widget class="GtkLabel" id="label22">
-                <property name="visible">True</property>
                 <property name="xalign">1</property>
                 <property name="label" translatable="yes">eds file name:</property>
               </widget>
@@ -279,7 +278,6 @@
             </child>
             <child>
               <widget class="GtkEntry" id="can_eds">
-                <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="invisible_char">&#x25CF;</property>
               </widget>
@@ -342,7 +340,6 @@
             </child>
             <child>
               <widget class="GtkLabel" id="label25">
-                <property name="visible">True</property>
                 <property name="xalign">1</property>
                 <property name="label" translatable="yes">can2 respond sensor:</property>
               </widget>
@@ -353,7 +350,6 @@
             </child>
             <child>
               <widget class="GtkLabel" id="label23">
-                <property name="visible">True</property>
                 <property name="xalign">1</property>
                 <property name="label" translatable="yes">can1 respond sensor:</property>
               </widget>
@@ -364,7 +360,6 @@
             </child>
             <child>
               <widget class="GtkLabel" id="label3">
-                <property name="visible">True</property>
                 <property name="xalign">1</property>
                 <property name="label" translatable="yes">node respond sensor:</property>
               </widget>
@@ -384,7 +379,6 @@
             </child>
             <child>
               <widget class="GtkLabel" id="label24">
-                <property name="visible">True</property>
                 <property name="xalign">1</property>
                 <property name="label" translatable="yes">heart beat sensor:</property>
               </widget>
@@ -397,9 +391,7 @@
               <widget class="GtkHBox" id="hbox9">
                 <property name="visible">True</property>
                 <child>
-                  <widget class="GtkLabel" id="can_respond2">
-                    <property name="visible">True</property>
-                  </widget>
+                  <widget class="GtkLabel" id="can_respond2"/>
                   <packing>
                     <property name="position">0</property>
                   </packing>
@@ -407,7 +399,6 @@
                 <child>
                   <widget class="GtkButton" id="can_btn_respond2">
                     <property name="label" translatable="yes">...</property>
-                    <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="use_action_appearance">False</property>
@@ -431,9 +422,7 @@
               <widget class="GtkHBox" id="hbox8">
                 <property name="visible">True</property>
                 <child>
-                  <widget class="GtkLabel" id="can_respond1">
-                    <property name="visible">True</property>
-                  </widget>
+                  <widget class="GtkLabel" id="can_respond1"/>
                   <packing>
                     <property name="position">0</property>
                   </packing>
@@ -441,7 +430,6 @@
                 <child>
                   <widget class="GtkButton" id="can_btn_respond1">
                     <property name="label" translatable="yes">...</property>
-                    <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="use_action_appearance">False</property>
@@ -465,9 +453,7 @@
               <widget class="GtkHBox" id="hbox7">
                 <property name="visible">True</property>
                 <child>
-                  <widget class="GtkLabel" id="can_respond">
-                    <property name="visible">True</property>
-                  </widget>
+                  <widget class="GtkLabel" id="can_respond"/>
                   <packing>
                     <property name="position">0</property>
                   </packing>
@@ -475,7 +461,6 @@
                 <child>
                   <widget class="GtkButton" id="can_btn_respond">
                     <property name="label" translatable="yes">...</property>
-                    <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="use_action_appearance">False</property>
@@ -510,9 +495,7 @@
               <widget class="GtkHBox" id="hbox6">
                 <property name="visible">True</property>
                 <child>
-                  <widget class="GtkLabel" id="can_hb_sensor">
-                    <property name="visible">True</property>
-                  </widget>
+                  <widget class="GtkLabel" id="can_hb_sensor"/>
                   <packing>
                     <property name="position">0</property>
                   </packing>
@@ -520,7 +503,6 @@
                 <child>
                   <widget class="GtkButton" id="can_btn_hbsensor">
                     <property name="label" translatable="yes">...</property>
-                    <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
                     <property name="use_action_appearance">False</property>
