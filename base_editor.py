@@ -53,6 +53,10 @@ class BaseEditor():
     def init_elements_value(self,elist,snode):
         ''' Инициализация переменных из xml
             по списку элементов вида [class field,gladename,xmlname,xml_save_ignore]'''
+
+        if not snode:
+           return            
+
         for e in elist:
             if e[0]==None or e[2] == None:
                 continue
@@ -85,6 +89,9 @@ class BaseEditor():
     def save2xml_elements_value(self,elist,snode,setval=None):
         ''' Сохранение переменных в xml-узел
             по списку элементов вида [class field,gladename,xmlname,xml_save_ignore, reset_ignore]'''
+        if not snode:
+           return
+
         for e in elist:
             if e[0]==None or e[2] == None or e[3]==True:
                 continue

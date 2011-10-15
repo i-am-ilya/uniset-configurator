@@ -479,6 +479,10 @@
 			</APSPanel>
 		</GEU_PUS_CPanel>
 		<GEUControl LocalPost_s="GEU_CtlLocalPost_S" Off_f="GEU_Off_F" On_f="GEU_On_F" ProtectionMode_f="GEU_ProtectionMode_F" ProtectionOff_f="GEU_ProtectionOff_S" RPM_as="GEU_RPM_S" Ready_c="GEU_Ready_C" Reset_f="GEU_Reset_F" SEES_ReservPower_as="SEES_ReservPower_AS" allowEnable_c="GEU_AllowEnable_FS" diagFree="GEU_free_mode" diagMooring="GEU_mooring_mode" exciterselector="ExciterSelector1" geu1="GEU1" geu2="GEU2" geuPower_f="GEU_Power_S" heartbeat_id="_31_31_AS" idPost_f="GEU_PostID_FS" lmpOFF_c="GEU_LampOFF_FC" lmpON_c="GEU_LampON_FC" name="GEUControl" needPowerLimit_c="GEU_NeedPowerLimit_S" needPower_c="GEU_NeedPower_S" nominalRPM="170" powerLimit="0" powerLimitTime="5000" reservRPM="5" setRPM_f="GEU_setRPM_F" setRealRPM_f="GEU_setRealRPM_F">
+			<geulist>
+				<item name="GEU1"/>
+				<item name="GEU2"/>
+			</geulist>
 			<cpanels>
 				<item name="GEU_CPU_CPanel"/>
 				<item name="GEU_PUS_CPanel"/>

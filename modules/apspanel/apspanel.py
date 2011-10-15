@@ -150,6 +150,16 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
     def reopen(self):
         self.model.clear()
         self.build_tree()
+
+    def clear(self):
+        self.model.clear()
+
+    def init(self, xmlnode):
+        if not xmlnode:
+           return
+
+        self.model.clear()
+        self.init_new_panel(xmlnode)
     
     def build_tree(self):
         self.settings_node = self.conf.xml.findNode(self.conf.xml.getDoc(),"settings")[0]
@@ -166,11 +176,15 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
                   node = self.conf.xml.nextNode(node)
                   continue
 
-               p = self.read_panel_param(node)
-               iter = self.model.append(None,p)
-               self.build_items(iter,node)
+               self.init_new_panel(node)
+
             node = self.conf.xml.nextNode(node)
-     
+
+    def init_new_panel(self,xmlnode):
+        p = self.read_panel_param(xmlnode)
+        iter = self.model.append(None,p)
+        self.build_items(iter,xmlnode)
+    
     def read_panel_param(self,xmlnode):
         p=[]
         for i in range(0,fid.maxnum):

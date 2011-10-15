@@ -6,7 +6,7 @@ import gtk
 from global_conf import *
 
 class Conf:
-    def __init__ (self, fname,gladexml, datdir):
+    def __init__ (self, fname,gladexml, datdir, moddir):
         
         self.xml = UniXML.UniXML(fname)
         self.glade = gladexml
@@ -19,6 +19,7 @@ class Conf:
         self.nodes_editor = None
         self.datdir = datdir
         self.imgdir = datdir + "images/"
+        self.moddir = moddir
 
         self.s_node = self.find_s_node()
         self.o_node = self.find_o_node()

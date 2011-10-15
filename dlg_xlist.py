@@ -126,8 +126,10 @@ class XListDialog():
             if self.model.get_value(it, fid.xmlnode) == sel: # check iterator
                 ts.select_iter( self.fmodel.convert_child_iter_to_iter(it))
                 self.tv.scroll_to_cell( self.model.get_path(it) )
-                return
+                return self.model.get_value(it, fid.xmlnode)
             it = self.model.iter_next(it)
+
+        return None
     
     def set_selected_name(self, sel):
         if sel=="" or sel==None:
@@ -140,8 +142,10 @@ class XListDialog():
             if self.model.get_value(it, fid.name) == sel:
                 ts.select_iter(self.fmodel.convert_child_iter_to_iter(it))
                 self.tv.scroll_to_cell( self.model.get_path(it) )
-                return
+                return self.model.get_value(it, fid.xmlnode)
             it = self.model.iter_next(it)
+
+        return None
 
     def set_selected_id(self, sel):
         ts = self.tv.get_selection()
@@ -153,8 +157,10 @@ class XListDialog():
             if self.model.get_value(it,fid.id) == sel:
                 ts.select_iter( self.fmodel.convert_child_iter_to_iter(it))
                 self.tv.scroll_to_cell( self.model.get_path(it) )
-                return
+                return self.model.get_value(it, fid.xmlnode)
             it = self.model.iter_next(it)
+
+        return None
     
     def set_selection_mode(self, mode):
         self.tv.get_selection().set_mode(mode)
@@ -162,7 +168,7 @@ class XListDialog():
     def foreach__sel_list(model, path, iter, plist):
         plist.append(path)
   
-    def run(self,rootwin,xmlnode=None,sel_mode=gtk.SELECTION_SINGLE):
+    def run(self, rootwin, xmlnode=None, sel_mode=gtk.SELECTION_SINGLE):
 #        if rootwin:
 #            self.dlg.set_transient_for(rootwin)
         if xmlnode != None:
@@ -173,6 +179,9 @@ class XListDialog():
 #        self.dlg.maximize()
         res = self.dlg.run()
         self.dlg.hide();
+
+        if res != gtk.RESPONSE_OK:
+           return xmlnode
 
         if res == gtk.RESPONSE_OK:  
            if sel_mode == gtk.SELECTION_SINGLE:
@@ -189,6 +198,7 @@ class XListDialog():
 #               model = sel.get_treeview().get_model()
 #               return (model, pathlist)               
                return nlist
+
         return None
  
     def xlist_filter_entry_changed(self,entry):

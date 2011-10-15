@@ -77,6 +77,9 @@ is_system_run_flag = sys.argv[0].startswith("./")
 datdir = ( "/usr/share/uniset-configurator/" if not is_system_run_flag else "./" )
 #moddir = ( "/usr/share/uniset-configurator/"+modules if not is_system_run_flag else "./modules" )
 
+sys.path.append(datdir)
+sys.path.append(moddir)
+
 if is_system_run_flag:
    sys.path.append("./")
 
@@ -128,7 +131,7 @@ if confile == "":
    confile = dlg.get_filename()
 
 try:
-   conf = configure.Conf(confile,glade,datdir) 
+   conf = configure.Conf(confile,glade,datdir,moddir) 
 except: 
    dialog = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, _("XML file damage or not found! \n Loading FAILED!"))
    dialog.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("gray")) 
