@@ -21,6 +21,7 @@ class fid():
    pic = 2
    etype = 3
    xmlnode = 4
+   list_xmlnode = 5
 
 pic_MAIN = 'ses_main.png'
 pic_SES_LIST = 'ses_main.png'
@@ -61,6 +62,7 @@ class SESEditor(base_editor.BaseEditor, gtk.Viewport):
                                     gobject.TYPE_STRING,
                                     gtk.gdk.Pixbuf,
                                     int,
+                                    object,
                                     object)
 
         #self.model.append("SEESControl","",ot.scontrol,None)
@@ -101,11 +103,11 @@ class SESEditor(base_editor.BaseEditor, gtk.Viewport):
             if nm == "":
                nm = "SEESControl"
 
-            it = self.model.append(None,[nm,"",img_main,ot.scontrol,node])
+            it = self.model.append(None,[nm,"",img_main,ot.scontrol,node,None])
 
-            self.s_it = self.model.append(it,["Процессы управления","",img_ses_list,ot.seslist,None])
+            self.s_it = self.model.append(it,["Процессы управления","",img_ses_list,ot.seslist,None,None])
             self.read_ses_objects(node,self.s_it,it)
-            self.p_it = self.model.append(it,["Панели управления","",img_panel_list,ot.panellist,None])
+            self.p_it = self.model.append(it,["Панели управления","",img_panel_list,ot.panellist,None,None])
             self.read_panel_objects(node,self.p_it,it)
 
             node = self.conf.xml.nextNode(node)
@@ -137,7 +139,7 @@ class SESEditor(base_editor.BaseEditor, gtk.Viewport):
                node = self.conf.xml.nextNode(node)
                continue
 
-            it = self.model.append(iter,[nm,"",img_ses,ot.ses,ses_node])
+            it = self.model.append(iter,[nm,"",img_ses,ot.ses,ses_node,node])
 
             node = self.conf.xml.nextNode(node)
 
@@ -168,7 +170,7 @@ class SESEditor(base_editor.BaseEditor, gtk.Viewport):
                node = self.conf.xml.nextNode(node)
                continue
 
-            it = self.model.append(iter,[nm,"",img_panel,ot.panel,p_node])
+            it = self.model.append(iter,[nm,"",img_panel,ot.panel,p_node,node])
 
             node = self.conf.xml.nextNode(node)
  
@@ -238,7 +240,7 @@ class SESEditor(base_editor.BaseEditor, gtk.Viewport):
            return False
 
         img_panel = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_PANEL)
-        it = self.model.append(self.p_it,[nm,"",img_panel,ot.panel,xnode])
+        it = self.model.append(self.p_it,[nm,"",img_panel,ot.panel,xnode,node])
         self.edit_panel(it)
         self.conf.mark_changes()
 
@@ -246,6 +248,8 @@ class SESEditor(base_editor.BaseEditor, gtk.Viewport):
         xmlnode = self.model.get_value(iter,fid.xmlnode)
         if self.panel.run(xmlnode):
            self.model.set_value(iter,fid.name,xmlnode.prop("name"))
+           p_node = self.model.get_value(iter,fid.list_xmlnode)
+           p_node.setProp("name",xmlnode.prop("name"))
            self.conf.mark_changes()
 
     def on_edit_panel_activate(self, mitem):
