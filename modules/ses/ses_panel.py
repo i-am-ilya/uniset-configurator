@@ -29,7 +29,7 @@ class SESPanel(base_editor.BaseEditor):
         self.elements=[
             ["win","main_window",None,False],
             ["win_aps","win_aps",None,False],
-            ["lblName","lblName",None,False]
+            ["entName","entName",None,False]
         ]
         self.init_builder_elements(self.elements,self.builder)
 
@@ -48,6 +48,7 @@ class SESPanel(base_editor.BaseEditor):
            return False
 
         self.save2xml_elements_value(self.props,xmlnode)
+        xmlnode.setProp("name", self.entName.get_text())
         return True
 
     def init_apspanel(self, xmlnode):
@@ -55,7 +56,7 @@ class SESPanel(base_editor.BaseEditor):
         if not xmlnode:
            return
 
-        self.lblName.set_text( to_str(xmlnode.prop("name")) )
+        self.entName.set_text( to_str(xmlnode.prop("name")) )
         node = self.conf.xml.findNode(xmlnode,"APSPanel")[0]
         if node:
            self.apspanel.init(node)
