@@ -42,8 +42,7 @@ class GEUEditor(base_editor.BaseEditor, gtk.Viewport):
         self.panel = GEUPanel(conf)
   
         self.elements=[
-            ["tv","tv_main",None,False],
-            ["mod_name","io_module","module",False]
+            ["tv","tv_main",None,False]
         ]
         self.init_builder_elements(self.elements,self.builder)
 
@@ -180,8 +179,9 @@ class GEUEditor(base_editor.BaseEditor, gtk.Viewport):
                  return False
 
             t = model.get_value(iter,fid.etype)
-            if t == ot.panel:
-               self.panel.run(model.get_value(iter,fid.xmlnode))
+            if t == ot.panel and self.panel.run(model.get_value(iter,fid.xmlnode)):
+               self.mark_changes()
+
 
         return False
 

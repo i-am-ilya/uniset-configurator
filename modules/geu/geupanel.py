@@ -28,7 +28,8 @@ class GEUPanel(base_editor.BaseEditor):
   
         self.elements=[
             ["win","main_window",None,False],
-            ["win_aps","win_aps",None,False]
+            ["win_aps","win_aps",None,False],
+            ["lblName","lblName",None,False]
         ]
         self.init_builder_elements(self.elements,self.builder)
 
@@ -54,6 +55,7 @@ class GEUPanel(base_editor.BaseEditor):
         if not xmlnode:
            return
 
+        self.lblName.set_text( to_str(xmlnode.prop("name")) )
         node = self.conf.xml.findNode(xmlnode,"APSPanel")[0]
         if node:
            self.apspanel.init(node)

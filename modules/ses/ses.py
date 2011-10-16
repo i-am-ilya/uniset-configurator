@@ -6,6 +6,7 @@ import UniXML
 import configure
 import base_editor
 from global_conf import *
+from ses_panel import *
 
 class ot():
    scontrol = 1
@@ -39,10 +40,11 @@ class SESEditor(base_editor.BaseEditor, gtk.Viewport):
         self.builder.connect_signals(self)
   
         self.elements=[
-            ["tv","tv_main",None,False],
-            ["mod_name","io_module","module",False]
+            ["tv","tv_main",None,False]
         ]
         self.init_builder_elements(self.elements,self.builder)
+
+        self.panel = SESPanel(conf)
 
         self.tv.reparent(self)
 
@@ -172,8 +174,11 @@ class SESEditor(base_editor.BaseEditor, gtk.Viewport):
 #            t = model.get_value(iter,fid.etype)
 
         if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
-            if not iter:
-                 return False
+           if not iter:
+              return False
+           t = model.get_value(iter,fid.etype)
+           if t == ot.panel and self.panel.run(model.get_value(iter,fid.xmlnode)):
+              self.mark_changes()
 
         return False
 
