@@ -551,13 +551,11 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
         s = self.conf.s_dlg().run(self)
         if s != None:
            self.item_sensor.set_text(s.prop("name"))
-
     
     def on_apspanel_dlg_btn_lamp_clicked(self, button):
         s = self.conf.s_dlg().run(self)
         if s != None:
            self.item_lamp.set_text(s.prop("name"))
-
     
     def on_apspanel_dlg_btn_block_clicked(self, button):
         s = self.conf.s_dlg().run(self)

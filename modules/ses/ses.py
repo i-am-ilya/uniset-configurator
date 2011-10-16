@@ -40,11 +40,18 @@ class SESEditor(base_editor.BaseEditor, gtk.Viewport):
         self.builder.connect_signals(self)
   
         self.elements=[
-            ["tv","tv_main",None,False]
+            ["tv","tv_main",None,False],
+            ["panel_popup","panel_popup",None,False],
+            ["dlg_name","dlg_name",None,False],
+            ["dlg_name_ent","dlg_name_ent",None,False],
+            ["dlg_comm_ent","dlg_comm_ent",None,False]
         ]
         self.init_builder_elements(self.elements,self.builder)
 
         self.panel = SESPanel(conf)
+#        self.panel_items = [
+#           []
+#        ]
 
         self.tv.reparent(self)
 
@@ -66,6 +73,8 @@ class SESEditor(base_editor.BaseEditor, gtk.Viewport):
         self.tv.set_rules_hint(True)
         self.tv.connect("button-press-event", self.on_button_press_event)
 
+        self.s_it = None
+        self.p_it = None
         self.read_configuration()
     
     def reopen(self):
@@ -94,10 +103,10 @@ class SESEditor(base_editor.BaseEditor, gtk.Viewport):
 
             it = self.model.append(None,[nm,"",img_main,ot.scontrol,node])
 
-            s_it = self.model.append(it,["Процессы управления","",img_ses_list,ot.seslist,None])
-            self.read_ses_objects(node,s_it,it)
-            p_it = self.model.append(it,["Панели управления","",img_panel_list,ot.panellist,None])
-            self.read_panel_objects(node,p_it,it)
+            self.s_it = self.model.append(it,["Процессы управления","",img_ses_list,ot.seslist,None])
+            self.read_ses_objects(node,self.s_it,it)
+            self.p_it = self.model.append(it,["Панели управления","",img_panel_list,ot.panellist,None])
+            self.read_panel_objects(node,self.p_it,it)
 
             node = self.conf.xml.nextNode(node)
 
@@ -107,8 +116,8 @@ class SESEditor(base_editor.BaseEditor, gtk.Viewport):
         if snode == None:
             print "(SESEditor::read_configuration): <seslist> for <SEESControl name='%s'...> not found?!..."%to_str(main_node.prop("name"))
             return
-        self.model.set_value(p_iter,fid.xmlnode,snode)
-         
+
+        self.model.set_value(iter,fid.xmlnode,snode)
         
         img_ses = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_SES)
         node = self.conf.xml.firstNode(snode.children)
@@ -132,13 +141,14 @@ class SESEditor(base_editor.BaseEditor, gtk.Viewport):
 
             node = self.conf.xml.nextNode(node)
 
-    def read_panel_objects(self, main_node, iter,p_iter):
+    def read_panel_objects(self, main_node, iter, p_iter):
         mnode = self.conf.xml.firstNode(main_node.children)
         snode = self.conf.xml.findNode(mnode,"panellist")[0]
         if snode == None:
-            print "(SESEditor::read_panel_objects): <panellist> for <SEESControl name='%s'...> not found?!..."%to_str(main_node.prop("name"))
-            return
-        self.model.set_value(p_iter,fid.xmlnode,snode)
+           print "(SESEditor::read_panel_objects): <panellist> for <SEESControl name='%s'...> not found?!..."%to_str(main_node.prop("name"))
+           return
+
+        self.model.set_value(iter,fid.xmlnode,snode)
 
         img_panel = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_PANEL)
         node = self.conf.xml.firstNode(snode.children)
@@ -168,20 +178,88 @@ class SESEditor(base_editor.BaseEditor, gtk.Viewport):
 
         if event.button == 3:
             if not iter:
-#                 self.empty_popup.popup(None, None, None, event.button, event.time)
-                 return False
+               return False
 
-#            t = model.get_value(iter,fid.etype)
+            t = model.get_value(iter,fid.etype)
+            if t == ot.panel:
+               self.panel_popup.popup(None, None, None, event.button, event.time)
+               return False
 
         if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
            if not iter:
               return False
            t = model.get_value(iter,fid.etype)
-           if t == ot.panel and self.panel.run(model.get_value(iter,fid.xmlnode)):
-              self.mark_changes()
+           if t == ot.panel:
+              self.edit_panel(iter)
 
         return False
 
+    def on_del_panel_activate(self, mitem):
+        (model, iter) = self.tv.get_selection().get_selected()
+        if not iter:
+           return
+
+        t = model.get_value(iter,fid.etype)
+        if t!=ot.panel and t!=ot.ses:
+           return
+        
+        dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,_("Are you sure?"))
+        res = dlg.run()
+        dlg.hide()
+        if res == gtk.RESPONSE_NO:
+            return False
+            
+
+    def on_add_panel_activate(self, mitem):
+
+        self.dlg_comm_ent.set_text("")
+        self.dlg_name_ent.set_text("")
+
+        res = self.dlg_name.run()
+        self.dlg_name.hide()
+        if res == gtk.RESPONSE_OK:
+           return False
+
+        nm = self.dlg_name_ent.get_text()
+        if nm == "":
+           return False
+
+        comm = self.dlg_comm_ent.get_text()
+
+        p_xmlnode = self.model.get_value(self.p_it,fid.xmlnode)
+        node = p_xmlnode.newChild(None,"item",None)
+        node.setProp("name",nm)
+
+        xnode = self.create_new_panel(nm,comm)
+        if not xnode:
+           dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,"Не удалось создать xml-узел для панели")
+           res = dlg.run()
+           dlg.hide()
+           return False
+
+        img_panel = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_PANEL)
+        it = self.model.append(self.p_it,[nm,"",img_panel,ot.panel,xnode])
+        self.edit_panel(it)
+        self.conf.mark_changes()
+
+    def edit_panel(self, iter):
+        if self.panel.run(self.model.get_value(iter,fid.xmlnode)):
+           self.conf.mark_changes()
+
+    def on_edit_panel_activate(self, mitem):
+        pass
+
+    def create_new_panel(self, nm, comm):
+        xmlnode = self.settings_node.newChild(None,"SEESPanel",None)
+        xmlnode.setProp("name",nm)
+        xmlnode.setProp("comment",self.dlg_comm_ent.get_text())
+        a_node = xmlnode.newChild(None,"APSPanel",None)
+        a_node.setProp("name","APSPanel")
+#        for i in self.panel_items:
+#            x = a_node.newChild(None,"item",None)
+#            x.setProp(i[0],i[1])
+
+        return xmlnode
 
 def create_module(conf):
     return SESEditor(conf)
