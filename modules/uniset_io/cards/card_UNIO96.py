@@ -23,7 +23,7 @@ class Card_UNIO96(simple_card.SimpleCard):
         ]
         self.init_builder_elements(self.params,self.builder)
 
-        self.module_name = "unioxx5a"
+        self.module_name = "unioxx5"
         self.default_init(self.cname)
 
         # номера см. исходники модуля unioxx
