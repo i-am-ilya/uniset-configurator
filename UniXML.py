@@ -5,6 +5,7 @@ import sys
 import libxml2
 import xml.dom.minidom as md
 import re
+import os
 # ----------------------------- 
 class EmptyNode():
     
@@ -130,12 +131,22 @@ class UniXML(str):
         if node != None:
            node.unlinkNode()
 
-    def save(self, filename=None, pretty_format=True):
+    def save(self, filename=None, pretty_format=True, backup=False):
         if filename == None:
            filename = self.fname
-        
+
+        if backup:
+           # чтобы "ссылки" не бились, делаем копирование не через rename
+           #os.rename(self.fname,str(self.fname+".bak"))
+           f_in = file(self.fname,'rb')
+           f_out = file(str(self.fname+".bak"),'wb')
+           f_in.seek(0)
+           f_out.write(f_in.read())
+           f_in.close()
+           f_out.close()
+
         if pretty_format == True:
-		   return self.pretty_save(filename)
+           return self.pretty_save(filename)
 
         return self.doc.saveFile(filename)
 

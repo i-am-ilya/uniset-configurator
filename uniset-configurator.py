@@ -33,8 +33,8 @@ class MainWindow(gtk.Widget):
     def on_save_activate(self, data):
         print "on_save_activate: " + str(conf.xml.getFileName())
         if conf.xml:
-           os.rename(conf.xml.getFileName(),str(conf.xml.getFileName())+".bak")
-           conf.xml.save()
+           #os.rename(conf.xml.getFileName(),str(conf.xml.getFileName())+".bak")
+           conf.xml.save(None,True,True)
            conf.unmark_changes()
 
     def on_save_as_activate(self, data):
@@ -60,8 +60,8 @@ class MainWindow(gtk.Widget):
             dlg = gtk.MessageDialog(self.win, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO, _("Save changes?"))
             res = dlg.run()
             if res == gtk.RESPONSE_YES:
-               os.rename(conf.xml.getFileName(),str(conf.xml.getFileName())+".bak")
-               conf.xml.save()
+               #os.rename(conf.xml.getFileName(),str(conf.xml.getFileName())+".bak")
+               conf.xml.save(None,True,True)
             conf.unmark_changes()
 
 
@@ -114,10 +114,11 @@ if len(sys.argv) > 1:
            print "Can`t open XML file '%s'\n"%confile
            exit(1)
 
+      backup = False
       if rewrite_filename == confile:
-         os.rename(xml.getFileName(),str(xml.getFileName())+".bak")
+         backup = True
 
-      xml.save(rewrite_filename)
+      xml.save(rewrite_filename,True,backup)
       exit(0)
 
 if confile == "":
