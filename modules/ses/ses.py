@@ -52,6 +52,7 @@ class SESEditor(base_editor.BaseEditor, gtk.Viewport):
 
         self.panel = LinkEditor(conf,conf.datdir+"cpanel.src.xml")
         self.ses = LinkEditor(conf,conf.datdir+"sees.src.xml")
+        self.sescontrol = LinkEditor(conf,conf.datdir+"seescontrol.src.xml")
 
         self.tv.reparent(self)
 
@@ -191,10 +192,11 @@ class SESEditor(base_editor.BaseEditor, gtk.Viewport):
               return False
            t = model.get_value(iter,fid.etype)
            if t == ot.panel:
-              self.edit_panel(iter)
+              self.edit(iter, self.panel)
            elif t == ot.ses:
-              self.edit_ses(iter)
-
+              self.edit(iter, self.ses)
+           elif t == ot.scontrol:
+              self.edit(iter, self.sescontrol)
         return False
 
     def on_del_panel_activate(self, mitem):
@@ -245,17 +247,9 @@ class SESEditor(base_editor.BaseEditor, gtk.Viewport):
         self.edit_panel(it)
         self.conf.mark_changes()
 
-    def edit_panel(self, iter):
+    def edit(self, iter, editor):
         xmlnode = self.model.get_value(iter,fid.xmlnode)
-        if self.panel.run(xmlnode):
-           self.model.set_value(iter,fid.name,xmlnode.prop("name"))
-           p_node = self.model.get_value(iter,fid.list_xmlnode)
-           p_node.setProp("name",xmlnode.prop("name"))
-           self.conf.mark_changes()
-
-    def edit_ses(self, iter):
-        xmlnode = self.model.get_value(iter,fid.xmlnode)
-        if self.ses.run(xmlnode):
+        if editor.run(xmlnode):
            self.model.set_value(iter,fid.name,xmlnode.prop("name"))
            p_node = self.model.get_value(iter,fid.list_xmlnode)
            p_node.setProp("name",xmlnode.prop("name"))

@@ -119,6 +119,7 @@
                           </object>
                           <attributes>
                             <attribute name="background">5</attribute>
+                            <attribute name="text">2</attribute>
                           </attributes>
                         </child>
                       </object>
@@ -130,6 +131,7 @@
                           <object class="GtkCellRendererText" id="cell_iotype"/>
                           <attributes>
                             <attribute name="background">5</attribute>
+                            <attribute name="text">3</attribute>
                           </attributes>
                         </child>
                       </object>
