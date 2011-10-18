@@ -22,6 +22,7 @@ class fid():
    xmlnode = 6
    v_min = 7
    v_max = 8
+   v_def = 9
 
 class LinkEditor(base_editor.BaseEditor):
 
@@ -43,7 +44,9 @@ class LinkEditor(base_editor.BaseEditor):
             ["val_spn","val",None,False],
             ["val_comm","val_lblComm",None,False],
             ["val_name","val_lblName",None,False],
-            ["val_adj","adj1",None,False]
+            ["val_adj","adj1",None,False],
+            ["dlg_str","dlg_str",None,False],
+            ["val_str","val_str",None,False]
         ]
         self.init_builder_elements(self.elements,self.builder)
         #self.model = self.tv.get_model()
@@ -74,7 +77,8 @@ class LinkEditor(base_editor.BaseEditor):
                               gobject.TYPE_STRING,  # bg_color
                               object,  # xmlnode
                               gobject.TYPE_STRING,  # min
-                              gobject.TYPE_STRING)  # max
+                              gobject.TYPE_STRING,  # max
+                              gobject.TYPE_STRING)  # default value
 
         self.tv.set_model(self.model)
         self.tv.connect("button-press-event", self.on_btn_press_event, self.tv)
@@ -118,10 +122,10 @@ class LinkEditor(base_editor.BaseEditor):
             #print i.prop("name")
             if i.name == "item":
                self.addon_model.append(["",i.prop("name"),i.prop("type"),"",i.prop("comment"),None,None,
-                   i.prop("min"),i.prop("max")
+                   i.prop("min"),i.prop("max"),i.prop("default")
                   ])
             elif i.name == "group":
-               self.addon_model.append(["",i.prop("name"),i.prop("type"),"",i.prop("comment"),"gray",None,"",""])
+               self.addon_model.append(["",i.prop("name"),i.prop("type"),"",i.prop("comment"),"gray",None,"","",""])
 
     def init_tree(self, model, xmlnode):
         it = model.get_iter_first()
@@ -225,5 +229,14 @@ class LinkEditor(base_editor.BaseEditor):
               return False
            #self.on_select_clicked(tv.get_model(),iter)
            
+           elif etype == "str":
+              self.val_str.set_text(model.get_value(iter,fid.value))
+              res = self.dlg_str.run()
+              self.dlg_str.hide()
+              if res != dlg_RESPONSE_OK:
+                 return False
+
+              model.set_value(iter,fid.value,self.val_str.get_text())
+              return False
 
         return False
