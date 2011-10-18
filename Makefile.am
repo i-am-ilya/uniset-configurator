@@ -3,7 +3,7 @@ SUBDIRS = modules templates images
 python_SCRIPTS 	= *.py
 
 confdir     = $(pkgdatadir)
-conf_DATA   = mainwin.glade
+conf_DATA   = mainwin.glade LinkEditor.ui
 
 #if MAINTAINER_MODE
 #MAINTAINER=locale/lstart.mo
