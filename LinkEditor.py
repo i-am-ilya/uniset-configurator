@@ -201,8 +201,8 @@ class LinkEditor(base_editor.BaseEditor):
            if etype == "int":
               v_max = 100000000
               v_min = -v_max
-              mi = model.get_value(iter,fid.v_min)
-              ma = model.get_value(iter,fid.v_max)
+              mi = to_str(model.get_value(iter,fid.v_min))
+              ma = to_str(model.get_value(iter,fid.v_max))
               if ma:
                  v_max = to_int(ma)
               if mi:

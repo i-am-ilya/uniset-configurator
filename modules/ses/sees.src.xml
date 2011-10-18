@@ -18,9 +18,31 @@
 	<set name="sleep-msec" val="150"/>
   </settings>
   <params>
-	  <!-- type = [int,str] -->
+	  <!-- type = [int,str]
+	     int:  max,min
+		 str:
+	  -->
 	  <item name="AcceptControlTime" type="int" min="-1" max=""/>
-	  <item name="TestStr" type="str"/>
+	  <item name="AcceptWaitingTime" type="int" />
+	  <item name="CommandPause" type="int" />
+	  <item name="DGProtectionCheckTime" type="int" />
+	  <item name="Load20Time" type="int" />
+	  <item name="NoPowerTime" type="int" />
+	  <item name="OffTime" type="int" />
+	  <item name="OnTime" type="int" />
+	  <item name="QGOffTime" type="int" />
+	  <item name="QGOnTime" type="int" />
+	  <item name="RunTime" type="int" />
+	  <item name="askPause" type="int" />
+	  <item name="askTimeout" type="int" />
+	  <item name="filterPause" type="int" />
+	  <item name="initPause" type="int" />
+	  <item name="kmax" type="int" />
+	  <item name="modeTime" type="int" />
+	  <item name="num" type="int" />
+	  <item name="power" type="int" />
+	  <item name="protectionPause" type="int" />
+	  <item name="updateStateTime" type="int" />
   </params>
   <smap> 
   	<!-- name - название переменной в конф. файле -->
