@@ -17,6 +17,10 @@
   	<set name="msg-count" val="30"/>
 	<set name="sleep-msec" val="150"/>
   </settings>
+  <params>
+	  <!-- type = [int,str] -->
+	  <item name="AcceptControlTime" type="int" min="-1" max=""/>
+  </params>
   <smap> 
   	<!-- name - название переменной в конф. файле -->
 	<group name="GROUP" />

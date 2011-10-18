@@ -20,6 +20,8 @@ class fid():
    comm = 4
    bg = 5
    xmlnode = 6
+   v_min = 7
+   v_max = 8
 
 class LinkEditor(base_editor.BaseEditor):
 
@@ -33,8 +35,15 @@ class LinkEditor(base_editor.BaseEditor):
 
         self.elements=[
             ["win","main_window",None,False],
+            ["entName","entName",None,False],
             ["tv","main_treeview",None,False],
-            ["tv_msg","msg_treeview",None,False]
+            ["tv_msg","msg_treeview",None,False],
+            ["tv_addon","addon_treeview",None,False],
+            ["dlg_val","dlg_val",None,False],
+            ["val_spn","val",None,False],
+            ["val_comm","val_lblComm",None,False],
+            ["val_name","val_lblName",None,False],
+            ["val_adj","adj1",None,False]
         ]
         self.init_builder_elements(self.elements,self.builder)
         #self.model = self.tv.get_model()
@@ -56,11 +65,25 @@ class LinkEditor(base_editor.BaseEditor):
                               gobject.TYPE_STRING,  # bg_color
                               object)  # xmlnode
 
+        self.addon_model = gtk.ListStore(
+                              gobject.TYPE_STRING,  # value
+                              gobject.TYPE_STRING,  # name
+                              gobject.TYPE_STRING,  # vartype
+                              gobject.TYPE_STRING,  # iotype
+                              gobject.TYPE_STRING,  # comm
+                              gobject.TYPE_STRING,  # bg_color
+                              object,  # xmlnode
+                              gobject.TYPE_STRING,  # min
+                              gobject.TYPE_STRING)  # max
+
         self.tv.set_model(self.model)
-        self.tv.connect("button-press-event", self.on_tv_press_event)
+        self.tv.connect("button-press-event", self.on_btn_press_event, self.tv)
 
         self.tv_msg.set_model(self.msg_model)
-        self.tv_msg.connect("button-press-event", self.on_tv_msg_press_event)
+        self.tv_msg.connect("button-press-event", self.on_btn_press_event, self.tv_msg)
+
+        self.tv_addon.set_model(self.addon_model)
+        self.tv_addon.connect("button-press-event", self.on_addon_press_event, self.tv_addon)
 
         if source_file != "":
            self.build_editor(source_file)
@@ -90,6 +113,16 @@ class LinkEditor(base_editor.BaseEditor):
             elif i.name == "group":
                self.msg_model.append(["",i.prop("name"),"","",i.prop("comment"),"gray",None])
 
+        res = ctxt.xpathEval("//params/*")
+        for i in res:
+            #print i.prop("name")
+            if i.name == "item":
+               self.addon_model.append(["",i.prop("name"),i.prop("type"),"",i.prop("comment"),None,None,
+                   i.prop("min"),i.prop("max")
+                  ])
+            elif i.name == "group":
+               self.addon_model.append(["",i.prop("name"),i.prop("type"),"",i.prop("comment"),"gray",None,"",""])
+
     def init_tree(self, model, xmlnode):
         it = model.get_iter_first()
         while it is not None:
@@ -101,6 +134,8 @@ class LinkEditor(base_editor.BaseEditor):
 
         self.init_tree(self.tv.get_model(),xmlnode)
         self.init_tree(self.tv_msg.get_model(),xmlnode)
+        self.init_tree(self.tv_addon.get_model(),xmlnode)
+        self.entName.set_text( to_str(xmlnode.prop("name")) )
         
         res = self.win.run()
         self.win.hide()
@@ -109,6 +144,7 @@ class LinkEditor(base_editor.BaseEditor):
 
         self.save2xml(self.tv.get_model(),xmlnode)
         self.save2xml(self.tv_msg.get_model(),xmlnode)
+        self.save2xml(self.tv_addon.get_model(),xmlnode)
         xmlnode.setProp("name", self.entName.get_text())
         return True
 
@@ -118,8 +154,8 @@ class LinkEditor(base_editor.BaseEditor):
             xmlnode.setProp(model.get_value(it,fid.name),model.get_value(it,fid.value))
             it = model.iter_next(it)
 
-    def on_tv_press_event(self, object, event):
-        (model, iter) = self.tv.get_selection().get_selected()
+    def on_btn_press_event(self, object, event, tv):
+        (model, iter) = tv.get_selection().get_selected()
 
         if event.button == 3:
             if not iter:
@@ -128,21 +164,7 @@ class LinkEditor(base_editor.BaseEditor):
         if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
            if not iter:
               return False
-           self.on_select_clicked(self.tv.get_model(),iter)
-
-        return False
-
-    def on_tv_msg_press_event(self, object, event):
-        (model, iter) = self.tv_msg.get_selection().get_selected()
-
-        if event.button == 3:
-            if not iter:
-               return False
-
-        if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
-           if not iter:
-              return False
-           self.on_select_clicked(self.tv_msg.get_model(),iter)
+           self.on_select_clicked(tv.get_model(),iter)
 
         return False
 
@@ -158,3 +180,50 @@ class LinkEditor(base_editor.BaseEditor):
         else:
             model.set_value(iter,fid.value,"")
             model.set_value(iter,fid.xmlnode,None)
+
+    def on_addon_press_event(self, object, event, tv):
+        (model, iter) = tv.get_selection().get_selected()
+
+        if event.button == 3:
+            if not iter:
+               return False
+
+        if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
+           if not iter:
+              return False
+
+           xmlnode = model.get_value(iter,fid.xmlnode)
+           etype = model.get_value(iter,fid.vartype)
+           if etype == "int":
+              v_max = 100000000
+              v_min = -v_max
+              mi = model.get_value(iter,fid.v_min)
+              ma = model.get_value(iter,fid.v_max)
+              if ma:
+                 v_max = to_int(ma)
+              if mi:
+                 v_min = to_int(mi)
+
+              self.val_adj.set_upper(v_max)
+              self.val_adj.set_lower(v_min)
+              self.val_name.set_text(model.get_value(iter,fid.name))
+              txt = ""
+              if mi!="" and ma!="":
+                 txt = "Введите число от %s до %s"%(mi,ma)
+              elif mi!="":
+                 txt = "Введите число больше %s"%(mi)
+              elif ma!="":
+                 txt = "Введите число меньше %s"%(ma)
+
+              self.val_comm.set_text(txt)
+              res = self.dlg_val.run()
+              self.dlg_val.hide()
+              if res != dlg_RESPONSE_OK:
+                 return False
+
+              model.set_value(iter,fid.value, to_str(self.val_spn.get_value_as_int()) )
+              return False
+           #self.on_select_clicked(tv.get_model(),iter)
+           
+
+        return False
