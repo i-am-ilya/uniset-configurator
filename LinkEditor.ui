@@ -115,7 +115,8 @@
                         <property name="title" translatable="yes">vtype</property>
                         <child>
                           <object class="GtkCellRendererText" id="cell_vtype">
-                            <property name="weight">450</property>
+                            <property name="foreground_gdk">#434342424646</property>
+                            <property name="weight">800</property>
                           </object>
                           <attributes>
                             <attribute name="background">5</attribute>
@@ -128,7 +129,10 @@
                       <object class="GtkTreeViewColumn" id="col_iotype">
                         <property name="title" translatable="yes">iotype</property>
                         <child>
-                          <object class="GtkCellRendererText" id="cell_iotype"/>
+                          <object class="GtkCellRendererText" id="cell_iotype">
+                            <property name="foreground_gdk">#434342424646</property>
+                            <property name="weight">800</property>
+                          </object>
                           <attributes>
                             <attribute name="background">5</attribute>
                             <attribute name="text">3</attribute>
