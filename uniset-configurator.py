@@ -138,8 +138,35 @@ except:
    dialog.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("gray")) 
    dialog.run()
    dialog.destroy()
+   exit(1)
 
+'''
+if len(sys.argv) > 1:
+   ind = findArgParam("--linkedit")
+   if ind != -1:
+      if len(sys.argv) < ind+2:
+         print "Unknown confname or object. Use --linkedit confname source.xml\n"
+         exit(1)         
 
+      cname = sys.argv[ind+1]
+      src_file = sys.argv[ind+2]
+
+      try:
+           xmlnode = conf.xml.findNode(conf.xml.getDoc(),cname)[0]
+           if xmlnode == None:
+              print "%s not found\n"%oname
+              exit(1)
+
+           ed = LinkEditor(conf, src_file)
+           if ed.run(xmlnode):
+              conf.xml.save(None,True,True)
+           gtk.main()
+           exit(0)
+
+      except:
+           print "linkeditor: exception...'\n"
+           exit(1)
+'''
 
 def add_module( face, lbl, mainbook, glade ):
     # main tree

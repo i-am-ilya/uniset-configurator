@@ -62,3 +62,10 @@ def checkArgParam(param,defval=""):
            return True
 
     return defval
+
+def findArgParam(param):
+    for i in range(0, len(sys.argv)):
+        if sys.argv[i] == param:
+           return i
+
+    return -1
