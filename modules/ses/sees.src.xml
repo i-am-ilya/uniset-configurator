@@ -20,6 +20,7 @@
   <params>
 	  <!-- type = [int,str] -->
 	  <item name="AcceptControlTime" type="int" min="-1" max=""/>
+	  <item name="TestStr" type="str"/>
   </params>
   <smap> 
   	<!-- name - название переменной в конф. файле -->
