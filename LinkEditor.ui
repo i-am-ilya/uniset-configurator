@@ -289,6 +289,20 @@
                       </object>
                     </child>
                     <child>
+                      <object class="GtkTreeViewColumn" id="treeviewcolumn1">
+                        <property name="title" translatable="yes">&#x422;&#x438;&#x43F;</property>
+                        <child>
+                          <object class="GtkCellRendererText" id="cellrenderertext1">
+                            <property name="foreground_gdk">#6def6d398589</property>
+                            <property name="weight">800</property>
+                          </object>
+                          <attributes>
+                            <attribute name="text">2</attribute>
+                          </attributes>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
                       <object class="GtkTreeViewColumn" id="col_comm2">
                         <property name="title" translatable="yes">&#x41A;&#x43E;&#x43C;&#x43C;&#x435;&#x43D;&#x442;&#x430;&#x440;&#x438;&#x439;</property>
                         <child>
