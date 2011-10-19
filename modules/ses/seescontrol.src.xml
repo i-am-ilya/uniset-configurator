@@ -17,6 +17,21 @@
   	<set name="msg-count" val="30"/>
 	<set name="sleep-msec" val="200"/>
   </settings>
+  <params>
+	   <item name="askPause" type="int" />
+	   <item name="askTimeout" type="int" />
+	   <item name="deviation_U" type="float" />
+	   <item name="deviation_U_nom" type="int" />
+	   <item name="deviation_U_timeout_msec" type="int" />
+	   <item name="deviation_f" type="float" />
+	   <item name="deviation_f_nom" type="int" />
+	   <item name="deviation_f_timeout_msec" type="int" />
+	   <item name="heartbeat_max" type="int" />
+	   <item name="initLoadingTime" type="int" />
+	   <item name="maxWorkingDG" type="int" />
+	   <item name="reservPowerTime" type="int" />
+	   <item name="timeoutUnbalance" type="int" />
+  </params>
   <smap>
   		<item name="SEES_ProtReset_S" vartype="in" iotype="DI" />
   		<item name="SEES_ProtResetLamp_C" vartype="out" iotype="AO" />

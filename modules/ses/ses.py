@@ -252,7 +252,8 @@ class SESEditor(base_editor.BaseEditor, gtk.Viewport):
         if editor.run(xmlnode):
            self.model.set_value(iter,fid.name,xmlnode.prop("name"))
            p_node = self.model.get_value(iter,fid.list_xmlnode)
-           p_node.setProp("name",xmlnode.prop("name"))
+           if p_node:
+              p_node.setProp("name",xmlnode.prop("name"))
            self.conf.mark_changes()
 
     def on_edit_panel_activate(self, mitem):
