@@ -36,6 +36,7 @@ class LinkEditor(base_editor.BaseEditor):
 
         self.elements=[
             ["win","main_window",None,False],
+            ["main_book","main_book",None,False],
             ["entName","entName",None,False],
             ["tv","main_treeview",None,False],
             ["tv_msg","msg_treeview",None,False],
@@ -130,6 +131,10 @@ class LinkEditor(base_editor.BaseEditor):
             elif i.name == "group":
                self.addon_model.append(["",i.prop("name"),i.prop("type"),"",i.prop("comment"),"gray",None,"","",""])
 
+
+    def get_face(self):
+        return self.main_book
+
     def init_tree(self, model, xmlnode):
         it = model.get_iter_first()
         while it is not None:
@@ -137,18 +142,23 @@ class LinkEditor(base_editor.BaseEditor):
             model.set_value(it,fid.value,val)
             it = model.iter_next(it)
 
-    def run(self, xmlnode):
-
+    def pre_init(self, xmlnode):
         self.init_tree(self.tv.get_model(),xmlnode)
         self.init_tree(self.tv_msg.get_model(),xmlnode)
         self.init_tree(self.tv_addon.get_model(),xmlnode)
         self.entName.set_text( to_str(xmlnode.prop("name")) )
         
+    def run(self, xmlnode):
+
+        self.pre_init(xmlnode)
         res = self.win.run()
         self.win.hide()
         if res != dlg_RESPONSE_OK:
            return False
 
+        return self.save(xmlnode)
+
+    def save(self,xmlnode):
         self.save2xml(self.tv.get_model(),xmlnode)
         self.save2xml(self.tv_msg.get_model(),xmlnode)
         self.save2xml(self.tv_addon.get_model(),xmlnode)
