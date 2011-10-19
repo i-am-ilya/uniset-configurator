@@ -50,7 +50,7 @@ class SESEditor(base_editor.BaseEditor, gtk.Viewport):
         ]
         self.init_builder_elements(self.elements,self.builder)
 
-        self.panel = LinkEditor(conf,conf.datdir+"cpanel.src.xml")
+        self.panel = SESPanel(conf)
         self.ses = LinkEditor(conf,conf.datdir+"sees.src.xml")
         self.sescontrol = LinkEditor(conf,conf.datdir+"seescontrol.src.xml")
 
