@@ -17,6 +17,26 @@
   	<set name="msg-count" val="30"/>
 	<set name="sleep-msec" val="150"/>
   </settings>
+  <params>
+  	  <item name="number" type="int" min="0"/>
+	  <item name="GlobalLockControlTime" type="int" min="0"/>
+	  <item name="GlobalLockWaitingTime" type="int" min="0"/>
+	  <item name="BlockStartWaitTime" type="int" min="0"/>
+	  <item name="ChargeTime" type="int" min="0"/>
+	  <item name="CoolingPumpOffTime" type="int" min="0"/>
+	  <item name="CoolingPumpOnTime" type="int" min="0"/>
+	  <item name="FQCOffTime" type="int" min="0"/>
+	  <item name="FQCOnTime" type="int" min="0"/>
+	  <item name="Pnom" type="int" min="0"/>
+	  <item name="QMOffTime" type="int" min="0"/>
+	  <item name="QMOnTime" type="int" min="0"/>
+	  <item name="QPOffTime" type="int" min="0"/>
+	  <item name="QPOnTime" type="int" min="0"/>
+	  <item name="initPause" type="int" min="0"/>
+	  <item name="powerLimit" type="int" min="0"/>
+	  <item name="powerLimitTime" type="int" min="0"/>
+	  <item name="resetPause" type="int" min="0"/>
+  </params>
   <smap> 
   	<!-- name - название переменной в конф. файле -->
 	<item name="isPowerLimit_s" vartype="in" iotype="DI" comment="ПЧ перешёл в режим ограничения мощности" />     

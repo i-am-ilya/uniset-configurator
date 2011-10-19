@@ -17,6 +17,12 @@
   	<set name="msg-count" val="30"/>
 	<set name="sleep-msec" val="150"/>
   </settings>
+  <params>
+	  <item name="prior" type="int" min="0"/>
+	  <item name="RPMnom" type="int" min="0"/>
+	  <item name="remoteLockNumber" type="int" min="0"/>
+	  <item name="heartbeat_id" type="sensor"/>
+  </params>
   <smap> 
 	<item name="On_f" vartype="out" iotype="DI" comment="GEU ON command" />
 	<item name="Off_f" vartype="out" iotype="DI" comment="GEU OFF command" />
