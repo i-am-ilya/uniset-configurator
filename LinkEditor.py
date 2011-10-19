@@ -282,4 +282,13 @@ class LinkEditor(base_editor.BaseEditor):
               model.set_value(iter,fid.value,v)
               return False
 
+           elif etype == "sensor":
+              txt = model.get_value(iter,fid.value)
+              xmlnode = self.conf.s_dlg().set_selected_name(txt)
+              s = self.conf.s_dlg().run(self,xmlnode)
+              if s != None:
+                 model.set_value(iter,fid.value,to_str(s.prop("name")))
+              else:
+                 model.set_value(iter,fid.value,"")
+
         return False
