@@ -13,6 +13,7 @@ import libxml2
 import UniXML
 import locale
 from global_conf import *
+import LinkEditor
 
 
 locale.setlocale(locale.LC_ALL, "ru_RU.UTF8")
@@ -140,34 +141,6 @@ except:
    dialog.destroy()
    exit(1)
 
-'''
-if len(sys.argv) > 1:
-   ind = findArgParam("--linkedit")
-   if ind != -1:
-      if len(sys.argv) < ind+2:
-         print "Unknown confname or object. Use --linkedit confname source.xml\n"
-         exit(1)         
-
-      cname = sys.argv[ind+1]
-      src_file = sys.argv[ind+2]
-
-      try:
-           xmlnode = conf.xml.findNode(conf.xml.getDoc(),cname)[0]
-           if xmlnode == None:
-              print "%s not found\n"%oname
-              exit(1)
-
-           ed = LinkEditor(conf, src_file)
-           if ed.run(xmlnode):
-              conf.xml.save(None,True,True)
-           gtk.main()
-           exit(0)
-
-      except:
-           print "linkeditor: exception...'\n"
-           exit(1)
-'''
-
 def add_module( face, lbl, mainbook, glade ):
     # main tree
     scwin = gtk.ScrolledWindow()
@@ -211,6 +184,34 @@ for n in modlist:
     if n not in prior_mlist:
        if imodules.has_key(n):
           load_list.append(n)
+
+if len(sys.argv) > 1:
+   ind = findArgParam("--linkedit")
+   if ind != -1:
+      if len(sys.argv) < ind+2:
+         print "Unknown confname or object. Use --linkedit confname source.xml\n"
+         exit(1)
+
+      cname = sys.argv[ind+1]
+      src_file = sys.argv[ind+2]
+
+      xmlnode = conf.xml.findNode(conf.xml.getDoc(),cname)[0]
+      if xmlnode == None:
+         print "%s not found\n"%oname
+         exit(1)
+
+      mwin = glade.get_widget("MainWindow")
+      #mwin.set_visible(False)
+      #mwin.resize(1,1)
+#      mwin.set_decorated(False)
+#      mwin.set_default_size(10,10)
+      mwin.hide()
+      ed = LinkEditor.create_module(conf)
+      ed.build_editor(src_file)
+      if ed.run(xmlnode) and conf.is_changed():
+         conf.xml.save(None,True,True)
+
+      exit(0)
 
 # загружаем согласно списку
 for n in load_list:

@@ -156,6 +156,7 @@ class LinkEditor(base_editor.BaseEditor):
         if res != dlg_RESPONSE_OK:
            return False
 
+        self.conf.mark_changes()
         return self.save(xmlnode)
 
     def save(self,xmlnode):
@@ -292,3 +293,9 @@ class LinkEditor(base_editor.BaseEditor):
                  model.set_value(iter,fid.value,"")
 
         return False
+
+def create_module(conf):
+    return LinkEditor(conf)
+
+def module_name():
+    return "Редактор связей"
