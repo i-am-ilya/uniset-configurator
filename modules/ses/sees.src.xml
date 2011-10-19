@@ -18,10 +18,14 @@
 	<set name="sleep-msec" val="150"/>
   </settings>
   <params>
-	  <!-- type = [int,str]
+	  <!-- type = [int,str,bool,float]
 	     int:  max,min
 		 str:
+		 float:
+		 bool:
 	  -->
+	  <item name="TestBool" type="bool"/>
+	  <item name="TestFloat" type="float" min="-1.5" max="5.5"/>
 	  <item name="AcceptControlTime" type="int" min="-1" max=""/>
 	  <item name="AcceptWaitingTime" type="int" />
 	  <item name="CommandPause" type="int" />

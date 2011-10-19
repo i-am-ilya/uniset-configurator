@@ -23,6 +23,11 @@ def to_int(str_val):
        return 0
     return int(str_val)
 
+def to_float(str_val):
+    if str_val == "" or str_val == None:
+       return 0.0
+    return float(str_val)
+
 def to_str(str_val):
     if str_val == None: 
        return ""

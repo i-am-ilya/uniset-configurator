@@ -46,7 +46,10 @@ class LinkEditor(base_editor.BaseEditor):
             ["val_name","val_lblName",None,False],
             ["val_adj","adj1",None,False],
             ["dlg_str","dlg_str",None,False],
-            ["val_str","val_str",None,False]
+            ["val_str","val_str",None,False],
+            ["dlg_bool","dlg_bool",None,False],
+            ["val_bool","cb_bool",None,False]
+            
         ]
         self.init_builder_elements(self.elements,self.builder)
         #self.model = self.tv.get_model()
@@ -198,19 +201,32 @@ class LinkEditor(base_editor.BaseEditor):
 
            xmlnode = model.get_value(iter,fid.xmlnode)
            etype = model.get_value(iter,fid.vartype)
-           if etype == "int":
+
+           if etype == "int" or etype == "float":
               v_max = 100000000
               v_min = -v_max
               mi = to_str(model.get_value(iter,fid.v_min))
               ma = to_str(model.get_value(iter,fid.v_max))
               if ma:
-                 v_max = to_int(ma)
+                 if etype == "int":
+                    v_max = to_int(ma)
+                 else:
+                    v_max = to_float(ma)
               if mi:
-                 v_min = to_int(mi)
+                 if etype == "int":
+                    v_min = to_int(mi)
+                 else:
+                    v_min = to_float(mi)
 
               self.val_adj.set_upper(v_max)
               self.val_adj.set_lower(v_min)
               self.val_name.set_text(model.get_value(iter,fid.name))
+              if etype == "int":
+                 self.val_spn.set_digits(0)
+              else:
+                 self.val_spn.set_digits(3)
+              
+              self.val_spn.set_value( to_float(model.get_value(iter,fid.value)) )
               txt = ""
               if mi!="" and ma!="":
                  txt = "Введите число от %s до %s"%(mi,ma)
@@ -225,10 +241,13 @@ class LinkEditor(base_editor.BaseEditor):
               if res != dlg_RESPONSE_OK:
                  return False
 
-              model.set_value(iter,fid.value, to_str(self.val_spn.get_value_as_int()) )
+              if etype == "int":
+                 model.set_value(iter,fid.value, to_str(self.val_spn.get_value_as_int()) )
+              else:
+                 model.set_value(iter,fid.value, to_str(self.val_spn.get_value()))
+
               return False
-           #self.on_select_clicked(tv.get_model(),iter)
-           
+          
            elif etype == "str":
               self.val_str.set_text(model.get_value(iter,fid.value))
               res = self.dlg_str.run()
@@ -237,6 +256,20 @@ class LinkEditor(base_editor.BaseEditor):
                  return False
 
               model.set_value(iter,fid.value,self.val_str.get_text())
+              return False
+
+           elif etype == "bool":
+              self.val_bool.set_active( to_int(model.get_value(iter,fid.value)) )
+              self.val_bool.set_label(model.get_value(iter,fid.name))
+              res = self.dlg_bool.run()
+              self.dlg_bool.hide()
+              if res != dlg_RESPONSE_OK:
+                 return False
+
+              v = "0"
+              if self.val_bool.get_active():
+                 v = "1"
+              model.set_value(iter,fid.value,v)
               return False
 
         return False
