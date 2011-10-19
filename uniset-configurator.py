@@ -133,13 +133,41 @@ if confile == "":
    confile = dlg.get_filename()
 
 try:
-   conf = configure.Conf(confile,glade,datdir,moddir) 
+   conf = configure.Conf(confile,glade,datdir,moddir)
 except: 
    dialog = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, _("XML file damage or not found! \n Loading FAILED!"))
    dialog.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("gray")) 
    dialog.run()
    dialog.destroy()
    exit(1)
+
+linkeditor = False
+if "linkeditor" in str(sys.argv[0]):
+   linkeditor = True
+
+if len(sys.argv) > 1 or linkeditor:
+   ind = findArgParam("--linkedit")
+   if linkeditor:
+      ind = 1
+
+   if ind != -1:
+      if len(sys.argv) < ind+2:
+         print "Unknown confname or object. Use --linkedit confname source.xml\n"
+         exit(1)
+
+      cname = sys.argv[ind+1]
+      src_file = sys.argv[ind+2]
+
+      xmlnode = conf.xml.findNode(conf.xml.getDoc(),cname)[0]
+      if xmlnode == None:
+         print "%s not found\n"%oname
+         exit(1)
+
+      ed = LinkEditor.create_module(conf)
+      ed.build_editor(src_file)
+      if ed.run(xmlnode) and conf.is_changed():
+         conf.xml.save(None,True,True)
+      exit(0)
 
 def add_module( face, lbl, mainbook, glade ):
     # main tree
@@ -185,40 +213,14 @@ for n in modlist:
        if imodules.has_key(n):
           load_list.append(n)
 
-if len(sys.argv) > 1:
-   ind = findArgParam("--linkedit")
-   if ind != -1:
-      if len(sys.argv) < ind+2:
-         print "Unknown confname or object. Use --linkedit confname source.xml\n"
-         exit(1)
-
-      cname = sys.argv[ind+1]
-      src_file = sys.argv[ind+2]
-
-      xmlnode = conf.xml.findNode(conf.xml.getDoc(),cname)[0]
-      if xmlnode == None:
-         print "%s not found\n"%oname
-         exit(1)
-
-      mwin = glade.get_widget("MainWindow")
-      #mwin.set_visible(False)
-      #mwin.resize(1,1)
-#      mwin.set_decorated(False)
-#      mwin.set_default_size(10,10)
-      mwin.hide()
-      ed = LinkEditor.create_module(conf)
-      ed.build_editor(src_file)
-      if ed.run(xmlnode) and conf.is_changed():
-         conf.xml.save(None,True,True)
-
-      exit(0)
-
 # загружаем согласно списку
 for n in load_list:
     m = imodules[n]
     face = m.create_module(conf)
     add_module(face,m.module_name(),mainbook,glade)
 # ---------------
+mwin = glade.get_widget("MainWindow")
 mainbook.show()
 MainWindow()
+mwin.show()
 gtk.main()

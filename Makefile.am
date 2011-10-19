@@ -1,6 +1,6 @@
 SUBDIRS = modules templates images
 
-python_SCRIPTS 	= *.py
+python_SCRIPTS 	= *.py uniset-linkeditor
 
 confdir     = $(pkgdatadir)
 conf_DATA   = mainwin.glade LinkEditor.ui
