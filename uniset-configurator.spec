@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.9
-Release: alt3
+Release: alt4
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -44,6 +44,7 @@ mv -f %buildroot%python_sitelibdir_noarch/*.py %buildroot%python_sitelibdir_noar
 
 mkdir -p %buildroot/%_bindir/
 ln -s %python_sitelibdir_noarch/%name/%name.py %buildroot/%_bindir/%name
+ln -s %python_sitelibdir_noarch/%name/%name.py %buildroot/%_bindir/uniset-linkeditor
 ln -s %python_sitelibdir_noarch/%name/uniset_io_conf.py %buildroot/%_bindir/uniset-ioconf
 ln -s %python_sitelibdir_noarch/%name/lcaps_conf.py %buildroot/%_bindir/uniset-lcaps-conf
 ln -s %python_sitelibdir_noarch/%name/apspanel_conf.py %buildroot/%_bindir/uniset-apspanel-conf
@@ -59,6 +60,10 @@ ln -s %python_sitelibdir_noarch/%name/can_conf.py %buildroot/%_bindir/uniset-can
 %_bindir/*
 
 %changelog
+* Thu Oct 20 2011 Pavel Vainerman <pv@altlinux.ru> 0.9-alt4
+- add ses and geu editor
+- add LinkEditor
+
 * Tue Oct 04 2011 Pavel Vainerman <pv@altlinux.ru> 0.9-alt3
 - add "unet" configurator
 

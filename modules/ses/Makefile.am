@@ -1,5 +1,5 @@
 moddir    = @pythondir@/@PACKAGE@/modules/ses
-mod_DATA  = ses.py
+mod_DATA  = *.py
 
 ddir     = $(pkgdatadir)
-d_DATA   = *.ui
+d_DATA   = *.ui *.xml
