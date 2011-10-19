@@ -160,7 +160,7 @@ if len(sys.argv) > 1 or linkeditor:
 
       xmlnode = conf.xml.findNode(conf.xml.getDoc(),cname)[0]
       if xmlnode == None:
-         print "%s not found\n"%oname
+         print "%s not found\n"%cname
          exit(1)
 
       ed = LinkEditor.create_module(conf)
