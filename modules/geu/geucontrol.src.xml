@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	name 		- название класса
+	msgcount	- сколько сообщений обрабатывается за один раз
+	sleep_msec	- пауза между итерациями в работе процесса
+
+	type
+	====
+		in 	- входные регистры (только для чтения)
+		out	- выходные регистры (запись)
+		io  - запись и чтение
+-->
+<GEUControl>
+  <settings>
+  	<set name="class-name" val="GEUControl"/>
+	<set name="base-class" val="ObjectsManager"/>
+  	<set name="msg-count" val="30"/>
+	<set name="sleep-msec" val="150"/>
+  </settings>
+  <smap> 
+	<item name="On_f" vartype="out" iotype="DI" comment="GEU ON command" />
+	<item name="Off_f" vartype="out" iotype="DI" comment="GEU OFF command" />
+	<item name="setRPM_f" vartype="out" iotype="AO" comment="GEU set RPM" />
+	<item name="setRPM_as" vartype="in" iotype="AI" comment="Заданные обороты (от внешней системы)" />
+	<item name="Reset_f" vartype="out" iotype="DI" comment="GEU reset command" />
+	<item name="Confirm_f" vartype="out" iotype="DI" comment="GEU Panel confirm command" />
+	<item name="ProtectionOff_f" vartype="out" iotype="DI" comment="GEU off protection command" />
+  	<item name="LocalPost_s" vartype="in" iotype="DI" comment="Выбрано управление с местного поста" />
+	<item name="idPost_f" vartype="out" iotype="AI" comment="selected post ID" />
+	<item name="lmpON_c" vartype="out" iotype="AO" comment="Lamp ON" />
+	<item name="lmpOFF_c" vartype="out" iotype="AO" comment="Lamp OFF" />
+	<item name="ProtectionMode_f" vartype="out" iotype="DI" comment="GEU protection mode" />
+	<item name="needPowerLimit_c" vartype="out" iotype="DI" comment="GEU need power limit" />
+	<item name="allowEnable_c" vartype="out" iotype="DI" comment="GEU allow enable" />
+	
+	<!-- Взаимодействие бортов между собой -->
+	<item name="qm1_s" vartype="in" iotype="DI" comment="QM1" />
+	<item name="qm2_s" vartype="in" iotype="DI" comment="QM2" />
+	<item name="remote_get_global_lock_s" vartype="in" iotype="DI" comment="Запрос от другого борта на включение/отключение" />
+	<item name="remote_global_lock_ok_s" vartype="out" iotype="DI" comment="Ответ: разрешение другому борту" />
+	<item name="remote_heartbeat_s" vartype="in" iotype="DI" comment="Живость удалённого процесса" />
+	<item name="remote_not_respond_s" vartype="in" iotype="DI" comment="Связь с удалённым узлом" />
+	<item name="get_global_lock_s" vartype="out" iotype="DI" comment="Запрос на включение/отключение отсылаемый на другой борт" />
+	<item name="global_lock_ok_s" vartype="in" iotype="DI" comment="Ответ на включение/отключение (от другого борта)" />
+  </smap>
+  <msgmap>
+  </msgmap>
+</GEUControl>
