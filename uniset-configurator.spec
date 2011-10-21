@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.9
-Release: alt4
+Release: alt5
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -60,6 +60,9 @@ ln -s %python_sitelibdir_noarch/%name/can_conf.py %buildroot/%_bindir/uniset-can
 %_bindir/*
 
 %changelog
+* Fri Oct 21 2011 Pavel Vainerman <pv@altlinux.ru> 0.9-alt5
+- add UNIO96-1 card editor
+
 * Thu Oct 20 2011 Pavel Vainerman <pv@altlinux.ru> 0.9-alt4
 - add ses and geu editor
 - add LinkEditor

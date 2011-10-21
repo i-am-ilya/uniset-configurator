@@ -12,7 +12,7 @@ class Card_UNIO96(simple_card.SimpleCard):
 
         simple_card.SimpleCard.__init__(self,datdir,uifile)
 
-        self.cname = "UNIO86"
+        self.cname = "UNIO96"
         self.clist = self.build_channel_list(self.cname)
 
         self.params=[
@@ -38,7 +38,7 @@ class Card_UNIO96(simple_card.SimpleCard):
         self.subdev_type["3"] = "TBI16_8"
 
     def get_supported_cards( self ):
-        return ["UNIO96","UNIO48"]
+        return ["UNIO96","UNIO48","UNIO96-1"]
 
     def build_channel_list( self, cname ):
         clist=[]

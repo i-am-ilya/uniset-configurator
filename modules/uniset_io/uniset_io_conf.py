@@ -47,10 +47,11 @@ class IOConfig():
             editor = m.create_editor(self.moddir)
             self.editors[m] = editor
             for cname in editor.get_supported_cards():
-                self.cardlist[cname] = editor
+                self.cardlist[cname.upper()] = editor
 
     def get_channel_list(self, cardnode):
         cname = cardnode.prop("name").upper()
+        
         if cname in self.cardlist:
            editor = self.cardlist[cname]
            return editor.get_channel_list(cname)
