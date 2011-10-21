@@ -30,12 +30,12 @@
 	
 		<!-- Разные лампочки и кнопочки -->
 		<item name="keyTestLamp" vartype="in" iotype="DI" comment="test lamp" no_check_id="1"/>
-		<item name="alarmBreak" vartype="in" iotype="DI" comment="(грибок): Аварийное отключение ГЭД"/>
+		<item name="emergencyStop" vartype="in" iotype="DI" comment="(грибок): Аварийное отключение ГЭД"/>
 		<item name="lmpPowerLimit" vartype="out" iotype="AO" comment="лампочка: ограничение мощности" no_check_id="1"/>
 		<item name="powerLimit" vartype="in" iotype="DI" comment="режим ограничения мощности"/>
 		<item name="lmpNeedPowerLimit" vartype="out" iotype="AO" comment="лампочка: требование снизить мощность" no_check_id="1"/>
 		<item name="needPowerLimit" vartype="in" iotype="DI" comment="требование снизить мощность"/>
-		<item name="geuAlarm" vartype="in" iotype="DI" comment="Авария ГЭУ"/>
+		<item name="geuFailure" vartype="in" iotype="DI" comment="Авария ГЭУ"/>
 		<item name="CS_Failed_Lamp" vartype="out" iotype="DI" comment="лампочка: Неисправность СУ ГУЭ"/>
 		
 

@@ -23,8 +23,6 @@
 	  <item name="GlobalLockWaitingTime" type="int" min="0"/>
 	  <item name="BlockStartWaitTime" type="int" min="0"/>
 	  <item name="ChargeTime" type="int" min="0"/>
-	  <item name="CoolingPumpOffTime" type="int" min="0"/>
-	  <item name="CoolingPumpOnTime" type="int" min="0"/>
 	  <item name="FQCOffTime" type="int" min="0"/>
 	  <item name="FQCOnTime" type="int" min="0"/>
 	  <item name="Pnom" type="int" min="0"/>
@@ -50,24 +48,6 @@
 	<item name="ProtectionMode_f" vartype="out" iotype="DI" comment="protection" />
 	<item name="needPower_c" vartype="out" iotype="DI" comment="need power (for SES)" />
 	<item name="allowEnable_c" vartype="out" iotype="DI" comment="allow enable" />
-	
-	<!-- Управление насосами охлаждения -->
-<!--	
-	<item name="Pump1_ControlReady_s" vartype="in" iotype="DO" comment="Насос N1 управление включено"/>
-	<item name="Pump2_ControlReady_s" vartype="in" iotype="DO" comment="Насос N1 управление включено"/>
--->
-	<item name="Pump1_Working_s" vartype="in" iotype="DI" comment="Насос N1 работает"/>
-	<item name="Pump2_Working_s" vartype="in" iotype="DI" comment="Насос N2 работает"/>
-	<item name="Pump1_On_f" vartype="out" iotype="DI" comment="CoolingPump1 ON command" />
-	<item name="Pump1_Off_f" vartype="out" iotype="DI" comment="CoolingPump1 ON command" />
-	<item name="Pump2_On_f" vartype="out" iotype="DI" comment="CoolingPump1 ON command" />
-	<item name="Pump2_Off_f" vartype="out" iotype="DI" comment="CoolingPump1 ON command" />
-	<item name="CoolingSystem_BlockStart_s" vartype="in" iotype="DI" comment="ГЭД: сигнал блокирования пуска от системы охлаждения забортной водой" />
-	<item name="FQC_CoolingSystem_BlockStart_s" vartype="in" iotype="DI" comment="ГЭД: сигнал блокирования пуска от системы охлаждения пресной водой" />
-	
-	<!-- отключение ПЧ по пожару -->
-	<item name="fire_s" vartype="in" iotype="DI" comment="Fire in the room"/>
-	<item name="alarm_stop_c" vartype="out" iotype="DO" comment="GEU alarm stop"/>	
   </smap>
   
   <msgmap>
@@ -89,12 +69,5 @@
 	<item name="mid_ProtectionOn_Att" comment="код причины 'Режим защиты' (Внимание)"/>
 	<item name="mid_ProtectionNotReset_Att" comment="код причины 'не восстановлена защита' (Внимание)"/>
 	<item name="mid_NotAccept" comment="код сообщения 'запрет одновременного включения'" />
-	<item name="mid_PumpNotON" comment="код сообщения 'не запустились насосы охлаждения'" />
-	<item name="mid_PumpNotOFF" comment="код сообщения 'не отключились насосы охлаждения'" />
-	<item name="mid_BlockStart" comment="код сообщения 'Защита системы охлаждения забортной воды.'" />
-	<item name="mid_FQC_BlockStart" comment="код сообщения 'Защита системы охлаждения пресной воды.'" />
-	<item name="mid_AlarmStop_Water" comment="код сообщения 'Защитное отключение по охлаждению пресной водой.'" />
-	<item name="mid_AlarmStop_ExtWater" comment="код сообщения 'Защитное отключение по охлаждению забортной водой.'" />
-	<item name="mid_Fire" comment="код сообщения 'Отключение ГЭУ по пожару'" />
   </msgmap>
 </GEU>
