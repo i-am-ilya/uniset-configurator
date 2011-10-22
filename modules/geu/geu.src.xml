@@ -17,7 +17,7 @@
   	<set name="msg-count" val="30"/>
 	<set name="sleep-msec" val="150"/>
   </settings>
-  <params>
+  <variables>
   	  <item name="number" type="int" min="0"/>
 	  <item name="GlobalLockControlTime" type="int" min="0"/>
 	  <item name="GlobalLockWaitingTime" type="int" min="0"/>
@@ -34,7 +34,7 @@
 	  <item name="powerLimit" type="int" min="0"/>
 	  <item name="powerLimitTime" type="int" min="0"/>
 	  <item name="resetPause" type="int" min="0"/>
-  </params>
+  </variables>
   <smap> 
   	<!-- name - название переменной в конф. файле -->
 	<item name="isPowerLimit_s" vartype="in" iotype="DI" comment="ПЧ перешёл в режим ограничения мощности" />     

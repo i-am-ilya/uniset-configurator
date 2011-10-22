@@ -17,7 +17,7 @@
   	<set name="msg-count" val="30"/>
 	<set name="sleep-msec" val="150"/>
   </settings>
-  <params>
+  <variables>
 	  <!-- type = [int,str,bool,float]
 	     int:  max,min
 		 str:
@@ -45,7 +45,7 @@
 	  <item name="power" type="int" />
 	  <item name="protectionPause" type="int" />
 	  <item name="updateStateTime" type="int" />
-  </params>
+  </variables>
   <smap> 
   	<!-- name - название переменной в конф. файле -->
 	<group name="GROUP" />

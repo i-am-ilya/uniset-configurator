@@ -121,7 +121,7 @@ class LinkEditor(base_editor.BaseEditor):
             elif i.name == "group":
                self.msg_model.append(["",i.prop("name"),"","",i.prop("comment"),"gray",None])
 
-        res = ctxt.xpathEval("//params/*")
+        res = ctxt.xpathEval("//variables/*")
         for i in res:
             #print i.prop("name")
             if i.name == "item":

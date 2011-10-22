@@ -6,9 +6,9 @@
   	<set name="msg-count" val="30"/>
 	<set name="sleep-msec" val="200"/>
   </settings>
-  <params>
+  <variables>
 	   <item name="prior" type="int" min="0"/>
-  </params>
+  </variables>
   <smap>
   		<!-- Приборы индикации -->
 		<item name="curRPM" vartype="in" iotype="AI" comment="текущая частота вращения вала"/>

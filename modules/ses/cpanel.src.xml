@@ -17,11 +17,11 @@
   	<set name="msg-count" val="30"/>
 	<set name="sleep-msec" val="200"/>
   </settings>
-  <params>
+  <variables>
 		<item name="ctlHeartbeat" type="sensor"/>
 		<item name="heartbeat_id" type="sensor"/>
 		<item name="StartingTime" type="int"/>
-  </params>
+  </variables>
   <smap>
 	<!-- разное -->
 	<item name="onPanel" vartype="out" iotype="DO" comment="Вкл/Откл данная панель" no_check_id="1"/>

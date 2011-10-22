@@ -17,7 +17,7 @@
   	<set name="msg-count" val="30"/>
 	<set name="sleep-msec" val="200"/>
   </settings>
-  <params>
+  <variables>
 	   <item name="askPause" type="int" />
 	   <item name="askTimeout" type="int" />
 	   <item name="deviation_U" type="float" />
@@ -31,7 +31,7 @@
 	   <item name="maxWorkingDG" type="int" />
 	   <item name="reservPowerTime" type="int" />
 	   <item name="timeoutUnbalance" type="int" />
-  </params>
+  </variables>
   <smap>
   		<item name="SEES_ProtReset_S" vartype="in" iotype="DI" />
   		<item name="SEES_ProtResetLamp_C" vartype="out" iotype="AO" />
