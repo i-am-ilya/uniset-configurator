@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.6
-Release: alt14
+Release: alt14.1
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -48,6 +48,9 @@ ln -s %python_sitelibdir/%name/can_conf.py %buildroot/%_bindir/uniset-can-conf
 %_bindir/*
 
 %changelog
+* Sat Oct 22 2011 Vitaly Kuznetsov <vitty@altlinux.ru> 0.6-alt14.1
+- Rebuild with Python-2.7
+
 * Mon Jan 17 2011 Ilya Shpigor <elly@altlinux.org> 0.6-alt14
 - fix build for x86_64 arch
 
