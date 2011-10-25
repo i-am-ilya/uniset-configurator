@@ -152,13 +152,24 @@ if len(sys.argv) > 1 or linkeditor:
 
    if ind != -1:
       if len(sys.argv) < ind+2:
-         print "Unknown confname or object. Use --linkedit confname source.xml\n"
+         print "Unknown confname or object. Use --linkedit confname[:objectname] source.xml\n"
          exit(1)
 
       cname = sys.argv[ind+1]
       src_file = sys.argv[ind+2]
+      oname = ""
 
-      xmlnode = conf.xml.findNode(conf.xml.getDoc(),cname)[0]
+      if ':' in cname:
+         t = cname.split(':')
+         cname = t[0]
+         oname = t[1]
+         
+      if oname != "":
+         print "<%s ... name='%s' ...>"%(cname,oname)
+         xmlnode = conf.xml.findNode_byPropValue(conf.xml.getDoc(),cname,oname,"name",True)[0]
+      else:
+         xmlnode = conf.xml.findNode(conf.xml.getDoc(),cname)[0]
+
       if xmlnode == None:
          print "%s not found\n"%cname
          exit(1)
