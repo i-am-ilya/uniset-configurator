@@ -36,6 +36,7 @@ class LinkEditor(base_editor.BaseEditor):
 
         self.elements=[
             ["win","main_window",None,False],
+            ["menu","menubar1",None,False],
             ["main_book","main_book",None,False],
             ["entName","entName",None,False],
             ["tv","main_treeview",None,False],
@@ -148,8 +149,14 @@ class LinkEditor(base_editor.BaseEditor):
         self.init_tree(self.tv_addon.get_model(),xmlnode)
         self.entName.set_text( to_str(xmlnode.prop("name")) )
         
-    def run(self, xmlnode):
+    def run(self, xmlnode, showMenu = False):
 
+        if showMenu:
+           self.menu.show()
+        else:
+           self.menu.hide()
+
+        self.xmlnode = xmlnode
         self.pre_init(xmlnode)
         res = self.win.run()
         self.win.hide()
@@ -157,6 +164,7 @@ class LinkEditor(base_editor.BaseEditor):
            return False
 
         self.conf.mark_changes()
+        self.xmlnode = None
         return self.save(xmlnode)
 
     def save(self,xmlnode):
@@ -172,6 +180,35 @@ class LinkEditor(base_editor.BaseEditor):
             xmlnode.setProp(model.get_value(it,fid.name),model.get_value(it,fid.value))
             it = model.iter_next(it)
 
+    def on_save( self, mi ):
+        if self.xmlnode:
+           self.save(self.xmlnode)
+           self.conf.xml.save(None,True,True)
+           self.conf.unmark_changes()
+
+    def on_reload( self, mi ):
+        if self.conf.is_changed():
+            dlg = gtk.MessageDialog(self.win, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO, _("Save changes?"))
+            res = dlg.run()
+            dlg.hide()
+            if res == gtk.RESPONSE_YES:
+               self.conf.xml.save(None,True,True)
+            self.conf.unmark_changes()
+
+        if self.xmlnode:
+            self.pre_init(self.xmlnode)
+
+    def on_quit( self, mi ):
+        if self.conf.is_changed():
+            dlg = gtk.MessageDialog(self.win, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO, _("Save changes?"))
+            res = dlg.run()
+            dlg.hide()
+            if res == gtk.RESPONSE_YES:
+               self.win.response(dlg_RESPONSE_OK)
+               return
+
+        self.win.response(-1)
+    
     def on_btn_press_event(self, object, event, tv):
         (model, iter) = tv.get_selection().get_selected()
 
@@ -192,6 +229,9 @@ class LinkEditor(base_editor.BaseEditor):
         xmlnode = self.conf.s_dlg().set_selected_name(txt)
 
         s = self.conf.s_dlg().run(self,xmlnode)
+        if s != xmlnode:
+           self.conf.mark_changes()
+
         if s != None:
             model.set_value(iter,fid.value,to_str(s.prop("name")))
             model.set_value(iter,fid.xmlnode,s)

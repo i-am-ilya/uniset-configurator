@@ -165,7 +165,7 @@ if len(sys.argv) > 1 or linkeditor:
 
       ed = LinkEditor.create_module(conf)
       ed.build_editor(src_file)
-      if ed.run(xmlnode) and conf.is_changed():
+      if ed.run(xmlnode,True) and conf.is_changed():
          conf.xml.save(None,True,True)
       exit(0)
 
