@@ -6,7 +6,7 @@ import gtk
 from global_conf import *
 
 class Conf:
-    def __init__ (self, fname,gladexml, datdir, moddir):
+    def __init__ (self, fname, gladexml, datdir, moddir):
         
         self.xml = UniXML.UniXML(fname)
         self.glade = gladexml

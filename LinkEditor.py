@@ -188,15 +188,20 @@ class LinkEditor(base_editor.BaseEditor):
 
     def on_reload( self, mi ):
         if self.conf.is_changed():
-            dlg = gtk.MessageDialog(self.win, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO, _("Save changes?"))
-            res = dlg.run()
-            dlg.hide()
-            if res == gtk.RESPONSE_YES:
-               self.conf.xml.save(None,True,True)
-            self.conf.unmark_changes()
+           dlg = gtk.MessageDialog(self.win, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO, _("Save changes?"))
+           res = dlg.run()
+           dlg.hide()
+           if res == gtk.RESPONSE_YES:
+              self.save(self.xmlnode)
+              self.conf.xml.save(None,True,True)
+           self.conf.unmark_changes()
 
+        oname = self.xmlnode.prop("name")
+        cname = self.xmlnode.name
+        self.conf.reopen(self.conf.xml.fname)
+        self.xmlnode = self.conf.xml.findNode_byPropValue(self.conf.xml.getDoc(),cname,oname,"name",True)[0]
         if self.xmlnode:
-            self.pre_init(self.xmlnode)
+           self.pre_init(self.xmlnode)
 
     def on_quit( self, mi ):
         if self.conf.is_changed():
@@ -207,7 +212,7 @@ class LinkEditor(base_editor.BaseEditor):
                self.win.response(dlg_RESPONSE_OK)
                return
 
-        self.win.response(-1)
+        self.win.response(gtk.RESPONSE_NO)
     
     def on_btn_press_event(self, object, event, tv):
         (model, iter) = tv.get_selection().get_selected()
