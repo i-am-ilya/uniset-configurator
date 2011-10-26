@@ -135,7 +135,13 @@ if __name__ == "__main__":
        print "%s not found in <nodes> (confile: %s)" % (nodename,confile)
        exit(1)
     
-    cannode = xml.findNode(xmlnode,"can")[0].children.next
+    cannode = xml.findNode(xmlnode,"can")[0]
+    if cannode:
+       if not cannode.children:
+          print "<can> section empty! for node='%s' (confile: %s)" % (nodename,confile)
+          exit(1)
+       cannode = cannode.children.next
+
     if cannode == None:
        print "<can> not found for node='%s' (confile: %s)" % (nodename,confile)
        exit(1)
