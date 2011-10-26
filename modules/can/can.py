@@ -292,7 +292,10 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
         n.setProp("net", self.model.get_value(rootiter,0))
         n.setProp("comment", self.model.get_value(rootiter,1))
         it = self.add_node(n,node,rootiter)
-        self.edit_node(it)
+        if self.edit_node(it) == False:
+           n.unlinkNode()
+           self.model.remove(it)
+
         self.conf.mark_changes()
 
     def on_remove_node_activate(self, menuitem):
@@ -413,7 +416,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
             res = self.dlg_node.run()
             self.dlg_node.hide()
             if res != dlg_RESPONSE_OK:
-                return
+                return False
 
             rootiter = self.model.iter_parent(iter) # NET level iterator
             nodeID = self.node_id.get_value_as_int()
@@ -450,6 +453,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
         
         self.model.set_value(iter,1,self.get_can_info(cnode))
         self.conf.mark_changes()
+        return True
     
     def get_can_info(self,xmlnode):
         info  = 'nodeID=' + str(xmlnode.prop("nodeID"))
