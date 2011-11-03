@@ -151,8 +151,12 @@ if len(sys.argv) > 1 or linkeditor:
       ind = 1
 
    if ind != -1:
-      if len(sys.argv) < ind+2:
-         print "Unknown confname or object. Use --linkedit confname[:objectname] source.xml\n"
+      if len(sys.argv) <= ind+2:
+         print "Unknown confname or object. Use:"
+         print "uniset-configurator --confile configure.xml --linkedit confsection[:objectname] source.xml"
+         print " or "
+         print "uniset-linkeditor configure.xml confsection[:objectname] source.xml"
+         print ""
          exit(1)
 
       cname = sys.argv[ind+1]
