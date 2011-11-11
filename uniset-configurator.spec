@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.9
-Release: alt7
+Release: alt8
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -60,6 +60,9 @@ ln -s %python_sitelibdir_noarch/%name/can_conf.py %buildroot/%_bindir/uniset-can
 %_bindir/*
 
 %changelog
+* Fri Nov 11 2011 Pavel Vainerman <pv@altlinux.ru> 0.9-alt8
+- add configure DAC0,1 for aixx5a
+
 * Sat Oct 22 2011 Pavel Vainerman <pv@altlinux.ru> 0.9-alt6
 - LinkEditor: rename <params> --> <variables> (changed in uniset-codegen)
 

@@ -32,6 +32,8 @@ class Card_AIxx5a(simple_card.SimpleCard):
             clist.append([i,"J2:"+str(i),"AI",2])
         for i in range(8,16):
             clist.append([i,"J3:"+str(i-8),"AI",2])
+        for i in range(0,2):
+            clist.append([i,"AO:"+str(i),"AO",1])
 
         return clist
 
