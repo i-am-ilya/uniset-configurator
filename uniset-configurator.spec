@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.9
-Release: alt8
+Release: alt9
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -60,6 +60,9 @@ ln -s %python_sitelibdir_noarch/%name/can_conf.py %buildroot/%_bindir/uniset-can
 %_bindir/*
 
 %changelog
+* Fri Nov 11 2011 Pavel Vainerman <pv@altlinux.ru> 0.9-alt9
+- add new card (Advantech PCI-1750) 
+
 * Fri Nov 11 2011 Pavel Vainerman <pv@altlinux.ru> 0.9-alt8
 - add configure DAC0,1 for aixx5a
 
