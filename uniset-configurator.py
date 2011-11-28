@@ -60,6 +60,7 @@ class MainWindow(gtk.Widget):
         if conf.is_changed() and conf.xml:
             dlg = gtk.MessageDialog(self.win, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO, _("Save changes?"))
             res = dlg.run()
+            dlg.hide()
             if res == gtk.RESPONSE_YES:
                #os.rename(conf.xml.getFileName(),str(conf.xml.getFileName())+".bak")
                conf.xml.save(None,True,True)
