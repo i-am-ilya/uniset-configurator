@@ -11,6 +11,8 @@ from global_conf import *
 import dlg_xlist
 
 pic_BTN = 'btn.png'
+pic_FAIL = 'link_error.png'
+pic_OK = 'link_ok.png'
 
 class fid():
    value = 0
@@ -20,9 +22,12 @@ class fid():
    comm = 4
    bg = 5
    xmlnode = 6
-   v_min = 7
-   v_max = 8
-   v_def = 9
+   img = 7
+   itype = 8
+   v_min = 9
+   v_max = 10
+   v_def = 11
+
 
 class LinkEditor(base_editor.BaseEditor):
 
@@ -62,7 +67,9 @@ class LinkEditor(base_editor.BaseEditor):
                               gobject.TYPE_STRING,  # iotype
                               gobject.TYPE_STRING,  # comm
                               gobject.TYPE_STRING,  # bg_color
-                              object)  # xmlnode
+                              object,               # xmlnode
+                              gtk.gdk.Pixbuf,       # picture
+                              gobject.TYPE_STRING)  # item type
 
         self.msg_model = gtk.ListStore(
                               gobject.TYPE_STRING,  # value
@@ -71,8 +78,10 @@ class LinkEditor(base_editor.BaseEditor):
                               gobject.TYPE_STRING,  # iotype
                               gobject.TYPE_STRING,  # comm
                               gobject.TYPE_STRING,  # bg_color
-                              object)  # xmlnode
-
+                              object,               # xmlnode
+                              gtk.gdk.Pixbuf,       # picture
+                              gobject.TYPE_STRING)  # item type
+                              
         self.addon_model = gtk.ListStore(
                               gobject.TYPE_STRING,  # value
                               gobject.TYPE_STRING,  # name
@@ -80,7 +89,9 @@ class LinkEditor(base_editor.BaseEditor):
                               gobject.TYPE_STRING,  # iotype
                               gobject.TYPE_STRING,  # comm
                               gobject.TYPE_STRING,  # bg_color
-                              object,  # xmlnode
+                              object,               # xmlnode
+                              gtk.gdk.Pixbuf,       # picture
+                              gobject.TYPE_STRING,  # item type
                               gobject.TYPE_STRING,  # min
                               gobject.TYPE_STRING,  # max
                               gobject.TYPE_STRING)  # default value
@@ -93,6 +104,9 @@ class LinkEditor(base_editor.BaseEditor):
 
         self.tv_addon.set_model(self.addon_model)
         self.tv_addon.connect("button-press-event", self.on_addon_press_event, self.tv_addon)
+
+        self.img_ok = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_OK)
+        self.img_fail = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_FAIL)
 
         if source_file != "":
            self.build_editor(source_file)
@@ -109,44 +123,50 @@ class LinkEditor(base_editor.BaseEditor):
         for i in res:
             #print i.prop("name")
             if i.name == "item":
-               self.model.append(["",i.prop("name"),i.prop("vartype"),i.prop("iotype"),i.prop("comment"),None,None])
+               self.model.append(["",i.prop("name"),i.prop("vartype"),i.prop("iotype"),i.prop("comment"),None,None,None,"item"])
             elif i.name == "group":
-               self.model.append(["",i.prop("name"),i.prop("vartype"),i.prop("iotype"),i.prop("comment"),"gray",None])
+               self.model.append(["",i.prop("name"),i.prop("vartype"),i.prop("iotype"),i.prop("comment"),"gray",None,None,"group"])
 
         res = ctxt.xpathEval("//msgmap/*")
 
         for i in res:
             #print i.prop("name")
             if i.name == "item":
-               self.msg_model.append(["",i.prop("name"),"","",i.prop("comment"),None,None])
+               self.msg_model.append(["",i.prop("name"),"","",i.prop("comment"),None,None,None,"item"])
             elif i.name == "group":
-               self.msg_model.append(["",i.prop("name"),"","",i.prop("comment"),"gray",None])
+               self.msg_model.append(["",i.prop("name"),"","",i.prop("comment"),"gray",None,None,"group"])
 
         res = ctxt.xpathEval("//variables/*")
         for i in res:
             #print i.prop("name")
             if i.name == "item":
-               self.addon_model.append(["",i.prop("name"),i.prop("type"),"",i.prop("comment"),None,None,
+               self.addon_model.append(["",i.prop("name"),i.prop("type"),"",i.prop("comment"),None,None,None,"item",
                    i.prop("min"),i.prop("max"),i.prop("default")
                   ])
             elif i.name == "group":
-               self.addon_model.append(["",i.prop("name"),i.prop("type"),"",i.prop("comment"),"gray",None,"","",""])
+               self.addon_model.append(["",i.prop("name"),i.prop("type"),"",i.prop("comment"),"gray",None,None,"group","","",""])
 
 
     def get_face(self):
         return self.main_book
 
-    def init_tree(self, model, xmlnode):
+    def init_tree(self, model, xmlnode, check=False):
         it = model.get_iter_first()
         while it is not None:
             val = to_str( xmlnode.prop(model.get_value(it,fid.name)) )
             model.set_value(it,fid.value,val)
+            itype = model.get_value(it,fid.itype)
+            if val != "" and itype == "item" and check == True:
+               if self.conf.find_sensor(val) == None:
+                  model.set_value(it,fid.img,self.img_fail)
+               else:
+                  model.set_value(it,fid.img,self.img_ok)
             it = model.iter_next(it)
 
     def pre_init(self, xmlnode):
-        self.init_tree(self.tv.get_model(),xmlnode)
-        self.init_tree(self.tv_msg.get_model(),xmlnode)
-        self.init_tree(self.tv_addon.get_model(),xmlnode)
+        self.init_tree(self.tv.get_model(),xmlnode,True)
+        self.init_tree(self.tv_msg.get_model(),xmlnode,True)
+        self.init_tree(self.tv_addon.get_model(),xmlnode,False)
         self.entName.set_text( to_str(xmlnode.prop("name")) )
         
     def run(self, xmlnode, showMenu = False):
@@ -240,9 +260,11 @@ class LinkEditor(base_editor.BaseEditor):
         if s != None:
             model.set_value(iter,fid.value,to_str(s.prop("name")))
             model.set_value(iter,fid.xmlnode,s)
+            model.set_value(iter,fid.img,self.img_ok)
         else:
             model.set_value(iter,fid.value,"")
             model.set_value(iter,fid.xmlnode,None)
+            model.set_value(iter,fid.img,None)
 
     def on_addon_press_event(self, object, event, tv):
         (model, iter) = tv.get_selection().get_selected()

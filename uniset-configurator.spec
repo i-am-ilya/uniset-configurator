@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.9
-Release: alt9
+Release: alt10
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -60,6 +60,9 @@ ln -s %python_sitelibdir_noarch/%name/can_conf.py %buildroot/%_bindir/uniset-can
 %_bindir/*
 
 %changelog
+* Fri Dec 30 2011 Pavel Vainerman <pv@altlinux.ru> 0.9-alt10
+- add "link status"(image) for LinkEditor
+
 * Fri Nov 11 2011 Pavel Vainerman <pv@altlinux.ru> 0.9-alt9
 - add new card (Advantech PCI-1750) 
 
