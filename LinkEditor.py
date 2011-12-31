@@ -12,6 +12,7 @@ import dlg_xlist
 
 pic_BTN = 'btn.png'
 pic_FAIL = 'link_error.png'
+pic_WARN= 'link_warning.png'
 pic_OK = 'link_ok.png'
 
 class fid():
@@ -24,9 +25,10 @@ class fid():
    xmlnode = 6
    img = 7
    itype = 8
-   v_min = 9
-   v_max = 10
-   v_def = 11
+   nocheckid = 9
+   v_min = 10
+   v_max = 11
+   v_def = 12
 
 
 class LinkEditor(base_editor.BaseEditor):
@@ -69,7 +71,8 @@ class LinkEditor(base_editor.BaseEditor):
                               gobject.TYPE_STRING,  # bg_color
                               object,               # xmlnode
                               gtk.gdk.Pixbuf,       # picture
-                              gobject.TYPE_STRING)  # item type
+                              gobject.TYPE_STRING,  # item type
+                              gobject.TYPE_BOOLEAN)    # no_check_id 
 
         self.msg_model = gtk.ListStore(
                               gobject.TYPE_STRING,  # value
@@ -80,7 +83,8 @@ class LinkEditor(base_editor.BaseEditor):
                               gobject.TYPE_STRING,  # bg_color
                               object,               # xmlnode
                               gtk.gdk.Pixbuf,       # picture
-                              gobject.TYPE_STRING)  # item type
+                              gobject.TYPE_STRING,  # item type
+                              gobject.TYPE_BOOLEAN)    # no_check_id 
                               
         self.addon_model = gtk.ListStore(
                               gobject.TYPE_STRING,  # value
@@ -92,6 +96,7 @@ class LinkEditor(base_editor.BaseEditor):
                               object,               # xmlnode
                               gtk.gdk.Pixbuf,       # picture
                               gobject.TYPE_STRING,  # item type
+                              gobject.TYPE_BOOLEAN,    # no_check_id
                               gobject.TYPE_STRING,  # min
                               gobject.TYPE_STRING,  # max
                               gobject.TYPE_STRING)  # default value
@@ -107,6 +112,7 @@ class LinkEditor(base_editor.BaseEditor):
 
         self.img_ok = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_OK)
         self.img_fail = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_FAIL)
+        self.img_warning = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_WARN)
 
         if source_file != "":
            self.build_editor(source_file)
@@ -121,30 +127,34 @@ class LinkEditor(base_editor.BaseEditor):
         res = ctxt.xpathEval("//smap/*")
 
         for i in res:
+            nocheckid = False
+            if i.prop("no_check_id") == "1":
+               nocheckid = True
+
             #print i.prop("name")
             if i.name == "item":
-               self.model.append(["",i.prop("name"),i.prop("vartype"),i.prop("iotype"),i.prop("comment"),None,None,None,"item"])
+               self.model.append(["",i.prop("name"),i.prop("vartype"),i.prop("iotype"),i.prop("comment"),None,None,None,"item",nocheckid])
             elif i.name == "group":
-               self.model.append(["",i.prop("name"),i.prop("vartype"),i.prop("iotype"),i.prop("comment"),"gray",None,None,"group"])
+               self.model.append(["",i.prop("name"),i.prop("vartype"),i.prop("iotype"),i.prop("comment"),"gray",None,None,"group",True])
 
         res = ctxt.xpathEval("//msgmap/*")
 
         for i in res:
             #print i.prop("name")
             if i.name == "item":
-               self.msg_model.append(["",i.prop("name"),"","",i.prop("comment"),None,None,None,"item"])
+               self.msg_model.append(["",i.prop("name"),"","",i.prop("comment"),None,None,None,"item",True])
             elif i.name == "group":
-               self.msg_model.append(["",i.prop("name"),"","",i.prop("comment"),"gray",None,None,"group"])
+               self.msg_model.append(["",i.prop("name"),"","",i.prop("comment"),"gray",None,None,"group",True])
 
         res = ctxt.xpathEval("//variables/*")
         for i in res:
             #print i.prop("name")
             if i.name == "item":
-               self.addon_model.append(["",i.prop("name"),i.prop("type"),"",i.prop("comment"),None,None,None,"item",
+               self.addon_model.append(["",i.prop("name"),i.prop("type"),"",i.prop("comment"),None,None,None,"item",True,
                    i.prop("min"),i.prop("max"),i.prop("default")
                   ])
             elif i.name == "group":
-               self.addon_model.append(["",i.prop("name"),i.prop("type"),"",i.prop("comment"),"gray",None,None,"group","","",""])
+               self.addon_model.append(["",i.prop("name"),i.prop("type"),"",i.prop("comment"),"gray",None,None,"group",True,"","",""])
 
 
     def get_face(self):
@@ -156,11 +166,15 @@ class LinkEditor(base_editor.BaseEditor):
             val = to_str( xmlnode.prop(model.get_value(it,fid.name)) )
             model.set_value(it,fid.value,val)
             itype = model.get_value(it,fid.itype)
+            nocheckid =  model.get_value(it,fid.nocheckid)
             if val != "" and itype == "item" and check == True:
                if self.conf.find_sensor(val) == None:
                   model.set_value(it,fid.img,self.img_fail)
                else:
                   model.set_value(it,fid.img,self.img_ok)
+            elif check == True and val == "" and nocheckid == False:
+                 model.set_value(it,fid.img,self.img_warning)
+
             it = model.iter_next(it)
 
     def pre_init(self, xmlnode):
@@ -264,7 +278,10 @@ class LinkEditor(base_editor.BaseEditor):
         else:
             model.set_value(iter,fid.value,"")
             model.set_value(iter,fid.xmlnode,None)
-            model.set_value(iter,fid.img,None)
+            if model.get_value(iter,fid.nocheckid) == False:
+               model.set_value(iter,fid.img,self.img_warning)
+            else:
+               model.set_value(iter,fid.img,None)
 
     def on_addon_press_event(self, object, event, tv):
         (model, iter) = tv.get_selection().get_selected()
