@@ -13,7 +13,6 @@ class Card_PCI1750(simple_card.SimpleCard):
         simple_card.SimpleCard.__init__(self,datdir,uifile)
 
         self.cname = "PCI-1750"
-        self.clist = self.build_channel_list(self.cname)
 
         self.module_name = "adv_pci1750"
         self.default_init(self.cname)

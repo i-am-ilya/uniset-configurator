@@ -13,7 +13,6 @@ class Card_UNIO96(simple_card.SimpleCard):
         simple_card.SimpleCard.__init__(self,datdir,uifile)
 
         self.cname = "UNIO96"
-        self.clist = self.build_channel_list(self.cname)
 
         self.params=[
             ["cbox1","cbox_subdev1","subdev1",False],

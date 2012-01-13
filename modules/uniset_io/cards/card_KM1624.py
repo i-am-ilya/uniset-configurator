@@ -13,7 +13,6 @@ class Card_KM1624(simple_card.SimpleCard):
         simple_card.SimpleCard.__init__(self,datdir,uifile)
 
         self.cname = "KM1624"
-        self.clist = self.build_channel_list(self.cname)
 
         self.params=[
             ["adc","cb_adc","pwr_adc",False],

@@ -13,7 +13,6 @@ class Card_KM5856(simple_card.SimpleCard):
         simple_card.SimpleCard.__init__(self,datdir,uifile)
 
         self.cname = "KM5856"
-        self.clist = self.build_channel_list(self.cname)
 
         self.module_name = "km5856"
         self.default_init(self.cname)

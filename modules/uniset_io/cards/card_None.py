@@ -13,7 +13,6 @@ class Card_None(simple_card.SimpleCard):
         simple_card.SimpleCard.__init__(self,datdir,uifile)
 
         self.cname = "None"
-        self.clist = []
         self.node_xmlnode = None
         self.editor_ui = None
         self.module_name = ""

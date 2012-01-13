@@ -83,15 +83,13 @@ class SimpleCard(base_editor.BaseEditor):
         self.save2xml_elements_value(self.params,xmlnode)
 
     def get_channel_list( self, cname ):
-        if cname.upper() != self.cname.upper():
-           self.clist = self.build_channel_list(cname.upper())
-
-        return self.clist
+        return self.build_channel_list(cname.upper())
         
-    def get_iotype( self, subdev, channel ):
+    def get_iotype( self, cname, subdev, channel ):
+        clist = self.get_channel_list(cname)
         subdev = to_int(subdev)
         channel = to_int(channel)
-        for c in self.clist:
+        for c in clist:
             if c[cid.cnum] == channel and c[cid.subdev] == subdev:
                return c[cid.iotype]
 

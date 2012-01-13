@@ -13,7 +13,6 @@ class Card_DI32(simple_card.SimpleCard):
         simple_card.SimpleCard.__init__(self,datdir,uifile)
 
         self.cname = "DI32"
-        self.clist = self.build_channel_list(self.cname)
         self.params=[
             ["jar","cbox_jartime","jar",False]
         ]

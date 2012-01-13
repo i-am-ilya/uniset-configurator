@@ -13,7 +13,6 @@ class Card_DO32(simple_card.SimpleCard):
         simple_card.SimpleCard.__init__(self,datdir,uifile)
 
         self.cname = "DO32"
-        self.clist = self.build_channel_list(self.cname)
 
         self.module_name = "do32"
         self.default_init(self.cname)
@@ -38,3 +37,4 @@ def create_editor(datdir):
 
 def editor_name():
     return "Card_DO32"
+    

@@ -13,7 +13,6 @@ class Card_AIxx5a(simple_card.SimpleCard):
         simple_card.SimpleCard.__init__(self,datdir,uifile)
 
         self.cname = "AIxx5a"
-        self.clist = self.build_channel_list(self.cname)
 
         self.params=[
             ["avg","cbox_avg","avg",False]
