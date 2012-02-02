@@ -390,7 +390,7 @@
               <object class="GtkLabel" id="label5">
                 <property name="visible">True</property>
                 <property name="xalign">1</property>
-                <property name="label" translatable="yes">lost packets sensor:</property>
+                <property name="label" translatable="yes">node lost packets sensor:</property>
               </object>
               <packing>
                 <property name="top_attach">5</property>
@@ -470,7 +470,7 @@
               <object class="GtkLabel" id="label8">
                 <property name="visible">True</property>
                 <property name="xalign">1</property>
-                <property name="label" translatable="yes">node respond sensor:</property>
+                <property name="label" translatable="yes">respond sensor:</property>
               </object>
               <packing>
                 <property name="top_attach">8</property>
@@ -495,7 +495,7 @@
               <object class="GtkLabel" id="label11">
                 <property name="visible">True</property>
                 <property name="xalign">1</property>
-                <property name="label" translatable="yes">node respond sensor:</property>
+                <property name="label" translatable="yes">respond sensor:</property>
               </object>
               <packing>
                 <property name="top_attach">11</property>
@@ -512,12 +512,6 @@
                 <property name="top_attach">9</property>
                 <property name="bottom_attach">10</property>
               </packing>
-            </child>
-            <child>
-              <placeholder/>
-            </child>
-            <child>
-              <placeholder/>
             </child>
             <child>
               <object class="GtkLabel" id="label12">
@@ -669,6 +663,12 @@
                 <property name="top_attach">12</property>
                 <property name="bottom_attach">13</property>
               </packing>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
             </child>
           </object>
           <packing>
