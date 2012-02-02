@@ -99,9 +99,17 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
             ["dlg_node","unet_dlg_node",None,True],
             ["node_name","unet_lbl_nodename",None,True],
             ["btn_respond","unet_btn_respond",None,True],
+			["btn_respond1","unet_btn_respond1",None,True],
+			["btn_respond2","unet_btn_respond2",None,True],
             ["respond","unet_respond","unet_respond_id",False],
+            ["respond1","unet_respond1","unet_respond1_id",False],
+            ["respond2","unet_respond2","unet_respond2_id",False],
             ["btn_lpsensor","unet_btn_lpsensor",None,True],
+            ["btn_lpsensor1","unet_btn_lpsensor1",None,True],
+            ["btn_lpsensor2","unet_btn_lpsensor2",None,True],
             ["lostpacket","unet_lpsensor","unet_lostpackets_id",False],
+            ["lostpacket1","unet_lpsensor1","unet_lostpackets1_id",False],
+            ["lostpacket2","unet_lpsensor2","unet_lostpackets2_id",False],
             ["btn_ignore","unet_cb_ignore","unet_ignore",False]
         ]
         self.init_builder_elements(self.node_param_list,self.builder)
@@ -113,7 +121,11 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
         # см. on_btn_sensor_activate()
         self.btn_lst = [
                [self.btn_respond,self.respond],
-               [self.btn_lpsensor,self.lostpacket]
+               [self.btn_respond1,self.respond1],
+               [self.btn_respond2,self.respond2],
+               [self.btn_lpsensor,self.lostpacket],
+               [self.btn_lpsensor1,self.lostpacket1],
+               [self.btn_lpsensor2,self.lostpacket2]
               ]
 #             [self.btn_hbsensor,self.hbsensor],
 
