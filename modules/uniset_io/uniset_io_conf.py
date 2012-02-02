@@ -51,7 +51,6 @@ class IOConfig():
 
     def get_channel_list(self, cardnode):
         cname = cardnode.prop("name").upper()
-        print "********** get_channel_list: %s"%cname
         if cname in self.cardlist:
            editor = self.cardlist[cname]
            return editor.get_channel_list(cname)
