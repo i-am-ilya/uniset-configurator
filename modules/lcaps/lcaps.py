@@ -694,9 +694,12 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
           self.conf.remove_object(lc["comhorn"]["node"].prop("name"))
           for sec in self.flamp_sections:
              fparams = self.flamp_params[sec]
-             fnode = fparams["node"]
-             self.conf.remove_object(fnode.prop("name"))
-             self.conf.remove_object(fparams["comm_node"].prop("name"))
+             try:
+                fnode = fparams["node"]
+                self.conf.remove_object(fnode.prop("name"))
+                self.conf.remove_object(fparams["comm_node"].prop("name"))
+             except KeyError:
+                pass
        
        if self.rm_lamps.get_active() == True:
           self.remove_sensors(lc_name,"Lamp", to_int(lc_node.prop("lamps")))
