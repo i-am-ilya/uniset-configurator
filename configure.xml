@@ -173,11 +173,11 @@
 				<item name="aQGM4"/>
 				<item name="aQB1"/>
 			</automatlist>
-            <panellist>
+			<panellist>
 				<item name="SEES1_CPanel"/>
-                <item name="SEES2_CPanel"/>
-                <item name="SEES3_CPanel"/>
-                <item name="SEES4_CPanel"/>
+				<item name="SEES2_CPanel"/>
+				<item name="SEES3_CPanel"/>
+				<item name="SEES4_CPanel"/>
 			</panellist>
 			<offlist>
 				<!--
@@ -878,7 +878,7 @@
 			</item>
 			<item id="3009" ip="ts1k1" name="ts1k1" textname="ШУ ТС1 Контроллер N1">
 				<iocards>
-					<item baddr="0x110" card="1" dev="/dev/comedi1" module="unioxx5" module_params="1,1,1,1" name="UNIO96" subdev1="TBI24_0" subdev2="TBI24_0" subdev3="TBI24_0" subdev4="TBI24_0"/>
+					<item baddr="0x110" card="1" dev="/dev/comedi1" module="unioxx5" module_params="1,1,1,0" name="UNIO96" subdev1="TBI24_0" subdev2="TBI24_0" subdev3="TBI24_0" subdev4="GRAYHILL"/>
 					<item baddr="0x120" card="2" dev="/dev/comedi2" module="unioxx5" module_params="2,1,2,1" name="UNIO96" subdev1="TBI0_24" subdev2="TBI24_0" subdev3="TBI0_24" subdev4="TBI24_0"/>
 					<item baddr="0x130" card="3" dev="/dev/comedi3" module="aixx5a" module_params="0,1" name="AI16-5a-3"/>
 					<item baddr="0x140" card="4" dev="/dev/comedi4" module="aixx5a" module_params="0,1" name="AI16-5a-3"/>

@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.9
-Release: alt11
+Release: alt12
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -60,6 +60,9 @@ ln -s %python_sitelibdir_noarch/%name/can_conf.py %buildroot/%_bindir/uniset-can
 %_bindir/*
 
 %changelog
+* Fri Feb 10 2012 Pavel Vainerman <pv@altlinux.ru> 0.9-alt12
+- Added support for setting boards such as 'Grayhill'
+
 * Fri Jan 13 2012 Pavel Vainerman <pv@altlinux.ru> 0.9-alt11
 - fixed bug (incorrect channel list for UNIO96/48)
 
