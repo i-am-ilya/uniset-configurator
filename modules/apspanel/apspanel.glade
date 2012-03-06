@@ -1453,6 +1453,7 @@
             </child>
             <child>
               <widget class="GtkLabel" id="label113">
+                <property name="visible">True</property>
                 <property name="xalign">1</property>
                 <property name="label" translatable="yes">&#x411;&#x43B;&#x43E;&#x43A;&#x438;&#x440;&#x443;&#x44E;&#x449;&#x438;&#x439; &#x434;&#x430;&#x442;&#x447;&#x438;&#x43A;:</property>
                 <property name="justify">right</property>
