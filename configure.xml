@@ -803,7 +803,7 @@
 	в качестве xxx будет узел из <nodes>
 -->
 		<nodes port="2809">
-			<item dbserver="DBServer1" id="3000" ip="127.0.0.1" name="localhost" textname="Локальный узел"/>
+			<item dbserver="DBServer1" id="3000" ip="127.0.0.1" name="localhost" textname="Локальный узел" unet_respond_invert="1"/>
 			<item dbserver="DBServer1" id="3001" ip="gui1" name="gui1" textname="Графическая станция N1">
 				<can>
 					<item card="pci1680" comment="Общесудовая сеть" eds="gui1.eds" module="pci1680" net="MAIN" nodeID="17"/>

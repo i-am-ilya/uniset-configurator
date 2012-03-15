@@ -110,7 +110,8 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
             ["lostpacket","unet_lpsensor","unet_lostpackets_id",False],
             ["lostpacket1","unet_lpsensor1","unet_lostpackets1_id",False],
             ["lostpacket2","unet_lpsensor2","unet_lostpackets2_id",False],
-            ["btn_ignore","unet_cb_ignore","unet_ignore",False]
+            ["btn_ignore","unet_cb_ignore","unet_ignore",False],
+            ["btn_resp_invert","unet_cb_resp_invert","unet_respond_invert",False]
         ]
         self.init_builder_elements(self.node_param_list,self.builder)
 #            ["hbsensor","unet_hb_sensor","hbSensor",False],
