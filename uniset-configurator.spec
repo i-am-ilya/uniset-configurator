@@ -155,6 +155,9 @@ ln -s %python_sitelibdir_noarch/%name/can_conf.py %buildroot/%_bindir/uniset-can
 * Fri Jan 28 2011 Pavel Vainerman <pv@altlinux.ru> 0.6-alt16
 - add generic 'dev' for ioconf 
 
+* Sat Oct 22 2011 Vitaly Kuznetsov <vitty@altlinux.ru> 0.6-alt14.1
+- Rebuild with Python-2.7
+
 * Mon Jan 17 2011 Ilya Shpigor <elly@altlinux.org> 0.6-alt14
 - fix build for x86_64 arch
 
