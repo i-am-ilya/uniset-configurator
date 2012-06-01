@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.9
-Release: alt14
+Release: alt14.1
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -60,6 +60,9 @@ ln -s %python_sitelibdir_noarch/%name/can_conf.py %buildroot/%_bindir/uniset-can
 %_bindir/*
 
 %changelog
+* Fri Jun 01 2012 Pavel Vainerman <pv@altlinux.ru> 0.9-alt14.1
+- update changelog
+
 * Tue May 29 2012 Pavel Vainerman <pv@altlinux.ru> 0.9-alt14
 - added 'default' field to LinkEditor::variables
 
