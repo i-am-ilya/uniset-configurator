@@ -272,6 +272,15 @@ class LinkEditor(base_editor.BaseEditor):
            self.conf.mark_changes()
 
         if s != None:
+        
+            if model.get_value(iter,fid.iotype).upper() != s.prop("iotype").upper():
+               msg = "Тип выбранного датчика '%s' не совпадает с типом для этого поля '%s'\nВсё равно сохранить?"%(s.prop("iotype").upper(),model.get_value(iter,fid.iotype).upper())
+               dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,msg)
+               res = dlg.run()
+               dlg.hide()
+               if res == gtk.RESPONSE_NO:
+                  return
+
             model.set_value(iter,fid.value,to_str(s.prop("name")))
             model.set_value(iter,fid.xmlnode,s)
             model.set_value(iter,fid.img,self.img_ok)
