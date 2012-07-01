@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.9
-Release: alt14.1
+Release: alt15
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -60,6 +60,9 @@ ln -s %python_sitelibdir_noarch/%name/can_conf.py %buildroot/%_bindir/uniset-can
 %_bindir/*
 
 %changelog
+* Sun Jul 01 2012 Pavel Vainerman <pv@altlinux.ru> 0.9-alt15
+- added to the display of channel number and subdev (eterbug #8573)
+
 * Fri Jun 01 2012 Pavel Vainerman <pv@altlinux.ru> 0.9-alt14.1
 - update changelog
 

@@ -90,6 +90,11 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         column.set_clickable(False)
         self.tv.append_column(column)
 
+        renderer = gtk.CellRendererText()
+        column = gtk.TreeViewColumn(_("subdev"), renderer, text=fid.subdev)
+        column.set_clickable(False)
+        self.tv.append_column(column)
+
         # expand all rows after the treeview widget has been realized
 #       self.connect('realize', lambda tv: tv.expand_all())
 
@@ -227,7 +232,7 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         while node != None:
             info = self.get_node_info(node)
             #img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_NODE)
-            iter1 = self.model.append(None,[node.prop("name"),info,node,"node",node.prop("name"),"0",img])
+            iter1 = self.model.append(None,[node.prop("name"),info,node,"node",node.prop("name"),"",img])
             self.read_cards(node,iter1)
             node = self.conf.xml.nextNode(node)
 
@@ -238,7 +243,7 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_CARD)
         while node != None:
             info = self.get_card_info(node)
-            iter2 = self.model.append(iter, [node.prop("name").upper(),info,node,"card",node.prop("card"),"0",img])
+            iter2 = self.model.append(iter, [node.prop("name").upper(),info,node,"card",node.prop("card"),"",img])
             self.build_channels_list(node,self.model,iter2)
             node = self.conf.xml.nextNode(node)
 

@@ -23,9 +23,9 @@ class Card_AO16(simple_card.SimpleCard):
     def build_channel_list( self, cname ):
         clist=[]
         for i in range(0,8):
-            clist.append([i,"J1:"+str(i),"AO",0])
+            clist.append([i,"(%2d) J1:%d"%(i,i),"AO",0])
         for i in range(8,16):
-            clist.append([i,"J2:"+str(i-8),"AO",0])
+            clist.append([i,"(%2d) J2:%d"%(i,i-8),"AO",0])
 
         return clist
 

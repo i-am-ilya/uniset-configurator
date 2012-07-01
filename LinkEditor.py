@@ -121,7 +121,8 @@ class LinkEditor(base_editor.BaseEditor):
         try:
             doc = libxml2.parseFile(sfile)
         except libxml2.parserError:
-            raise CommandError('File "%s" parse error' % cfg)		
+            print 'File "%s" parse error' % cfg
+            raise Exception()
 
         ctxt = doc.xpathNewContext()
         res = ctxt.xpathEval("//smap/*")

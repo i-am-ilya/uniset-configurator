@@ -43,9 +43,9 @@ class Card_DI32(simple_card.SimpleCard):
     def build_channel_list( self, cname ):
         clist=[]
         for i in range(0,16):
-            clist.append([i,"J1:"+str(i),"DI",0])
+            clist.append([i,"(%2d) J1:%d"%(i,i),"DI",0])
         for i in range(16,32):
-            clist.append([i,"J2:"+str(i-16),"DI",0])
+            clist.append([i,"(%2d) J2:%d"%(i,i-16),"DI",0])
 
         return clist
 
