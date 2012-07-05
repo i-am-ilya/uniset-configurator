@@ -752,6 +752,12 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         self.set_combobox_element(self.iotype,self.ioconf.get_iotype(cardname,subdev,chan))
 
         while True:
+      
+            if prev_sensor == None: 
+               self.on_io_btn_sensor_clicked(None)
+               if self.sensor == None:
+                  return
+        
             res = self.dlg_param.run()
             self.dlg_param.hide()
             if res != dlg_RESPONSE_OK:
