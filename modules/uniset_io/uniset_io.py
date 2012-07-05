@@ -52,12 +52,6 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         self.fentry = self.glade.get_widget("io_filter_entry")
         self.filter_cb_case = self.glade.get_widget("io_filter_cb_case")
         
-        # подключение к редактору узлов (для отслеживания изменений в списке узлов)
-        n_editor = conf.n_editor()
-        if n_editor != None:
-            n_editor.connect("change-node",self.nodeslist_change)
-            n_editor.connect("add-new-node",self.nodeslist_add)
-            n_editor.connect("remove-node",self.nodeslist_remove)
 
         self.model = None
         self.modelfilter = None
@@ -173,7 +167,17 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         
         self.reopen()
         self.show_all()
-    
+
+    def init_editor(self):
+        base_editor.BaseEditor.init_editor(self)
+
+        # подключение к редактору узлов (для отслеживания изменений в списке узлов)
+        n_editor = self.conf.n_editor()
+        if n_editor != None:
+            n_editor.connect("change-node",self.nodeslist_change)
+            n_editor.connect("add-new-node",self.nodeslist_add)
+            n_editor.connect("remove-node",self.nodeslist_remove)
+
     def reopen(self):
         self.model.clear()
         self.build_tree()

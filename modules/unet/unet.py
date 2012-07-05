@@ -32,12 +32,6 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
         self.builder.add_from_file(conf.datdir+"unet.ui")
         self.builder.connect_signals(self)
         
-        n_editor = conf.n_editor()
-        if n_editor != None:
-            n_editor.connect("change-node",self.nodeslist_change)
-            n_editor.connect("add-new-node",self.nodeslist_add)
-            n_editor.connect("remove-node",self.nodeslist_remove)        
-        
         self.netlist = [] # list of pair [name,tree iter]
 
         self.model = None
@@ -134,12 +128,22 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
         self.default_list_it = None
         self.reopen()
         self.show_all()
-    
+
+    def init_editor(self):
+        base_editor.BaseEditor.init_editor(self)
+
+        # подключение к редактору узлов (для отслеживания изменений в списке узлов)
+        n_editor = self.conf.n_editor()
+        if n_editor != None:
+            n_editor.connect("change-node",self.nodeslist_change)
+            n_editor.connect("add-new-node",self.nodeslist_add)
+            n_editor.connect("remove-node",self.nodeslist_remove)
+
     def reopen(self):
         self.model.clear()
         self.netlist = []
         self.build_tree()
-        self.edit_xmlnode = None    
+        self.edit_xmlnode = None
     
     def build_tree(self):
         node = self.conf.xml.findNode(self.conf.xml.getDoc(),"nodes")[0].children.next 
@@ -481,11 +485,11 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
                      self.conf.mark_changes()
                      break
                 it1 = self.model.iter_next(it1)
-            it = self.model.iter_next(it)        
-    
+            it = self.model.iter_next(it)
+
     def nodeslist_add(self,obj, xmlnode):
-        pass    
-    
+        pass
+
     def nodeslist_remove(self,obj, xmlnode):
         # Ищем сети куда входит данный узел и удаляем
         it = self.model.get_iter_first()
@@ -498,9 +502,9 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
                      self.conf.mark_changes()
                      break
                 it1 = self.model.iter_next(it1)
-            
+
             it = self.model.iter_next(it)
-    
+
 def create_module(conf):
     return UNETEditor(conf)
 

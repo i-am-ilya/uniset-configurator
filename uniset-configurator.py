@@ -229,11 +229,21 @@ for n in modlist:
        if imodules.has_key(n):
           load_list.append(n)
 
+
+mfacelist=[]
+
 # загружаем согласно списку
 for n in load_list:
     m = imodules[n]
     face = m.create_module(conf)
     add_module(face,m.module_name(),mainbook,glade)
+    mfacelist.append(face)
+
+# после того как все модули построены..
+# инициализируем взаимосвязи между модулями
+for m in mfacelist:
+    m.init_editor()
+
 # ---------------
 mwin = glade.get_widget("MainWindow")
 mainbook.show()

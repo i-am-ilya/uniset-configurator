@@ -428,7 +428,7 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
     def on_button_press_event(self, object, event):
         (model, iter) = self.get_selection().get_selected()
 
-        if event.button == 3:                                                                                                                                                       
+        if event.button == 3:
             if not iter: 
                self.lcaps_popup.popup(None, None, None, event.button, event.time)
                return False
@@ -436,20 +436,20 @@ class LCAPSEditor(base_editor.BaseEditor,gtk.TreeView):
             t = model.get_value(iter,fid.etype)
             if t == "L":
                 self.lcaps_popup.popup(None, None, None, event.button, event.time)
-                return False                                                                                                                                                         
+                return False
             if t == "I":
                 self.item_popup.popup(None, None, None, event.button, event.time)
                 return False
             
         
         if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
-            if not iter:                                                                                                                                                                
+            if not iter:
                return False
             t = model.get_value(iter,fid.etype)
             if t == "L": 
                self.lcaps_edit(iter)
             elif t == "I":
-               self.on_edit_item(iter)               
+               self.on_edit_item(iter)
         
         return False
     

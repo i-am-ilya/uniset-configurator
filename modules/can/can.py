@@ -33,13 +33,7 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
 
         self.glade = gtk.glade.XML(conf.datdir+"can.glade")
         self.glade.signal_autoconnect(self)
-        
-        n_editor = conf.n_editor()
-        if n_editor != None:
-            n_editor.connect("change-node",self.nodeslist_change)
-            n_editor.connect("add-new-node",self.nodeslist_add)
-            n_editor.connect("remove-node",self.nodeslist_remove)        
-        
+
         self.netlist = [] # list of pair [name,tree iter]
 
         self.model = None
@@ -124,7 +118,17 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
         
         self.reopen()
         self.show_all()
-    
+        
+    def init_editor(self):
+        base_editor.BaseEditor.init_editor(self)
+
+        # подключение к редактору узлов (для отслеживания изменений в списке узлов)
+        n_editor = self.conf.n_editor()
+        if n_editor != None:
+            n_editor.connect("change-node",self.nodeslist_change)
+            n_editor.connect("add-new-node",self.nodeslist_add)
+            n_editor.connect("remove-node",self.nodeslist_remove)
+
     def reopen(self):
         self.model.clear()
         self.netlist = []

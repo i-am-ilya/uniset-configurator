@@ -34,6 +34,14 @@ class BaseEditor():
 
         self.conf = conf
 
+
+    # функция переопределяемая в каждом редакторе
+    # для инициализации взаимосвязей между модулями
+    # вызывается, когда все модули в редакторе уже загружены
+    # и доступны
+    def init_editor(self):
+        pass
+
     def init_glade_elements(self, elist, glade):
         ''' Инициализация переменных из glade файла...
             по списку элементов вида [class field,gladename,xmlname,xml_save_ignore]'''
