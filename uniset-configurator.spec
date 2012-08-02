@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.9
-Release: alt16
+Release: alt17
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -60,6 +60,9 @@ ln -s %python_sitelibdir_noarch/%name/can_conf.py %buildroot/%_bindir/uniset-can
 %_bindir/*
 
 %changelog
+* Thu Aug 02 2012 Pavel Vaynerman <pv@server> 0.9-alt17
+- remove display jack-number for AIxx5a
+
 * Sun Jul 01 2012 Pavel Vainerman <pv@altlinux.ru> 0.9-alt15
 - added to the display of channel number and subdev (eterbug #8573)
 
