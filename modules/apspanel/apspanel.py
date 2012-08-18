@@ -39,6 +39,8 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
 
         gtk.TreeView.__init__(self)
         base_editor.BaseEditor.__init__(self,conf)
+  
+        self.settings_node = None
 
         self.glade = gtk.glade.XML(conf.datdir+"apspanel.glade")
         self.glade.signal_autoconnect(self)
@@ -91,6 +93,8 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
         self.append_column(column)                
 
         self.panel_params=[ \
+            ["win","main_window",None,True], \
+            ["scwin","scwin",None,True], \
             ["dlg","apspanel_dlg",None,True], \
             ["panel_popup","apspanel_popup",None,True], \
             ["item_popup","apspanel_item_popup",None,True], \
@@ -148,6 +152,7 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
         self.reopen()
     
     def reopen(self):
+        self.settings_node = None
         self.model.clear()
         self.build_tree()
 
@@ -162,10 +167,11 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
         self.init_new_panel(xmlnode)
     
     def build_tree(self):
-        self.settings_node = self.conf.xml.findNode(self.conf.xml.getDoc(),"settings")[0]
         if self.settings_node == None:
-            print "(APSPanelEditor::load_list): <settings> not found?!..."
-            return
+           self.settings_node = self.conf.xml.findNode(self.conf.xml.getDoc(),"settings")[0]
+           if self.settings_node == None:
+              print "(APSPanelEditor::load_list): <settings> not found?!..."
+              return
         
         node = self.conf.xml.firstNode(self.settings_node.children)
         while node != None:
@@ -228,6 +234,20 @@ class APSPanelEditor(base_editor.BaseEditor,gtk.TreeView):
            p[fid.tname] = ""
 
         return p
+
+    def run(self, xmlnode):
+        self.settings_node = xmlnode
+        self.model.clear()
+        self.build_tree()
+        self.scwin.add(self)
+        self.show()
+        res = self.win.run()
+        self.win.hide()
+#        print "RESLULT: %d    ok=%d"%(res,dlg_RESPONSE_OK)
+        if res != dlg_RESPONSE_OK:
+           return False
+
+        return True
      
     def get_default_param(self,etype):
         p=[]

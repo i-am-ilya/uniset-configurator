@@ -15,7 +15,6 @@ import locale
 from global_conf import *
 import LinkEditor
 
-
 locale.setlocale(locale.LC_ALL, "ru_RU.UTF8")
 #loc = findarg("--localepath=", "./locale")
 #locale.setlocale(locale.LC_ALL,'')
@@ -146,22 +145,34 @@ linkeditor = False
 if "linkeditor" in str(sys.argv[0]):
    linkeditor = True
 
-if len(sys.argv) > 1 or linkeditor:
+apeditor = False
+if "apeditor" in str(sys.argv[0]):
+   apeditor = True
+
+if len(sys.argv) > 1 or linkeditor or apeditor:
    ind = findArgParam("--linkedit")
-   if linkeditor:
+   if linkeditor or apeditor:
       ind = 1
 
    if ind != -1:
-      if len(sys.argv) <= ind+2:
+      if linkeditor and len(sys.argv) <= ind+2:
          print "Unknown confname or object. Use:"
          print "uniset-configurator --confile configure.xml --linkedit confsection[:objectname] source.xml"
          print " or "
          print "uniset-linkeditor configure.xml confsection[:objectname] source.xml"
+         exit(1)         
+           
+      if apeditor and len(sys.argv) <= ind+1:
+         print "uniset-configurator --confile configure.xml --apedit confsection[:objectname]"
+         print " or "
+         print "uniset-apeditor configure.xml confsection[:objectname] source.xml"
          print ""
          exit(1)
 
       cname = sys.argv[ind+1]
-      src_file = sys.argv[ind+2]
+      src_file = ""
+      if linkeditor:
+         src_file = sys.argv[ind+2]
       oname = ""
 
       if ':' in cname:
@@ -179,11 +190,22 @@ if len(sys.argv) > 1 or linkeditor:
          print "%s not found\n"%cname
          exit(1)
 
-      ed = LinkEditor.create_module(conf)
-      ed.build_editor(src_file)
-      if ed.run(xmlnode,True) and conf.is_changed():
-         conf.xml.save(None,True,True)
-      exit(0)
+      if linkeditor:
+         import LinkEditor
+         ed = LinkEditor.create_module(conf)
+         ed.build_editor(src_file)
+         if ed.run(xmlnode,True) and conf.is_changed():
+            conf.xml.save(None,True,True)
+         exit(0)
+         
+      if apeditor:
+         sys.path.append(moddir+"/apspanel")
+         import apspanel
+         ed = apspanel.create_module(conf)
+         # xmlnode.parent
+         if ed.run(xmlnode.parent) and conf.is_changed():
+            conf.xml.save(None,True,True)
+         exit(0)
 
 def add_module( face, lbl, mainbook, glade ):
     # main tree

@@ -296,7 +296,7 @@
 		</SEES_CPanel_ResetProtectionLamp>
 		<!-- 			 keyTestLamp="SEESPanel_TestLamp_S" -->
 		<SEES1_CPanel DG_OFF_c="DG1_LampOFF_C" DG_ON_c="DG1_LampON_C" QG_OFF_c="QGM1_LampOFF_C" QG_ON_c="QGM1_LampON_C" ctlHeartbeat="_41_35_S" ctlMode_s="DG1_CtlMode_AS" ctlRespond="CAN_SESCPU_Not_Respond_FS" heartbeat_id="_31_36_AS" idPost="SEES1_PostID" lmpCtlAuto_c="CPU_DG1_AutoCtl_BS" lmpCtlLocal_c="CPU_DG1_LocalCtl_BS" lmpCtlPult_c="CPU_DG1_PultCtl_BS" lmpDG_OFF_c="CPU_DG1_LampOFF_C" lmpDG_ON_c="CPU_DG1_LampON_C" lmpQG_OFF_c="CPU_QGM1_LampOFF_C" lmpQG_ON_c="CPU_QGM1_LampON_C" name="SEES1_CPanel" panelFailure="SEES1_CPanel_Failed_F">
-			<APSPanel confirm="SEES_Confirm_S" confirmlamp="SEES1_ConfirmLamp_C" hornblink1="SEES1_Horn_C" hornreset="SEES_ResetHorn_S" name="SEES1_APSPanel" testlamp="SEESPanel_TestLamp_S">
+			<APSPanel comment="test" confirm="SEES_Confirm_S" confirmlamp="SEES1_ConfirmLamp_C" hornblink1="SEES1_Horn_C" hornreset="SEES_ResetHorn_S" name="SEES1_APSPanel" testlamp="SEESPanel_TestLamp_S">
 				<item delay="0" lamp="CPU_QGM1_Protection_BS" lamptype="AO" name="QGM1_Protection_BS"/>
 				<item blink="1" delay="0" lamp="CPU_SEES1_Protection_BS" lamptype="AO" name="SEES1_Protection_BS" noconfirm="1"/>
 				<item blink="1" delay="0" lamp="CPU_DG1_Discharge_BS" lamptype="AO" name="DG1_Discharge_S" noconfirm="1"/>

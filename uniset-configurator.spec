@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.9
-Release: alt17
+Release: alt18
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -45,6 +45,7 @@ mv -f %buildroot%python_sitelibdir_noarch/*.py %buildroot%python_sitelibdir_noar
 mkdir -p %buildroot/%_bindir/
 ln -s %python_sitelibdir_noarch/%name/%name.py %buildroot/%_bindir/%name
 ln -s %python_sitelibdir_noarch/%name/%name.py %buildroot/%_bindir/uniset-linkeditor
+ln -s %python_sitelibdir_noarch/%name/%name.py %buildroot/%_bindir/uniset-apeditor
 ln -s %python_sitelibdir_noarch/%name/uniset_io_conf.py %buildroot/%_bindir/uniset-ioconf
 ln -s %python_sitelibdir_noarch/%name/lcaps_conf.py %buildroot/%_bindir/uniset-lcaps-conf
 ln -s %python_sitelibdir_noarch/%name/apspanel_conf.py %buildroot/%_bindir/uniset-apspanel-conf
@@ -60,6 +61,9 @@ ln -s %python_sitelibdir_noarch/%name/can_conf.py %buildroot/%_bindir/uniset-can
 %_bindir/*
 
 %changelog
+* Sat Aug 18 2012 Pavel Vainerman <pv@altlinux.ru> 0.9-alt18
+- add uniset-apeditor (apspanel editor)
+
 * Thu Aug 02 2012 Pavel Vaynerman <pv@server> 0.9-alt17
 - remove display jack-number for AIxx5a
 
