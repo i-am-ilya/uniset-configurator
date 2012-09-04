@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 0.9
-Release: alt18
+Release: alt19
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -61,6 +61,9 @@ ln -s %python_sitelibdir_noarch/%name/can_conf.py %buildroot/%_bindir/uniset-can
 %_bindir/*
 
 %changelog
+* Tue Sep 04 2012 Pavel Vainerman <pv@altlinux.ru> 0.9-alt19
+- add ID column for uniset-linkeditor
+
 * Sat Aug 18 2012 Pavel Vainerman <pv@altlinux.ru> 0.9-alt18
 - add uniset-apeditor (apspanel editor)
 

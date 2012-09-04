@@ -164,6 +164,12 @@ class Conf:
         self.id_dict[i] = n
         self.name_dict[oname] = n
         return n
+
+    def getSID(self, name):
+        s = self.find_sensor(name)
+        if s != None:
+           return s.prop("id")
+        return None
     
     def find_sensor(self, name):
         try:

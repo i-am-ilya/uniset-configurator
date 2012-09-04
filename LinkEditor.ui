@@ -20,6 +20,8 @@
       <column type="GdkPixbuf"/>
       <!-- column-name default -->
       <column type="gchararray"/>
+      <!-- column-name sid -->
+      <column type="gchararray"/>
     </columns>
   </object>
   <object class="GtkDialog" id="main_window">
@@ -187,6 +189,17 @@
                       </object>
                     </child>
                     <child>
+                      <object class="GtkTreeViewColumn" id="treeviewcolumn2">
+                        <property name="title" translatable="yes">ID</property>
+                        <child>
+                          <object class="GtkCellRendererText" id="cell_sid"/>
+                          <attributes>
+                            <attribute name="text">10</attribute>
+                          </attributes>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
                       <object class="GtkTreeViewColumn" id="col_value">
                         <property name="spacing">4</property>
                         <property name="title" translatable="yes">&#x41F;&#x440;&#x438;&#x432;&#x44F;&#x437;&#x43A;&#x430;</property>
@@ -294,6 +307,17 @@
                           <object class="GtkCellRendererPixbuf" id="cll_img"/>
                           <attributes>
                             <attribute name="pixbuf">7</attribute>
+                          </attributes>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkTreeViewColumn" id="treeviewcolumn3">
+                        <property name="title" translatable="yes">ID</property>
+                        <child>
+                          <object class="GtkCellRendererText" id="cell_sid1"/>
+                          <attributes>
+                            <attribute name="text">10</attribute>
                           </attributes>
                         </child>
                       </object>

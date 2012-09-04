@@ -29,6 +29,7 @@ class fid():
    v_min = 10
    v_max = 11
    v_def = 12
+   sid = 10
 
 
 class LinkEditor(base_editor.BaseEditor):
@@ -72,7 +73,8 @@ class LinkEditor(base_editor.BaseEditor):
                               object,               # xmlnode
                               gtk.gdk.Pixbuf,       # picture
                               gobject.TYPE_STRING,  # item type
-                              gobject.TYPE_BOOLEAN)    # no_check_id 
+                              gobject.TYPE_BOOLEAN, # no_check_id 
+                              gobject.TYPE_STRING)  # sensor ID 
 
         self.msg_model = gtk.ListStore(
                               gobject.TYPE_STRING,  # value
@@ -84,7 +86,8 @@ class LinkEditor(base_editor.BaseEditor):
                               object,               # xmlnode
                               gtk.gdk.Pixbuf,       # picture
                               gobject.TYPE_STRING,  # item type
-                              gobject.TYPE_BOOLEAN)    # no_check_id 
+                              gobject.TYPE_BOOLEAN, # no_check_id 
+                              gobject.TYPE_STRING)  # sensor ID
                               
         self.addon_model = gtk.ListStore(
                               gobject.TYPE_STRING,  # value
@@ -96,7 +99,7 @@ class LinkEditor(base_editor.BaseEditor):
                               object,               # xmlnode
                               gtk.gdk.Pixbuf,       # picture
                               gobject.TYPE_STRING,  # item type
-                              gobject.TYPE_BOOLEAN,    # no_check_id
+                              gobject.TYPE_BOOLEAN, # no_check_id
                               gobject.TYPE_STRING,  # min
                               gobject.TYPE_STRING,  # max
                               gobject.TYPE_STRING)  # default value
@@ -134,18 +137,18 @@ class LinkEditor(base_editor.BaseEditor):
 
             #print i.prop("name")
             if i.name == "item":
-               self.model.append(["",i.prop("name"),i.prop("vartype"),i.prop("iotype"),i.prop("comment"),None,None,None,"item",nocheckid])
+               self.model.append(["",i.prop("name"),i.prop("vartype"),i.prop("iotype"),i.prop("comment"),None,None,None,"item",nocheckid,i.prop("id")])
             elif i.name == "group":
-               self.model.append(["",i.prop("name"),i.prop("vartype"),i.prop("iotype"),i.prop("comment"),"gray",None,None,"group",True])
+               self.model.append(["",i.prop("name"),i.prop("vartype"),i.prop("iotype"),i.prop("comment"),"gray",None,None,"group",True,""])
 
         res = ctxt.xpathEval("//msgmap/*")
 
         for i in res:
             #print i.prop("name")
             if i.name == "item":
-               self.msg_model.append(["",i.prop("name"),"","",i.prop("comment"),None,None,None,"item",True])
+               self.msg_model.append(["",i.prop("name"),"","",i.prop("comment"),None,None,None,"item",True,""])
             elif i.name == "group":
-               self.msg_model.append(["",i.prop("name"),"","",i.prop("comment"),"gray",None,None,"group",True])
+               self.msg_model.append(["",i.prop("name"),"","",i.prop("comment"),"gray",None,None,"group",True,""])
 
         res = ctxt.xpathEval("//variables/*")
         for i in res:
@@ -166,6 +169,7 @@ class LinkEditor(base_editor.BaseEditor):
         while it is not None:
             val = to_str( xmlnode.prop(model.get_value(it,fid.name)) )
             model.set_value(it,fid.value,val)
+            model.set_value(it,fid.sid, self.conf.getSID(val))
             itype = model.get_value(it,fid.itype)
             nocheckid =  model.get_value(it,fid.nocheckid)
             if val != "" and itype == "item" and check == True:
@@ -283,10 +287,12 @@ class LinkEditor(base_editor.BaseEditor):
                   return
 
             model.set_value(iter,fid.value,to_str(s.prop("name")))
+            model.set_value(iter,fid.sid,to_str(s.prop("id")))
             model.set_value(iter,fid.xmlnode,s)
             model.set_value(iter,fid.img,self.img_ok)
         else:
             model.set_value(iter,fid.value,"")
+            model.set_value(iter,fid.sid,"")
             model.set_value(iter,fid.xmlnode,None)
             if model.get_value(iter,fid.nocheckid) == False:
                model.set_value(iter,fid.img,self.img_warning)
