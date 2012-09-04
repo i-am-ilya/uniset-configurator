@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 # AC_PREREQ(2.59)
-AC_INIT([uniset-configurator], [0.9])
+AC_INIT([uniset-configurator], [1.0])
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME,AC_PACKAGE_VERSION)
 
 #AM_GNU_GETTEXT([external])
@@ -39,8 +39,6 @@ AC_CONFIG_FILES([Makefile
                  modules/apspanel/templates/Makefile
                  modules/viewer/Makefile
                  modules/unet/Makefile
-                 modules/ses/Makefile
-                 modules/geu/Makefile
                  templates/Makefile
                  images/Makefile])
 		 

@@ -1,6 +1,6 @@
 Name: uniset-configurator
-Version: 0.9
-Release: alt19
+Version: 0.1
+Release: alt1
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -61,6 +61,10 @@ ln -s %python_sitelibdir_noarch/%name/can_conf.py %buildroot/%_bindir/uniset-can
 %_bindir/*
 
 %changelog
+* Tue Sep 04 2012 Pavel Vainerman <pv@altlinux.ru> 0.1-alt1
+- remove unused modules 'ses' and 'geu' (use LinkEditor)
+- LinkEditor: added support for the selection ID or name
+
 * Tue Sep 04 2012 Pavel Vainerman <pv@altlinux.ru> 0.9-alt19
 - add ID column for uniset-linkeditor
 

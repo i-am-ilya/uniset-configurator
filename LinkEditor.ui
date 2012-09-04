@@ -192,7 +192,9 @@
                       <object class="GtkTreeViewColumn" id="treeviewcolumn2">
                         <property name="title" translatable="yes">ID</property>
                         <child>
-                          <object class="GtkCellRendererText" id="cell_sid"/>
+                          <object class="GtkCellRendererText" id="cell_sid">
+                            <property name="editable">True</property>
+                          </object>
                           <attributes>
                             <attribute name="text">10</attribute>
                           </attributes>
@@ -204,7 +206,9 @@
                         <property name="spacing">4</property>
                         <property name="title" translatable="yes">&#x41F;&#x440;&#x438;&#x432;&#x44F;&#x437;&#x43A;&#x430;</property>
                         <child>
-                          <object class="GtkCellRendererText" id="cell_value"/>
+                          <object class="GtkCellRendererText" id="cell_value">
+                            <property name="editable">True</property>
+                          </object>
                           <attributes>
                             <attribute name="background">5</attribute>
                             <attribute name="text">0</attribute>
@@ -315,7 +319,9 @@
                       <object class="GtkTreeViewColumn" id="treeviewcolumn3">
                         <property name="title" translatable="yes">ID</property>
                         <child>
-                          <object class="GtkCellRendererText" id="cell_sid1"/>
+                          <object class="GtkCellRendererText" id="cell_sid1">
+                            <property name="editable">True</property>
+                          </object>
                           <attributes>
                             <attribute name="text">10</attribute>
                           </attributes>
@@ -327,7 +333,9 @@
                         <property name="spacing">4</property>
                         <property name="title" translatable="yes">&#x41F;&#x440;&#x438;&#x432;&#x44F;&#x437;&#x43A;&#x430;</property>
                         <child>
-                          <object class="GtkCellRendererText" id="cell_value1"/>
+                          <object class="GtkCellRendererText" id="cell_value1">
+                            <property name="editable">True</property>
+                          </object>
                           <attributes>
                             <attribute name="background">5</attribute>
                             <attribute name="text">0</attribute>
