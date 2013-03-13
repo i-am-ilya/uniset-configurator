@@ -235,6 +235,20 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
                  elif t == "node":
                      self.on_node_edit_activate(None)
         return False
+        
+    def on_key_press_event(self, object, event):      
+        keyname = gtk.gdk.keyval_name(event.keyval)
+        if keyname == "Escape":
+            #self.dlg.response(gtk.RESPONSE_CANCEL)
+            return False
+            
+        if keyname == "KP_Enter":
+           #(model, iter) = self.tv.get_selection().get_selected()                                                                                                                         
+           #if iter:                                                                                                                                                                
+           #   self.dlg.response(gtk.RESPONSE_OK)
+           pass
+
+        return False        
 
     def on_add_net_activate(self, menuitem):
         self.net_name.set_text("")

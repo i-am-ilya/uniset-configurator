@@ -47,6 +47,7 @@ class NodesEditor(base_editor.BaseEditor,gtk.TreeView):
         self.set_model(self.model)
         self.set_rules_hint(True)
         self.connect("button-press-event", self.on_button_press_event)
+        self.connect("key-press-event", self.on_key_press_event)
 
         column = gtk.TreeViewColumn(_("Name"))
         nmcell = gtk.CellRendererText()
@@ -110,7 +111,19 @@ class NodesEditor(base_editor.BaseEditor,gtk.TreeView):
                  return False
             self.nodes_edit_node_activate(None)
         return False
+        
+    def on_key_press_event(self, object, event):      
+        keyname = gtk.gdk.keyval_name(event.keyval)
+        if keyname == "Escape":
+            self.dlg.response(gtk.RESPONSE_CANCEL)
+            return False
+            
+        if keyname == "KP_Enter":
+           (model, iter) = self.tv.get_selection().get_selected()                                                                                                                         
+           if iter:                                                                                                                                                                
+              self.dlg.response(gtk.RESPONSE_OK)
 
+        return False
     def on_nodes_btnCancel_clicked(self, button):
        self.dlg.response(gtk.RESPONSE_CANCEL)
 

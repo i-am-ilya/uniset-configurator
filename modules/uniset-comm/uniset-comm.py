@@ -6,12 +6,6 @@ import UniXML
 import configure
 import base_editor
 
-def create_module(conf):
-    return UniSetEditor(conf)
-
-def module_name():
-    return "UniSet"
-
 '''
 Редактирование общих параметров uniset
 '''
@@ -22,13 +16,14 @@ class UniSetEditor(base_editor.BaseEditor,gtk.Viewport):
         base_editor.BaseEditor.__init__(self,conf)
         gtk.Viewport.__init__(self)
 
-        self.glade = gtk.glade.XML(conf.datdir+"uniset.glade")
+        self.glade = gtk.glade.XML(conf.datdir+"uniset-comm.glade")
         self.glade.signal_autoconnect(self)
         
         nbook = self.glade.get_widget("uniset_nbook")
         nbook.reparent(self)
        
         self.connect("button-press-event", self.on_button_press_event)
+        self.connect("key-press-event", self.on_key_press_event)
         
         self.menu_list = [ \
             ["node_popup","nodes_popup",None,True] \
@@ -108,6 +103,19 @@ class UniSetEditor(base_editor.BaseEditor,gtk.Viewport):
 #        if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
           
         return False
+        
+    def on_key_press_event(self, object, event):      
+        keyname = gtk.gdk.keyval_name(event.keyval)
+        if keyname == "Escape":
+            self.dlg.response(gtk.RESPONSE_CANCEL)
+            return False
+            
+        if keyname == "KP_Enter":
+           (model, iter) = self.tv.get_selection().get_selected()                                                                                                                         
+           if iter:                                                                                                                                                                
+              self.dlg.response(gtk.RESPONSE_OK)
+
+        return False        
     
     def on_uniset_btn_lnode_clicked(self,button):
         print "**************** lnode clicked.."
@@ -122,4 +130,4 @@ def create_module(conf):
     return UniSetEditor(conf)
 
 def module_name():
-    return "Общие параметры"
+    return "UniSet"
