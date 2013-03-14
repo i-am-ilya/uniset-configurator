@@ -127,6 +127,27 @@ class Card_UNIO96(simple_card.SimpleCard):
 
         ent_mod_param  = self.editor_ui.get_object("io_params")
         ent_mod_param.set_text(s)
+        
+    def get_iotype( self, cname, subdev, channel ):
+        clist = self.get_channel_list(cname)
+        subdev = to_int(subdev)
+        channel = to_int(channel)
+        for c in clist:
+            if c[simple_card.cid.cnum] == channel and c[simple_card.cid.subdev] == subdev:
+               if subdev not in self.subdev_type:
+                  return "DI"
+
+               sname = self.subdev_type[subdev].upper()
+               if sname == "TBI0_24":
+                  return "DO"
+               if sname == "TBI24_0":
+                  return "DI"
+               if sname == "TBI16_8":
+                  if channel > 15:
+                     return "DO"
+                  return "DI"
+
+        return "DI"
 
 def create_editor(datdir):
     return Card_UNIO96(datdir)
