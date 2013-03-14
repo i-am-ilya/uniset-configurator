@@ -114,7 +114,7 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
             # Common parameters
             ["tbl_comm","io_tbl_comm",None,True],
             ["lamp","io_cb_lamp","lamp",False],
-            ["notestlamp","io_cb_notestlamp","notestlamp",False],
+            ["notestlamp","io_cb_notestlamp","no_iotestlamp",False],
             ["io_range","io_sp_range","range",False],
             ["io_aref","io_sp_aref","aref",False],
             ["safety","io_safety","safety",False],
