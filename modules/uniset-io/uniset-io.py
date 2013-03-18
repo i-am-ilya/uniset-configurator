@@ -393,6 +393,24 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         while True:
             s = self.conf.s_dlg().run(self)
             if s != None:
+                iotype = s.prop("iotype")
+                p_iter = self.model.iter_parent(self.myedit_iter)
+                cardname = self.model.get_value(p_iter,fid.name)
+                chan = self.model.get_value(self.myedit_iter,fid.num)
+                subdev = self.model.get_value(self.myedit_iter,fid.subdev)
+                c_iotype = self.ioconf.get_iotype(cardname,subdev,chan)
+           
+                if c_iotype != "" and iotype != c_iotype:
+                    msg = "'" + s.prop("name") + "' " + _("Difference in the types: card channel iotype '%s' != you selected '%s'.\n")%(c_iotype,iotype)
+                    msg = msg + " Change the type of sensor?"
+                    dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,msg)
+                    # dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_WARNING,gtk.BUTTONS_OK,msg)
+                    res = dlg.run()
+                    dlg.hide()
+                    if res == gtk.RESPONSE_NO:        
+                       return False
+                    s.setProp("iotype",c_iotype)
+
                 n_it,cd_it,ch_it = self.check_connection(s,self.myedit_iter)
                 if ch_it is not None:
                     msg = "'" + s.prop("name") + "' " + _("Already connection!") 
@@ -407,7 +425,7 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
                     # сперва очистим привязку у старого
                     self.model.set_value(ch_it,fid.xmlnode,None)
                     self.model.set_value(ch_it,fid.param,"")
-
+                
             self.sensor = s  
             break
  
@@ -419,7 +437,14 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
              self.tbl_comm.set_sensitive(True)  
              self.set_combobox_element(self.iotype,self.sensor.prop("iotype"))
              self.lbl_sensor.set_text(self.sensor.prop("name"))
-
+             iotype = self.sensor.prop("iotype")
+             if iotype == "DI" or iotype == "AI":
+                self.iotype.set_sensitive(False)
+                self.lamp.set_sensitive(False)
+             else:
+                self.iotype.set_sensitive(True)
+                self.lamp.set_sensitive(True)
+        
     def on_io_cbox_iotype_changed(self,combobox):
         # В зависимости от типа блокируем различные настройки
         t = combobox.get_active_text()
@@ -447,6 +472,11 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
              self.lblThresholds.set_sensitive(True)
              self.pgDelay.set_sensitive(True)
              self.lblDelay.set_sensitive(True)
+             
+        if t == "DI" or t == "AI":
+           self.lamp.set_sensitive(False)
+        else:
+           self.lamp.set_sensitive(True)
     
     def on_io_cbox_cdiagram_changed(self,combobox):
         if self.cdiagram.get_active_text() == "None":
@@ -652,7 +682,7 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         (model, iter) = self.tv.get_selection().get_selected()
         if not iter: return
 
-        cnode = model.get_value(iter,2)
+        cnode = model.get_value(iter,fid.xmlnode)
         while True:
             res = self.editor.run(cnode)
             if res != dlg_RESPONSE_OK:
@@ -715,7 +745,10 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
            cardname = self.model.get_value(p_iter,fid.name)
            chan = self.model.get_value(self.myedit_iter,fid.num)
            subdev = self.model.get_value(self.myedit_iter,fid.subdev)
-           self.set_combobox_element(self.iotype,self.ioconf.get_iotype(cardname,subdev,chan))
+           iotype = self.ioconf.get_iotype(cardname,subdev,chan)
+           if iotype == "":
+              iotype = "DO"
+           self.set_combobox_element(self.iotype,iotype)
 
     def on_edit_channel(self,iter):
         iter = self.fmodel.convert_iter_to_child_iter(iter)
@@ -724,6 +757,8 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         node_iter = self.model.iter_parent(card_iter)
         node = self.model.get_value(node_iter,fid.xmlnode)
         node_id = self.model.get_value(node_iter,fid.num) # node.prop("id")
+        
+        self.editor.card_init( card )
 
         self.sensor = self.model.get_value(iter,fid.xmlnode)
         snode = UniXML.EmptyNode()
@@ -753,7 +788,26 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         cardname = self.model.get_value(card_iter,fid.name)
         chan = self.model.get_value(self.myedit_iter,fid.num)
         subdev = self.model.get_value(self.myedit_iter,fid.subdev)
-        self.set_combobox_element(self.iotype,self.ioconf.get_iotype(cardname,subdev,chan))
+        iotype = self.ioconf.get_iotype(cardname,subdev,chan)
+        if iotype == "":
+           # если у карты тип каналов не задан, берём непосредственно из конф. файла
+           if snode:
+              iotype = snode.prop("iotype")
+           # если и в конф. файле не указан, делаем DI по умолчанию
+           if iotype == "":
+              iotype = "DI"
+           self.iotype.set_sensitive(True)
+        else:  
+           # если у карты жёстко задан тип канала, то отключаем возможность менять
+           self.iotype.set_sensitive(False)
+           
+        self.set_combobox_element(self.iotype,iotype)
+        
+        if iotype == "DI" or iotype == "AI":
+           self.lamp.set_sensitive(False)
+           self.lamp.set_active(False)
+        else:
+           self.lamp.set_sensitive(True)
 
         while True:
       

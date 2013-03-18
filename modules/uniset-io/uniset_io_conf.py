@@ -55,7 +55,7 @@ class IOConfig():
            editor = self.cardlist[cname]
            return editor.get_channel_list(cname)
 
-        return [[0,"Unknown CARD","DI",0]]
+        return [[0,"Unknown CARD","",0]]
 
     def get_iotype(self,cname,subdev,channel):
         cname = cname.upper()
@@ -63,7 +63,7 @@ class IOConfig():
            editor = self.cardlist[cname]
            return editor.get_iotype(cname,subdev,channel)
 
-        return "DI"
+        return ""
    
     def get_default_channel_param(self,cname):
         cname = cname.upper()

@@ -42,17 +42,17 @@ class Card_UNIO96(simple_card.SimpleCard):
     def build_channel_list( self, cname ):
         clist=[]
         for i in range(0,24):
-            clist.append([i,"J1:"+str(i),"DI",0])
+            clist.append([i,"J1:"+str(i),"",0])
         for i in range(0,24):
-            clist.append([i,"J2:"+str(i),"DI",1])
+            clist.append([i,"J2:"+str(i),"",1])
 
         if cname == "UNIO48":
            return clist
 
         for i in range(0,24):
-            clist.append([i,"J3:"+str(i),"DI",2])
+            clist.append([i,"J3:"+str(i),"",2])
         for i in range(0,24):
-            clist.append([i,"J4:"+str(i),"DI",3])
+            clist.append([i,"J4:"+str(i),"",3])
 
         return clist
 
@@ -113,7 +113,20 @@ class Card_UNIO96(simple_card.SimpleCard):
              s = self.get_typenum_for_unio_subdev(sname.upper())
 
         return s
+	
+    def get_subdev_name(self,subdev):
+        sn = to_str(subdev)
+        if sn == "0":
+           return self.cbox1.get_active_text()
+        if sn == "1":
+           return self.cbox2.get_active_text()
+        if sn == "2":
+           return self.cbox3.get_active_text()
+        if sn == "3":
+           return self.cbox4.get_active_text()
 
+        return ""
+	
     def on_unioxx_subdev_changed(self,cb):
         if self.editor_ui == None:
            return
@@ -130,24 +143,24 @@ class Card_UNIO96(simple_card.SimpleCard):
         
     def get_iotype( self, cname, subdev, channel ):
         clist = self.get_channel_list(cname)
-        subdev = to_int(subdev)
+        subdev = to_str(subdev)
+        subnum = to_int(subdev)
         channel = to_int(channel)
-        for c in clist:
-            if c[simple_card.cid.cnum] == channel and c[simple_card.cid.subdev] == subdev:
-               if subdev not in self.subdev_type:
-                  return "DI"
 
-               sname = self.subdev_type[subdev].upper()
-               if sname == "TBI0_24":
+        for c in clist:
+            if c[simple_card.cid.cnum] == channel and c[simple_card.cid.subdev] == subnum:
+            
+               subdev_name = self.get_subdev_name(subdev)
+               if subdev_name == "TBI0_24":
                   return "DO"
-               if sname == "TBI24_0":
+               if subdev_name == "TBI24_0":
                   return "DI"
-               if sname == "TBI16_8":
+               if subdev_name == "TBI16_8":
                   if channel > 15:
                      return "DO"
                   return "DI"
 
-        return "DI"
+        return ""
 
 def create_editor(datdir):
     return Card_UNIO96(datdir)

@@ -11,7 +11,6 @@ class cid():
   cname = 1
   iotype = 2
   subdev = 3
-
   
 class SimpleCard(base_editor.BaseEditor):
 
@@ -50,7 +49,7 @@ class SimpleCard(base_editor.BaseEditor):
         return self.builder.get_object("main")
 
     def build_channel_list( self, cname ):
-        return [[0,"Unknown card","DI",0]]
+        return [[0,"Unknown card","",0]]
 
     def default_init(self,cname):
         pass
@@ -93,7 +92,7 @@ class SimpleCard(base_editor.BaseEditor):
             if c[cid.cnum] == channel and c[cid.subdev] == subdev:
                return c[cid.iotype]
 
-        return "DI"
+        return ""
 
     def get_default_channel_param(self,cname):
         ret = dict()

@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 1.0
-Release: alt2
+Release: alt3
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -61,6 +61,9 @@ ln -s %python_sitelibdir_noarch/%name/can_conf.py %buildroot/%_bindir/uniset-can
 %_bindir/*
 
 %changelog
+* Mon Mar 18 2013 Pavel Vainerman <pv@altlinux.ru> 1.0-alt3
+- added check the channel type in the editor 
+
 * Wed Mar 13 2013 Pavel Vainerman <pv@altlinux.ru> 1.0-alt2
 - rename uniset --> uniset-comm (fix conflict with new python-modules-uniset)
 - rename uniset_io --> uniset-io

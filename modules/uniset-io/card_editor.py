@@ -58,8 +58,17 @@ class CardEditor(base_editor.BaseEditor):
         self.mod_name.set_text("")
         self.set_combobox_element(self.cardlist,"None")
 
+    def card_init(self, cnode):
+        if cnode:
+           self.init_elements_value(self.card_params,cnode)
+           e_it = self.cardlist.get_active_iter()
+           if e_it:
+              editor = self.cardlist.get_model().get_value(e_it,1)
+              editor.init(self.cardlist.get_active_text(),self.builder,cnode)
+           
     def run(self, cnode=None):
         self.cnode = cnode
+
         if cnode:
            # при редактировании отключаем выбор, т.к.
            # сменить тип карты можно только удалив старую
