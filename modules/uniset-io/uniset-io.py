@@ -19,6 +19,7 @@ class fid():
   num = 4
   subdev = 5
   pic = 6
+  comm = 7
   
 pic_CARD = 'card.png'
 pic_NODE = 'node.png'  
@@ -61,7 +62,8 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
                                    gobject.TYPE_STRING, # element type
                                    gobject.TYPE_STRING, # number
                                    gobject.TYPE_STRING, # subdev
-                                   gtk.gdk.Pixbuf)      # picture
+                                   gtk.gdk.Pixbuf,      # picture
+                                   gobject.TYPE_STRING) # comment)
         
         self.fmodel = self.model.filter_new()
         self.fmodel.set_visible_func(self.view_filter_func)
@@ -86,6 +88,11 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
 
         renderer = gtk.CellRendererText()
         column = gtk.TreeViewColumn(_("subdev"), renderer, text=fid.subdev)
+        column.set_clickable(False)
+        self.tv.append_column(column)
+
+        renderer = gtk.CellRendererText()
+        column = gtk.TreeViewColumn(_("comment"), renderer, text=fid.comm)
         column.set_clickable(False)
         self.tv.append_column(column)
 
@@ -236,7 +243,7 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         while node != None:
             info = self.get_node_info(node)
             #img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_NODE)
-            iter1 = self.model.append(None,[node.prop("name"),info,node,"node",node.prop("name"),"",img])
+            iter1 = self.model.append(None,[node.prop("name"),info,node,"node",node.prop("name"),"",img,node.prop("comment")])
             self.read_cards(node,iter1)
             node = self.conf.xml.nextNode(node)
 
@@ -247,7 +254,7 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_CARD)
         while node != None:
             info = self.get_card_info(node)
-            iter2 = self.model.append(iter, [node.prop("name").upper(),info,node,"card",node.prop("card"),"",img])
+            iter2 = self.model.append(iter, [node.prop("name").upper(),info,node,"card",node.prop("card"),"",img,node.prop("comment")])
             self.build_channels_list(node,self.model,iter2)
             node = self.conf.xml.nextNode(node)
 
@@ -260,7 +267,7 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_CHAN)
         clst = self.ioconf.get_channel_list(cardnode)
         for c in clst:
-            model.append(iter, [c[1],"",None,"channel",str(c[0]),str(c[3]),img])
+            model.append(iter, [c[1],"",None,"channel",str(c[0]),str(c[3]),img,""])
 
         #self.ioconf.build_channels_list(cardnode,model,iter,img)
 
@@ -605,7 +612,7 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_CARD)
 
         i_node_iter = self.fmodel.convert_iter_to_child_iter(node_iter)
-        it = self.model.append(i_node_iter, [n.prop("name"),self.get_card_info(n),n,"card",n.prop("card"),"0",img])
+        it = self.model.append(i_node_iter, [n.prop("name"),self.get_card_info(n),n,"card",n.prop("card"),"0",img,n.prop("comment")])
         self.build_channels_list(n,self.model,it)
         self.conf.mark_changes()
 
@@ -721,6 +728,7 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         info  = info + ' BA=' + str(cnode.prop("baddr"))
         self.model.set_value(i_iter,fid.param,info)
         self.update_card_info_for_sensors(i_iter,cnode)
+        self.model.set_value(i_iter,fid.comm,cnode.prop("comment"))
         self.conf.mark_changes()
 
     def update_card_info_for_sensors(self,iter,cnode):
@@ -901,7 +909,7 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
     
     def nodeslist_add(self,obj, xmlnode):
         img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_NODE)
-        self.model.append(None,[xmlnode.prop("name"),self.get_node_info(xmlnode),xmlnode,"node",xmlnode.prop("name"),"0",img])
+        self.model.append(None,[xmlnode.prop("name"),self.get_node_info(xmlnode),xmlnode,"node",xmlnode.prop("name"),"0",img,xmlnode.prop("comment")])
     
     def nodeslist_remove(self,obj, xmlnode):
         node_id = xmlnode.prop("name")

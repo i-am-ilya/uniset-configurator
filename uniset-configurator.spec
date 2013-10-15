@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 1.0
-Release: alt3
+Release: alt4
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -61,6 +61,9 @@ ln -s %python_sitelibdir_noarch/%name/can_conf.py %buildroot/%_bindir/uniset-can
 %_bindir/*
 
 %changelog
+* Tue Oct 15 2013 Pavel Vainerman <pv@altlinux.ru> 1.0-alt4
+- added "comment" for io-card 
+
 * Mon Mar 18 2013 Pavel Vainerman <pv@altlinux.ru> 1.0-alt3
 - added check the channel type in the editor 
 

@@ -21,6 +21,7 @@ class CardEditor(base_editor.BaseEditor):
         # Список параметров для карты
         self.card_params=[
             ["dlg_card","dlg_card","name",False],
+            ["comm","io_comment","comment",False],
             ["cardmain","cardmain",None,True],
             ["cardlist","io_cardlist","name",False],
             ["card_number","io_sp_cardnum","card",False],
@@ -57,6 +58,7 @@ class CardEditor(base_editor.BaseEditor):
         self.mod_params.set_text("")
         self.mod_name.set_text("")
         self.set_combobox_element(self.cardlist,"None")
+        self.comm.set_text("")
 
     def card_init(self, cnode):
         if cnode:
