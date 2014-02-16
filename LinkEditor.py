@@ -146,9 +146,9 @@ class LinkEditor(base_editor.BaseEditor):
         for i in res:
             #print i.prop("name")
             if i.name == "item":
-               self.msg_model.append(["",i.prop("name"),"","",i.prop("comment"),None,None,None,"item",True,""])
+               self.msg_model.append(["",i.prop("name"),"","DI",i.prop("comment"),None,None,None,"item",True,""])
             elif i.name == "group":
-               self.msg_model.append(["",i.prop("name"),"","",i.prop("comment"),"gray",None,None,"group",True,""])
+               self.msg_model.append(["",i.prop("name"),"","DI",i.prop("comment"),"gray",None,None,"group",True,""])
 
         res = ctxt.xpathEval("//variables/*")
         for i in res:
@@ -278,7 +278,7 @@ class LinkEditor(base_editor.BaseEditor):
 
         if s != None:
         
-            if model.get_value(iter,fid.iotype).upper() != s.prop("iotype").upper():
+            if model.get_value(iter,fid.iotype)!="" and model.get_value(iter,fid.iotype).upper() != s.prop("iotype").upper():
                msg = "Тип выбранного датчика '%s' не совпадает с типом для этого поля '%s'\nВсё равно сохранить?"%(s.prop("iotype").upper(),model.get_value(iter,fid.iotype).upper())
                dlg = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_QUESTION,gtk.BUTTONS_YES_NO,msg)
                res = dlg.run()
