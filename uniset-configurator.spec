@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 1.0
-Release: alt5
+Release: alt6
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -61,6 +61,9 @@ ln -s %python_sitelibdir_noarch/%name/can_conf.py %buildroot/%_bindir/uniset-can
 %_bindir/*
 
 %changelog
+* Tue Mar 24 2015 Pavel Vainerman <pv@altlinux.ru> 1.0-alt6
+- Use 'xml.dom.minidom' replaced by the use 'lxml'
+
 * Mon Feb 17 2014 Pavel Vainerman <pv@altlinux.ru> 1.0-alt5
 - fixed minor bug in LinkEditor
 
