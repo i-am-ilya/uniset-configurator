@@ -8,4 +8,8 @@ moddir    = @pythondir@/@PACKAGE@/modules/uniset_io
 mod_DATA  = uniset_io.py card_editor.py
 
 ddir     = $(pkgdatadir)
-d_DATA   = *.glade *.ui *.xsl
+d_DATA   = *.glade *.ui uniset-io-gentags.xsl
+
+
+uniset-io-gentags.xsl: uniset-io-gentags.xsl.tpl uniset-io-gentags.sh
+	$(SHELL) gen-xsltfile.sh $(srcdir)/uniset-io-gentags.xsl.tpl $@
