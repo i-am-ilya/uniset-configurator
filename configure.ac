@@ -31,6 +31,7 @@ AC_CONFIG_FILES([Makefile
                  modules/uniset-io/Makefile
                  modules/uniset-io/templates/Makefile
                  modules/uniset-io/cards/Makefile
+                 modules/uniset-io/uniset-io-gentags.sh
                  modules/nodes/Makefile
                  modules/uniset-comm/Makefile
                  modules/lcaps/Makefile

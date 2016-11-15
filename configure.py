@@ -4,10 +4,12 @@
 import sys, UniXML, dlg_xlist
 import gtk
 from global_conf import *
+import gobject
 
-class Conf:
+class Conf(gobject.GObject):
     def __init__ (self, fname, gladexml, datdir, moddir):
-        
+        gobject.GObject.__init__(self)
+
         self.xml = UniXML.UniXML(fname)
         self.glade = gladexml
 
@@ -21,6 +23,9 @@ class Conf:
         self.imgdir = datdir + "images/"
         self.moddir = moddir
 
+        gobject.signal_new("save", Conf, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (object,))
+        gobject.signal_new("reopen", Conf, gobject.SIGNAL_RUN_FIRST, gobject.TYPE_NONE, (object,))
+
         self.s_node = self.find_s_node()
         self.o_node = self.find_o_node()
         
@@ -28,7 +33,7 @@ class Conf:
    
     def add_module(self,m):
         self.modlist.append(m)   	
-    
+
     def load_dicts(self):
         self.id_dict = dict()
         self.name_dict = dict()
@@ -105,6 +110,11 @@ class Conf:
         self.load_dicts()
         for m in self.modlist:
             m.reopen()
+
+        try:
+            self.emit("reopen", self.xml)
+        except:
+            pass
         
     def find_s_node(self):
         return self.find_section("sensors")
@@ -231,4 +241,18 @@ class Conf:
            node = parent.newChild(None,name,None)
            node.setProp(propname,propvalue)
         
-        return node    
+        return node
+
+    def save(self):
+
+        if not self.xml:
+            return
+
+        # os.rename(conf.xml.getFileName(),str(conf.xml.getFileName())+".bak")
+        self.xml.save(None, True, True)
+        self.unmark_changes()
+
+        try:
+            self.emit("save", self.xml)
+        except:
+            pass

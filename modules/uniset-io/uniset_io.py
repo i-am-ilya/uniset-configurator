@@ -28,6 +28,7 @@ pic_CHAN = 'channel.png'
 Задачи:
 1. Добавление, удаление карт ввода/вывода на узлах
 2. Редактирование параметров каждого канала
+3. Сохранение специального tag-файла
 '''
 class IOEditor(base_editor.BaseEditor,gtk.Viewport):
 
@@ -42,6 +43,9 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         self.glade = gtk.glade.XML(conf.datdir+"uniset-io.glade")
         self.glade.signal_autoconnect(self)
 
+        conf.connect("save", self.on_save_configuration)
+        self.tagfilename = None
+
         vbox = self.glade.get_widget("mainbox")
         vbox.reparent(self)
 
@@ -52,7 +56,8 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
 
         self.fentry = self.glade.get_widget("io_filter_entry")
         self.filter_cb_case = self.glade.get_widget("io_filter_cb_case")
-        
+
+        self.cb_save_tagFile = self.glade.get_widget("io_cb_save_tagFile")
 
         self.model = None
         self.modelfilter = None
@@ -194,7 +199,7 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
     def init_notebook_pages(self):
         # читаем все страницы и создаём нужные нам поля класса
         # (для управления доступностью закладок)
-        # не очень конечно выгляди, но работает..
+        # не очень конечно выглядит, но работает..
         nums = self.parambook.get_n_pages()
         for n in range(0,nums):
             p = self.parambook.get_nth_page(n)
@@ -1038,10 +1043,50 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
 
         return True
 
-
     def btn_collaps_clicked(self,btn):
         self.tv.collapse_all()
 
+    def on_save_configuration(self, obj, xml):
+
+        if self.cb_save_tagFile.get_active() == False:
+            return
+
+        if self.tagfilename == None:
+            tagfilename = str(xml.getFileName() + ".ioconfig")
+        else:
+            tagfilename = self.tagfilename
+
+        print "IOEDITOR: save tag file: %s"%tagfilename
+
+        f_out = file(tagfilename, 'w')
+        it = self.model.get_iter_first()
+        dlg_ok = False
+        while it is not None:
+            if self.model.get_value(it, 2): # xmlnode != NULL
+                card = self.model.iter_children(it)
+                # Идём по картам
+                while card is not None:
+                    channel = self.model.iter_children(card)
+                    # Идём по каналам
+                    while channel is not None:
+                        sensor = self.model.get_value(channel, fid.xmlnode)
+                        if sensor != None:
+
+                            wtext='@%s@\t\tio="%s" card="%s" subdev="%s" channel="%s"\n'%(
+                                sensor.prop("name"),
+                                sensor.prop("io"),
+                                sensor.prop("card"),
+                                sensor.prop("subdev"),
+                                sensor.prop("channel")
+                            )
+                            f_out.write(wtext)
+                        channel = self.model.iter_next(channel)
+
+                    card = self.model.iter_next(card)
+
+            it = self.model.iter_next(it)
+
+        f_out.close()
 
 def create_module(conf):
     return IOEditor(conf)

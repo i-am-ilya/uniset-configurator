@@ -1,0 +1,10 @@
+#!/bin/sh
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+bindir=@bindir@
+datadir=@datadir@
+
+[ -z "$1" ] && echo "Unknown configure.xml" && exit 1
+
+xsltproc ${datadir}/@PACKAGE@/uniset-io-gentags.xsl $1

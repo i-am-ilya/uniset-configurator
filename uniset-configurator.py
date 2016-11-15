@@ -32,10 +32,7 @@ class MainWindow(gtk.Widget):
 
     def on_save_activate(self, data):
         print "on_save_activate: " + str(conf.xml.getFileName())
-        if conf.xml:
-           #os.rename(conf.xml.getFileName(),str(conf.xml.getFileName())+".bak")
-           conf.xml.save(None,True,True)
-           conf.unmark_changes()
+        conf.save()
 
     def on_save_as_activate(self, data):
          print "on_save_as_activate"
@@ -61,8 +58,8 @@ class MainWindow(gtk.Widget):
             res = dlg.run()
             dlg.hide()
             if res == gtk.RESPONSE_YES:
-               #os.rename(conf.xml.getFileName(),str(conf.xml.getFileName())+".bak")
-               conf.xml.save(None,True,True)
+                conf.save()
+
             conf.unmark_changes()
 
 
@@ -91,6 +88,7 @@ mwinglade = datdir + "mainwin.glade"
 confile=""
 
 rewrite_confile = False
+rewrite_iotagfile = False
 
 try:
     glade = gtk.glade.XML(mwinglade)
@@ -103,10 +101,16 @@ except:
 if len(sys.argv) > 1:
    confile = getArgParam("--confile",sys.argv[1])
    rewrite_confile = checkArgParam("--rewrite",False)
-   if rewrite_confile == True:
+   rewrite_iotagfile = checkArgParam("--rewrite-iotagfile",False)
+
+   if rewrite_confile or rewrite_iotagfile:
       if confile == "":
          print "Unknown confile. Use --confile filename\n"
          exit(1)
+
+      if rewrite_iotagfile:
+          ret = os.system("uniset-io-gentags.sh %s"%confile)
+          exit(ret)
 
       rewrite_filename = getArgParam("--rewrite",confile)
       try:
@@ -134,9 +138,9 @@ if confile == "":
 
 try:
    conf = configure.Conf(confile,glade,datdir,moddir)
-except: 
+except:
    dialog = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, _("XML file damage or not found! \n Loading FAILED!"))
-   dialog.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("gray")) 
+   dialog.modify_bg(gtk.STATE_NORMAL, gtk.gdk.color_parse("gray"))
    dialog.run()
    dialog.destroy()
    exit(1)
@@ -195,7 +199,7 @@ if len(sys.argv) > 1 or linkeditor or apeditor:
          ed = LinkEditor.create_module(conf)
          ed.build_editor(src_file)
          if ed.run(xmlnode,True) and conf.is_changed():
-            conf.xml.save(None,True,True)
+            conf.save()
          exit(0)
          
       if apeditor:
@@ -204,7 +208,7 @@ if len(sys.argv) > 1 or linkeditor or apeditor:
          ed = apspanel.create_module(conf)
          # xmlnode.parent
          if ed.run(xmlnode.parent) and conf.is_changed():
-            conf.xml.save(None,True,True)
+            conf.save()
          exit(0)
 
 def add_module( face, lbl, mainbook, glade ):
