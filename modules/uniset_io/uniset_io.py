@@ -40,7 +40,7 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         self.ioconf = uniset_io_conf.IOConfig(conf.xml,conf.datdir)
         self.editor = card_editor.CardEditor(conf,self.ioconf,conf.datdir)
 
-        self.glade = gtk.glade.XML(conf.datdir+"uniset-io.glade")
+        self.glade = gtk.glade.XML(conf.datdir+"uniset_io.glade")
         self.glade.signal_autoconnect(self)
 
         conf.connect("save", self.on_save_configuration)

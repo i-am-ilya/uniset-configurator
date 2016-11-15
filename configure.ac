@@ -28,10 +28,10 @@ AC_CONFIG_FILES([Makefile
                  modules/Makefile
                  modules/can/Makefile
                  modules/can/templates/Makefile
-                 modules/uniset-io/Makefile
-                 modules/uniset-io/templates/Makefile
-                 modules/uniset-io/cards/Makefile
-                 modules/uniset-io/uniset-io-gentags.sh
+                 modules/uniset_io/Makefile
+                 modules/uniset_io/templates/Makefile
+                 modules/uniset_io/cards/Makefile
+                 modules/uniset_io/uniset-io-gentags.sh
                  modules/nodes/Makefile
                  modules/uniset-comm/Makefile
                  modules/lcaps/Makefile

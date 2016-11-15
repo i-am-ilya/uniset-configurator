@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 1.0
-Release: alt7
+Release: alt8
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -61,6 +61,9 @@ ln -s %python_sitelibdir_noarch/%name/can_conf.py %buildroot/%_bindir/uniset-can
 %_bindir/*
 
 %changelog
+* Tue Nov 15 2016 Pavel Vainerman <pv@altlinux.ru> 1.0-alt8
+- rename 'uniset-io' --> 'uniset_io'
+
 * Tue Nov 15 2016 Pavel Vainerman <pv@altlinux.ru> 1.0-alt7
 - Add tagfile generator for uniset-io
 
