@@ -7,4 +7,4 @@ datadir=@datadir@
 
 [ -z "$1" ] && echo "Unknown configure.xml" && exit 1
 
-xsltproc ${datadir}/@PACKAGE@/uniset-io-gentags.xsl $1
+xsltproc ${datadir}/@PACKAGE@/uniset-io-gentags.xsl $1 | grep -v "^$"
