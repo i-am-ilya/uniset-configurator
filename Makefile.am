@@ -3,7 +3,11 @@ SUBDIRS = modules templates images
 python_SCRIPTS 	= *.py
 
 confdir     = $(pkgdatadir)
-conf_DATA   = mainwin.glade LinkEditor.ui
+conf_DATA   = mainwin.glade LinkEditor.ui uniset-configurator-gentags.xsl.tpl
+
+bin_SCRIPTS = uniset-configurator-gentags.sh
+
+
 
 #if MAINTAINER_MODE
 #MAINTAINER=locale/lstart.mo

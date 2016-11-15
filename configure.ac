@@ -25,6 +25,7 @@ AM_PATH_PYTHON(,,)
 PKG_CHECK_MODULES(PYTHON,python,,exit)
 
 AC_CONFIG_FILES([Makefile
+                 uniset-configurator-gentags.sh
                  modules/Makefile
                  modules/can/Makefile
                  modules/can/templates/Makefile

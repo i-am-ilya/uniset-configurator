@@ -1,6 +1,6 @@
 Name: uniset-configurator
 Version: 1.0
-Release: alt9
+Release: alt10
 Summary: UniSet configurator
 Group: Development/Python
 License: GPL
@@ -61,6 +61,9 @@ ln -s %python_sitelibdir_noarch/%name/can_conf.py %buildroot/%_bindir/uniset-can
 %_bindir/*
 
 %changelog
+* Tue Nov 15 2016 Pavel Vainerman <pv@altlinux.ru> 1.0-alt10
+- add new utility:  uniset-configurator-gentags.sh
+
 * Tue Nov 15 2016 Pavel Vainerman <pv@altlinux.ru> 1.0-alt9
 - io: added other parameters for generate tagfile
 

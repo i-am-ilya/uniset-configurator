@@ -1,0 +1,32 @@
+#!/bin/sh
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+bindir=@bindir@
+datadir=@datadir@
+
+srcxslfile=${datadir}/@PACKAGE@/uniset-configurator-gentags.xsl.tpl
+
+function usage()
+{
+    echo "${0##*/} file_with_parameters configure.xml"
+}
+
+[ -z "$1" ] && echo "Unknown list of parameters" && usage && exit 1
+[ -z "$2" ] && echo "Unknown configure.xml" && usage && exit 1
+
+PARAMS=
+
+while read param; do
+	[ -z "$param" ] && continue
+	if [ -n "$param" ] && echo $param | grep -vqe '^#'; then
+		PARAMS="${PARAMS}\n<xsl:call-template name=\"ifDefined\"><xsl:with-param name=\"value\"><xsl:value-of select=\"@${param}\"/></xsl:with-param><xsl:with-param name=\"varname\">${param}</xsl:with-param></xsl:call-template>"
+	fi
+done < ${1}
+
+xslfile=`mktemp`
+cat ${srcxslfile} | sed "s|@PARAMS@|${PARAMS}|g" > ${xslfile}
+
+xsltproc ${xslfile} ${2} | grep -v "^$"
+rm -f ${xslfile}
+
