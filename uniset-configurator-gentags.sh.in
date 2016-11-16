@@ -9,11 +9,41 @@ srcxslfile=${datadir}/@PACKAGE@/uniset-configurator-gentags.xsl.tpl
 
 function usage()
 {
-    echo "${0##*/} file_with_parameters configure.xml [filter_field [filter_value]]"
+    echo "${0##*/} [file_with_parameters | param1,param2,param2,..] configure.xml [filter_field [filter_value]]"
 }
 
 [ -z "$1" ] && echo "Unknown list of parameters" && usage && exit 1
 [ -z "$2" ] && echo "Unknown configure.xml" && usage && exit 1
+
+ARG1="$1"
+CONF="$2"
+
+PARAMS=
+
+function params_from_file()
+{
+	FILE="$1"
+	
+	while read param; do
+		[ -z "$param" ] && continue
+		if [ -n "$param" ] && echo $param | grep -vqe '^#'; then
+			PARAMS="${PARAMS}\n<xsl:call-template name=\"ifDefined\"><xsl:with-param name=\"value\"><xsl:value-of select=\"@${param}\"/></xsl:with-param><xsl:with-param name=\"varname\">${param}</xsl:with-param></xsl:call-template>"
+		fi
+	done < ${FILE}
+}
+
+function params_from_args()
+{
+	PLIST=`echo ${1} | tr ',' ' '`
+	for param in ${PLIST}; do
+		PARAMS="${PARAMS}\n<xsl:call-template name=\"ifDefined\"><xsl:with-param name=\"value\"><xsl:value-of select=\"@${param}\"/></xsl:with-param><xsl:with-param name=\"varname\">${param}</xsl:with-param></xsl:call-template>"
+	done
+}
+
+# Формирование списка замен (если есть такой файл то из него, иначе трактуем, что это аргументы через запятую
+[ -a "$ARG1" ] && params_from_file ${ARG1} || params_from_args ${ARG1}
+
+# Создание xslt и преобразование
 
 F_FIELD=1
 F_VALUE=1
@@ -22,18 +52,9 @@ F_RULE='='
 [ -n "$3" ] && F_FIELD="\@${3}" && F_VALUE='' && F_RULE='!='
 [ -n "$4" ] && F_FIELD="\@${3}" && F_VALUE="$4" && F_RULE='='
 
-PARAMS=
-
-while read param; do
-	[ -z "$param" ] && continue
-	if [ -n "$param" ] && echo $param | grep -vqe '^#'; then
-		PARAMS="${PARAMS}\n<xsl:call-template name=\"ifDefined\"><xsl:with-param name=\"value\"><xsl:value-of select=\"@${param}\"/></xsl:with-param><xsl:with-param name=\"varname\">${param}</xsl:with-param></xsl:call-template>"
-	fi
-done < ${1}
-
 xslfile=`mktemp`
 cat ${srcxslfile} | sed "s|@F_FIELD@|${F_FIELD}|g;s|@F_VALUE@|${F_VALUE}|g;s|@F_RULE@|${F_RULE}|g;s|@PARAMS@|${PARAMS}|g" > ${xslfile}
 
-xsltproc ${xslfile} ${2} | grep -v "^$"
+xsltproc ${xslfile} ${CONF} | grep -v "^$"
 rm -f ${xslfile}
 
