@@ -9,11 +9,18 @@ srcxslfile=${datadir}/@PACKAGE@/uniset-configurator-gentags.xsl.tpl
 
 function usage()
 {
-    echo "${0##*/} file_with_parameters configure.xml"
+    echo "${0##*/} file_with_parameters configure.xml [filter_field [filter_value]]"
 }
 
 [ -z "$1" ] && echo "Unknown list of parameters" && usage && exit 1
 [ -z "$2" ] && echo "Unknown configure.xml" && usage && exit 1
+
+F_FIELD=1
+F_VALUE=1
+F_RULE='='
+
+[ -n "$3" ] && F_FIELD="\@${3}" && F_VALUE='' && F_RULE='!='
+[ -n "$4" ] && F_FIELD="\@${3}" && F_VALUE="$4" && F_RULE='='
 
 PARAMS=
 
@@ -25,7 +32,7 @@ while read param; do
 done < ${1}
 
 xslfile=`mktemp`
-cat ${srcxslfile} | sed "s|@PARAMS@|${PARAMS}|g" > ${xslfile}
+cat ${srcxslfile} | sed "s|@F_FIELD@|${F_FIELD}|g;s|@F_VALUE@|${F_VALUE}|g;s|@F_RULE@|${F_RULE}|g;s|@PARAMS@|${PARAMS}|g" > ${xslfile}
 
 xsltproc ${xslfile} ${2} | grep -v "^$"
 rm -f ${xslfile}

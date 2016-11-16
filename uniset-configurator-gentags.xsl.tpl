@@ -15,8 +15,10 @@
 <xsl:for-each select="//sensors/item">
 <xsl:sort select="@id" order="ascending" data-type="text"/>
 <xsl:sort select="@name" order="ascending" data-type="text"/>
+<xsl:if test="normalize-space(@F_FIELD@)@F_RULE@'@F_VALUE@'">
 @<xsl:value-of select="@name"/>@		<xsl:call-template name="parameters"/><xsl:text>
 </xsl:text>
+</xsl:if>
 </xsl:for-each>
 </xsl:template>
 
