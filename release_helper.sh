@@ -9,7 +9,6 @@ REL=eter
 MAILDOMAIN=server
 
 [ -z "$TOPDIR" ] && TOPDIR=/var/ftp/pub/Ourside
-[ -z "$GEN" ] && GEN=/var/ftp/pub/Ourside/$PLATFORM/genb.sh
 
 PKGNAME=uniset-configurator
 SPECNAME=uniset-configurator.spec
