@@ -68,7 +68,6 @@ class LCAPSConfig():
            print "For '%s' <orange> section not found."%lc_name
            return
         
-        
         reset_list = self.gen_reset_set(lc_node,o_node,g_node,r_node)
         
         ctx = open( self.datdir + "lcaps-test-skel.xml" ).readlines()
@@ -182,11 +181,16 @@ class LCAPSConfig():
             
             if nohorn and noconfirm:
                t_postfix = "-nohorn-noconfirm"
-            
+
+            t_delay = node.prop("delay")
+            if t_delay is None or len(t_delay) == 0:
+                t_delay="0"
+
             for l in ctx_check:
                 l = self.check_and_replace(l,'{LAMP}',node.prop("lamp"))
                 l = self.check_and_replace(l,"{POSTFIX}",t_postfix)
                 l = self.check_and_replace(l,"{SENSOR}",node.prop("name"))
+                l = self.check_and_replace(l, "{DELAY}", t_delay)
                 res += l
             node = self.xml.nextNode(node)
         

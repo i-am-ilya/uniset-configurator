@@ -1,12 +1,11 @@
 <?xml version = '1.0' encoding = 'utf-8'?>
 <LCAPSTestScenario generate="{GENTIME}">
-<TestList logfile="result.lcaps-{LCNAME}.txt" logfile_trunc="1" 
-    replace="HornReset:{HORNRESET},Confirm:{CONFIRM},Horn:{HORN}">
+<TestList replace="[HornReset]:{HORNRESET},[Confirm]:{CONFIRM},[Horn]:{HORN}">
 	<test num="1" name="{LCNAME} Initialization" ignore_failed="1">
-		<action name="set" id="HornReset" val="1" reset_time="300" val2="0"/>
-		<action name="set" id="Confirm" val="1" reset_time="300" val2="0"/>
-		<action name="multiset" set="{RLIST}"/>
-		<action name="msleep" msec="1000"/>
+        <action set="[HornReset]=1" reset_time="300" rval="0"/>
+        <action set="[Confirm]=1" reset_time="300" rval="0"/>
+		<action set="{RLIST}"/>
+		<action msleep="1000"/>
     </test>
 {TESTS}</TestList>
 </LCAPSTestScenario>
