@@ -58,15 +58,15 @@ function cp2ftp()
 	RPMBINDIR=$RPMDIR/RPMS
 	RPMNOARCHDIR=$RPMDIR/RPMS/noarch
 	test -d $RPMBINDIR/$PLATFORM && RPMBINDIR=$RPMBINDIR/$PLATFORM
-	mkdir -p $BACKUPDIR
+#	mkdir -p $BACKUPDIR
 	mkdir -p $BACKUPDIR_noarch
 	mkdir -p $FTPDIR
 	mkdir -p ${FTPDIR_noarch}
 
-	mv -f $FTPDIR/*$PKGNAME* $BACKUPDIR/
-	mv -f $RPMBINDIR/*$PKGNAME* $FTPDIR/
-	chmod 'a+rw' $FTPDIR/*$PKGNAME*
-	$GEN
+#	mv -f $FTPDIR/*$PKGNAME* $BACKUPDIR/
+#	mv -f $RPMBINDIR/*$PKGNAME* $FTPDIR/
+#	chmod 'a+rw' $FTPDIR/*$PKGNAME*
+#	$GEN
 
 	mv -f $FTPDIR_noarch/*$PKGNAME* $BACKUPDIR_noarch/
 	mv -f $RPMNOARCHDIR/*$PKGNAME* ${FTPDIR_noarch}/
