@@ -12,7 +12,7 @@
 	<test num="2" name="Run [APS]">
 	 <action set="[APS]=1" />
 	 <action msleep="[delay]" />
-	 <check test="[Lamp]=1" />
+	 <check test="[Lamp]=2" />
 	</test>	  
 	<test num="3" name="Reset [APS]">
 	 <action set="[APS]=0" />
