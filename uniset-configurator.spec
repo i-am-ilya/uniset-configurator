@@ -11,9 +11,13 @@ Packager: Pavel Vainerman <pv@altlinux.ru>
 Source: %name-%version.tar
 BuildArch: noarch
 
-# Automatically added by buildreq on Sat Sep 25 2010 (-bi)
+# Automatically added by buildreq on Tue Mar 14 2017
+# optimized out: pkg-config python-base python-modules python3 python3-base
 BuildRequires: python-devel
+
 BuildRequires(pre): rpm-build-python
+
+Requires: python-module-pygtk-libglade
 
 %add_findreq_skiplist %_datadir/%name/*.sh
 %global _target_python_libdir %_target_libdir_noarch
