@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2.7
 # -*- coding: utf-8 -*-
 import sys
 is_system_run_flag = sys.argv[0].startswith("./")
