@@ -225,6 +225,7 @@ if __name__ == "__main__":
     xml = UniXML.UniXML(confile)
     
     xmlnode = xml.findNode(xml.getDoc(),"nodes")[0].children.next
+    xmlnode = xml.getNode(xmlnode)
     while xmlnode != None:
        if xmlnode.prop("name") == nodename:
           break;
@@ -235,6 +236,7 @@ if __name__ == "__main__":
        exit(1)
     
     cardnode = xml.findNode(xmlnode,"iocards")[0].children.next
+    cardnode = xml.getNode(cardnode)
     if cardnode == None:
        print "<iocards> not found for node='%s' (confile: %s)" % (nodename,confile)
        exit(1)

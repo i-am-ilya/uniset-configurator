@@ -136,12 +136,14 @@ class CANEditor(base_editor.BaseEditor, gtk.TreeView):
         self.edit_xmlnode = None    
     
     def build_tree(self):
-        node = self.conf.xml.findNode(self.conf.xml.getDoc(),"nodes")[0].children.next 
+        node = self.conf.xml.findNode(self.conf.xml.getDoc(),"nodes")[0].children.next
+        node = self.conf.xml.getNode(node)
         while node != None:
              cannode = self.conf.xml.findMyLevel(node.children,"can")
              cnode = None
              if cannode[0] != None and cannode[0].children:
                  cnode = cannode[0].children.next
+                 cnode = self.conf.xml.getNode(cnode)
 
              while cnode != None:
                    self.add_net(cnode,node)

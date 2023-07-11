@@ -242,7 +242,8 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
             node = self.conf.xml.nextNode(node)
 
     def build_tree(self):
-        node = self.conf.xml.findNode(self.conf.xml.getDoc(),"nodes")[0].children.next 
+        node = self.conf.xml.findNode(self.conf.xml.getDoc(),"nodes")[0].children.next
+        node = self.conf.xml.getNode(node)
 #        iter0 = self.model.append(None, [_("Nodes"),"",None,"",-1,-1,None])
         img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_NODE)
         while node != None:
@@ -255,7 +256,7 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
     def read_cards(self,rootnode,iter):
         rnode = self.conf.xml.findMyLevel(rootnode.children,"iocards")[0] # .children.next
         if rnode == None: return
-        node = rnode.children.next
+        node = self.conf.xml.getNode(rnode.children.next)
         img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_CARD)
         while node != None:
             info = self.get_card_info(node)
@@ -279,6 +280,7 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
     def init_channels(self):
         # проходим по <sensors> и если поля заполнены ищем в нашем TreeView
         node = self.conf.xml.findNode(self.conf.xml.getDoc(),"sensors")[0].children.next 
+        node = self.conf.xml.getNode(node)
         while node != None:
             if node.prop("io") != None and node.prop("threshold_aid") == None:
                  self.find_node(node)
@@ -639,7 +641,8 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         cn = cnode.prop("card")
         nn = pnode.prop("id")
 
-        node = self.conf.xml.findNode(self.conf.xml.getDoc(),"sensors")[0].children.next 
+        node = self.conf.xml.findNode(self.conf.xml.getDoc(),"sensors")[0].children.next
+        node = self.conf.xml.getNode(node)
         while node != None:
             if node.prop("io") == nn and node.prop("card") == cn:
                   node.unsetProp("io")
@@ -879,7 +882,7 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         self.conf.mark_changes()
   
     def get_node_info(self, xmlnode):
-        return str("id=" + str(xmlnode.prop("id")) + " ip=" + xmlnode.prop("ip"))
+        return str("id=" + str(xmlnode.prop("id")) + " ip=" + str(xmlnode.prop("ip")))
 
     def get_sensor_info(self, xmlnode):
         return "[%s]%s"%(xmlnode.prop("id"),xmlnode.prop("name"))
@@ -977,7 +980,7 @@ class IOEditor(base_editor.BaseEditor,gtk.Viewport):
         if cardnode == None or cardnode.children.next == None:
             print "<iocards> not found for node='%s'" % xmlnode.prop("name")
             return
-        cardnode = cardnode.children.next
+        cardnode = self.conf.xml.getNode(cardnode.children.next)
 
         dlg = gtk.FileChooserDialog(_("File save"),action=gtk.FILE_CHOOSER_ACTION_SAVE,
                                   buttons=(gtk.STOCK_CANCEL,gtk.RESPONSE_CANCEL,gtk.STOCK_SAVE,gtk.RESPONSE_OK))

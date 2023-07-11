@@ -88,10 +88,11 @@ class NodesEditor(base_editor.BaseEditor,gtk.TreeView):
         self.build_tree() 
     
     def get_info(self,xmlnode):
-        return str("id=" + str(xmlnode.prop("id")) + " ip=" + xmlnode.prop("ip"))
+        return str("id=" + str(xmlnode.prop("id")) + " ip=" + str(xmlnode.prop("ip")))
 
     def build_tree(self):
-        node = self.conf.xml.findNode(self.conf.xml.getDoc(),"nodes")[0].children.next 
+        node = self.conf.xml.findNode(self.conf.xml.getDoc(),"nodes")[0].children.next
+        node = self.conf.xml.getNode(node)
         img = gtk.gdk.pixbuf_new_from_file(self.conf.imgdir+pic_NODE)
         while node != None:
             iter1 = self.model.append(None,[node.prop("name"),self.get_info(node),node,img])

@@ -126,6 +126,7 @@ if __name__ == "__main__":
     xml = UniXML.UniXML(confile)
     
     xmlnode = xml.findNode(xml.getDoc(),"nodes")[0].children.next
+    xmlnode = xml.getNode(xmlnode)
     while xmlnode != None:
        if xmlnode.prop("name") == nodename:
           break;
@@ -145,7 +146,7 @@ if __name__ == "__main__":
        print "<can> section empty! for node='%s' (confile: %s)" % (nodename,confile)
        exit(1)
 
-    cannode = cannode.children.next
+    cannode = xml.getNode(cannode.children.next)
     canconf = CANConfig(xml,templdir)
 
     if outfile == "":

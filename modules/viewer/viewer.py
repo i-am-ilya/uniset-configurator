@@ -102,6 +102,7 @@ class Viewer(base_editor.BaseEditor,gtk.Viewport):
 
     def build_tree(self):
         node = self.conf.xml.findNode(self.conf.xml.getDoc(),"sensors")[0].children.next
+        node = self.conf.xml.getNode(node)
         while node != None:
             info = self.get_rawxml_text(node)
             self.model.append(None,[node.prop("name"),node.prop("textname"),info,node])

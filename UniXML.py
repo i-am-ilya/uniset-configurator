@@ -29,6 +29,11 @@ class UniXML(str):
             self.doc = None
             self.fname = str
             self.doc = libxml2.parseFile(str)
+            res=-1
+            if self.doc != None:
+                res = self.doc.xincludeProcess()
+                if res == -1:
+                    raise libxml2.parserError("UniXML: XInclude error")
         except libxml2.parserError:
             sys.exit(-1)
 #        print "parsing " + self.doc.name
@@ -100,14 +105,14 @@ class UniXML(str):
             node = node.next
             if node == None:
                 return node
-            if node.name != "text" and node.name != "comment":
+            if node.type != "text" and node.type != "comment" and node.type != "xinclude_start" and node.type != "xinclude_end":
                   return node
         return None
 
     def getNode(self, node):
         if node == None:
            return None
-        if node.name != "text" and node.name != "comment":
+        if node.type != "text" and node.type != "comment" and node.type != "xinclude_start" and node.type != "xinclude_end":
            return node
         return self.nextNode(node)
 

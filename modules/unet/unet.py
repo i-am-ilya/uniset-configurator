@@ -146,13 +146,15 @@ class UNETEditor(base_editor.BaseEditor, gtk.TreeView):
         self.edit_xmlnode = None
     
     def build_tree(self):
-        node = self.conf.xml.findNode(self.conf.xml.getDoc(),"nodes")[0].children.next 
+        node = self.conf.xml.findNode(self.conf.xml.getDoc(),"nodes")[0].children.next
+        node = self.conf.xml.getNode(node) 
         while node != None:
              # пока не unet не предусматривает выделение отдельного тега <unet> внутри <node>
              #cannode = self.conf.xml.findMyLevel(node.children,"unet")
              #cnode = node
              #if cannode[0] != None:
              #    cnode = cannode[0].children.next
+             #    cnode = self.conf.xml.getNode(cnode)
              #while cnode != None:
              #       self.add_net(cnode,node)
              #      cnode = self.conf.xml.nextNode(cnode)
